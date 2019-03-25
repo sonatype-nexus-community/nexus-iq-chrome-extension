@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <style>
+        button {
+          height: 30px;
+          width: 30px;
+          outline: none;
+          margin: 10px;
+        }
+      </style>
+      <script src="options.js"></script>
+    </head>
+    <body>
+      <form>
+      <div id="buttonDiv">
+      </div>
+      <div>
+        <p>Display the Sonatype Login boxes!</p>
+      </div>
+      <table border="1">
+        <tr>
+          <td>The address of your IQ Server<td>
+          <td><input type="text" name="URL" id="url"><td>
+        </tr>
+        <tr>
+          <td>AuthenticationMode<td>
+          <td>UserName and password. ToDo: Add PKI<td>
+        </tr>
+        <tr>
+          <td>Username<td>
+          <td><input type="text" name="username" id="username"><td>
+        </tr>
+        <tr>
+          <td>Password<td>
+          <td><input type="text" name="password" id="password"><td>
+        </tr>
+        <tr>
+          <td><input type="reset" name="Reset"><td>
+          <td><input type="submit" value="Save" id="save"><td>
+        </tr>
+      </table>
+    </form>
+    <span id="msg"></span>
+    </body>
+  </html>

@@ -1,0 +1,60 @@
+{
+    "name": "Sonatype Nexus IQ Evaluation",
+    "description" : "Sonatype Nexus IQ Evaluation Extension - evaluate OSS component against the Nexus IQ Server. ",
+    "version": "1.0.5",
+    "manifest_version": 2,
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "storage",
+        "declarativeContent",
+        "https://search.maven.org/",
+        "https://www.npmjs.com/",
+        "https://www.nuget.org/",
+        "https://rubygems.org/",
+        "https://pypi.org/"        
+      ],
+    "background": {
+      "scripts": ["background.js"]      
+    },
+    "page_action": {
+     "default_popup": "popup.html",
+     "default_icon": {
+        "16": "images/IQ_Default.png",
+        "32": "images/IQ_Default.png",
+        "48": "images/IQ_Default.png",
+        "128": "images/IQ_Default.png"
+      }
+    },
+    "icons": {
+        "16": "images/IQ_Default.png",
+        "32": "images/IQ_Default.png",
+        "48": "images/IQ_Default.png",
+        "128": "images/IQ_Default.png"
+      },
+    "content_scripts":[
+
+        {
+          "matches": ["https://search.maven.org/*"],
+          "js": ["jquery-3.3.1.min.js", "content.js"]
+        },
+        {
+          "matches": ["https://www.npmjs.com/package/*"],
+          "js": ["jquery-3.3.1.min.js", "content.js"]       
+         },
+         {
+          "matches": ["https://www.nuget.org/packages/*"],
+          "js": ["jquery-3.3.1.min.js", "content.js"]
+         },
+         {
+          "matches": ["https://pypi.org/project/*"],
+          "js": ["jquery-3.3.1.min.js", "content.js"]
+         },
+         {
+          
+          "matches": ["https://rubygems.org/gems/*"],
+          "js": ["jquery-3.3.1.min.js", "content.js"]
+         }    
+  ],
+    "options_page": "options.html"
+  }
