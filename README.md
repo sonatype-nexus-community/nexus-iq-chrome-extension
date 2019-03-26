@@ -1,4 +1,4 @@
-# Chrome Extension for Sonatype Nexexus IQ
+# Chrome Extension for Sonatype Nexus IQ
 [![DepShield Badge](https://depshield.sonatype.org/badges/sonatype-nexus-community/nexus-iq-chrome-extension/depshield.svg)](https://depshield.github.io) [![CircleCI](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq.svg?style=svg)](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq)
 
 ## Table of Contents
