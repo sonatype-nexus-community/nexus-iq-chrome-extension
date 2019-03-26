@@ -1,9 +1,4 @@
 # Chrome Extension for Sonatype Nexexus IQ
-
-<img src="images/SON_logo_favicon.png" alt="drawing" width="300"/>
-</br>
-Sonatype Nexus IQ Server scan of a component from a chrome extension
-
 [![DepShield Badge](https://depshield.sonatype.org/badges/sonatype-nexus-community/nexus-iq-chrome-extension/depshield.svg)](https://depshield.github.io)
 
 [![CircleCI](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq.svg?style=svg)](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq)
