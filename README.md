@@ -33,7 +33,7 @@ The plugin can scan packages at the following repositories.
 10. Golang - Go - https://gocenter.jfrog.com/
 
 ## Data
-The data is sourced from IQ server which accesses the HDS for those supported ecosystems supported. Currently 1-6. Systems 7-10 get their data from Sonatype OSSIndex.
+The data is sourced from IQ server which accesses the HDS for those supported ecosystems supported. Currently 1-6. Systems 7-10 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
 
 
 ## Usage
