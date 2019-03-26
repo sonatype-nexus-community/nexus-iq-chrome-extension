@@ -1,0 +1,97 @@
+{
+    "name": "Sonatype Nexus IQ Evaluation",
+    "description": "Sonatype Nexus IQ Evaluation-community developed",
+    "author": "Cameron Townshend - cameron.townshend@sonatype.com",
+    "version": "1.7.5",
+    "manifest_version": 2,
+    "permissions": [
+      "storage",
+      "declarativeContent",
+      "webRequest",
+      "webRequestBlocking", 
+      "cookies", 
+      "background",
+      "tabs", 
+      "activeTab",
+      "https://search.maven.org/",
+      "https://mvnrepository.com/",
+      "https://www.npmjs.com/",
+      "https://www.nuget.org/",
+      "https://rubygems.org/",
+      "https://pypi.org/",
+      "https://packagist.org/",
+      "https://cran.r-project.org/",
+      "https://crates.io/",
+      "https://gocenter.jfrog.com/",
+      "https://ossindex.sonatype.org/",
+      "*://*/*"
+
+      ],
+    "background": {
+      "scripts": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/background.js"],
+      "persistent": true
+    },
+    "page_action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+         "16": "images/IQ_Default.png",
+         "32": "images/IQ_Default.png",
+         "48": "images/IQ_Default.png",
+         "128": "images/IQ_Default.png"
+       }
+     }, 
+    "icons": {
+      "16": "images/SON_logo_favicon.png",
+      "32": "images/SON_logo_favicon.png",
+      "48": "images/SON_logo_favicon.png",
+      "128": "images/SON_logo_favicon.png"
+    },
+    "content_scripts":[
+      {
+        "matches": ["https://search.maven.org/artifact/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+      },
+      {
+        "matches": ["https://mvnrepository.com/artifact/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+      },
+
+      {
+        "matches": ["https://www.npmjs.com/package/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+      },
+      {
+        "matches": ["https://www.nuget.org/packages/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+      },
+      {
+        "matches": ["https://pypi.org/project/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+      },
+      {  
+        "matches": ["https://rubygems.org/gems/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+      },
+      {          
+       "matches": ["https://packagist.org/packages/*"],
+       "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+      },
+      {          
+        "matches": ["https://cran.r-project.org/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+       },
+       {          
+        "matches": ["https://crates.io/crates/*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+       },
+       {          
+        "matches": ["https://gocenter.jfrog.com/github.com*"],
+        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
+       }       
+    ],
+
+
+    
+  "options_page": "options.html"    
+  }
+  

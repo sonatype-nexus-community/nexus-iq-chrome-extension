@@ -1,0 +1,29 @@
+{
+  "name": "chrome-extension-nexus-iq",
+  "version": "1.7.5",
+  "description": "Chrome Extension for IQ Validation",
+  "main": "background.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ctownshend/chrome-extension-nexus-iq.git"
+  },
+  "keywords": [
+    "IQ",
+    "Validation",
+    "Nexus",
+    "Sonatype",
+    "Lifecycle"
+  ],
+  "author": "Cameron Townshend",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ctownshend/chrome-extension-nexus-iq/issues"
+  },
+  "homepage": "https://github.com/ctownshend/chrome-extension-nexus-iq#readme",
+  "devDependencies": {
+    "jest": "^24.5.0"
+  }
+}

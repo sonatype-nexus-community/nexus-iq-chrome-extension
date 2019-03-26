@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <script src="Scripts/jquery-3.3.1.min.js"></script>
+      <link rel="stylesheet" href="styles.css">
+      <script src="options.js"></script>
+    </head>
+    <body>
+      <form>
+      
+      <div id="buttonDiv" class="optionstable">
+      
+      <div>
+        <p>Enter your Sonatype IQ Server Address and Login</p>
+      </div>
+      <table class="optionstable" id="optionstable">
+        <tr>
+          <td>The address of your IQ Server</td>
+          <td><input type="text" name="URL" id="url" required></td>
+        </tr>
+        <tr>
+          <td>Authentication Mode</td>
+          <td>UserName and password.</td>
+        </tr>    
+        <tr>
+          <td colspan="2">Please note: This version stores the username and password in Chrome Storage. This is not secure and you can see the password if you debug the Extension.</td>            
+        </tr>
+        <tr>
+          <td>Username</td>
+          <td><input type="text" name="username" id="username" required></td>
+        </tr>
+        <tr>
+          <td>Password</td>
+          <td><input type="password" name="password" id="password"  autocomplete="off" required></td>
+        </tr>
+        <tr>
+          <td><input type="reset" name="Reset" id="reset"></td>
+          <td><input type="submit" value="Save" id="save"></td>
+        </tr>
+        <tr>
+          <td colspan="2"><input type="button" value="Close" id="cancel" class="cancelbutton"></td>
+        </tr>
+      </table>
+    </div>
+    </form>
+    <span id="msg"></span>
+    
+    </body>
+  </html>
