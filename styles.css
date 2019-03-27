@@ -213,8 +213,9 @@ div .optionstable {
 
 .headingseverity{
     float:right;
-    
-    
+    padding:1px;
+    margin: 1px;
+    width:100px;
 }
 
 .headingreference{
@@ -224,20 +225,21 @@ div .optionstable {
 
 .criticalSeverity{
     /* color: red; */
-    font-weight:bold;
+    /* font-weight:bold; */
+    background-color: red;
 }
 .highSeverity{
-    /* color: #fb2525; */
+    background-color: #fb2525;
     font-weight:bold;
 }
 
 .mediumSeverity{
-    /* color: rgb(243, 134, 45); */
+    background-color: rgb(243, 134, 45);
     font-weight:bold;
 }
 
 .lowSeverity{
-    /* color: rgb(240, 210, 76); */
+    background-color: rgb(240, 210, 76);
     font-weight:bold;
 }
 
