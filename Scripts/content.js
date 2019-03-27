@@ -177,17 +177,46 @@ function parseNPM(format, url) {
     var doc = $('html')[0].outerHTML
     var docelements = $(doc);
 
-    var found = $('h1.package-name-redundant', doc);
-    let newV = found.text().trim();
-    console.log("newV");
-    console.log(newV);
+    var found
+    let newV 
+    let elements
+    let packageName
+    let version
+    if (url.search('/v/') >0 ){
+      //has version in URL
+      var urlElements = url.split('/');
+      packageName = urlElements[4]
+      version = urlElements[6]
+
+    }else{
+      //try to parse the URL
+      //Seems like node has changed their selector
+      //var found = $('h1.package-name-redundant', doc);
+      // found = $('h1.package-name-redundant', doc);
+      found = $("h2 span")
+      console.log(found);
+      if (typeof found !== "undefined" && found !== ""){
+        packageName = found.text().trim();        
+        // let foundV = $("h2", doc);
+        //https://www.npmjs.com/package/jest
+        newV = $("h2").next("span")
+        if (typeof newV !== "undefined" && newV !== ""){
+          newV = newV.text()
+          //produces "24.5.0 • "
+          let findnbsp = newV.search(String.fromCharCode(160))
+          if (findnbsp >=0){
+            newV = newV.substring(0,findnbsp)
+          }
+          version = newV;
+        }
+        console.log("newV");
+        console.log(newV);   
+  
+      }
+    }
     //  
-    let elements = newV.split(' ');   
-    packageName = elements[0].trim();
     //  packageName=url.substr(url.lastIndexOf('/')+1);
     packageName = encodeURIComponent(packageName);
-    version = elements[1].trim();
-    version = version.substr(1); //drop the v
     version = encodeURIComponent(version);
     
     return {format:format, packageName:packageName, version:version}

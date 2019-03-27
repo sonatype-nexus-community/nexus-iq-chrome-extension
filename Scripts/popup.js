@@ -205,7 +205,7 @@ function renderComponentDataOSSIndex(message){
     $("#hash").html(message.message.response.coordinates);
     
     //document.getElementById("matchstate").innerHTML = componentInfoData.componentDetails["0"].matchState;
-    $("#matchstate").html(message.message.response.reference)
+    // $("#matchstate").html(message.message.response.reference)
 }
 function renderLicenseDataOSSIndex(message){
     //not supported
@@ -321,13 +321,25 @@ function renderSecurityData(message){
     let securityIssues = thisComponent.securityData.securityIssues;
     let strAccordion = "";
     console.log(securityIssues.length);
-    
+    securityIssues.sort((securityIssues1, securityIssues2)=>{
+        // console.log(securityIssues1.severity);
+        return  securityIssues2.severity - securityIssues1.severity;
+    });
     if(securityIssues.length > 0){
+        console.log(securityIssues);
+
+        // const resultsByObjectId = sortByProperty(securityIssues, 'severity');
+
+        // console.log(resultsByObjectId);
+        // for (_index, securityIssue in securityIssues){
+            // console.log(securityIssue);
         for(i=0; i < securityIssues.length; i++){
             let securityIssue = securityIssues[i];
+            console.log(securityIssue);
 
             //console.log(securityIssue.reference);
             //console.log(i);
+            let className;
             switch (true){
                 case (securityIssue.severity >= 10):
                     className = "criticalSeverity" 
@@ -362,7 +374,7 @@ function renderSecurityData(message){
             strAccordion += '</table>'
             strAccordion += '</div>';            
         }
-        console.log(strAccordion);
+        // console.log(strAccordion);
         $("#accordion").html(strAccordion);
         //$('#accordion').accordion({heightStyle: 'content'});
         $('#accordion').accordion({heightStyle: 'panel'});
@@ -435,3 +447,26 @@ function setupAccordion(){
         $(".accordion-content").not($(this).next()).slideUp('fast');
     });
 }
+
+
+function sortByProperty(objArray, prop, direction){
+    if (arguments.length<2) throw new Error("ARRAY, AND OBJECT PROPERTY MINIMUM ARGUMENTS, OPTIONAL DIRECTION");
+    if (!Array.isArray(objArray)) throw new Error("FIRST ARGUMENT NOT AN ARRAY");
+    const clone = objArray.slice(0);
+    const direct = arguments.length>2 ? arguments[2] : 1; //Default to ascending
+    const propPath = (prop.constructor===Array) ? prop : prop.split(".");
+    clone.sort(function(a,b){
+        for (let p in propPath){
+                if (a[propPath[p]] && b[propPath[p]]){
+                    a = a[propPath[p]];
+                    b = b[propPath[p]];
+                }
+        }
+        // convert numeric strings to integers
+        a = a.match(/^\d+$/) ? +a : a;
+        b = b.match(/^\d+$/) ? +b : b;
+        return ( (a < b) ? -1*direct : ((a > b) ? 1*direct : 0) );
+    });
+    return clone;
+};
+

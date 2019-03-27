@@ -639,3 +639,29 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
   
+
+// var p = new Promise(function (resolve, reject) {
+//     var permission = true;
+//     chrome.storage.sync.get({
+//         history: true
+//     }, function (items) {
+//         permission = items.history;
+//         resolve(permission);
+//     });
+// });
+// p.then(function (permission) {
+//     loadStuff(permission);
+// });
+
+// function GetCVEDetails(cve){
+//     url="http://iq-server:8070/rest/vulnerability/details/cve/CVE-2018-3721?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D&hash=4c854c86c91ab36c86fc&timestamp=1553676800618"
+//     fetch(url)
+//         .then(
+//             function (response) {
+//                 console.log(response);
+//                 }
+//             )
+//         .catch(function(err){
+//             console.log('Fetch Error:-S', err);
+//         })
+// }
