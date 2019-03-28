@@ -11,7 +11,7 @@
 
 
 ## Purpose
-To allow you to inspect a package before you download it. The plugin requires a valid Sonatype Nexus Lifecycle instance. You must be licensed to use Nexus lifecycle to use this plugin.
+To allow you to inspect a package before you download it. The plugin requires a valid Sonatype Nexus Lifecycle instance. You must be licensed to use Nexus Lifecycle to use this plugin.
 The plugin can scan packages at the following repositories.
 
 1. Java - maven - https://search.maven.org/
@@ -26,7 +26,7 @@ The plugin can scan packages at the following repositories.
 10. Golang - Go - https://gocenter.jfrog.com/
 
 ## Data
-The data is sourced from IQ server which accesses the HDS for those supported ecosystems supported. Currently 1-6. Systems 7-10 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
+The data is sourced from IQ Server which accesses the Sonatype Data Services for those supported ecosystems supported. Currently 1-6. Systems 7-10 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
 
 
 ## Usage
@@ -152,7 +152,7 @@ If you do not want to use the extension then you can right click on the icon and
 
 
 #### Version 1.7.3-All URLS
-* Supports running IQ server on any URL
+* Supports running IQ Server on any URL
 * Fixed various bugs
 
 #### Version 1.7.2-added new formats
@@ -178,7 +178,7 @@ If you do not want to use the extension then you can right click on the icon and
 
 
 #### Version 1.7 - initial release
-Complete rewrite to fix cookie problem with calling Nexus IQ server.
+Complete rewrite to fix cookie problem with calling Nexus IQ Server.
 I have decided the best way to fix the security issues for now is to limit access to http://iq-server:8070. 
 So you will have to alias your localhost as iq-server in your /etc/hosts/ file to use this plugin for now.
 I will think about a change which gives access to all URLS like so below
