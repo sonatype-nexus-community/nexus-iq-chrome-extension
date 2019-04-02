@@ -1,5 +1,5 @@
 # Chrome Extension for Sonatype Nexus IQ
-[![DepShield Badge](https://depshield.sonatype.org/badges/sonatype-nexus-community/nexus-iq-chrome-extension/depshield.svg)](https://depshield.github.io) [![CircleCI](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq.svg?style=svg)](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq)
+[![DepShield Badge](https://depshield.sonatype.org/badges/ctownshend/chrome-extension-nexus-iq/depshield.svg)](https://depshield.github.io) [![CircleCI](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq.svg?style=svg)](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq)
 
 ## Table of Contents
 - [Purpose](#purpose)
@@ -7,8 +7,6 @@
 - [Usage](#usage)
 - [Examples](#examples)
 - [Installation](#installation)
-
-
 
 ## Purpose
 To allow you to inspect a package before you download it. The plugin requires a valid Sonatype Nexus Lifecycle instance. You must be licensed to use Nexus Lifecycle to use this plugin.
@@ -31,23 +29,18 @@ The data is sourced from IQ Server which accesses the Sonatype Data Services for
 
 ## Usage
 1. The install will create a new icon in your Chrome Browser next to the location box.
-<br/>
 <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
-<br/>
 
 2. The plugin will work on any new page opened after install. It will not work on pages already opened at time of install.
 
 3. Navigate to one of the pages that the extension is compatible with (see the list below).
 
 4. Click on the Blue Lightbulb... 
-<br/>
 <img src="images/Extension_lodash_-_npm_4.17.9.png" alt="drawing" width="300"/>
 <br/>
 4.1 ...The solution will think for a second...Then show the Data.
-<br/>
 <img src="images/Extension_thinking_icon.png" alt="drawing" width="300"/>
 <br/>
-
 5. Component Information
 <img src="images/Extension_Component_info.png" alt="drawing" width="300"/>
 <br/>
@@ -79,7 +72,7 @@ Pattern - `https://www.npmjs.com/package/<package>`
 <br/>e.g. https://www.npmjs.com/package/lodash/v/4.17.9
 ### DotNet - nuget
 Pattern - `https://www.nuget.org/packages/<package>/<version>`
-<br/>e.g. https://www.nuget.org/packages/LibGit2Sharp/0.1.0
+<br/>e.g. https://www.nuget.org/packages/LibGit2Sharp/0.20.1
 ### Ruby - rubygems
 Pattern - `https://rubygems.org/gems/<package>`
 <br/>e.g. https://rubygems.org/gems/bundler
@@ -97,12 +90,13 @@ Pattern - `https://cran.r-project.org/`
 ### Rust - Crates
 Pattern - `https://crates.io/`
 <br/>e.g. https://crates.io/crates/random
-### Golang - Go 
+### Golang - Gocenter
 `https://gocenter.jfrog.com`
 <br/>e.g. https://gocenter.jfrog.com/github.com~2Fjbenet~2Fgo-random/versions
 
 ## Installation
 1. Download the plugin from Github
+`git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
 2. Open Chrome Browser
 3. Click on the three dots, then More Tools, then Extensions
 <br/>
@@ -112,15 +106,15 @@ Pattern - `https://crates.io/`
 <br/>
 <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
 <br/>
-5. Navigate to the folder where you downloaded the plugin fro gihub onto your local machine.
+5. Navigate to the folder where you downloaded the plugin from gihub onto your local machine.
 <br/>
 <img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
 <br/>
-6. You will be prompted to enter your login details. (Important: Please not that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it.)
+6. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it.)
 <br/>
 <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
 <br/>
-7. Enter your delays and click save.
+7. Enter your details and click save.
 <br/>
 <img src="images/Extensions_Login_Entered.png" alt="drawing" width="300"/>
 <br/>
@@ -143,6 +137,12 @@ If you do not want to use the extension then you can right click on the icon and
 
 
 ### Version History
+#### Version 1.7.7
+* Bug fix whereby sometimes the Waiting page would sit there for ever. Due to content script not being injected. Seems the content script is always injected now as I inject it with code rather than in the manifest.json declaration
+
+#### Version 1.7.6
+* Release fixes
+
 #### Version 1.7.5
 * Added README.md
 
@@ -183,7 +183,7 @@ I have decided the best way to fix the security issues for now is to limit acces
 So you will have to alias your localhost as iq-server in your /etc/hosts/ file to use this plugin for now.
 I will think about a change which gives access to all URLS like so below
 
-Add "*://*/*" to permissions section like so
+Add `*://*/*` to permissions section like so
 
 `"permissions": [
     "*://*/*",

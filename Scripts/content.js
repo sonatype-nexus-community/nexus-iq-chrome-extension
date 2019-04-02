@@ -1,35 +1,19 @@
 console.log('contentscript.js');
-// var formats = {
-//   maven: "maven",
-//   npm: "npm",
-//   nuget: "nuget",
-//   gem: "gem",
-//   pypi: "pypi",
-//   packagist: "packagist",
-//   cocoapods: "cocoapods"
-// }
 
-// const dataSources = {
-//   NEXUSIQ: 'NEXUSIQ',
-//   OSSINDEX: 'OSSINDEX'
-// }
-
-// var messageType = {
-//   login: "login",
-//   evaluate: "evaluate",
-//   loggedIn:"loggedIn",
-//   displayMessage: "displayMessage",
-//   loginFailedMessage: "loginFailedMessage",
-//   beginevaluate: "beginevaluate",
-//   artifact: "artifact"
-
-// };
 
 chrome.runtime.onMessage.addListener(gotMessage);
-
-function gotMessage(message, sender, sendResponse){
+var message
+function gotMessage(receivedMessage, sender, sendResponse){
     console.log('gotMessage');
-    console.log(message);
+    console.log(receivedMessage);
+    message = receivedMessage;
+    processPage(message);
+}
+
+function processPage(message = {messagetype: messageTypes.beginevaluate}){
+  console.log('processPage');
+  console.log(message);
+
     //please tell what is my url and what is my content
     console.log("url");
     var url  = window.location.href;     
@@ -57,9 +41,6 @@ function gotMessage(message, sender, sendResponse){
 
 
 
-///////////////////////PASTED
-
-
 function ParsePage(){
     //returns message in format like this {messageType: "artifact", payload: artifact};
     //artifact varies depending on eco-system
@@ -68,7 +49,7 @@ function ParsePage(){
     let artifact;
     let format;
     let datasource = dataSources.NEXUSIQ;;
-    let url = location.href; //'https://www.npmjs.com/package/lodash';
+    let url = location.href;
     console.log(url);
 
     if (url.search('search.maven.org/artifact/') >=0){
@@ -254,6 +235,84 @@ function parseMaven(format, url) {
     return {format: format, groupId:groupId, artifactId:artifactId, version:version, extension: extension}
 };
   
+
+
+function parseNPM(format, url) {
+  //ADD SIMPLE CODE THAT CHECLS THE URL?
+  //note that this changed as of 19/03/19
+  //version in URL
+  //https://www.npmjs.com/package/lodash/v/4.17.9
+  //No version in URL so read DOM
+  //https://www.npmjs.com/package/lodash/
+  var doc = $('html')[0].outerHTML
+  var docelements = $(doc);
+
+  var found
+  let newV 
+  let elements
+  let packageName
+  let version
+  if (url.search('/v/') >0 ){
+    //has version in URL
+    var urlElements = url.split('/');
+    packageName = urlElements[4]
+    version = urlElements[6]
+
+  }else{
+    //try to parse the URL
+    //Seems like node has changed their selector
+    //var found = $('h1.package-name-redundant', doc);
+    // found = $('h1.package-name-redundant', doc);
+    found = $("h2 span")
+    console.log(found);
+    if (typeof found !== "undefined" && found !== ""){
+      packageName = found.text().trim();        
+      // let foundV = $("h2", doc);
+      //https://www.npmjs.com/package/jest
+      newV = $("h2").next("span")
+      if (typeof newV !== "undefined" && newV !== ""){
+        newV = newV.text()
+        //produces "24.5.0 • "
+        let findnbsp = newV.search(String.fromCharCode(160))
+        if (findnbsp >=0){
+          newV = newV.substring(0,findnbsp)
+        }
+        version = newV;
+      }
+      console.log("newV");
+      console.log(newV);   
+
+    }
+  }
+  //  
+  //  packageName=url.substr(url.lastIndexOf('/')+1);
+  packageName = encodeURIComponent(packageName);
+  version = encodeURIComponent(version);
+  
+  return {format:format, packageName:packageName, version:version}
+};
+
+function parseNuget(format, url) {
+    //we can parse the URL or the DOM
+    //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
+    var elements = url.split('/')
+    if(elements[5]==""){
+      //we are on the latest version - no version in the url
+      //https://www.nuget.org/packages/LibGit2Sharp/
+      packageId = elements[4];
+      version = $(".package-title .text-nowrap").text();
+    }
+    else{
+      packageId = elements[4];
+      //  packageName=url.substr(url.lastIndexOf('/')+1);
+      version = elements[5];
+    }
+    packageId = encodeURIComponent(packageId);
+    version = encodeURIComponent(version);
+    return {format: format, packageId:packageId, version:version}
+};
+
+
 function parsePyPI(format, url) {
     console.log('parsePyPI');
     //https://pypi.org/project/Django/1.6/
@@ -280,32 +339,8 @@ function parsePyPI(format, url) {
     version = encodeURIComponent(version);
 
     return {format: format, name:name, version:version}
-};
-  
-  
-  
-  
-function parseNuget(format, url) {
-    //for now we have to parse the URL, I cant get the page source??
-    //it's in an iframe
-    //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
-    var elements = url.split('/')
-    if(elements[5]==""){
-      //we are on the latest version - no version in the url
-      //https://www.nuget.org/packages/LibGit2Sharp/
-      packageId = elements[4];
-      version = $(".package-title .text-nowrap").text();
-    }
-    else{
-      packageId = elements[4];
-      //  packageName=url.substr(url.lastIndexOf('/')+1);
-      version = elements[5];
-    }
-    packageId = encodeURIComponent(packageId);
-    version = encodeURIComponent(version);
-    return {format: format, packageId:packageId, version:version}
-};
-  
+};  
+
 function parseRuby(format, url) {
     //for now we have to parse the URL, I cant get the page source??
     //it's in an iframe
@@ -329,8 +364,7 @@ function parseRuby(format, url) {
     name = encodeURIComponent(name);
     version = encodeURIComponent(version);
     return {format: format, name:name, version:version}
-  };
-///////////////////////END PASTED
+};
 
 
 ///OSSIndex////
