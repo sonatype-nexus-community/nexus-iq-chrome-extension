@@ -386,13 +386,16 @@ function renderSecurityData(message){
     });
     if(securityIssues.length > 0){
         console.log(securityIssues);
+
         for(i=0; i < securityIssues.length; i++){
             let securityIssue = securityIssues[i];
             console.log(securityIssue);
 
             //console.log(securityIssue.reference);
             //console.log(i);
+
             let className = styleCVSS(securityIssue.severity);
+
             strAccordion += '<h3><span class="headingreference">' + securityIssue.reference + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.severity + '</span></h3>';
             strAccordion += '<div>';
             strAccordion += '<table>'

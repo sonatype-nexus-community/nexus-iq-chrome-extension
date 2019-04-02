@@ -752,23 +752,10 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
   
- 
-// chrome.pageAction.onClicked.addListener(function (tab) {
-//     // alert('chrome.pageAction.onClicked.addListener(function (tab)');   
-//     alert(tab.tabId);
-//     console.log('chrome.pageAction.onClicked.addListener(function (tab)');
-//     console.log(tab);
-//     installScripts();
-// });
 
 
 function receiveText(resultsArray){
     console.log(resultsArray[0]);
 }
 
-// chrome.pageAction.onClicked.addListener(function(tab){
-//     alert(tab.id);
-// });
 
-
-/////////////////
