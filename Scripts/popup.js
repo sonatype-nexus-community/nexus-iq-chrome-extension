@@ -3,32 +3,6 @@ if (typeof chrome !== "undefined"){
     chrome.runtime.onMessage.addListener(gotMessage);
 }
 
-// var messageType = {
-//     login: "login",  //message to send that we are in the process of logging in
-//     evaluate: "evaluate",  //message to send that we are evaluating
-//     loggedIn:"loggedIn",    //message to send that we are in the loggedin
-//     displayMessage: "displayMessage",  //message to send that we have data from REST and wish to display it
-//     loginFailedMessage: "loginFailedMessage",  //message to send that login failed
-//     beginevaluate: "beginevaluate",  //message to send that we are beginning the evaluation process, it's different to the evaluatew message for a readon that TODO I fgogot
-//     artifact: "artifact" //passing a artifact/package identifier from content to the background to kick off the eval
-
-// };
-
-// const dataSource = {
-//     NEXUSIQ: 'NEXUSIQ',
-//     OSSINDEX: 'OSSINDEX'
-//   }
-
-
-// var formats = {
-//     maven: "maven",
-//     npm: "npm",
-//     nuget: "nuget",
-//     gem: "gem",
-//     pypi: "pypi",
-//     packagist: "packagist",
-//     cocoapods: "cocoapods"
-// }
 
 //var settings;
 //var componentInfoData;
@@ -46,25 +20,7 @@ $(function () {
     //I may be able to cheat and just get the URL, which simplifies the logic
     //if the URL is not parseable then I will have to go the content script to read the DOM
     beginEvaluation();
-    // return;
-    //i should send a message to the content script in the future to parse the page
-    //for now I am going to rely on the content script running and it has parsed the r.
-
-    //need to make sure that we have the data from the wbesite
     
-
-    // let bpage = chrome.extension.getBackgroundPage();
-    // console.log(bpage);
-    // var message = bpage.message;
-    // console.log ("message");
-    // console.log (message);
-    // if (message == null){       
-    //     popup();
-    //     console.log("message");
-    //     console.log(message);
-    //     console.log(bpage.message);
-    
-    // }
     
 });
 
@@ -89,10 +45,26 @@ function beginEvaluation(){
         let url = thisTab.url;
         
         if (checkPageIsHandled(url)){
-            //this sends a message to the content tab
-            //hopefully it will tell me what it sees
-            //this fixes a bug where we did not get the right DOM because we did not know what page we were on
-            chrome.tabs.sendMessage(tabId, message);
+            //yes we know about this sort of URL so continue
+            let artifact = ParsePageURL(url)
+            if (artifact){
+                //evaluate now
+                //as the page has the version so no need to insert dom
+                //just parse the URL
+                let evaluatemessage = {
+                    artifact: artifact,        
+                    messagetype: messageTypes.evaluate
+                }
+                console.log('chrome.runtime.sendMessage(evaluatemessage)');
+                console.log(evaluatemessage);
+                
+                chrome.runtime.sendMessage(evaluatemessage);
+            }else{
+                //this sends a message to the content tab
+                //hopefully it will tell me what it sees
+                //this fixes a bug where we did not get the right DOM because we did not know what page we were on
+                installScripts(message);
+            }
         }
         else{
             alert('This page is not currently handled by this extension.')
@@ -101,18 +73,47 @@ function beginEvaluation(){
 }
 
 
-function readyHandler(){
-    console.log("popup.js");
-    console.log(document);
-    let ctrluserinput =  document.querySelector("#userinput");    
-    // console.log(ctrluserinput);
+
+function executeScripts(tabId, injectDetailsArray)
+{
+    console.log('executeScripts(tabId, injectDetailsArray')
+    console.log(tabId)
     
+    function createCallback(tabId, injectDetails, innerCallback) {
+        return function () {
+            chrome.tabs.executeScript(tabId, injectDetails, innerCallback);
+        };
+    }
+
+    var callback = null;
+
+    for (var i = injectDetailsArray.length - 1; i >= 0; --i)
+        callback = createCallback(tabId, injectDetailsArray[i], callback);
+
+    if (callback !== null)
+        callback();   // execute outermost function
 }
 
-function changeText(ctrluserinput){
-    console.log(ctrluserinput);
-    console.log(ctrluserinput);
-}
+function installScripts(message){
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        let tabId = tabs[0].id
+        console.log('begin installScripts');
+        var background = chrome.extension.getBackgroundPage();
+        background.message = message;
+        console.log('sending message:',  message);
+        executeScripts(null, [ 
+            { file: "Scripts/jquery-3.3.1.min.js" }, 
+            { file: "Scripts/utils.js" },
+            // { code: "var message = " + message  + ";"},
+            { file: "Scripts/content.js" },
+            { code: "processPage();" }
+        ])
+        chrome.tabs.sendMessage(tabId, message);
+        console.log('end installScripts');
+    })
+};
+ 
+
 
 
 function gotMessage(message, sender, sendResponse){
@@ -205,7 +206,7 @@ function renderComponentDataOSSIndex(message){
     $("#hash").html(message.message.response.coordinates);
     
     //document.getElementById("matchstate").innerHTML = componentInfoData.componentDetails["0"].matchState;
-    $("#matchstate").html(message.message.response.reference)
+    // $("#matchstate").html(message.message.response.reference)
 }
 function renderLicenseDataOSSIndex(message){
     //not supported
@@ -285,6 +286,14 @@ function renderComponentData(message){
     $("#matchstate").html(thisComponent.matchState)
     $("#catalogdate").html(thisComponent.catalogDate);
     $("#relativepopularity").html(thisComponent.relativePopularity);
+    $("#datasource").html(message.artifact.datasource);
+    let highest = Highest_CVSS_Score(message);
+    let className = styleCVSS(highest);
+    $("#Highest_CVSS_Score").html(highest).addClass(className);
+
+    let numIssues = Count_CVSS_Issues(message);
+    let theCount = ` within ${numIssues} security issues`
+    $("#Num_CVSS_Issues").html(theCount);
 
 }
 
@@ -311,8 +320,58 @@ function renderLicenseData(message){
         //document.getElementById("observedLicenses_licenseLink").innerHTML = componentInfoData.componentDetails["0"].licenseData.observedLicenses["0"].licenseName;
         $("#observedLicenses_licenseName").html(thisComponent.licenseData.observedLicenses["0"].licenseName);
     }
-
 }
+
+function Highest_CVSS_Score(message){
+    console.log('Highest_CVSS_Score(beginning)', message);
+    var thisComponent = message.message.response.componentDetails["0"];
+ 
+    //document.getElementById("securityData_securityIssues").innerHTML = componentInfoData.componentDetails["0"].component.componentIdentifier.coordinates.securityData_securityIssues;
+    let securityIssues = thisComponent.securityData.securityIssues;
+    var highestSecurityIssue = Math.max.apply(Math, securityIssues.map(function(securityIssue) { return securityIssue.severity; }))
+    if (typeof highestSecurityIssue === "undefined"){
+        highestSecurityIssue = 'NA'
+    }
+    console.log('Highest_CVSS_Score(ending)', highestSecurityIssue);
+    return highestSecurityIssue;
+    
+}
+
+function Count_CVSS_Issues(message){
+    console.log('Count_CVSS_Issues(beginning)', message);
+    var thisComponent = message.message.response.componentDetails["0"];
+ 
+    //document.getElementById("securityData_securityIssues").innerHTML = componentInfoData.componentDetails["0"].component.componentIdentifier.coordinates.securityData_securityIssues;
+    let securityIssues = thisComponent.securityData.securityIssues;
+    var countCVSSIssues = securityIssues.length;
+
+    console.log('Count_CVSS_Issues(ending)', countCVSSIssues);
+    return countCVSSIssues;
+    
+}
+
+function styleCVSS(severity){
+    let className;
+    switch (true){
+        case (severity >= 10):
+            className = "criticalSeverity" 
+            break;
+        case (severity >= 7):
+            className = "highSeverity" 
+            break;
+        case (severity >= 5):
+            className = "mediumSeverity" 
+            break;
+        case (severity >= 0):
+            className = "lowSeverity" 
+            break;
+        default:
+            className = "noneSeverity" 
+            break;
+    }
+    return className;
+}
+
 
 function renderSecurityData(message){
     var thisComponent = message.message.response.componentDetails["0"];
@@ -321,29 +380,19 @@ function renderSecurityData(message){
     let securityIssues = thisComponent.securityData.securityIssues;
     let strAccordion = "";
     console.log(securityIssues.length);
-    
+    securityIssues.sort((securityIssues1, securityIssues2)=>{
+        // console.log(securityIssues1.severity);
+        return  securityIssues2.severity - securityIssues1.severity;
+    });
     if(securityIssues.length > 0){
+        console.log(securityIssues);
         for(i=0; i < securityIssues.length; i++){
             let securityIssue = securityIssues[i];
+            console.log(securityIssue);
 
             //console.log(securityIssue.reference);
             //console.log(i);
-            switch (true){
-                case (securityIssue.severity >= 10):
-                    className = "criticalSeverity" 
-                    break;
-                case (securityIssue.severity >= 7):
-                    className = "highSeverity" 
-                    break;
-                case (securityIssue.severity >= 5):
-                    className = "mediumSeverity" 
-                    break;
-                case (securityIssue.severity >= 0):
-                    className = "lowSeverity" 
-                    break;
-                default:
-                    break;
-            }
+            let className = styleCVSS(securityIssue.severity);
             strAccordion += '<h3><span class="headingreference">' + securityIssue.reference + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.severity + '</span></h3>';
             strAccordion += '<div>';
             strAccordion += '<table>'
@@ -362,7 +411,7 @@ function renderSecurityData(message){
             strAccordion += '</table>'
             strAccordion += '</div>';            
         }
-        console.log(strAccordion);
+        // console.log(strAccordion);
         $("#accordion").html(strAccordion);
         //$('#accordion').accordion({heightStyle: 'content'});
         $('#accordion').accordion({heightStyle: 'panel'});
@@ -435,3 +484,26 @@ function setupAccordion(){
         $(".accordion-content").not($(this).next()).slideUp('fast');
     });
 }
+
+
+function sortByProperty(objArray, prop, direction){
+    if (arguments.length<2) throw new Error("ARRAY, AND OBJECT PROPERTY MINIMUM ARGUMENTS, OPTIONAL DIRECTION");
+    if (!Array.isArray(objArray)) throw new Error("FIRST ARGUMENT NOT AN ARRAY");
+    const clone = objArray.slice(0);
+    const direct = arguments.length>2 ? arguments[2] : 1; //Default to ascending
+    const propPath = (prop.constructor===Array) ? prop : prop.split(".");
+    clone.sort(function(a,b){
+        for (let p in propPath){
+                if (a[propPath[p]] && b[propPath[p]]){
+                    a = a[propPath[p]];
+                    b = b[propPath[p]];
+                }
+        }
+        // convert numeric strings to integers
+        a = a.match(/^\d+$/) ? +a : a;
+        b = b.match(/^\d+$/) ? +b : b;
+        return ( (a < b) ? -1*direct : ((a > b) ? 1*direct : 0) );
+    });
+    return clone;
+};
+

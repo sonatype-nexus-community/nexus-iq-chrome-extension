@@ -205,18 +205,22 @@ div .optionstable {
 
 .label {
     font-style: italic;
+    text-align: right;
 }
 
 .data{
     font-weight:bold;
+    text-align: left;
 }
 
 .headingseverity{
     float:right;
-    padding:1px;
-    margin: 1px;
-    width:100px;
+    padding: 2px 0px 2px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 80px;
 }
+
+
 
 .headingreference{
     float: left;
@@ -241,6 +245,20 @@ div .optionstable {
 .lowSeverity{
     background-color: rgb(240, 210, 76);
     font-weight:bold;
+}
+
+.noneSeverity{
+    background-color: silver;
+    font-weight:bold;
+}
+.numissues{
+    padding: 1px;
+    margin: 1px;
+    
+}
+.maxIssue{
+    padding: 4px;
+    margin: 4px;
 }
 
 

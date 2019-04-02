@@ -56,6 +56,93 @@ function checkPageIsHandled(url){
 }
 
 
+function ParsePageURL(url){
+    //artifact varies depending on eco-system
+    //returns an artifact if URL contains the version
+    //if not a version specific URL then returns a falsy value
+    console.log('ParsePageURL');
+    //who I am what is my address?
+    let artifact;
+    let format;
+    console.log(url);
+
+    if (url.search('search.maven.org/artifact/') >=0){
+        //https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar  
+        format = formats.maven;
+        artifact = parseMavenURL(url);
+
+    }
+    else if (url.search('https://mvnrepository.com/artifact/') >=0){
+        //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+        format = formats.maven;
+        artifact = parseMavenURL(url);
+    }
+
+    else if (url.search('www.npmjs.com/package/') >= 0){
+      //'https://www.npmjs.com/package/lodash'};
+      format = formats.npm;
+      artifact = parseNPMURL(url);
+    }
+    else if (url.search('nuget.org/packages/') >=0){
+      //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
+      format = formats.nuget;
+      artifact =  parseNugetURL( url);
+
+    }    
+    
+    else if (url.search('pypi.org/project/') >=0){
+      //https://pypi.org/project/Django/1.6/
+      format = formats.pypi;
+      artifact = parsePyPIURL(url);
+
+    }
+    
+    else if (url.search('rubygems.org/gems/') >=0){
+      //https://rubygems.org/gems/bundler/versions/1.16.1
+      format = formats.gem;
+      artifact = parseRubyURL(url);
+
+    }
+    
+    //OSSIndex
+    else if (url.search('packagist.org/packages/') >=0){
+      //https: packagist ???
+      format = formats.packagist;
+      
+      artifact = parsePackagistURL(url);
+
+    }
+    else if (url.search('cocoapods.org/pods/') >=0){
+      //https:// cocoapods ???
+      format = formats.cocoapods;
+      
+      artifact = parseCocoaPodsURL(url);
+
+    }
+    else if (url.search('cran.r-project.org/') >=0){      
+      format = formats.cran;
+      
+      artifact = parseCRANURL(url);
+    }
+    
+    else if (url.search('https://crates.io/crates/') >=0){      
+      format = formats.crates;
+      artifact = parseCratesURL(url);
+    }
+    else if (url.search('https://gocenter.jfrog.com/') >=0){      
+      format = formats.golang;
+      artifact = parseGoLangURL(url);
+    }
+
+    console.log("ParsePageURL Complete");
+    console.log(artifact);
+    //now we write this to background as
+    //we pass variables through background
+    return artifact;
+};
+
+
+
 function BuildEmptySettings(){
     let settings = {
         username : "",
@@ -71,7 +158,6 @@ function BuildEmptySettings(){
     }
     return settings;
 }
-
 
 function removeCookies(settings_url){
     console.log('removeCookies')
@@ -97,25 +183,26 @@ function removeCookies(settings_url){
           chrome.cookies.remove({url: settings_url, name: cookies[i].name});
         }
       });
-      //the only one to remove is this one.
-     chrome.cookies.remove({url: settings_url, name: "CLMSESSIONID"});  
+    //the only one to remove is this one.
+    chrome.cookies.remove({url: settings_url, name: "CLMSESSIONID"});  
 }
 
 function NexusFormatMaven(artifact){  
 	//return a dictionary in Nexus Format
     //return dictionary of components
-    componentDict = {"components":[	
+    componentDict = {components:[	
 		component = {
-			"hash": null, 
-			"componentIdentifier": 
+			hash: null, 
+			componentIdentifier: 
 				{
-				"format": artifact.format,
-				"coordinates" : 
+				format: artifact.format,
+				coordinates : 
 					{
-						"groupId": artifact.groupId, 
-						"artifactId": artifact.artifactId, 
-                        "version" : artifact.version,
-                        'extension': artifact.extension
+						groupId: artifact.groupId, 
+						artifactId: artifact.artifactId, 
+                        version : artifact.version,
+                        extension: artifact.extension,
+                        classifier: ""
 					}
 				}
             }
@@ -208,6 +295,257 @@ function NexusFormatRuby(artifact){
 	return componentDict
 };
 
+function epochToJsDate(ts){
+    // ts = epoch timestamp
+    // returns date obj
+    return new Date(ts*1000);
+  }
+  
+function jsDateToEpoch(d){
+    // d = javascript date obj
+    // returns epoch timestamp
+    console.log(d)
+    if(!(d instanceof Date)){
+        throw new TypeError('Bad date passed in');
+    }
+    else{
+        return (d.getTime()-d.getMilliseconds())/1000;
+    }
+}
+
+function encodeComponentIdentifier(nexusArtifact){
+    let actual =  encodeURIComponent(JSON.stringify(nexusArtifact.components[0].componentIdentifier))
+    console.log(actual);
+    return actual;
+}
+
+
+function parseMavenURL(url) {
+    console.log('parseMavenURL')      
+      //maven repo https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+      //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
+      //CURRENTLY both have the same format in the URL version, except maven central also has the packaging type  
+      let format = formats.maven;
+      let datasource = dataSources.NEXUSIQ;
+
+      let elements = url.split('/')
+      let groupId = elements[4];
+      //  packageName=url.substr(url.lastIndexOf('/')+1);
+      groupId = encodeURIComponent(groupId);
+      let artifactId = elements[5];
+      artifactId = encodeURIComponent(artifactId);
+    
+      let version = elements[6];
+      version = encodeURIComponent(version);
+      
+      let extension = elements[7];
+      if (typeof extension === "undefined"){
+        //mvnrepository doesnt have it
+        extension = "jar"
+      }
+      extension = encodeURIComponent(extension);
+      let classifier = "";
+      let artifact = {
+          format: format, 
+          groupId:groupId, 
+          artifactId:artifactId, 
+          version:version, 
+          extension: extension,
+          classifier: classifier,
+          datasource: datasource
+        }
+      return artifact;
+};
+
+function parseNPMURL(url) {
+    //ADD SIMPLE CODE THAT Check THE URL
+    //this is run outside of the content page
+    //so can not see the dom
+
+    let format = formats.npm;
+    let datasource = dataSources.NEXUSIQ;
+
+    let packageName
+    let version
+    let artifact = ""
+    if (url.search('/v/') >0 ){
+      //has version in URL
+      var urlElements = url.split('/');
+      packageName = urlElements[4]
+      version = urlElements[6]
+      packageName = encodeURIComponent(packageName);
+      version = encodeURIComponent(version);  
+      artifact = {
+          format: format, 
+          packageName: packageName, 
+          version: version,
+          datasource: datasource
+        };
+    }else{
+        artifact = ""
+    }
+    return artifact;
+};
+
+function parseNugetURL(url) {
+    //https://www.nuget.org/packages/LibGit2Sharp/0.20.1
+    let format = formats.nuget;
+    let datasource = dataSources.NEXUSIQ;
+
+    var elements = url.split('/')
+    var artifact    = ""
+    if (elements.length==6){
+      packageId = elements[4];
+      //  packageName=url.substr(url.lastIndexOf('/')+1);
+      version = elements[5];
+      packageId = encodeURIComponent(packageId);
+      version = encodeURIComponent(version);
+      artifact =  {
+          format: format, 
+          packageId: packageId, 
+          version: version,
+          datasource: datasource
+        }
+      }
+    else{
+        artifact = ""
+    }
+    return artifact;
+};
+
+function parsePyPIURL(url) {
+    console.log('parsePyPI');
+    //https://pypi.org/project/Django/1.6/
+    //return falsy if no version in the URL
+    let format = formats.pypi;
+    let datasource = dataSources.NEXUSIQ;
+
+    let elements = url.split('/')
+    let artifact = ""
+    if (elements[5]==""){
+        artifact = ""
+    }
+    else{
+      name = elements[4];
+      //  packageName=url.substr(url.lastIndexOf('/')+1);    
+      version = elements[5];
+      name = encodeURIComponent(name);
+      version = encodeURIComponent(version);
+      artifact = {
+          format: format, 
+          name: name, 
+          version: version,
+          datasource: datasource
+        };
+    }
+    return artifact;
+};
+
+function parseRubyURL(url) {
+    console.log('parseRubyURL');
+    let format = formats.gem;
+    let datasource = dataSources.NEXUSIQ;
+
+    let elements = url.split('/')
+    let artifact
+    if (elements.length < 6){
+        //current version is inside the dom
+        //https://rubygems.org/gems/bundler
+        //return falsy
+        artifact = ""
+    }
+    else{
+        //https://rubygems.org/gems/bundler/versions/1.16.1
+        name = elements[4];
+        version = elements[6];
+        name = encodeURIComponent(name);
+        version = encodeURIComponent(version);
+        artifact = {
+            format: format, 
+            name: name, 
+            version: version,
+            datasource: datasource
+        };
+    }
+    return artifact;
+};
+
+function parsePackagistURL(url) {
+    //server is packagist, format is composer
+    console.log('parsePackagist:' +  url);
+    const elements = url.split('/')
+    let format = formats.packagist;
+    let datasource = dataSources.OSSINDEX;
+
+    let artifact
+    let name
+    let version
+    //https://packagist.org/packages/drupal/drupal
+    //Specific version is with a hash
+    //https://packagist.org/packages/drupal/drupal#8.6.2
+    let namePt1 = elements[4];
+    let namePt2 = elements[5];
+    name = namePt1 + "/" + namePt2
+    let whereIs = namePt2.search("#")
+    //is the version number in the URL? if so get that, else get it from the HTML
+    //can only parse the DOM from content script
+    //so this script will return falsy
+    if (whereIs > -1 ){
+        version = namePt2.substr(whereIs +1)
+        name = encodeURIComponent(name);
+        version = encodeURIComponent(version);
+        artifact = {
+            format: format, 
+            datasource: datasource,
+            name: name, 
+            version: version
+        }  
+    } else{
+      //return falsy
+      artifact = ""
+    }
+    return artifact;
+}
+
+function parseCocoaPodsURL(url) {
+    console.log('parseCocoaPodsURL');
+    let format = formats.cocoapods;
+    let datasource = dataSources.OSSINDEX;
+
+    // var elements = url.split('/')
+    //https://cocoapods.org/pods/TestFairy
+    //no version number in the URL
+    return false;
+  }
+
+function parseCRANURL(url) {
+    //https://cran.r-project.org/
+    // https://cran.r-project.org/web/packages/latte/index.html
+    //https://cran.r-project.org/package=clustcurv
+    //no version ATM
+    let format = formats.cocoapods;
+    let datasource = dataSources.OSSINDEX;
+
+    return false;
+}
+
+function parseGoLangURL(url) {
+    //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
+    let format = formats.cocoapods;
+    let datasource = dataSources.OSSINDEX;
+
+    return false;
+}
+
+function parseCratesURL( url) {
+    //server is crates, language is rust
+    //https://crates.io/crates/rand
+    //no version in the URL    
+    let format = formats.crates;
+    let datasource = dataSources.OSSINDEX;
+
+    return false;
+  }
 
 
 if (typeof module !== "undefined"){
@@ -219,9 +557,21 @@ if (typeof module !== "undefined"){
         NexusFormatNPM: NexusFormatNPM,
         NexusFormatNuget: NexusFormatNuget,
         NexusFormatPyPI: NexusFormatPyPI,
-        NexusFormatRuby: NexusFormatRuby
+        NexusFormatRuby: NexusFormatRuby,
+        epochToJsDate: epochToJsDate,
+        jsDateToEpoch: jsDateToEpoch,
+        encodeComponentIdentifier: encodeComponentIdentifier,
+        parseMavenURL: parseMavenURL,
+        parseNPMURL: parseNPMURL,
+        parseNugetURL: parseNugetURL,
+        parsePyPIURL: parsePyPIURL,
+        parseRubyURL: parseRubyURL,
+        parsePackagistURL: parsePackagistURL,
+        parseCocoaPodsURL: parseCocoaPodsURL,
+        parseCRANURL: parseCRANURL,
+        parseGoLangURL: parseGoLangURL,
+        parseCratesURL: parseCratesURL,
+        ParsePageURL: ParsePageURL
+        
     };
 }
-
-
-

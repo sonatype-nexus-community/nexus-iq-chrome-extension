@@ -2,7 +2,7 @@
     "name": "Sonatype Nexus IQ Evaluation",
     "description": "Sonatype Nexus IQ Evaluation-community developed",
     "author": "Cameron Townshend - ctownshend@sonatype.com",
-    "version": "1.7.6",
+    "version": "1.7.7",
     "manifest_version": 2,
     "permissions": [
       "storage",
@@ -34,10 +34,10 @@
     "page_action": {
       "default_popup": "popup.html",
       "default_icon": {
-         "16": "images/IQ_Default.png",
-         "32": "images/IQ_Default.png",
-         "48": "images/IQ_Default.png",
-         "128": "images/IQ_Default.png"
+         "16": "images/SON_logo_favicon.png",
+         "32": "images/SON_logo_favicon.png",
+         "48": "images/SON_logo_favicon.png",
+         "128": "images/SON_logo_favicon.png"
        }
      }, 
     "icons": {
@@ -46,49 +46,7 @@
       "48": "images/SON_logo_favicon.png",
       "128": "images/SON_logo_favicon.png"
     },
-    "content_scripts":[
-      {
-        "matches": ["https://search.maven.org/artifact/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-      },
-      {
-        "matches": ["https://mvnrepository.com/artifact/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-      },
-
-      {
-        "matches": ["https://www.npmjs.com/package/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-      },
-      {
-        "matches": ["https://www.nuget.org/packages/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-      },
-      {
-        "matches": ["https://pypi.org/project/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-      },
-      {  
-        "matches": ["https://rubygems.org/gems/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-      },
-      {          
-       "matches": ["https://packagist.org/packages/*"],
-       "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-      },
-      {          
-        "matches": ["https://cran.r-project.org/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-       },
-       {          
-        "matches": ["https://crates.io/crates/*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-       },
-       {          
-        "matches": ["https://gocenter.jfrog.com/github.com*"],
-        "js": ["Scripts/jquery-3.3.1.min.js", "Scripts/utils.js", "Scripts/content.js"]
-       }       
-    ],
+    
 
 
     

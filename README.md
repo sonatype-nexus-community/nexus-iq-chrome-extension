@@ -1,5 +1,5 @@
 # Chrome Extension for Sonatype Nexus IQ
-[![DepShield Badge](https://depshield.sonatype.org/badges/sonatype-nexus-community/nexus-iq-chrome-extension/depshield.svg)](https://depshield.github.io) [![CircleCI](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq.svg?style=svg)](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq)
+[![DepShield Badge](https://depshield.sonatype.org/badges/ctownshend/chrome-extension-nexus-iq/depshield.svg)](https://depshield.github.io) [![CircleCI](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq.svg?style=svg)](https://circleci.com/gh/ctownshend/chrome-extension-nexus-iq)
 
 ## Table of Contents
 - [Purpose](#purpose)
@@ -90,7 +90,7 @@ Pattern - `https://cran.r-project.org/`
 ### Rust - Crates
 Pattern - `https://crates.io/`
 <br/>e.g. https://crates.io/crates/random
-### Golang - Gocenter 
+### Golang - Gocenter
 `https://gocenter.jfrog.com`
 <br/>e.g. https://gocenter.jfrog.com/github.com~2Fjbenet~2Fgo-random/versions
 
@@ -137,6 +137,12 @@ If you do not want to use the extension then you can right click on the icon and
 
 
 ### Version History
+#### Version 1.7.7
+* Bug fix whereby sometimes the Waiting page would sit there for ever. Due to content script not being injected. Seems the content script is always injected now as I inject it with code rather than in the manifest.json declaration
+
+#### Version 1.7.6
+* Release fixes
+
 #### Version 1.7.5
 * Added README.md
 
