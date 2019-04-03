@@ -2,9 +2,7 @@
     "name": "Sonatype Nexus IQ Evaluation",
     "description": "Sonatype Nexus IQ Evaluation-community developed",
     "author": "Cameron Townshend - ctownshend@sonatype.com",
-
-    "version": "1.7.7",
-
+    "version": "1.7.8",
     "manifest_version": 2,
     "permissions": [
       "storage",

@@ -203,19 +203,33 @@ function renderComponentDataOSSIndex(message){
     $("#package").html(message.artifact.name);
     $("#version").html(message.artifact.version);
 
-    $("#hash").html(message.message.response.coordinates);
+    $("#hash").html(message.message.response.description);
+    $("#hash_label").html('Description:');
     
+    $("#matchstate").html(message.message.response.reference);
+    $("#datasource").html(message.artifact.datasource);
+    $("CatalogDate_row").addClass("invisible");
+    $("RelativePopularity_Row").addClass("invisible");
+    $("#catalogdate").html('-');
+    $("#relativepopularity").html('-');
+
+    renderSecuritySummaryOSSIndex(message);
     //document.getElementById("matchstate").innerHTML = componentInfoData.componentDetails["0"].matchState;
     // $("#matchstate").html(message.message.response.reference)
 }
 function renderLicenseDataOSSIndex(message){
     //not supported
+    //$("#tabs-2").addClass("invisible");
+
     $("#declaredlicenses").html("<h3>OSSIndex does not carry license data</h3>")
+    $("#licensetable").addClass("invisible");
 }
 function renderSecurityDataOSSIndex(message){
  
     let securityIssues = message.message.response.vulnerabilities;
-    let strAccordion = "";
+    let strAccordion = '';
+    console.log('renderSecurityDataOSSIndex')
+    console.log(message)
     console.log(securityIssues.length);
     
     if(securityIssues.length > 0){
@@ -224,9 +238,25 @@ function renderSecurityDataOSSIndex(message){
 
             //console.log(securityIssue.reference);
             //console.log(i);
-            strAccordion += '<h3>' + securityIssue + '</h3>';
+            let vulnerabilityCode = ''
+            if(typeof securityIssue.cve === "undefined") {
+                vulnerabilityCode = " No CVE ";
+            }else{
+                vulnerabilityCode = securityIssue.cve
+            }
+            let className = styleCVSS(securityIssue.cvssScore);
+            // let vulnerabilityCode = (typeof securityIssue.cve === "undefined") ? 'No CVE' : securityIssue.cve;
+            strAccordion += '<h3><span class="headingreference">' + vulnerabilityCode + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.cvssScore + '</span></h3>';
+            // strAccordion += '<h3><span class="headingreference">' + vulnerabilityCode + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.cvssScore + '</span></h3>';
             strAccordion += '<div>';
-            strAccordion += '<p>TO BE ADVISED</p>';
+            strAccordion += '<table>';            
+            strAccordion += '<tr><td><span class="label">Title:</span></td><td><span class="data">' + securityIssue.title + '</span></td></tr>';
+            strAccordion += '<tr><td><span class="label">Score:</span></td><td><span class="data">' + securityIssue.cvssScore + '</span></td></tr>';
+            strAccordion += '<tr><td><span class="label">CVSS 3 Vector:</span></td><td><span class="data">' + securityIssue.cvssVector + '</span></td></tr>';
+            strAccordion += '<tr><td><span class="label">Description:</span></td><td><span class="data">' + securityIssue.description + '</span></td></tr>';
+            strAccordion += '<tr><td><span class="label">Id:</span></td><td><span class="data">' + securityIssue.id + '</span></td></tr>';
+            strAccordion += '<tr><td><span class="label">Reference:</span></td><td><span class="data">' + securityIssue.reference + '</span></td></tr>';
+            strAccordion += '</table>';
             strAccordion += '</div>';            
         }
         console.log(strAccordion);
@@ -238,6 +268,8 @@ function renderSecurityDataOSSIndex(message){
         // $("#accordion").accordion();
     }else{
         strAccordion += '<h3>No Security Issues Found</h3>';
+        strAccordion += '<div>';
+        strAccordion += '</div>';
         $("#accordion").html(strAccordion);
         //$('#accordion').accordion({heightStyle: 'content'});
         $('#accordion').accordion({heightStyle: 'panel'});
@@ -287,6 +319,11 @@ function renderComponentData(message){
     $("#catalogdate").html(thisComponent.catalogDate);
     $("#relativepopularity").html(thisComponent.relativePopularity);
     $("#datasource").html(message.artifact.datasource);
+    renderSecuritySummaryIQ(message);
+}
+
+
+function renderSecuritySummaryIQ(message){
     let highest = Highest_CVSS_Score(message);
     let className = styleCVSS(highest);
     $("#Highest_CVSS_Score").html(highest).addClass(className);
@@ -297,6 +334,16 @@ function renderComponentData(message){
 
 }
 
+function renderSecuritySummaryOSSIndex(message){
+    let highest = Highest_CVSS_ScoreOSSIndex(message);
+    let className = styleCVSS(highest);
+    $("#Highest_CVSS_Score").html(highest).addClass(className);
+
+    let numIssues = Count_CVSS_IssuesOSSIndex(message);
+    let theCount = ` within ${numIssues} security issues`
+    $("#Num_CVSS_Issues").html(theCount);
+
+}
 function renderLicenseData(message){
     var thisComponent = message.message.response.componentDetails["0"];
     let licenseData = thisComponent.licenseData;
@@ -329,11 +376,45 @@ function Highest_CVSS_Score(message){
     //document.getElementById("securityData_securityIssues").innerHTML = componentInfoData.componentDetails["0"].component.componentIdentifier.coordinates.securityData_securityIssues;
     let securityIssues = thisComponent.securityData.securityIssues;
     var highestSecurityIssue = Math.max.apply(Math, securityIssues.map(function(securityIssue) { return securityIssue.severity; }))
-    if (typeof highestSecurityIssue === "undefined"){
+    console.log('highestSecurityIssue');
+    console.log(highestSecurityIssue);
+    
+    if (typeof highestSecurityIssue === "undefined" || highestSecurityIssue == -Infinity){
         highestSecurityIssue = 'NA'
     }
     console.log('Highest_CVSS_Score(ending)', highestSecurityIssue);
     return highestSecurityIssue;
+    
+}
+function Highest_CVSS_ScoreOSSIndex(message){
+    console.log('Highest_CVSS_Score(beginning)', message);
+    var thisComponent = message.message.response;
+    
+    //document.getElementById("securityData_securityIssues").innerHTML = componentInfoData.componentDetails["0"].component.componentIdentifier.coordinates.securityData_securityIssues;
+    let securityIssues = thisComponent.vulnerabilities;
+    var highestSecurityIssue = Math.max.apply(Math, securityIssues.map(function(securityIssue) { return securityIssue.cvssScore; }))
+    console.log('highestSecurityIssue');
+    console.log(highestSecurityIssue);
+    
+    if (typeof highestSecurityIssue === "undefined" || highestSecurityIssue == -Infinity){
+        highestSecurityIssue = 'NA'
+    }
+    console.log('Highest_CVSS_Score(ending)', highestSecurityIssue);
+    return highestSecurityIssue;
+    
+}
+
+
+function Count_CVSS_IssuesOSSIndex(message){
+    console.log('Count_CVSS_Issues(beginning)', message);
+    var thisComponent = message.message.response;
+ 
+    //document.getElementById("securityData_securityIssues").innerHTML = componentInfoData.componentDetails["0"].component.componentIdentifier.coordinates.securityData_securityIssues;
+    let securityIssues = thisComponent.vulnerabilities;
+    var countCVSSIssues = securityIssues.length;
+
+    console.log('Count_CVSS_Issues(ending)', countCVSSIssues);
+    return countCVSSIssues;
     
 }
 
@@ -386,16 +467,13 @@ function renderSecurityData(message){
     });
     if(securityIssues.length > 0){
         console.log(securityIssues);
-
         for(i=0; i < securityIssues.length; i++){
             let securityIssue = securityIssues[i];
             console.log(securityIssue);
 
             //console.log(securityIssue.reference);
             //console.log(i);
-
             let className = styleCVSS(securityIssue.severity);
-
             strAccordion += '<h3><span class="headingreference">' + securityIssue.reference + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.severity + '</span></h3>';
             strAccordion += '<div>';
             strAccordion += '<table>'
@@ -448,10 +526,29 @@ function showError(error)
 {
     console.log('showError');
     console.log(error);
+    let displayError;
     // $("#error").text(error);
     // $("#error").removeClass("hidden");
-
-    $("#error").html(error);
+    //OSSINdex responds with HTML and not JSON if there is an error
+    let errorText
+    if (typeof error.statusText !== "undefined"){
+        errorText = error.statusText;
+    }
+    if (errorText.search('<html>')>-1){
+        if (typeof error.responseText !== "undefined"){
+            let errorText = error.responseText;
+            var el = document.createElement( 'html' );
+            el.innerHTML = errorText;
+    
+            displayError = el.getElementsByTagName( 'title' ); // Live NodeList of your anchor elements
+            }
+        else{
+            displayError = "Unknown error"
+        }
+    }else{
+        displayError = errorText;
+    }
+    $("#error").html(displayError);
     $("#error").fadeIn("slow");
     $('#error').show();
 

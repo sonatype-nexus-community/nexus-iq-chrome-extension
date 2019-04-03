@@ -6,10 +6,10 @@ var formats = {
     nuget: "nuget",
     gem: "gem",
     pypi: "pypi",
-    packagist: "packagist",
+    composer: "composer", //packagist website but composer format
     cocoapods: "cocoapods",
     cran: "cran",
-    crates: "crates",
+    cargo: "cargo", //cargo == crates 
     golang: "golang"
 }
   
@@ -107,7 +107,7 @@ function ParsePageURL(url){
     //OSSIndex
     else if (url.search('packagist.org/packages/') >=0){
       //https: packagist ???
-      format = formats.packagist;
+      format = formats.composer;
       
       artifact = parsePackagistURL(url);
 
@@ -126,7 +126,7 @@ function ParsePageURL(url){
     }
     
     else if (url.search('https://crates.io/crates/') >=0){      
-      format = formats.crates;
+      format = formats.cargo;
       artifact = parseCratesURL(url);
     }
     else if (url.search('https://gocenter.jfrog.com/') >=0){      
@@ -361,7 +361,8 @@ function parseNPMURL(url) {
     //ADD SIMPLE CODE THAT Check THE URL
     //this is run outside of the content page
     //so can not see the dom
-
+    //need to handle when the component has a slash in the name
+    //https://www.npmjs.com/package/@angular/animation/v/4.0.0-beta.8
     let format = formats.npm;
     let datasource = dataSources.NEXUSIQ;
 
@@ -371,10 +372,18 @@ function parseNPMURL(url) {
     if (url.search('/v/') >0 ){
       //has version in URL
       var urlElements = url.split('/');
-      packageName = urlElements[4]
-      version = urlElements[6]
-      packageName = encodeURIComponent(packageName);
-      version = encodeURIComponent(version);  
+      if (urlElements.length>=8){
+        packageName = urlElements[4] +'/'+ urlElements[5];
+        version = urlElements[7]
+        // packageName = encodeURIComponent(packageName);
+        // version = encodeURIComponent(version);    
+      }
+      else{
+        packageName = urlElements[4]
+        version = urlElements[6]
+        // packageName = encodeURIComponent(packageName);
+        // version = encodeURIComponent(version);    
+      }
       artifact = {
           format: format, 
           packageName: packageName, 
@@ -474,7 +483,7 @@ function parsePackagistURL(url) {
     //server is packagist, format is composer
     console.log('parsePackagist:' +  url);
     const elements = url.split('/')
-    let format = formats.packagist;
+    let format = formats.composer;
     let datasource = dataSources.OSSINDEX;
 
     let artifact
@@ -483,15 +492,18 @@ function parsePackagistURL(url) {
     //https://packagist.org/packages/drupal/drupal
     //Specific version is with a hash
     //https://packagist.org/packages/drupal/drupal#8.6.2
+    //https://packagist.org/packages/phpbb/phpbb#3.1.2
     let namePt1 = elements[4];
     let namePt2 = elements[5];
-    name = namePt1 + "/" + namePt2
+
     let whereIs = namePt2.search("#")
     //is the version number in the URL? if so get that, else get it from the HTML
     //can only parse the DOM from content script
     //so this script will return falsy
     if (whereIs > -1 ){
         version = namePt2.substr(whereIs +1)
+        namePt2 = namePt2.substr(0, whereIs)
+        name = namePt1 + "/" + namePt2
         name = encodeURIComponent(name);
         version = encodeURIComponent(version);
         artifact = {

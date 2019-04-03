@@ -391,6 +391,26 @@ test('Check parseNPMURL(npmjs.com) positive test', () => {
   
 });
 
+test('Check parseNPMURL(npmjs.com) positive test @angular/animation', () => {
+  // /https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/issues/7
+  //https://www.npmjs.com/package/@angular/animation/v/4.0.0-beta.8
+  let format = 'npm'
+  let artifact = {
+    format: format,    
+    packageName: '@angular/animation', 
+    version: '4.0.0-beta.8',
+    datasource: 'NEXUSIQ'
+  }
+
+
+  let  url = 'https://www.npmjs.com/package/@angular/animation/v/4.0.0-beta.8'
+  let actual = parseNPMURL( url);
+  let expected = artifact
+  expect(actual).toEqual(expected);
+  
+});
+
+
 test('Check parseNPMURL(npmjs.com) negative test', () => {
   let format = 'npm'
   let artifact = {
@@ -498,41 +518,54 @@ test('Check parseRubyURL(rubygems.org) positive test', () => {
 
 
 test('Check parseRubyURL(rubygems.org) negative test', () => {
-  let format = 'gem'
-  let artifact = {
-    format: format,    
+  
+  let expected = {
+    format: 'gem',    
     name: 'bundler', 
     version: undefined,
     datasource: 'IQSERVER'
   }
 
 
-  let  url = 'https://rubygems.org/gems/bundler'
+  let url = 'https://rubygems.org/gems/bundler'
   let actual = parseRubyURL( url);
-  let expected = artifact
+  
   expect(actual).toBeFalsy();
 });
 
 
 
-test('Check parsePackagistURL(packagist.org) positive test', () => {
-  let format = 'packagist'
-  let artifact = {
+test('Check parsePackagistURL(packagist.org/drupal) positive test', () => {
+  
+  let expected = {
     datasource: 'OSSINDEX',
-    format: format,    
-    name: 'drupal%2Fdrupal%238.6.2',  
+    format: 'composer',    
+    name: 'drupal%2Fdrupal',  
     version: '8.6.2',
   }
   let  url = 'https://packagist.org/packages/drupal/drupal#8.6.2'
-  let actual = parsePackagistURL(url);
-  let expected = artifact
+  let actual = parsePackagistURL(url);  
   expect(actual).toEqual(expected);
 });
 
-test('Check parsePackagistURL(packagist.org) negative test', () => {
-  let format = 'packagist'
-  let artifact = {
-    format: format,    
+
+
+test('Check parsePackagistURL(packagist.org/phpbb) positive test', () => {
+  
+  let expected = {
+    datasource: 'OSSINDEX',
+    format: 'composer',    
+    name: 'phpbb%2Fphpbb',  
+    version: '3.1.2',
+  }
+  let  url = 'https://packagist.org/packages/phpbb/phpbb#3.1.2'
+  let actual = parsePackagistURL(url);
+  expect(actual).toEqual(expected);
+});
+
+test('Check parsePackagistURL(packagist.org) negative test', () => {  
+  let expected = {
+    format: 'composer',    
     name: 'drupal', 
     version: undefined,
     datasource: 'OSSINDEX'
@@ -540,8 +573,7 @@ test('Check parsePackagistURL(packagist.org) negative test', () => {
 
 
   let  url = 'https://packagist.org/packages/drupal/drupal'
-  let actual = parsePackagistURL(url);
-  let expected = artifact
+  let actual = parsePackagistURL(url);  
   expect(actual).toBeFalsy();
 });
 
@@ -604,9 +636,9 @@ test('Check parseGoLangURL(cran.r-project.org) negative test', () => {
 
 test('Check parseCratesURL(crates.io) negative test', () => {
   // parseCratesURL ->falsy only
-  let format = 'crates'
+  
   let artifact = {
-    format: format,    
+    format: 'cargo',    
     name: 'rand', 
     version: undefined,
     datasource: 'OSSINDEX'
@@ -827,16 +859,15 @@ test('Check ParsePageURL(rubygems.org) negative test', () => {
 
 
 test('Check ParsePageURL(packagist.org) positive test', () => {
-  let format = 'packagist'
-  let artifact = {
+  
+  let expected = {
     datasource: 'OSSINDEX',
-    format: format,    
-    name: 'drupal%2Fdrupal%238.6.2',  
+    format: 'composer',    
+    name: 'drupal%2Fdrupal',  
     version: '8.6.2',
   }
   let  url = 'https://packagist.org/packages/drupal/drupal#8.6.2'
   let actual = ParsePageURL(url);
-  let expected = artifact
   expect(actual).toEqual(expected);
 });
 
@@ -915,9 +946,9 @@ test('Check ParsePageURL(cran.r-project.org) negative test', () => {
 
 test('Check ParsePageURL(crates.io) negative test', () => {
   // parseCratesURL ->falsy only
-  let format = 'crates'
+  
   let artifact = {
-    format: format,    
+    format: 'cargo',    
     name: 'rand', 
     version: undefined,
     datasource: 'OSSINDEX'

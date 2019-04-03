@@ -99,9 +99,9 @@ function ParsePage(){
     //OSSIndex
     if (url.search('packagist.org/packages/') >=0){
       //https: packagist ???
-      format = formats.packagist;
+      format = formats.composer;
       datasource = dataSources.OSSINDEX;
-      artifact = parsePackagist(format, url, datasource);
+      artifact = parsePackagist(format, url);
 
     }
     if (url.search('cocoapods.org/pods/') >=0){
@@ -119,7 +119,7 @@ function ParsePage(){
     }
     
     if (url.search('https://crates.io/crates/') >=0){      
-      format = formats.crates;
+      format = formats.cargo;
       datasource = dataSources.OSSINDEX;
       artifact = parseCrates(format, url, datasource);
     }
@@ -338,8 +338,8 @@ function parsePackagist(format, url, datasource) {
     console.log(versionHTML);
     version=versionHTML.trim();
   }
-  name = encodeURIComponent(name);
-  version = encodeURIComponent(version);
+  // name = encodeURIComponent(name);
+  // version = encodeURIComponent(version);
   return {
     format: format, 
     datasource: datasource,
@@ -443,12 +443,12 @@ function parseGoLang(format, url, datasource) {
     name = nameElements[2]
   }
  
-  versionHTML = $("span.version-name").text()
+  versionHTML = $("span.version-name").first().text()
   console.log('versionHTML');
   console.log(versionHTML);
   version=versionHTML.trim();
-  name = encodeURIComponent(name);
-  version = encodeURIComponent(version);
+  // name = encodeURIComponent(name);
+  // version = encodeURIComponent(version);
   return {
     format: format, 
     datasource: datasource,
@@ -468,16 +468,20 @@ function parseCrates(format, url, datasource) {
   //CRAN may have the packagename in the URL
   //but not the version in URL
   //could also be just in the body
-  let name
+  let name = elements[4]
   if (elements.length==5){
     //has packagename in 5
-    name = elements[4]
+    //need to parse the HTML
+    //
+    versionHTML = $("div.info h2").text()
+    console.log('versionHTML');
+    console.log(versionHTML);
+    version=versionHTML.trim();
+    }else if (elements.length==6){
+    //version is in the Path
+    version = elements[5];
   }
  
-  versionHTML = $("div.info h2").text()
-  console.log('versionHTML');
-  console.log(versionHTML);
-  version=versionHTML.trim();
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
   return {

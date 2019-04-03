@@ -211,6 +211,7 @@ div .optionstable {
 .data{
     font-weight:bold;
     text-align: left;
+    overflow: scroll;
 }
 
 .headingseverity{
