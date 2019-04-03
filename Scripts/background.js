@@ -480,23 +480,6 @@ function addDataOSSIndex( artifact){// pass your data in method
         },
         timeout: 3000 // sets timeout to 3 seconds
     });
-
-    // if(retVal.error === 0){
-    //     let componentInfoData = retVal;
-    //     console.log('retVal');
-    //     console.log(retVal);
-    //     var componentDetail = componentInfoData.response;
-    //     console.log("componentInfoData");
-    //     console.log(componentDetail);        
-    // }else{
-    //     //an error
-    //     console.log('an eror occurred, show the response')
-    //     console.log(retVal);
-    //     // $("#error").html(retVal.response.statusText);
-    //     // $("#error").show(1000);
-    // }
-    // // window.responsedata = retVal;
-    // return retVal;
 };
 
 
@@ -751,11 +734,6 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
-  
-
-
 function receiveText(resultsArray){
     console.log(resultsArray[0]);
-}
-
-
+};
