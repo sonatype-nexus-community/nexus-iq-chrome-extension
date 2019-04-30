@@ -9,8 +9,8 @@
 - [Installation](#installation)
 
 ## Purpose
-To allow you to inspect a package before you download it. The plugin requires a valid Sonatype Nexus Lifecycle instance. You must be licensed to use Nexus Lifecycle to use this plugin.
-The plugin can scan packages at the following repositories.
+To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
+The plugin can scan packages at the following repositories:
 
 1. Java - maven - https://search.maven.org/
 2. Java - maven - https://mvnrepository.com/
@@ -24,7 +24,7 @@ The plugin can scan packages at the following repositories.
 10. Golang - Go - https://gocenter.jfrog.com/
 
 ## Data
-The data is sourced from IQ Server which accesses the Sonatype Data Services for those supported ecosystems supported. Currently 1-6. Systems 7-10 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
+The data is sourced from Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems, currently 1-6. Systems 7-10 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
 
 
 ## Usage
@@ -33,7 +33,7 @@ The data is sourced from IQ Server which accesses the Sonatype Data Services for
 
 2. The plugin will work on any new page opened after install. It will not work on pages already opened at time of install.
 
-3. Navigate to one of the pages that the extension is compatible with (see the list below).
+3. Navigate to one of the pages that the extension is compatible with (see the detailed list below).
 
 4. Click on the Blue Lightbulb... 
 <img src="images/Extension_lodash_-_npm_4.17.9.png" alt="drawing" width="300"/>
@@ -48,7 +48,7 @@ The data is sourced from IQ Server which accesses the Sonatype Data Services for
 <img src="images/Extension_Licensing.png" alt="drawing" width="300"/>
 <br/>
 7. Security Information
-The security data is presented in a list with clickable sections for each vulnerbaility.
+The security data is presented in a list with clickable sections for each vulnerability.
 <img src="images/Extension_Security.png" alt="drawing" width="300"/>
 <br/>
 
@@ -95,18 +95,18 @@ Pattern - `https://crates.io/`
 <br/>e.g. https://gocenter.jfrog.com/github.com~2Fjbenet~2Fgo-random/versions
 
 ## Installation
-1. Download the plugin from Github
+1. Download the plugin from GitHub
 `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
 2. Open Chrome Browser
 3. Click on the three dots, then More Tools, then Extensions
 <br/>
 <img src="images/Extensions.png" alt="drawing" width="300"/>
 <br/>
-4. Click on load unpacked
+4. Click on load unpacked (requires "Developper Mode" to be enabled)
 <br/>
 <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
 <br/>
-5. Navigate to the folder where you downloaded the plugin from gihub onto your local machine.
+5. Navigate to the folder where you downloaded the plugin from GitHub onto your local machine.
 <br/>
 <img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
 <br/>
