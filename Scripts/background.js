@@ -86,13 +86,12 @@ function gotMessage(message, sender, sendResponse){
 function loadSettingsAndEvaluate(artifact){
     console.log('loadSettings');
   
-    chrome.storage.sync.get(['url', 'username', 'password'], function(data){
-        console.log("url: "+ data.url);
-        console.log("username: "+ data.username);
-        console.log("password: "+ data.password);
+    chrome.storage.sync.get(['url', 'username', 'password', 'appId'], function(data){
+        console.log("data: ", data);
         let username = data.username;
         let password = data.password;
         let baseURL = data.url;
+        let appId = data.appId;
         let settings;
         if (!username){
             // settings = BuildEmptySettings();
@@ -107,7 +106,7 @@ function loadSettingsAndEvaluate(artifact){
             chrome.runtime.sendMessage(errorMessage);
             
         }else{
-            settings = BuildSettings(baseURL, username, password);
+            settings = BuildSettings(baseURL, username, password, appId);
             retval = evaluate(artifact, settings);
         }
         console.log("settings:");
@@ -213,28 +212,7 @@ function callIQ(artifact, settings){
     console.log("evaluate");
     console.log(settings.auth);
     console.log(artifact);
-    let format = artifact.format;
-    switch (format){
-        case formats.npm:
-            requestdata = NexusFormatNPM(artifact);
-            break;
-        case formats.maven:
-            requestdata = NexusFormatMaven(artifact);
-            break;
-        case formats.gem:
-            requestdata = NexusFormatRuby(artifact);
-            break;
-        case formats.pypi:
-            requestdata = NexusFormatPyPI(artifact);
-            break;
-        case formats.nuget:
-            requestdata = NexusFormatNuget(artifact);
-            break;
-        
-        default:
-            return;
-            break;
-    }
+    var requestdata = NexusFormat(artifact);
     
  
   
@@ -546,99 +524,7 @@ async function quickTest2(){
     console.log(myResp3);
 }
 
-
-
-async function GetCVEDetails(cve, nexusArtifact, settings){
-    console.log('begin GetCVEDetails');
-    // let url="http://iq-server:8070/rest/vulnerability/details/cve/CVE-2018-3721?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D&hash=4c854c86c91ab36c86fc&timestamp=1553676800618"
-    let servername = settings.baseURL;// + (settings.baseURL[settings.baseURL.length-1]=='/' ? '' : '/') ;//'http://iq-server:8070'
-    //let CVE = 'CVE-2018-3721'
-    let timestamp = Date.now()
-    let hash = nexusArtifact.hash;//'4c854c86c91ab36c86fc'
-    // let componentIdentifier = '%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D'
-    let componentIdentifier = encodeComponentIdentifier(nexusArtifact)
-    let vulnerability_source
-    if (cve.search('sonatype')>=0){
-        vulnerability_source = 'sonatype'
-    }
-    else{
-        //CVE type
-        vulnerability_source = 'cve'
-    }
-    //servername has a slash
-    
-    let url=`${servername}rest/vulnerability/details/${vulnerability_source}/${cve}?componentIdentifier=${componentIdentifier}&hash=${hash}&timestamp=${timestamp}`
-
-
-    // var response = await fetch(url, {
-    //     method: 'GET',
-    //     headers: {"Authorization" : settings.auth}
-    //     } );
-    // var body = await response.json(); // .json() is asynchronous and therefore must be awaited
-    // console.log(body);    
-    let retVal
-    let allVersions
-    try
-    {
-        let response = await fetch(url, {
-            method: 'GET',
-            headers: {"Authorization" : settings.auth}
-            })
-            .then(response => {
-                retVal =  response.json()
-            })
-            .then(retVal => {
-                //get all versions
-                allVersions =  GetAllVersions(nexusArtifact, settings)
-
-            })
-            .catch(function(err){
-                console.log('Fetch Error:-S', err);
-                throw err;
-            });
-    }
-    catch(err){
-        //an error was found
-        //retval is null
-        //not json
-        retval = {error:500, message: "Error parsing json or calling service"}
-    }
-    return {cvedetail: retVal, allversionsdetails: allVersions};
-        // .then(function (response) {
-        //     let retVal = await response.json()
-        //     console.log('retVal.body');
-        //     console.log(retVal);
-        //     return retVal;
-        // })
-        // .catch(function(err){
-        //     console.log('Fetch Error:-S', err);
-        //     throw err;
-        // })
-    console.log('complete GetCVEDetails');
-}
-
-async function GetAllVersions(nexusArtifact, settings){
-    //'rest/ci/componentDetails/application/webgoat7/allVersions?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22commons-collections%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22commons-collections%22%2C%22version%22%3A%223.2.1%22%7D%7D&hash=761ea405b9b37ced573d&matchState=exact&reportId=2d9054219bd549db8700d3bfd027d7fd&timestamp=1554129430974'
-    
-    let appid = 'webgoat7'
-    let comp = "%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22commons-collections%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22commons-collections%22%2C%22version%22%3A%223.2.1%22%7D%7D"
-    let timestamp = "1554129430974"
-    let hash = "761ea405b9b37ced573d"
-    let matchstate = "exact"
-    let report = "2d9054219bd549db8700d3bfd027d7fd"
-    //let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123")
-    let servername = settings.baseURL;
-    let url = `${servername}rest/ci/componentDetails/application/${appid}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&reportId=${report}&timestamp=${timestamp}`
-    let response = await fetch(url, {
-        method: 'GET',
-        headers: {"Authorization" : settings.auth}
-        })
-        .then(response => {
-            retVal =  response.json()
-        });
-    return retVal;
-}
-
+ 
 /////////////////Listeners///////////////////////////////////
 chrome.tabs.onActivated.addListener(function(activeInfo) {
     console.log('chrome.tabs.onActivated.addListener(function(activeInfo)')

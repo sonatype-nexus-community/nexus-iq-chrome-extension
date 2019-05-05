@@ -35,7 +35,7 @@ The data is sourced from Lifecycle's IQ Server, which accesses the Sonatype Data
 
 3. Navigate to one of the pages that the extension is compatible with (see the detailed list below).
 
-4. Click on the Blue Lightbulb... 
+4. Click on the Blue Sonatype Logo... 
 <img src="images/Extension_lodash_-_npm_4.17.9.png" alt="drawing" width="300"/>
 <br/>
 4.1 ...The solution will think for a second...Then show the Data.
@@ -50,6 +50,18 @@ The data is sourced from Lifecycle's IQ Server, which accesses the Sonatype Data
 7. Security Information
 The security data is presented in a list with clickable sections for each vulnerability.
 <img src="images/Extension_Security.png" alt="drawing" width="300"/>
+<br/>
+8. Security Details
+The security details for each vulnerability is available. Click on the reference to display the security details.
+<img src="images/Extension_Vulnerability_Detail.png" alt="drawing" width="300"/>
+<br/>
+9. Version History
+The version history is available for each component.
+<img src="images/Extension_Version_History.png" alt="drawing" width="300"/>
+<br/>
+10. Remediation Guidance
+The remediation guidance API has been added. The recommended fix version will be highlighted in green.
+<img src="images/Extension_Remediation_Guidance.png" alt="drawing" width="300"/>
 <br/>
 
 
@@ -114,11 +126,14 @@ Pattern - `https://crates.io/`
 <br/>
 <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
 <br/>
-7. Enter your details and click save.
+7. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
 <br/>
-<img src="images/Extensions_Login_Entered.png" alt="drawing" width="300"/>
+<img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
 <br/>
-7. You will be advised that your details are saved, and the screen will close. You will be taken back to the Extensions Install screen in Chrome. Close the screen and begin using.
+8. Click Save to save your credentials.
+<br/>
+
+9. You will be advised that your details are saved. Click Close when you are done and You will be taken back to the Extensions Install screen in Chrome. Close the screen and begin using.
 8. The installer will have created a new icon in your Chrome Menu Bar.
 <br/>
 <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>

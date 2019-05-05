@@ -187,6 +187,32 @@ function removeCookies(settings_url){
     chrome.cookies.remove({url: settings_url, name: "CLMSESSIONID"});  
 }
 
+function NexusFormat(artifact){
+    let format = artifact.format;
+    switch (format){
+        case formats.npm:
+            requestdata = NexusFormatNPM(artifact);
+            break;
+        case formats.maven:
+            requestdata = NexusFormatMaven(artifact);
+            break;
+        case formats.gem:
+            requestdata = NexusFormatRuby(artifact);
+            break;
+        case formats.pypi:
+            requestdata = NexusFormatPyPI(artifact);
+            break;
+        case formats.nuget:
+            requestdata = NexusFormatNuget(artifact);
+            break;
+        
+        default:
+            return;
+            break;
+    }
+    return requestdata;
+}
+
 function NexusFormatMaven(artifact){  
 	//return a dictionary in Nexus Format
     //return dictionary of components
@@ -549,11 +575,44 @@ function parseGoLangURL(url) {
     return false;
 }
 
+function BuildSettings(baseURL, username, password, appId, appInternalId){
+    //let settings = {};
+    console.log("BuildSettings");
+    let tok = username + ':' + password;
+    let hash = btoa(tok);
+    let auth =  "Basic " + hash;
+    let restEndPoint = "api/v2/components/details"
+    if (baseURL.substring(baseURL.length-1) !== '/'){
+        baseURL =baseURL + '/'
+    }
+    let url = baseURL + restEndPoint
+    //login end point
+    let loginEndPoint = "rest/user/session"
+    let loginurl = baseURL + loginEndPoint
+  
+    //whenDone(settings);
+    let settings = {
+        username : username,
+        password : password,
+        tok : tok,
+        hash : hash,
+        auth : auth,
+        restEndPoint : restEndPoint,
+        baseURL : baseURL,
+        url : url,
+        loginEndPoint: loginEndPoint,
+        loginurl: loginurl,
+        appId: appId,
+        appInternalId: appInternalId
+    }
+    return settings;        
+}; 
+
 function parseCratesURL( url) {
     //server is crates, language is rust
     //https://crates.io/crates/rand
     //no version in the URL    
-    let format = formats.crates;
+    let format = formats.cargo;
     let datasource = dataSources.OSSINDEX;
 
     return false;
