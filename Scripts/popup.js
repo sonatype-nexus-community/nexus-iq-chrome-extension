@@ -3,7 +3,10 @@
 console.log ('popup.js');
 
 var artifact
-
+var nexusArtifact
+var hasVulns
+var settings
+var hasLoadedHistory
 if (typeof chrome !== "undefined"){
     chrome.runtime.onMessage.addListener(gotMessage);
 }
@@ -17,9 +20,13 @@ $(function () {
     console.log( "ready!" );
     //setupAccordion();
     showLoader();
-    $('#error').hide()
-    $('#tabs').tabs();
+    $('#error').hide();
 
+    let tabOptions = {
+        beforeActivate: selectHandler
+    }
+    $('#tabs').tabs(tabOptions);
+    hasLoadedHistory = false
     $("div#dialog").dialog ({
         show : "slide",
         hide : "puff",        
@@ -37,6 +44,28 @@ $(function () {
     
 });
 
+selectHandler = async function(e, tab) {
+    //lazy loading of history
+    //only do it if the user clicks on the tab
+    showLoader();
+    const remediationTab  = 2;
+    console.log('selectHandler', nexusArtifact, artifact)
+    if (tab.newTab.index() === remediationTab && !hasLoadedHistory && artifact.datasource === dataSources.NEXUSIQ){
+        $("<p></p>", {
+            text: "Please wait while we load the Version History...", 
+            "class": "status-message ui-corner-all"
+          }).appendTo(".ui-tabs-nav", "#demo").fadeOut(2500, function() {
+            $(this).remove();
+          });
+        let remediation
+        if (hasVulns) {
+            remediation = await showRemediation(nexusArtifact, settings)
+        }
+        let allVersions = await GetAllVersions(nexusArtifact, settings, remediation)
+        hasLoadedHistory = true;
+    }
+    hideLoader();
+}
 
 function beginEvaluation(){
     console.log('beginEvaluation');
@@ -139,7 +168,7 @@ async function gotMessage(message, sender, sendResponse){
     console.log(respMessage);
     let hasError = false;
     let promise =  await GetSettings(['url', 'username', 'password', 'appId', 'appInternalId'])
-    let settings = BuildSettings(promise.url, promise.username, promise.password, promise.appId, promise.appInternalId)
+    settings = BuildSettings(promise.url, promise.username, promise.password, promise.appId, promise.appInternalId)
     console.log('settings', settings)
 
     switch(respMessage.messagetype){
@@ -181,14 +210,17 @@ async function gotMessage(message, sender, sendResponse){
 
 }
 
-function createAllversionsHTML(data, remediation){
-    console.log('createAllversionsHTML', data);
+function createAllversionsHTML(data, remediation, currentVersion){
+    console.log('createAllversionsHTML', data, remediation, currentVersion);
     let strData = ""
     var grid;
 
     var options = {
+        enableColumnReorder: false,
+        autoHeight: false,
         enableCellNavigation: false,
-        enableColumnReorder: false
+        cellHighlightCssClass: "changed",
+        cellFlashingCssClass: "remediation-version"
     };
     
     var slickData = [];
@@ -198,19 +230,21 @@ function createAllversionsHTML(data, remediation){
         {id: 'security', name: 'security', field: 'security'},
         {id: 'license', name: 'license', field: 'license'},
         {id: 'popularity', name: 'popularity', field: 'popularity'},
-        {id: 'catalogDate', name: 'catalogDate', field: 'catalogDate'},
-        
-        {id: 'majorRevisionStep', name: 'majorRevisionStep', field: 'majorRevisionStep'},
+        {id: 'catalogDate', name: 'catalogDate', field: 'catalogDate'},        
+        {id: 'majorRevisionStep', name: 'majorRevisionStep', field: 'majorRevisionStep'}
         
 
     ];
     var colId = 0;
     let rowId = 0;
     let remediationRow = -1;
+    let currentVersionRow = -1;
+    //let sortedData = sortByProperty(data, 'componentIdentifier.coordinates.version', 'descending')
     data.forEach(element => {
         // console.log('element.componentIdentifier.coordinates.version', element.componentIdentifier.coordinates.version)
         let version = element.componentIdentifier.coordinates.version    
         if (remediation === version) {remediationRow = rowId}
+        if (currentVersion === version) {currentVersionRow = rowId}
         let popularity = element.relativePopularity
         let license = (typeof element.policyMaxThreatLevelsByCategory.LICENSE === "undefined" ? 0 : element.policyMaxThreatLevelsByCategory.LICENSE )
         let myDate = new Date(element.catalogDate)
@@ -240,32 +274,34 @@ function createAllversionsHTML(data, remediation){
     grid = new Slick.Grid("#myGrid", slickData, columns, options);
     if (remediationRow >=0){
         console.log('remediationRow', remediationRow)
-        $($('.grid-canvas').children()[remediationRow]).css('background-color','lawngreen');
-        
+        grid.scrollRowIntoView(remediationRow);
+        grid.flashCell(remediationRow, grid.getColumnIndex("version"), 250);
+    
+        // $($('.grid-canvas').children()[remediationRow]).addClass('remediation-version');
+        // $($('.grid-canvas').children()[remediationRow]).css("background-color", "lawngreen");
+
+        paintRow (remediation, "lawngreen")
+        paintRow (currentVersion, "#85B6D5")
     }
+
     grid.onViewportChanged.subscribe(function(e, args){
         //event handling code.
         //find the fix
         console.log('grid.onViewportChanged')
-
-        let myCell = $("div").filter(function() {
-            // Matches exact string   
-            return $(this).text() === remediation;
-            });
-
-        // let myCell = $('div:contains("'+remediation+'")')
-        console.log(myCell);
-        //#myGrid > div.slick-pane.slick-pane-top.slick-pane-left > div.slick-viewport.slick-viewport-top.slick-viewport-left > div > div:nth-child(22)
-        //<div class="ui-widget-content slick-row odd" style="top:2575px"><div class="slick-cell l0 r0">4.17.11</div><div class="slick-cell l1 r1">0</div><div class="slick-cell l2 r2">0</div><div class="slick-cell l3 r3"></div><div class="slick-cell l4 r4">13/09/2018, 04:32:16</div><div class="slick-cell l5 r5">false</div></div>
-        
-        //let myParent = myCell.closest();
-        let myParent = $(myCell).parents('div .slick-row')
-        //$($('.grid-canvas').children()[remediationRow])
-        myParent.css('background-color','lawngreen');;
+        paintRow (remediation, "lawngreen")        
+        paintRow (currentVersion, "#85B6D5")
     });
     // $("#remediation").html(strData);
 }
 
+function paintRow (currentVersion, color){
+    let currentVersionCell = $("div").filter(function() {
+        // Matches exact string   
+        return $(this).text() === currentVersion;
+    });
+    let currentVersionCellParent = $(currentVersionCell).parents('div .slick-row')        
+    currentVersionCellParent.css("background-color", color)
+}
 
 async function createHTML(message, settings)
 {
@@ -283,14 +319,15 @@ async function createHTML(message, settings)
                 
             renderComponentData(message);
             renderLicenseData(message);
-            let hasVulns = renderSecurityData(message);
-            let nexusArtifact = componentDetails.componentDetails[0];
+            hasVulns = renderSecurityData(message);
+            //store nexusArtifact in Global variable
+            nexusArtifact = componentDetails.componentDetails[0];
             console.log('nexusArtifact', nexusArtifact);
-            let remediation
-            if (hasVulns) {
-                remediation = await showRemediation(nexusArtifact, settings)
-            }
-            let allVersions = await GetAllVersions(nexusArtifact, settings, remediation)
+            // let remediation
+            // if (hasVulns) {
+            //     remediation = await showRemediation(nexusArtifact, settings)
+            // }
+            // let allVersions = await GetAllVersions(nexusArtifact, settings, remediation)
 
             break;
         case dataSources.OSSINDEX:
@@ -363,7 +400,7 @@ function renderSecurityDataOSSIndex(message){
             strAccordion += '<h3><span class="headingreference">' + vulnerabilityCode + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.cvssScore + '</span></h3>';
             // strAccordion += '<h3><span class="headingreference">' + vulnerabilityCode + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.cvssScore + '</span></h3>';
             strAccordion += '<div>';
-            strAccordion += '<table>';            
+            strAccordion += '<table class="optionstable">';            
             strAccordion += '<tr><td><span class="label">Title:</span></td><td><span class="data">' + securityIssue.title + '</span></td></tr>';
             strAccordion += '<tr><td><span class="label">Score:</span></td><td><span class="data">' + securityIssue.cvssScore + '</span></td></tr>';
             strAccordion += '<tr><td><span class="label">CVSS 3 Vector:</span></td><td><span class="data">' + securityIssue.cvssVector + '</span></td></tr>';
@@ -668,16 +705,20 @@ async function showCVEDetail(cveReference){
     // newNode.setAttribute("id", "dialog");
     let nexusArtifact = NexusFormat(artifact);
     nexusArtifact.hash = artifact.hash;
-    let promise =  await GetSettings(['url', 'username', 'password', 'appId', 'appInternalId' ])
-    let settings = BuildSettings(promise.url, promise.username, promise.password, promise.appId, promise.appInternalId)
+    // let promise =  await GetSettings(['url', 'username', 'password', 'appId', 'appInternalId' ])
+    // let settings = BuildSettings(promise.url, promise.username, promise.password, promise.appId, promise.appInternalId)
     console.log('settings', settings)
     // let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123", 'webgoat7')
     let myResp3 = await GetCVEDetails(cveReference, nexusArtifact, settings)
     console.log('myResp3', myResp3)
     let htmlDetails = myResp3.cvedetail.data.htmlDetails
+    // document.body.style.height = '600px';
     
-    $("#dialog").html(htmlDetails);     
+    $("#dialog").html(htmlDetails);  
+    
     $('#dialog').dialog("open");
+    $('#dialog').dialog("option", "maxHeight", 400);  
+    
     
 }
 
@@ -707,7 +748,7 @@ async function showRemediation(nexusArtifact, settings){
     let advice
     if (respData.remediation.versionChanges.length > 0){
         newVersion = respData.remediation.versionChanges[0].data.component.componentIdentifier.coordinates.version
-        advice = `Remediation advice Upgrade to the new version:<strong> ${newVersion}</strong>`
+        advice = `<span id="remediation">Remediation advice Upgrade to the new version:<strong> ${newVersion}</strong></span>`
     }else{
         advice = ''
     }
@@ -763,7 +804,9 @@ async function GetAllVersions(nexusArtifact, settings, remediation){
         }
     });
     let data = response.data;
-    createAllversionsHTML(data, remediation);
+    
+    let currentVersion = nexusArtifact.component.componentIdentifier.coordinates.version;
+    createAllversionsHTML(data, remediation, currentVersion);
     
 }
     

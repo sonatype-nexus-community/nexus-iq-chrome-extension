@@ -115,6 +115,7 @@ Pattern - `https://crates.io/`
 <img src="images/Extensions.png" alt="drawing" width="300"/>
 <br/>
 4. Click on load unpacked (requires "Developper Mode" to be enabled)
+<img src="images/Extension_Develop_Mode.png" alt="drawing" width="300"/>
 <br/>
 <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
 <br/>

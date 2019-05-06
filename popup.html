@@ -22,10 +22,11 @@
             <ul>
             <li><a href="#tabs-1">Component Info</a></li>
             <li><a href="#tabs-2">Security</a></li>
+            <li><a href="#tabs-4">Remediation</a></li>
             <li><a href="#tabs-3">Licensing</a></li>
-            <li><a href="#tabs-4">Versions</a></li>
             </ul>
-            <div id="tabs-1">
+            <div id="tabs-1" class="component-tab">
+                <div class="info-display">
                 <table class="optionstable">
                     <tr>
                         <td class="label">Format:</td> 
@@ -68,6 +69,7 @@
                     </tr>
 
                 </table>
+                </div>
             </div>
 
             <!-- Security -->
@@ -109,7 +111,7 @@
             <!-- Remediation -->
             <div id="tabs-4">
                 <div id="remediation"></div>
-                <div id="myGrid" class="slick-grid" style="width: 600px; height: 500px; overflow: hidden; outline: 0px; position: relative;"></div>
+                <div id="myGrid" class="slick-grid" ></div>
             </div>                        
         </div>
         <div id="error"  class="error"><p >Some error occurred</p></div>
@@ -123,6 +125,8 @@
         <script src="Scripts/jquery.event.drag-2.3.0.js"></script>  
 
         <script src="Scripts/slick.core.js"></script>
+        <script src="Scripts/slick.cellselectionmodel.js"></script>
+        <script src="Scripts/slick.rowmovemanager.js"></script>
         <script src="Scripts/slick.grid.js"></script>
         <script src="Scripts/axios.min.js"></script>  
     
