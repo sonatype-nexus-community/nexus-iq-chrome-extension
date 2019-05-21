@@ -109,12 +109,12 @@ Pattern - `https://crates.io/`
 ## Installation
 1. Download the plugin from GitHub
 `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
-2. Open Chrome Browser
-3. Click on the three dots, then More Tools, then Extensions
+2. Open Chrome Browser.
+3. Click on the three dots, then More Tools, then Extensions.
 <br/>
 <img src="images/Extensions.png" alt="drawing" width="300"/>
 <br/>
-4. Click on load unpacked (requires "Developper Mode" to be enabled)
+4. Click on load unpacked (requires "Developer Mode" to be enabled).
 <img src="images/Extension_Develop_Mode.png" alt="drawing" width="300"/>
 <br/>
 <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
