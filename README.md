@@ -103,8 +103,10 @@ Pattern - `https://cran.r-project.org/`
 Pattern - `https://crates.io/`
 <br/>e.g. https://crates.io/crates/random
 ### Golang - Gocenter
-`https://gocenter.jfrog.com`
-<br/>e.g. https://gocenter.jfrog.com/github.com~2Fjbenet~2Fgo-random/versions
+`https://search.gocenter.io/`
+<br/>e.g. https://search.gocenter.io/github.com~2Fjbenet~2Fgo-random/versions
+### Github - any language but only supports the releases tag at this stage
+`https://github.com/jquery/jquery/releases/tag/1.11.1`
 
 ## Installation
 1. Download the plugin from GitHub
@@ -153,6 +155,7 @@ If you do not want to use the extension then you can right click on the icon and
 
 
 ### Version History
+No longer documented here. Go to the releases tab
 #### Version 1.7.7
 * Bug fix whereby sometimes the Waiting page would sit there for ever. Due to content script not being injected. Seems the content script is always injected now as I inject it with code rather than in the manifest.json declaration
 

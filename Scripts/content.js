@@ -123,7 +123,7 @@ function ParsePage(){
       datasource = dataSources.OSSINDEX;
       artifact = parseCrates(format, url, datasource);
     }
-    if (url.search('https://gocenter.jfrog.com/') >=0){      
+    if (url.search('https://search.gocenter.io/') >=0){      
       format = formats.golang;
       datasource = dataSources.OSSINDEX;
       artifact = parseGoLang(format, url, datasource);
@@ -377,7 +377,7 @@ function parseCRAN(format, url, datasource) {
   // https://cran.r-project.org/web/packages/latte/index.html
   //https://cran.r-project.org/package=clustcurv
 
-  console.log('parseCRAN:' +  url);
+  console.log('parseCRAN:', format, url, datasource);
   let elements = url.split('/')
   //CRAN may have the packagename in the URL
   //but not the version in URL
@@ -422,7 +422,7 @@ function parseGoLang(format, url, datasource) {
   //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
   // pkg:golang/github.com/etcd-io/etcd@3.3.1
   // pkg:github/etcd-io/etcd@3.3.1
-  console.log('parseGolang:' +  url);
+  console.log('parseGolang:', format,  url, datasource);
   let elements = url.split('/')
   //CRAN may have the packagename in the URL
   //but not the version in URL
@@ -430,7 +430,7 @@ function parseGoLang(format, url, datasource) {
   let name
   let namespace
   let type
-  if (url.search('gocenter.jfrog.com')>=0){
+  if (url.search('search.gocenter.io')>=0){
     //has packagename in 5
     let fullname = elements[3]
     //"github.com~2Fhansrodtang~2Frandomcolor"

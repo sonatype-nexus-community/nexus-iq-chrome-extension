@@ -1,12 +1,15 @@
 body{
     width: 600px;
     height: 400px;
-    margin:0;
-    padding:0;
+    margin: 2px;
+    padding:2px;
     /* background:url(pic1.jpg); */
     /* background-size: cover; */
     /* background-position: center; */
     font-family:sans-serif;
+    border-radius: 5px;
+    border-color: cornflowerblue;
+    border-width: 2px;
 }
 
 #dialog {

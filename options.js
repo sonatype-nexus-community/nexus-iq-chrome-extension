@@ -67,6 +67,7 @@ function saveForm(){
   if(ok){
     message('Saved Values');
     
+    
     // window.close();
   }
   // load_data();
@@ -85,13 +86,29 @@ function login(){
     var appValues = app.split(' ');
     var appInternalId = appValues[0]
     var appId = appValues[1]
-
+    addPerms(url);
     canLogin(url, username, password);
     addApps(url, username, password, appId, appInternalId);
   }
 };
+function addPerms(url){
+  return;
+  console.log('addPerms(url)', url)
+  chrome.permissions.request({
+    permissions: ['tabs'],
+    origins: ["*://*/*"]
+  }, function(granted) {
+    if (granted) {
+      // The permissions have been removed.
+      console.log('granted')
+    } else {
+      // The permissions have not been removed (e.g., you tried to remove
+      // required permissions).
+    }
+  });
+}
 function canLogin(url, username, password){
-  console.log(url, username, password)
+  console.log('canLogin', url, username, password)
   message('');
   let baseURL = url + (url.substr(-1) ===  '/' ? '' : '/') 
   let urlEndPoint = baseURL + 'rest/user/session';
@@ -134,7 +151,9 @@ function addApps(url, username, password, appId, appInternalId){
           $('#appId').append($('<option>' , {value:element.id + ' ' + element.publicId, text:element.name}));  
           
         });     
-        $("#appId").val(appInternalId + ' ' + appId);       
+        $("#appId").val(appInternalId + ' ' + appId);  
+        // $("#appId").disabled=false; 
+        document.getElementById("appId").disabled = false;    
         // console.log($("#appId").value)
         message("Login successful");
       })
@@ -169,6 +188,7 @@ function load_data(){
       //Need to login to get the list of apps
       if (canLogin){
         document.getElementById("appId").disabled = false;
+        addPerms(url);
         addApps(url, username, password, appId, appInternalId)
         // document.getElementById("appId").selectedIndex = i;
         //document.getElementById("appId").selected = appId;

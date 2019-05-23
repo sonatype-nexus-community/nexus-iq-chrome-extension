@@ -22,14 +22,13 @@ install_notice();
 
 function gotMessage(message, sender, sendResponse){
     
-    console.log('gotMessage');
-    console.log(message);
+    console.log('gotMessage', message);
     var settings;
     var retval;
     var baseURL, username, password;
     var artifact;
-    console.log('message')
-    console.log(message)
+    // console.log('message')
+    // console.log(message)
     switch (message.messagetype){
         case messageTypes.login:
             //login attempt
@@ -84,7 +83,7 @@ function gotMessage(message, sender, sendResponse){
 }
 
 function loadSettingsAndEvaluate(artifact){
-    console.log('loadSettings');
+    console.log('loadSettingsAndEvaluate', artifact);
   
     chrome.storage.sync.get(['url', 'username', 'password', 'appId'], function(data){
         console.log("data: ", data);
@@ -356,21 +355,20 @@ function getActiveTab(){
 
 
 function ToggleIcon(tab){
-    console.log('ToggleIcon');
-    console.log(tab);
+    console.log('ToggleIcon', tab);
     let found = checkPageIsHandled(tab.url)
 
-    // if (found){
-    //     chrome.browseAction.show(tab.id);        
-    // }else{
-    //     chrome.browseAction.hide(tab.id);
-    // }
+    if (found){
+        chrome.pageAction.show(tab.id);        
+    }else{
+        chrome.pageAction.hide(tab.id);
+    }
     console.log(found);
 }
 
 function addDataOSSIndex( artifact){// pass your data in method
     //OSSINdex is anonymous
-    console.log('entering addDataOSSIndex');
+    console.log('entering addDataOSSIndex', artifact);
     let retVal;
     // https://ossindex.sonatype.org/api/v3/component-report/composer%3Adrupal%2Fdrupal%405
     //type:namespace/name@version?qualifiers#subpath 
@@ -382,7 +380,9 @@ function addDataOSSIndex( artifact){// pass your data in method
         //Example: pkg:github/etcd-io/etcd@3.3.1
         OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
     }else{
-        OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
+        // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
+        //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/jquery/jquery@3.0.0
+        OSSIndexURL= `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`
     }
     let status = false;
     //components[""0""].componentIdentifier.coordinates.packageId
@@ -390,9 +390,8 @@ function addDataOSSIndex( artifact){// pass your data in method
     // console.log(settings);
     // console.log(settings.auth);
     // console.log("inputdata");
-    console.log(artifact);
-    console.log("OSSIndexURL");
-    console.log(OSSIndexURL);
+    console.log('artifact request', artifact);
+    console.log("OSSIndexURL request", OSSIndexURL);
     inputStr=JSON.stringify(artifact);
 
         
@@ -430,8 +429,7 @@ function addDataOSSIndex( artifact){// pass your data in method
                 artifact: artifact,            
                 message: retVal                
             }
-            console.log('sendmessage displayMessage');
-            console.log(displayMessage);
+            console.log('sendmessage displayMessage', displayMessage);
             chrome.runtime.sendMessage(displayMessage);
             return(retVal);
         },
@@ -463,7 +461,9 @@ function addDataOSSIndex( artifact){// pass your data in method
 
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
     //page was updated
-    if (changeInfo.status == 'complete' && tab.active) {  
+    console.log('chrome.tabs.onUpdated.addListener', tabId, changeInfo, tab)
+    chrome.pageAction.hide(tabId);
+    if (changeInfo.status == 'complete' && tab.active && changeInfo.url) {  
       // do your things
         console.log('chrome.tabs.onUpdated.addListener');
         //need to tell the content script to reevaluate
@@ -524,11 +524,15 @@ async function quickTest2(){
     console.log(myResp3);
 }
 
- 
+chrome.tabs.onSelectionChanged.addListener(function(tabId) {
+    console.log('chrome.tabs.onSelectionChanged.addListener', tabId)
+    chrome.pageAction.hide(tabId);
+});
 /////////////////Listeners///////////////////////////////////
 chrome.tabs.onActivated.addListener(function(activeInfo) {
-    console.log('chrome.tabs.onActivated.addListener(function(activeInfo)')
-    console.log(activeInfo.tabId);
+    console.log('chrome.tabs.onActivated.addListener(function(activeInfo) tabId', activeInfo);
+    let tabId = activeInfo.tabId;
+    // chrome.pageAction.hide(tabId)
     // var tab = chrome.tabs.get(activeInfo.tabId, function(tab) {
     //     let url = tab.url;
     //     if (typeof url !== "undefined" && checkPageIsHandled(url)){
@@ -540,12 +544,14 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 
 chrome.runtime.onInstalled.addListener(function() {
     // loadSettings();
+    // let tabId = 0;
     // if (checkPageIsHandled(url)){
-    //     browser.browserAction.enable();
+    //     // browser.pageAction.hide();
     // }else{
-    //     browser.browserAction.disable();
+    //     browser.pageAction.hide(tabId);
     // }
-    // return;
+    
+    
     console.log('chrome.runtime.onInstalled.addListener')
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
       chrome.declarativeContent.onPageChanged.addRules([{
@@ -593,27 +599,34 @@ chrome.runtime.onInstalled.addListener(function() {
                       schemes: ['https'],
                       pathContains: "packages"}, 
           }),
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {hostEquals: 'cocoapods.org', 
-                      schemes: ['https'],
-                      pathContains: "pods"}, 
-          }),          
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {hostEquals: 'cran.r-project.org', 
-                      schemes: ['https']}, 
-          }),
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {hostEquals: 'crates.io', 
-                      schemes: ['https'],
-                      pathContains: "crates"
-                    }
-          }),
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {hostEquals: 'gocenter.jfrog.com', 
-                      schemes: ['https'],
-                      pathContains: "github.com"
-                    }
-          })                                                        
+        new chrome.declarativeContent.PageStateMatcher({
+        pageUrl: {hostEquals: 'cocoapods.org', 
+                    schemes: ['https'],
+                    pathContains: "pods"}, 
+        }),          
+        new chrome.declarativeContent.PageStateMatcher({
+        pageUrl: {hostEquals: 'cran.r-project.org', 
+                    schemes: ['https']}, 
+        }),
+        new chrome.declarativeContent.PageStateMatcher({
+        pageUrl: {hostEquals: 'crates.io', 
+                    schemes: ['https'],
+                    pathContains: "crates"
+                }
+        }),
+        new chrome.declarativeContent.PageStateMatcher({
+        pageUrl: {hostEquals: 'search.gocenter.io', 
+                    schemes: ['https'],
+                    pathContains: "github.com"
+                }
+        }),
+        //https://github.com/jquery/jquery/releases/tag/3.0.0
+        new chrome.declarativeContent.PageStateMatcher({
+        pageUrl: {hostEquals: 'github.com', 
+                    schemes: ['https'],
+                    pathContains: "releases/tag"
+                }
+        })                                                               
         ],
             actions: [new chrome.declarativeContent.ShowPageAction()]
       }]);

@@ -10,7 +10,8 @@ var formats = {
     cocoapods: "cocoapods",
     cran: "cran",
     cargo: "cargo", //cargo == crates 
-    golang: "golang"
+    golang: "golang",
+    github: "github"
 }
   
 
@@ -47,7 +48,8 @@ function checkPageIsHandled(url){
         url.search("https://packagist.org/") >= 0 ||
         url.search("https://cran.r-project.org/") >= 0 ||
         url.search("https://crates.io/") >= 0 ||
-        url.search("https://gocenter.jfrog.com/") >= 0        
+        url.search("https://search.gocenter.io/") >= 0 ||
+        url.search("https://github.com/") >= 0 //https://github.com/jquery/jquery/releases/tag/3.0.0
         ) 
         {
             found = true;
@@ -83,7 +85,7 @@ function ParsePageURL(url){
       format = formats.npm;
       artifact = parseNPMURL(url);
     }
-    else if (url.search('nuget.org/packages/') >=0){
+    else if (url.search('https://www.nuget.org/packages/') >=0){
       //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
       format = formats.nuget;
       artifact =  parseNugetURL( url);
@@ -129,9 +131,14 @@ function ParsePageURL(url){
       format = formats.cargo;
       artifact = parseCratesURL(url);
     }
-    else if (url.search('https://gocenter.jfrog.com/') >=0){      
+    else if (url.search('https://search.gocenter.io/') >=0){      
       format = formats.golang;
       artifact = parseGoLangURL(url);
+    }
+    //https://github.com/jquery/jquery/releases/tag/3.0.0
+    else if (url.search('https://github.com/') >=0){      
+      format = formats.golang;
+      artifact = parseGitHubURL(url);
     }
 
     console.log("ParsePageURL Complete");
@@ -218,7 +225,7 @@ function NexusFormatMaven(artifact){
     //return dictionary of components
     componentDict = {components:[	
 		component = {
-			hash: null, 
+			hash: artifact.hash, 
 			componentIdentifier: 
 				{
 				format: artifact.format,
@@ -241,7 +248,7 @@ function NexusFormatNPM(artifact){
     //return dictionary of components
     componentDict = {"components":[	
         component = {
-            "hash": null, 
+            "hash": artifact.hash, 
             "componentIdentifier": 
                 {
                 "format": artifact.format,
@@ -262,7 +269,7 @@ function NexusFormatNuget(artifact){
     componentDict = {
         "components":[
             component = {
-                "hash": null, 
+                "hash": artifact.hash, 
                 "componentIdentifier": {
                     "format": artifact.format,
                     "coordinates" : {
@@ -282,7 +289,7 @@ function NexusFormatPyPI(artifact){
     componentDict = {"components":[	
 
             component = {
-                "hash": null, 
+                "hash": artifact.hash, 
                 "componentIdentifier": 
                     {
                     "format": artifact.format,
@@ -305,7 +312,7 @@ function NexusFormatRuby(artifact){
     //TODO: how to determine the qualifier and the extension??
     componentDict = {"components":[	
 		component = {
-			"hash": null, 
+			"hash": artifact.hash, 
 			"componentIdentifier": 
 				{
 				"format": artifact.format,
@@ -569,11 +576,48 @@ function parseCRANURL(url) {
 
 function parseGoLangURL(url) {
     //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
-    let format = formats.cocoapods;
+    //https://search.gocenter.io/github.com~2Fbazelbuild~2Fbazel-integration-testing/versions
+    let format = formats.golang;
     let datasource = dataSources.OSSINDEX;
 
     return false;
 }
+
+function parseGitHubURL(url) {
+    console.log('parseGitHubURL', url)
+    //https://github.com/jquery/jquery/releases/tag/3.0.0
+    let format = formats.github;
+    let datasource = dataSources.OSSINDEX;
+
+    let packageName
+    let version
+    let artifact = ""
+    if (url.search('/releases/tag/') >0 ){
+      //has version in URL
+      var urlElements = url.split('/');
+      if (urlElements.length>=8){
+        packageName = urlElements[3] +'/'+ urlElements[4];
+        version = urlElements[7]
+      }
+      else{
+        packageName = urlElements[4]
+        version = urlElements[6]
+      }
+      artifact = {
+          format: format, 
+          name: packageName, 
+          version: version,
+          datasource: datasource
+        };
+    }else{
+        artifact = ""
+        return false;
+    }
+    console.log('artifact', artifact)
+    return artifact;
+    
+}
+
 
 function BuildSettings(baseURL, username, password, appId, appInternalId){
     //let settings = {};

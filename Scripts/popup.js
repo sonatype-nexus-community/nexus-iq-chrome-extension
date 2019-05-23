@@ -89,7 +89,8 @@ function beginEvaluation(){
         if (checkPageIsHandled(url)){
             //yes we know about this sort of URL so continue
             artifact = ParsePageURL(url)
-            if (artifact){
+            console.log('artifact set', artifact)
+            if (artifact && artifact.version){
                 //evaluate now
                 //as the page has the version so no need to insert dom
                 //just parse the URL
@@ -113,9 +114,6 @@ function beginEvaluation(){
         }
     }
 }
-
-
-
 function executeScripts(tabId, injectDetailsArray)
 {
     console.log('executeScripts(tabId, injectDetailsArray')
@@ -135,7 +133,6 @@ function executeScripts(tabId, injectDetailsArray)
     if (callback !== null)
         callback();   // execute outermost function
 }
-
 function installScripts(message){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         let tabId = tabs[0].id
@@ -154,15 +151,10 @@ function installScripts(message){
         console.log('end installScripts');
     })
 };
- 
-
-
-
-async function gotMessage(message, sender, sendResponse){
-    console.log('gotMessage')
-    console.log(message)
+async function gotMessage(respMessage, sender, sendResponse){
+    console.log('gotMessage-respMessage', respMessage)
     // const respMessage = JSON.parse(message)
-    const respMessage = message
+    // const respMessage = message
     //this is the callback handler for a message received
     console.log('popup got message');
     console.log(respMessage);
@@ -177,13 +169,19 @@ async function gotMessage(message, sender, sendResponse){
             if (respMessage.message.error){
                 showError(respMessage.message.response);
             }else{
-                console.log('coming in here really late.-respMessage');
-                // jQuery("#response").append('<div class="messages ok">' + message.message.response + '</div>');
-                console.log(respMessage);
-                
-                // $("#response").html(findings.toString());
-                // displayFindings(message);
-                let htmlCreated = await createHTML(message, settings);
+                console.log('coming in here really late.-respMessage', respMessage);
+                //need to set the artifact
+                artifact = respMessage.artifact;
+                console.log('after content parsed artifact', artifact);
+ 
+                var componentDetails = respMessage.message.response;
+                console.log('componentDetails', componentDetails);
+    
+                if (artifact.datasource === dataSources.NEXUSIQ){
+                    nexusArtifact = componentDetails.componentDetails[0];
+                    console.log('nexusArtifact', nexusArtifact);
+                }
+                let htmlCreated = await createHTML(respMessage, settings);
 
             }            
             hideLoader(hasError);
@@ -198,9 +196,8 @@ async function gotMessage(message, sender, sendResponse){
         case messageTypes.loginFailedMessage:
             hasError = true;
             //display error
-            console.log('display error');
-            console.log(message);
-            let errorShown = showError(message.message.response);
+            console.log('display error', respMessage);
+            let errorShown = showError(respMessage.message.response);
             hideLoader(hasError);
             break;
         default:
@@ -209,7 +206,6 @@ async function gotMessage(message, sender, sendResponse){
         
 
 }
-
 function createAllversionsHTML(data, remediation, currentVersion){
     console.log('createAllversionsHTML', data, remediation, currentVersion);
     let strData = ""
@@ -291,9 +287,9 @@ function createAllversionsHTML(data, remediation, currentVersion){
         paintRow (remediation, "lawngreen")        
         paintRow (currentVersion, "#85B6D5")
     });
+    paintRow (currentVersion, "#85B6D5")
     // $("#remediation").html(strData);
 }
-
 function paintRow (currentVersion, color){
     let currentVersionCell = $("div").filter(function() {
         // Matches exact string   
@@ -302,11 +298,9 @@ function paintRow (currentVersion, color){
     let currentVersionCellParent = $(currentVersionCell).parents('div .slick-row')        
     currentVersionCellParent.css("background-color", color)
 }
-
 async function createHTML(message, settings)
 {
-    console.log('createHTML(message)');
-    console.log(message);
+    console.log('createHTML(message)', message, settings);
 
     // console.log(componentDetails.length)
     // const thisComponent = componentDetails["0"];
@@ -321,8 +315,6 @@ async function createHTML(message, settings)
             renderLicenseData(message);
             hasVulns = renderSecurityData(message);
             //store nexusArtifact in Global variable
-            nexusArtifact = componentDetails.componentDetails[0];
-            console.log('nexusArtifact', nexusArtifact);
             // let remediation
             // if (hasVulns) {
             //     remediation = await showRemediation(nexusArtifact, settings)
@@ -345,13 +337,11 @@ async function createHTML(message, settings)
             console.log(message)
     }
 };
-
-
 function renderComponentDataOSSIndex(message){
     console.log('renderComponentData');
     console.log(message);
     $("#format").html(message.artifact.format);
-    $("#package").html(message.artifact.name);
+    $("#package").html(unescape(message.artifact.name));
     $("#version").html(message.artifact.version);
 
     $("#hash").html(message.message.response.description);
@@ -382,7 +372,10 @@ function renderSecurityDataOSSIndex(message){
     console.log('renderSecurityDataOSSIndex')
     console.log(message)
     console.log(securityIssues.length);
-    
+    securityIssues.sort((securityIssues1, securityIssues2)=>{
+        // console.log(securityIssues1.severity);
+        return  securityIssues2.cvssScore - securityIssues1.cvssScore;
+    });
     if(securityIssues.length > 0){
         for(i=0; i < securityIssues.length; i++){
             let securityIssue = securityIssues[i];
@@ -428,8 +421,6 @@ function renderSecurityDataOSSIndex(message){
     }  
 
 }
-
-
 function renderComponentData(message){
     console.log('renderComponentData');
     console.log(message);
@@ -473,8 +464,6 @@ function renderComponentData(message){
     $("#datasource").html(message.artifact.datasource);
     renderSecuritySummaryIQ(message);
 }
-
-
 function renderSecuritySummaryIQ(message){
     let highest = Highest_CVSS_Score(message);
     let className = styleCVSS(highest);
@@ -485,7 +474,6 @@ function renderSecuritySummaryIQ(message){
     $("#Num_CVSS_Issues").html(theCount);
 
 }
-
 function renderSecuritySummaryOSSIndex(message){
     let highest = Highest_CVSS_ScoreOSSIndex(message);
     let className = styleCVSS(highest);
@@ -520,7 +508,6 @@ function renderLicenseData(message){
         $("#observedLicenses_licenseName").html(thisComponent.licenseData.observedLicenses["0"].licenseName);
     }
 }
-
 function Highest_CVSS_Score(message){
     console.log('Highest_CVSS_Score(beginning)', message);
     var thisComponent = message.message.response.componentDetails["0"];
@@ -555,8 +542,6 @@ function Highest_CVSS_ScoreOSSIndex(message){
     return highestSecurityIssue;
     
 }
-
-
 function Count_CVSS_IssuesOSSIndex(message){
     console.log('Count_CVSS_Issues(beginning)', message);
     var thisComponent = message.message.response;
@@ -569,7 +554,6 @@ function Count_CVSS_IssuesOSSIndex(message){
     return countCVSSIssues;
     
 }
-
 function Count_CVSS_Issues(message){
     console.log('Count_CVSS_Issues(beginning)', message);
     var thisComponent = message.message.response.componentDetails["0"];
@@ -582,7 +566,6 @@ function Count_CVSS_Issues(message){
     return countCVSSIssues;
     
 }
-
 function styleCVSS(severity){
     let className;
     switch (true){
@@ -604,8 +587,6 @@ function styleCVSS(severity){
     }
     return className;
 }
-
-
 function renderSecurityData(message){
     let retVal = false;
     var thisComponent = message.message.response.componentDetails["0"];
@@ -683,28 +664,27 @@ function renderSecurityData(message){
     return retVal;
     //securityurl=<a href="{{{url}}}" target="_blank">url</a>    
 }
-
 function showLoader()
 {
     $(".loader").fadeIn("slow");
 }
-
 function hideLoader(hasError)
 {
     //$(".loader").fadeOut("slow");
     document.getElementById("loader").style.display = "none";
     document.getElementById("tabs").style.display = "block";
 }
-
 async function showCVEDetail(cveReference){
     console.log('showCVEDetail', cveReference)
+    console.log('artifact', artifact);
     //  alert(cveReference)
     //get CVEetail with Axios
     // let newElement = document.createElement("div");
     // newNode=document.body.appendChild(newElement);
     // newNode.setAttribute("id", "dialog");
     let nexusArtifact = NexusFormat(artifact);
-    nexusArtifact.hash = artifact.hash;
+    console.log('nexusArtifact', nexusArtifact);
+    // if (artifact.hash) {nexusArtifact.hash = artifact.hash};
     // let promise =  await GetSettings(['url', 'username', 'password', 'appId', 'appInternalId' ])
     // let settings = BuildSettings(promise.url, promise.username, promise.password, promise.appId, promise.appInternalId)
     console.log('settings', settings)
@@ -721,7 +701,6 @@ async function showCVEDetail(cveReference){
     
     
 }
-
 async function showRemediation(nexusArtifact, settings){
     console.log('showRemediation', nexusArtifact, settings)
     console.log('settings', settings)
@@ -758,7 +737,6 @@ async function showRemediation(nexusArtifact, settings){
     return newVersion;
     
 }
-
 async function GetSettings(keys){
     let settings;    
     let promise = new Promise((resolve, reject) => {
@@ -773,7 +751,6 @@ async function GetSettings(keys){
     });
     return promise;
 }
-
 async function GetAllVersions(nexusArtifact, settings, remediation){
     console.log('GetAllVersions', nexusArtifact);
     let retVal
@@ -809,15 +786,13 @@ async function GetAllVersions(nexusArtifact, settings, remediation){
     createAllversionsHTML(data, remediation, currentVersion);
     
 }
-    
-
 async function GetCVEDetails(cve, nexusArtifact, settings){
-    console.log('begin GetCVEDetails');
+    console.log('begin GetCVEDetails', cve, nexusArtifact, settings);
     // let url="http://iq-server:8070/rest/vulnerability/details/cve/CVE-2018-3721?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D&hash=4c854c86c91ab36c86fc&timestamp=1553676800618"
     let servername = settings.baseURL;// + (settings.baseURL[settings.baseURL.length-1]=='/' ? '' : '/') ;//'http://iq-server:8070'
     //let CVE = 'CVE-2018-3721'
     let timestamp = Date.now()
-    let hash = nexusArtifact.hash;//'4c854c86c91ab36c86fc'
+    let hash = nexusArtifact.components[0].hash;//'4c854c86c91ab36c86fc'
     // let componentIdentifier = '%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D'
     let componentIdentifier = encodeComponentIdentifier(nexusArtifact)
     let vulnerability_source
@@ -877,7 +852,6 @@ async function GetCVEDetails(cve, nexusArtifact, settings){
     // return {cvedetail: retVal};
     // console.log('complete GetCVEDetails');
 }
-
 function showError(error)
 {
     console.log('showError');
@@ -909,17 +883,12 @@ function showError(error)
     $('#error').show();
 
 }
-
-
-
 function hideError()
 {
     $("#error").fadeOut("slow");
     $('#error').hide();
 
 }
-
-
 function ChangeIconMessage(showVulnerable)  {
     if(showVulnerable) {
         // send message to background script
@@ -930,7 +899,6 @@ function ChangeIconMessage(showVulnerable)  {
         chrome.runtime.sendMessage({ "messagetype" : "newIcon",  "newIconPath" : "images/IQ_Default.png"});    
     }
 }
-
 function setupAccordion(){
     console.log('setupAccordion');
     $('#accordion').find('.accordion-toggle').click(function(){
@@ -940,8 +908,6 @@ function setupAccordion(){
         $(".accordion-content").not($(this).next()).slideUp('fast');
     });
 }
-
-
 function sortByProperty(objArray, prop, direction){
     if (arguments.length<2) throw new Error("ARRAY, AND OBJECT PROPERTY MINIMUM ARGUMENTS, OPTIONAL DIRECTION");
     if (!Array.isArray(objArray)) throw new Error("FIRST ARGUMENT NOT AN ARRAY");
