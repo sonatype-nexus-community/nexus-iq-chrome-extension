@@ -48,7 +48,7 @@ function ParsePage(){
     //who I am what is my address?
     let artifact;
     let format;
-    let datasource = dataSources.NEXUSIQ;;
+    let datasource = dataSources.NEXUSIQ;
     let url = location.href;
     console.log(url);
 
@@ -128,11 +128,18 @@ function ParsePage(){
       datasource = dataSources.OSSINDEX;
       artifact = parseGoLang(format, url, datasource);
     }
+    //nexusRepo ->http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
+    if (url.search('/#browse/browse:') >=0){      
+      //format = formats.golang;
+      
+      artifact = parseNexusRepo(url);
+    }
+    
 
     
 
 
-    artifact.datasource = datasource;
+    // artifact.datasource = datasource;
     console.log("ParsePage Complete");
     console.log(artifact);
     //now we write this to background as
@@ -490,4 +497,81 @@ function parseCrates(format, url, datasource) {
     name: name, 
     version: version
   }
+}
+
+function parseNexusRepo(url) {
+  //http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
+  console.log('parseNexusRepo:',  url);
+  let elements = url.split('/')
+  //CRAN may have the packagename in the URL
+  //but not the version in URL
+  //could also be just in the body
+  let name
+  let namespace
+  let type
+  let format
+  let datasource
+  let artifact
+  let version
+  let groupId
+  let artifactId
+  //#nx-info-1179 > div > table > tbody > tr:nth-child(2) > td.nx-info-entry-value
+  let nexusRepoformat = $("div.nx-info > table > tbody > tr:nth-child(2) > td.nx-info-entry-value").html();
+  switch(nexusRepoformat){
+    case "pypi":
+      format = formats.pypi;
+      datasource = dataSources.NEXUSIQ;
+      
+      name = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
+      version = $("div.nx-info > table > tbody > tr:nth-child(4) > td.nx-info-entry-value").html();
+      artifact = {
+        format: format, 
+        datasource: datasource,
+        name: name,    
+        version: version    
+      };
+      break;
+    case "maven2":
+      format = formats.maven;
+      datasource = dataSources.NEXUSIQ;
+      groupId = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
+      artifactId = $("div.nx-info > table > tbody > tr:nth-child(4) > td.nx-info-entry-value").html();
+      version = $("div.nx-info > table > tbody > tr:nth-child(5) > td.nx-info-entry-value").html();
+      artifact = {
+        format: format, 
+        datasource: datasource,
+        groupId: groupId,
+        artifactId: artifactId,    
+        version: version,
+        extension: 'jar'    
+      };
+      break;
+    case "npm":
+      format = formats.npm;
+      datasource = dataSources.NEXUSIQ;
+      name = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
+      version = $("div.nx-info > table > tbody > tr:nth-child(4) > td.nx-info-entry-value").html();
+      artifact = {
+        format: format, 
+        datasource: datasource,
+        packageName: name,    
+        version: version    
+      };  
+    case "nuget":
+      format = formats.nuget;
+      datasource = dataSources.NEXUSIQ;
+      name = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
+      version = $("div.nx-info > table > tbody > tr:nth-child(4) > td.nx-info-entry-value").html();
+      artifact = {
+        format: format, 
+        datasource: datasource,
+        packageId: name,    
+        version: version    
+      };             
+      break;
+    default:
+
+  }
+  console.log('component', artifact);
+  return artifact;
 }

@@ -49,7 +49,10 @@ function checkPageIsHandled(url){
         url.search("https://cran.r-project.org/") >= 0 ||
         url.search("https://crates.io/") >= 0 ||
         url.search("https://search.gocenter.io/") >= 0 ||
-        url.search("https://github.com/") >= 0 //https://github.com/jquery/jquery/releases/tag/3.0.0
+        url.search("https://github.com/") >= 0 || //https://github.com/jquery/jquery/releases/tag/3.0.0
+        url.search("/webapp/#/artifacts/") >= 0 || //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+        url.search("/list/") >= 0 ||//https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+        url.search("/#browse/browse:") >= 0 //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
         ) 
         {
             found = true;
@@ -89,7 +92,6 @@ function ParsePageURL(url){
       //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
       format = formats.nuget;
       artifact =  parseNugetURL( url);
-
     }    
     
     else if (url.search('pypi.org/project/') >=0){
@@ -109,21 +111,18 @@ function ParsePageURL(url){
     //OSSIndex
     else if (url.search('packagist.org/packages/') >=0){
       //https: packagist ???
-      format = formats.composer;
-      
+      format = formats.composer;      
       artifact = parsePackagistURL(url);
 
     }
     else if (url.search('cocoapods.org/pods/') >=0){
       //https:// cocoapods ???
-      format = formats.cocoapods;
-      
+      format = formats.cocoapods;      
       artifact = parseCocoaPodsURL(url);
 
     }
     else if (url.search('cran.r-project.org/') >=0){      
-      format = formats.cran;
-      
+      format = formats.cran;      
       artifact = parseCRANURL(url);
     }
     
@@ -140,6 +139,19 @@ function ParsePageURL(url){
       format = formats.golang;
       artifact = parseGitHubURL(url);
     }
+    //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+    //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+    else if (url.search('webapp/#/artifacts') >=0 || url.search('/list/') >=0 ){      
+      artifact = parseArtifactoryURL(url);
+    }
+
+    //nexus Repo
+    // http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
+    else if (url.search('#browse/browse:') >=0 ){              
+        // artifact = parseNexusRepoURL(url);
+        artifact = undefined;
+    }
+      
 
     console.log("ParsePageURL Complete");
     console.log(artifact);
@@ -617,6 +629,256 @@ function parseGitHubURL(url) {
     return artifact;
     
 }
+
+function parseNexusRepoURL(url){
+    console.log('parseNexusRepoURL', url)
+    //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
+    //http://nexus:8081/#browse/browse:npm-proxy:%40akryum%2Fwinattr%2Fwinattr-3.0.0.tgz
+    //http://nexus:8081/#browse/search=keyword%3Dlodash:2a59043ed2ea556e86a68efbf920b14d:40292acdebc01b836aa6c0988697aca5
+    //http://nexus:8081/#browse/browse:npm-proxy:lodash%2Flodash-4.17.9.tgz
+    //pypi
+    // http://nexus:8081/#browse/browse:pypi-proxy:abodepy%2F0.15.0%2Fabodepy-0.15.0-py3-none-any.whl
+    let artifact;
+    let elements = url.split('/');
+    let browseElement = elements[elements.length-1]; //last item
+    let browseElements=  browseElement.split(':');
+    let groupEls  = browseElements[2].split('%2F');
+    let format = formats.maven;
+    //"abodepy%2F0.15.0%2Fabodepy-0.15.0-py3-none-any.whl"
+    if (groupEls.length==3 && groupEls[2].endsWith('.whl')){
+        //I will deem this as pypi
+        format = formats.pypi;
+    }    
+    else if (groupEls[1].search('-') > -1){
+        //I will deem this as npm
+        format = formats.npm;
+    }
+    if (format === formats.pypi){
+        let fileName = groupEls[2]
+        let name = groupEls[0]
+        name = encodeURIComponent(name);
+        let version = groupEls[1] 
+        version = encodeURIComponent(version);
+        let datasource = dataSources.NEXUSIQ;
+        artifact = {
+            format: format, 
+            name: name, 
+            version: version,
+            datasource: datasource
+          };
+    }
+    if (format === formats.npm){
+        let fileName = groupEls[1]
+        let packageName
+        let version
+        packageName = fileName.substring(0, fileName.search('-'));
+        version = fileName.substring(fileName.search('-')+1, fileName.lastIndexOf('.'))
+        datasource = dataSources.NEXUSIQ;
+        artifact = {
+            format: format, 
+            packageName: packageName, 
+            version: version,
+            datasource: datasource
+        };
+    }
+
+    if (format === formats.maven){
+        let groupId 
+        let artifactId 
+        let version
+        let extension = "jar"
+
+        let classifier = "";
+        let datasource = dataSources.NEXUSIQ;
+
+        groupId = groupEls[0]
+        artifactId = groupEls[1]
+        version = groupEls[2]
+        extension = "jar"
+
+        groupId = encodeURIComponent(groupId);
+        artifactId = encodeURIComponent(artifactId);
+        version = encodeURIComponent(version);
+        extension = encodeURIComponent(extension);
+        artifact = {
+            format: format, 
+            groupId:groupId, 
+            artifactId:artifactId, 
+            version:version, 
+            extension: extension,
+            classifier: classifier,
+            datasource: datasource
+          }
+    }
+    return artifact;
+}
+
+
+function parseArtifactoryURL(url) {
+    console.log('parseArtifactoryURL', url)
+    //java object
+    //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+    //npm object
+    // https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
+    //java
+    //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/springframework/spring-core/4.1.7.RELEASE
+    //compare this to
+    //https://search.maven.org/artifact/org.springframework/spring-core/4.1.7.RELEASE/jar
+    //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/cloudfoundry/cf-maven-plugin/1.1.4.RELEASE/cf-maven-plugin-1.1.4.RELEASE.jar
+    //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+
+    let elements = url.split('/')
+    let format = formats.maven;
+    let datasource = dataSources.NEXUSIQ;
+    let artifact
+    var found = elements.find(function(element) {
+        return element === '-';
+    });
+    if (found){
+        //npm
+        format = formats.npm;
+        datasource = dataSources.NEXUSIQ;
+    }else{
+        //maven
+        format = formats.maven;
+        datasource = dataSources.NEXUSIQ;
+    }
+    //now lets iterate through the elements of the URL
+    //when we find the # we are at the root of the path
+    let baseIndex = 0 ;
+    let groupIdIndex = 0;
+    let artifactIdIndex  = 0;
+    let versionIndex = 0
+    let extensionIndex = 0;
+    let packageNameIndex = 0;
+    let repoIndex = 0;
+
+    for (let index = 0; index < elements.length; index++) {
+        const element = elements[index];
+        if (element==="#") {
+            //we are at the base offset
+            //now this can be tricky
+            //repository will be the 5th element after #
+
+            baseIndex = index;
+            repoIndex = baseIndex+5;
+            break;
+        }
+        if (element === 'list'){
+            //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+            //we are at the base offset
+            baseIndex = index;
+            repoIndex = baseIndex+1;
+            break;
+        }
+    }
+    console.log('format', format, baseIndex, repoIndex, elements.length);
+    if (format === formats.npm) {
+        packageNameIndex = repoIndex + 1;
+        versionIndex = packageNameIndex + 2;            
+
+        let packageName
+        let version
+        
+        packageName = elements[packageNameIndex];
+        let fileName = elements[versionIndex];
+        version = fileName.substring(fileName.search('-')+1, fileName.lastIndexOf('.'))
+        artifact = {
+            format: format, 
+            packageName: packageName, 
+            version: version,
+            datasource: datasource
+        };
+    } else if (format === formats.maven){
+        let lastElementIsFileName = false
+        if (elements[elements.length-1].search(/[.][a-z]ar/) > -1){
+            //last element is the filename
+            //"cf-maven-plugin-1.1.4.RELEASE.jar"
+            lastElementIsFileName = true;
+        }
+        //work out how many elements there are in the group/artifact/version section
+        let numElements = elements.length - repoIndex -1;
+        //if there are 5 and the last element is a filename
+        //then first 2 elements are the group
+        //3rd is the artifact
+        //4th is the name
+        let groupId;
+        let artifactId;
+        let version;
+        let extension;
+        //group can be in two parts
+        groupIdIndex = repoIndex + 1;
+        artifactIdIndex = groupIdIndex + 1;
+        versionIndex = artifactIdIndex + 1;
+        extensionIndex = versionIndex + 1;
+
+        console.log('here', numElements, lastElementIsFileName);
+        if (numElements ===5 && lastElementIsFileName){
+            
+
+            //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/cloudfoundry/cf-maven-plugin/1.1.4.RELEASE/cf-maven-plugin-1.1.4.RELEASE.jar"
+            groupIdIndex = repoIndex + 1;
+            artifactIdIndex = groupIdIndex + 2;
+            versionIndex = artifactIdIndex + 1;
+            extensionIndex = versionIndex + 1;
+    
+            groupId = elements[groupIdIndex] + '.' + elements[groupIdIndex+1];
+            artifactId = elements[artifactIdIndex];
+            version = elements[versionIndex];
+            extension = elements[extensionIndex];
+            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+
+        }
+        else if (numElements ===5 && !lastElementIsFileName){
+            //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/springframework/spring-core/4.1.7.RELEASE
+            groupIdIndex = repoIndex + 1;
+            artifactIdIndex = groupIdIndex + 2;
+            versionIndex = artifactIdIndex + 1;
+            extensionIndex = versionIndex + 1;
+    
+            groupId = elements[groupIdIndex] + '.' + elements[groupIdIndex+1];
+            artifactId = elements[artifactIdIndex];
+            version = elements[versionIndex];
+            extension = "jar"
+        }
+        else if (numElements ==4 && lastElementIsFileName){
+            //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+            groupId = elements[groupIdIndex];
+            artifactId = elements[artifactIdIndex];          
+            version = elements[versionIndex];            
+            extension = elements[extensionIndex];
+            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+        }
+        else if (numElements ==4 && !lastElementIsFileName){
+            //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/springframework/spring-core/4.1.7.RELEASE
+            groupId = elements[groupIdIndex]+ '.' + elements[groupIdIndex+1];
+            artifactIdIndex = groupIdIndex + 2;
+            artifactId = elements[artifactIdIndex];
+            versionIndex = artifactIdIndex + 1;
+            version = elements[versionIndex];            
+            extension = 'jar';
+        }
+
+        groupId = encodeURIComponent(groupId);
+        artifactId = encodeURIComponent(artifactId);
+        version = encodeURIComponent(version);
+        extension = encodeURIComponent(extension);
+        let classifier = "";
+        artifact = {
+            format: format, 
+            groupId:groupId, 
+            artifactId:artifactId, 
+            version:version, 
+            extension: extension,
+            classifier: classifier,
+            datasource: datasource
+          }
+    }
+    console.log('artifact', artifact);
+    return artifact;
+    
+}
+
 
 
 function BuildSettings(baseURL, username, password, appId, appInternalId){

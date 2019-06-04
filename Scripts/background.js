@@ -208,9 +208,7 @@ function evaluate(artifact, settings){
 
 
 function callIQ(artifact, settings){
-    console.log("evaluate");
-    console.log(settings.auth);
-    console.log(artifact);
+    console.log("evaluate", settings.auth, artifact);
     var requestdata = NexusFormat(artifact);
     
  
@@ -626,7 +624,32 @@ chrome.runtime.onInstalled.addListener(function() {
                     schemes: ['https'],
                     pathContains: "releases/tag"
                 }
-        })                                                               
+        }),
+        //Artifactory could be any URL but has the 
+        //webapp/#/artifacts pattern
+        //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+        //https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz        
+        new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {  pathContains: "webapp"
+                    }
+            }),
+        //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+        new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {  pathContains: "list"
+                    },
+            css:  ["address"]
+        }),
+        //Nexus Repo
+        //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
+        //#browse/browse:
+        //Chrome does not support parsing after the # in these PageMatchers
+
+        new chrome.declarativeContent.PageStateMatcher({            
+            css:  ["label.x-component"]
+        })
+
+    
+    
         ],
             actions: [new chrome.declarativeContent.ShowPageAction()]
       }]);

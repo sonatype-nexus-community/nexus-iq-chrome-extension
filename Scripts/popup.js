@@ -111,6 +111,8 @@ function beginEvaluation(){
         }
         else{
             alert('This page is not currently handled by this extension.')
+            //close this document
+            window.close();
         }
     }
 }
@@ -854,8 +856,7 @@ async function GetCVEDetails(cve, nexusArtifact, settings){
 }
 function showError(error)
 {
-    console.log('showError');
-    console.log(error);
+    console.log('showError', error);
     let displayError;
     // $("#error").text(error);
     // $("#error").removeClass("hidden");
@@ -863,6 +864,8 @@ function showError(error)
     let errorText
     if (typeof error.statusText !== "undefined"){
         errorText = error.statusText;
+    }else{
+        errorText = error;
     }
     if (errorText.search('<html>')>-1){
         if (typeof error.responseText !== "undefined"){
@@ -878,6 +881,7 @@ function showError(error)
     }else{
         displayError = errorText;
     }
+    displayError = 'An error occurred: ' + displayError;
     $("#error").html(displayError);
     $("#error").fadeIn("slow");
     $('#error').show();
