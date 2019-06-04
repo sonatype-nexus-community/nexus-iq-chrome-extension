@@ -1,3 +1,4 @@
+"use strict";
 console.log('contentscript.js');
 
 
@@ -48,13 +49,13 @@ function ParsePage(){
     //who I am what is my address?
     let artifact;
     let format;
-    let datasource = dataSources.NEXUSIQ;
+    // let datasource = dataSources.NEXUSIQ;
     let url = location.href;
     console.log(url);
 
     if (url.search('search.maven.org/artifact/') >=0){
       format = formats.maven;
-      datasource = dataSources.NEXUSIQ;
+      // datasource = dataSources.NEXUSIQ;
       artifact = parseMaven(format, url);
 
     }
@@ -69,64 +70,51 @@ function ParsePage(){
     if (url.search('www.npmjs.com/package/') >= 0){
       //'https://www.npmjs.com/package/lodash'};
       format = formats.npm;
-      datasource = dataSources.NEXUSIQ;
       artifact = parseNPM(format, url);
     }
     if (url.search('nuget.org/packages/') >=0){
       //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
-      format = formats.nuget;
-      datasource = dataSources.NEXUSIQ;
+      format = formats.nuget;     
       artifact =  parseNuget(format, url);
 
-    }    
-    
+    }        
     if (url.search('pypi.org/project/') >=0){
       //https://pypi.org/project/Django/1.6/
-      format = formats.pypi;
-      datasource = dataSources.NEXUSIQ;
+      format = formats.pypi;      
       artifact = parsePyPI(format, url);
-
     }
     
     if (url.search('rubygems.org/gems/') >=0){
       //https://rubygems.org/gems/bundler/versions/1.16.1
-      format = formats.gem;
-      datasource = dataSources.NEXUSIQ;
+      format = formats.gem;      
       artifact = parseRuby(format, url);
-
     }
     
     //OSSIndex
     if (url.search('packagist.org/packages/') >=0){
       //https: packagist ???
       format = formats.composer;
-      datasource = dataSources.OSSINDEX;
       artifact = parsePackagist(format, url);
 
     }
     if (url.search('cocoapods.org/pods/') >=0){
       //https:// cocoapods ???
       format = formats.cocoapods;
-      datasource = dataSources.OSSINDEX;
-      artifact = parseCocoaPods(format, url, datasource);
+      artifact = parseCocoaPods(format, url);
 
     }
-    if (url.search('cran.r-project.org/') >=0){
-      
+    if (url.search('cran.r-project.org/') >=0){      
       format = formats.cran;
-      datasource = dataSources.OSSINDEX;
-      artifact = parseCRAN(format, url, datasource);
+      artifact = parseCRAN(format, url);
     }
     
     if (url.search('https://crates.io/crates/') >=0){      
       format = formats.cargo;
-      datasource = dataSources.OSSINDEX;
-      artifact = parseCrates(format, url, datasource);
+      artifact = parseCrates(format, url);
     }
     if (url.search('https://search.gocenter.io/') >=0){      
       format = formats.golang;
-      datasource = dataSources.OSSINDEX;
-      artifact = parseGoLang(format, url, datasource);
+      artifact = parseGoLang(format, url);
     }
     //nexusRepo ->http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
     if (url.search('/#browse/browse:') >=0){      
@@ -134,12 +122,6 @@ function ParsePage(){
       
       artifact = parseNexusRepo(url);
     }
-    
-
-    
-
-
-    // artifact.datasource = datasource;
     console.log("ParsePage Complete");
     console.log(artifact);
     //now we write this to background as
@@ -170,24 +152,24 @@ function parseMaven(format, url) {
     //new format here
     
     //maven repo https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
-    var elements = url.split('/')
-    groupId = elements[4];
+    let elements = url.split('/')
+    let groupId = elements[4];
     //  packageName=url.substr(url.lastIndexOf('/')+1);
     groupId = encodeURIComponent(groupId);
-    artifactId = elements[5];
+    let artifactId = elements[5];
     artifactId = encodeURIComponent(artifactId);
   
-    version = elements[6];
+    let version = elements[6];
     version = encodeURIComponent(version);
     
-    extension = elements[7];
+    let extension = elements[7];
     if (typeof extension === "undefined"){
       //mvnrepository doesnt have it
       extension = "jar"
     }
     extension = encodeURIComponent(extension);
-  
-    return {format: format, groupId:groupId, artifactId:artifactId, version:version, extension: extension}
+    let datasource = dataSources.NEXUSIQ;
+    return {format: format, groupId:groupId, artifactId:artifactId, version:version, extension: extension, datasource:datasource}
 };
   
 
@@ -199,10 +181,10 @@ function parseNPM(format, url) {
   //https://www.npmjs.com/package/lodash/v/4.17.9
   //No version in URL so read DOM
   //https://www.npmjs.com/package/lodash/
-  var doc = $('html')[0].outerHTML
-  var docelements = $(doc);
+  let doc = $('html')[0].outerHTML
+  // let docelements = $(doc);
 
-  var found
+  let found
   let newV 
   let elements
   let packageName
@@ -243,18 +225,22 @@ function parseNPM(format, url) {
   //  packageName=url.substr(url.lastIndexOf('/')+1);
   packageName = encodeURIComponent(packageName);
   version = encodeURIComponent(version);
-  
-  return {format:format, packageName:packageName, version:version}
+  let datasource = dataSources.NEXUSIQ;
+  return {format:format, packageName:packageName, version:version, datasource:datasource}
 };
 
 function parseNuget(format, url) {
     //we can parse the URL or the DOM
     //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
-    var elements = url.split('/')
-    if(elements[5]==""){
+    let elements = url.split('/')
+    let packageId
+    let version
+    let datasource
+    if(elements.length <= 5){
       //we are on the latest version - no version in the url
       //https://www.nuget.org/packages/LibGit2Sharp/
       packageId = elements[4];
+      //#skippedToContent > section > div > article > div.package-title > h1 > small
       version = $(".package-title .text-nowrap").text();
     }
     else{
@@ -264,25 +250,29 @@ function parseNuget(format, url) {
     }
     packageId = encodeURIComponent(packageId);
     version = encodeURIComponent(version);
-    return {format: format, packageId:packageId, version:version}
+    datasource = dataSources.NEXUSIQ;
+    return {format: format, packageId:packageId, version:version, datasource:datasource}
 };
 
 
 function parsePyPI(format, url) {
     console.log('parsePyPI');
+    let version
+    let name
+    let datasource
     //https://pypi.org/project/Django/1.6/
     //https://pypi.org/project/Django/
-    var elements = url.split('/')
+    let elements = url.split('/')
     if (elements[5]==""){
       //then we will try to parse
       //#content > section.banner > div > div.package-header__left > h1
       //Says Django 2.0.5
       name = elements[4];
-      versionHTML = $("h1.package-header__name").text().trim();
+      let versionHTML = $("h1.package-header__name").text().trim();
       console.log('versionHTML');
       console.log(versionHTML);
-      var elements = versionHTML.split(' ');
-      version = elements[1];
+      let versionElements = versionHTML.split(' ');
+      version = versionElements[1];
       console.log(version);
     }
     else{
@@ -292,15 +282,19 @@ function parsePyPI(format, url) {
     }
     name = encodeURIComponent(name);
     version = encodeURIComponent(version);
-
-    return {format: format, name:name, version:version}
+    datasource = dataSources.NEXUSIQ;
+    return {format: format, name:name, version:version, datasource:datasource}
 };  
 
 function parseRuby(format, url) {
     //for now we have to parse the URL, I cant get the page source??
     //it's in an iframe
     console.log('parseRuby');
-    var elements = url.split('/')
+    let elements = url.split('/')
+    let name
+    let versionHTML
+    let version
+    let datasource
     if (elements.length < 6){
       //current version is inside the dom
       //https://rubygems.org/gems/bundler
@@ -318,14 +312,17 @@ function parseRuby(format, url) {
     }
     name = encodeURIComponent(name);
     version = encodeURIComponent(version);
-    return {format: format, name:name, version:version}
+    datasource = dataSources.NEXUSIQ;
+    return {format: format, name:name, version:version, datasource:datasource}
 };
 
 
 ///OSSIndex////
-function parsePackagist(format, url, datasource) {
+function parsePackagist(format, url) {
   //server is packagist, format is composer
   console.log('parsePackagist:' +  url);
+  let name
+  let version
   var elements = url.split('/')
   //https://packagist.org/packages/drupal/drupal
   //Specific version is with a hash
@@ -334,19 +331,21 @@ function parsePackagist(format, url, datasource) {
   var namePt2 = elements[5];
   name = namePt1 + "/" + namePt2
   var whereIs = namePt2.search("#")
+
   //is the version number in the URL? if so get that, else get it from the HTML
   if (whereIs > -1 ){
     version = namePt2.substr(whereIs +1)
   } else{
     //get the version from the HTML as we are on the generic page
     //#headline > div > h1 > span
-    versionHTML = $("span.version-number").first().text()
+    let versionHTML = $("span.version-number").first().text()
     console.log('versionHTML');
     console.log(versionHTML);
     version=versionHTML.trim();
   }
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
+  let datasource = dataSources.OSSINDEX;
   return {
     format: format, 
     datasource: datasource,
@@ -355,7 +354,7 @@ function parsePackagist(format, url, datasource) {
   }
 }
 
-function parseCocoaPods(format, url, datasource) {
+function parseCocoaPods(format, url) {
   console.log('parseCocoaPods');
   var elements = url.split('/')
   //https://cocoapods.org/pods/TestFairy
@@ -368,6 +367,7 @@ function parseCocoaPods(format, url, datasource) {
 
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
+  let datasource = dataSources.OSSINDEX;
   return {
     format: format, 
     datasource: datasource,
@@ -377,19 +377,20 @@ function parseCocoaPods(format, url, datasource) {
 }
 
 
-function parseCRAN(format, url, datasource) {
+function parseCRAN(format, url) {
   //https://ossindex.sonatype.org/api/v3/component-report/cran%3AA3%400.0.1
   //server is CRAN, format is CRAN
   //https://cran.r-project.org/
   // https://cran.r-project.org/web/packages/latte/index.html
   //https://cran.r-project.org/package=clustcurv
 
-  console.log('parseCRAN:', format, url, datasource);
+  console.log('parseCRAN:', format, url);
   let elements = url.split('/')
   //CRAN may have the packagename in the URL
   //but not the version in URL
   //could also be just in the body
   let name
+  let version
   if (elements.length>5){
     //has packagename in 5
     name = elements[5]
@@ -408,12 +409,13 @@ function parseCRAN(format, url, datasource) {
     }
   }
  
-  versionHTML = $('table tr:nth-child(1) td:nth-child(2)').first().text()
+  let versionHTML = $('table tr:nth-child(1) td:nth-child(2)').first().text()
   console.log('versionHTML');
   console.log(versionHTML);
   version=versionHTML.trim();
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
+  let datasource = dataSources.OSSINDEX;
   return {
     format: format, 
     datasource: datasource,
@@ -423,13 +425,13 @@ function parseCRAN(format, url, datasource) {
 }
 
 
-function parseGoLang(format, url, datasource) {
+function parseGoLang(format, url) {
   //server is non-defined, language is go/golang
   //index of github stored at jfrog
   //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
   // pkg:golang/github.com/etcd-io/etcd@3.3.1
   // pkg:github/etcd-io/etcd@3.3.1
-  console.log('parseGolang:', format,  url, datasource);
+  console.log('parseGolang:', format,  url);
   let elements = url.split('/')
   //CRAN may have the packagename in the URL
   //but not the version in URL
@@ -456,6 +458,7 @@ function parseGoLang(format, url, datasource) {
   version=versionHTML.trim();
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
+  let datasource = dataSources.OSSINDEX;
   return {
     format: format, 
     datasource: datasource,
@@ -466,7 +469,7 @@ function parseGoLang(format, url, datasource) {
   }
 }
 
-function parseCrates(format, url, datasource) {
+function parseCrates(format, url) {
   //server is crates, language is rust
   //https://crates.io/crates/rand
 
@@ -476,11 +479,12 @@ function parseCrates(format, url, datasource) {
   //but not the version in URL
   //could also be just in the body
   let name = elements[4]
+  let version
   if (elements.length==5){
     //has packagename in 5
     //need to parse the HTML
     //
-    versionHTML = $("div.info h2").text()
+    let versionHTML = $("div.info h2").text()
     console.log('versionHTML');
     console.log(versionHTML);
     version=versionHTML.trim();
@@ -491,6 +495,7 @@ function parseCrates(format, url, datasource) {
  
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
+  let datasource = dataSources.OSSINDEX;
   return {
     format: format, 
     datasource: datasource,

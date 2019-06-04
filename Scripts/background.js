@@ -108,8 +108,7 @@ function loadSettingsAndEvaluate(artifact){
             settings = BuildSettings(baseURL, username, password, appId);
             retval = evaluate(artifact, settings);
         }
-        console.log("settings:");
-        console.log(settings);        
+        console.log("settings:", settings);        
         return settings;
     });    
 };
@@ -187,20 +186,18 @@ function login(settings){
 
 
 function evaluate(artifact, settings){
-    console.log('evaluate');
-    console.log(artifact)
-    console.log(settings)
+    console.log('evaluate', artifact, settings);
 
     // console.log(artifact.datasource)
     switch(artifact.datasource) {
-        case dataSources.NEXUSIQ:
+    case dataSources.NEXUSIQ:
         removeCookies(settings.url);
         resp = callIQ(artifact, settings);
-            break;
-        case dataSources.OSSINDEX:
-          resp = addDataOSSIndex(artifact);
-          break;
-        default:
+        break;
+    case dataSources.OSSINDEX:
+        resp = addDataOSSIndex(artifact);
+        break;
+    default:
           alert('Unhandled datasource' + artifact.datasource);
 
     }
