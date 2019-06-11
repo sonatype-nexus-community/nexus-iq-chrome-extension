@@ -21,50 +21,52 @@ The plugin can scan packages at the following repositories:
 7. php - packagist/composer/ -  https://packagist.org/
 8. R - CRAN -  https://cran.r-project.org/
 9. Rust - Crates-  https://crates.io/
-10. Golang - Go - https://gocenter.jfrog.com/
+10. Golang - Go - https://search.gocenter.io/
+11. Github - any language - https://github.com/jquery/jquery/releases/tag/1.11.1
+12. Nexus Proxy Repos - supported repository formats are maven2, npm, rubygems and nuget e.g. http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
+13. Artifactory Proxy Repos - supported repository formats are maven2 and npm e.g. https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
+14. Artifactory Repo lists - e.g. https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
 
 ## Data
-The data is sourced from Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems, currently 1-6. Systems 7-10 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
+The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems, currently 1-6 & 12-13. Systems 7-11 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
 
 
 ## Usage
 1. The install will create a new icon in your Chrome Browser next to the location box.
 <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
-
-2. The plugin will work on any new page opened after install. It will not work on pages already opened at time of install.
-
+<br/>
+2. The plugin will work on any page that matches the URL list above.
+<br/>
 3. Navigate to one of the pages that the extension is compatible with (see the detailed list below).
-
+<br/>
 4. Click on the Blue Sonatype Logo... 
 <img src="images/Extension_lodash_-_npm_4.17.9.png" alt="drawing" width="300"/>
 <br/>
-4.1 ...The solution will think for a second...Then show the Data.
+4.1 ...The solution will think for a second and show the Sonatype hexagon log while it retrieves the data...Then show the Data.
 <img src="images/Extension_thinking_icon.png" alt="drawing" width="300"/>
 <br/>
 5. Component Information
 <img src="images/Extension_Component_info.png" alt="drawing" width="300"/>
 <br/>
-6. License Information
-<img src="images/Extension_Licensing.png" alt="drawing" width="300"/>
-<br/>
-7. Security Information
+6. Security Information
 The security data is presented in a list with clickable sections for each vulnerability.
 <img src="images/Extension_Security.png" alt="drawing" width="300"/>
 <br/>
-8. Security Details
+7. Security Details
 The security details for each vulnerability is available. Click on the reference to display the security details.
 <img src="images/Extension_Vulnerability_Detail.png" alt="drawing" width="300"/>
 <br/>
-9. Version History
+8. Remediation
 The version history is available for each component.
 <img src="images/Extension_Version_History.png" alt="drawing" width="300"/>
 <br/>
-10. Remediation Guidance
+9. Remediation Guidance
 The remediation guidance API has been added. The recommended fix version will be highlighted in green.
 <img src="images/Extension_Remediation_Guidance.png" alt="drawing" width="300"/>
 <br/>
-
-
+10. License Information
+<img src="images/Extension_Licensing.png" alt="drawing" width="300"/>
+<br/>
 
 ## Examples
 The list of pages that are supported are here.
@@ -72,41 +74,43 @@ The list of pages that are supported are here.
 
 ### Java - maven
 Pattern - `https://search.maven.org/artifact/<group>/<artifact>/<version>/<extension>`
-<br/>e.g. https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar
+<br/>e.g. <https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar>
 ### Java - maven
 Pattern -`https://mvnrepository.com/artifact/<group>/<artifact>/<version>`
-<br/>e.g. https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+<br/>e.g. <https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1>
 ### JS/Node - npm
 Pattern - `https://www.npmjs.com/package/<package>`
-<br/>e.g. https://www.npmjs.com/package/lodash/
+<br/>e.g. <https://www.npmjs.com/package/lodash/>
 <br/>and
 <br/>Pattern - `https://www.npmjs.com/package/<package>/v/<version>`
-<br/>e.g. https://www.npmjs.com/package/lodash/v/4.17.9
+<br/>e.g. <https://www.npmjs.com/package/lodash/v/4.17.9>
 ### DotNet - nuget
 Pattern - `https://www.nuget.org/packages/<package>/<version>`
-<br/>e.g. https://www.nuget.org/packages/LibGit2Sharp/0.20.1
+<br/>e.g. <https://www.nuget.org/packages/LibGit2Sharp/0.20.1>
 ### Ruby - rubygems
 Pattern - `https://rubygems.org/gems/<package>`
-<br/>e.g. https://rubygems.org/gems/bundler
+<br/>e.g. <https://rubygems.org/gems/bundler>
 ### Python - pypi
 Pattern - `https://pypi.org/<package>/`
-<br/>e.g. https://pypi.org/project/Django/
+<br/>e.g. <https://pypi.org/project/Django/>
 <br/>or Pattern - `https://pypi.org/<package>/<version>/`
-<br/>e.g. https://pypi.org/project/Django/1.6/
+<br/>e.g. <https://pypi.org/project/Django/1.6/>
 ### php - packagist/composer/
 Pattern - `https://packagist.org/`
-<br/>e.g. https://packagist.org/packages/drupal/drupal
+<br/>e.g. <https://packagist.org/packages/drupal/drupal>
 ### R - CRAN
 Pattern - `https://cran.r-project.org/`
-<br/>e.g. https://cran.r-project.org/web/packages/A3/index.html
+<br/>e.g. <https://cran.r-project.org/web/packages/A3/index.html>
 ### Rust - Crates
 Pattern - `https://crates.io/`
-<br/>e.g. https://crates.io/crates/random
+<br/>e.g. <https://crates.io/crates/random>
 ### Golang - Gocenter
 `https://search.gocenter.io/`
-<br/>e.g. https://search.gocenter.io/github.com~2Fjbenet~2Fgo-random/versions
-### Github - any language but only supports the releases tag at this stage
-`https://github.com/jquery/jquery/releases/tag/1.11.1`
+<br/>e.g. <https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions>
+### Github - any language supported by OSSIndex but only supports the releases tag at this stage
+<https://github.com/jquery/jquery/releases/tag/1.11.1>
+### NexusRepo - npm, maven2 and rubygems
+e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.0.gem>
 
 ## Installation
 1. Download the plugin from GitHub
@@ -218,3 +222,18 @@ Supports scanning components in the following repos
 * https://rubygems.org/
 * https://pypi.org/
 * https://packagist.org/
+
+## The Fine Print
+
+It is worth noting that this is **NOT SUPPORTED** by Sonatype, and is a contribution of ours
+to the open source community (read: you!)
+
+Remember:
+
+* Use this contribution at the risk tolerance that you have
+* Do NOT file Sonatype support tickets related to `chrome-extension` support in regard to this project
+* DO file issues here on GitHub, so that the community can pitch in
+
+Phew, that was easier than I thought. Last but not least of all:
+
+Have fun creating and using `chrome-extension`, we are glad to have you here!

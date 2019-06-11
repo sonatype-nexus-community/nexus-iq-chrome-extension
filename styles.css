@@ -147,7 +147,8 @@ table{
 
 
 .optionstable tr:nth-child(even){
-    background-color: rgb(216, 228, 250);
+    /* background-color: rgb(216, 228, 250); */
+    background-color: white;
 }
 
 .optionstable tr:nth-child(odd){

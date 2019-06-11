@@ -207,7 +207,8 @@ async function gotMessage(respMessage, sender, sendResponse){
 
 }
 function createAllversionsHTML(data, remediation, currentVersion){
-    console.log('createAllversionsHTML', data, remediation, currentVersion);
+    console.log('createAllversionsHTML', remediation, currentVersion);
+    // console.log('data:', data);
     let strData = ""
     var grid;
 
@@ -255,18 +256,14 @@ function createAllversionsHTML(data, remediation, currentVersion){
             popularity: popularity,
             catalogDate: catalogDate,
             majorRevisionStep: majorRevisionStep
-        };
-        // var d = (slickData[rowId] = {});
-        // d["version"] = version
-        // d["security"] = security
-        // d["license"] =  license
-        // d["popularity"] =  popularity        
+        };      
         rowId++;
     });
-    console.log('strData', strData)
-    console.table(slickData)
+    // console.log('strData', strData)
+    // console.table(slickData)
 
-
+    let currentVersionColor = "#85B6D5";
+    let remediationVersionColor = "lawngreen"
     grid = new Slick.Grid("#myGrid", slickData, columns, options);
     if (remediationRow >=0){
         console.log('remediationRow', remediationRow)
@@ -276,18 +273,24 @@ function createAllversionsHTML(data, remediation, currentVersion){
         // $($('.grid-canvas').children()[remediationRow]).addClass('remediation-version');
         // $($('.grid-canvas').children()[remediationRow]).css("background-color", "lawngreen");
 
-        paintRow (remediation, "lawngreen")
-        paintRow (currentVersion, "#85B6D5")
+        paintRow (remediation, remediationVersionColor);
+        paintRow (currentVersion, currentVersionColor);
+    }else{
+        //no remediation
+        grid.scrollRowIntoView(currentVersionRow);
+        paintRow (currentVersion, currentVersionColor);
     }
 
     grid.onViewportChanged.subscribe(function(e, args){
         //event handling code.
         //find the fix
         console.log('grid.onViewportChanged')
-        paintRow (remediation, "lawngreen")        
-        paintRow (currentVersion, "#85B6D5")
+        
+        paintRow (remediation, remediationVersionColor);
+        paintRow (currentVersion, currentVersionColor);
     });
-    paintRow (currentVersion, "#85B6D5")
+    // paintRow (remediation, remediationVersionColor);
+    // paintRow (currentVersion, currentVersionColor)
     // $("#remediation").html(strData);
 }
 function paintRow (currentVersion, color){
