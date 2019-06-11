@@ -33,39 +33,43 @@ The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses th
 
 ## Usage
 1. The install will create a new icon in your Chrome Browser next to the location box.
-<img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
+<img src="images/Extensions_Icon_created.png" alt="Extensions Icon Created" width="300"/>
 <br/>
 2. The plugin will work on any page that matches the URL list above.
 <br/>
 3. Navigate to one of the pages that the extension is compatible with (see the detailed list below).
 <br/>
 4. Click on the Blue Sonatype Logo... 
-<img src="images/Extension_lodash_-_npm_4.17.9.png" alt="drawing" width="300"/>
+<img src="images/Extension_lodash_-_npm_4.17.9.png" alt="Extension Lodash 4.17.9" width="300"/>
 <br/>
 4.1 ...The solution will think for a second and show the Sonatype hexagon log while it retrieves the data...Then show the Data.
-<img src="images/Extension_thinking_icon.png" alt="drawing" width="300"/>
+<img src="images/Extension_thinking_icon.png" alt="Extension Thinking Icon" width="300"/>
 <br/>
 5. Component Information
-<img src="images/Extension_Component_info.png" alt="drawing" width="300"/>
+<img src="images/Extension_Component_info.png" alt="Extension Componen Info" width="300"/>
 <br/>
 6. Security Information
 The security data is presented in a list with clickable sections for each vulnerability.
-<img src="images/Extension_Security.png" alt="drawing" width="300"/>
+<img src="images/Extension_Security.png" alt="Extension Security List" width="300"/>
 <br/>
 7. Security Details
 The security details for each vulnerability is available. Click on the reference to display the security details.
-<img src="images/Extension_Vulnerability_Detail.png" alt="drawing" width="300"/>
+<img src="images/Extension_Vulnerability_Detail.png" alt="Extension Vulnerability Detail" width="300"/>
 <br/>
 8. Remediation
 The version history is available for each component.
-<img src="images/Extension_Version_History.png" alt="drawing" width="300"/>
+<img src="images/Extension_Version_History.png" alt="Extension Version History" width="300"/>
 <br/>
 9. Remediation Guidance
 The remediation guidance API has been added. The recommended fix version will be highlighted in green.
-<img src="images/Extension_Remediation_Guidance.png" alt="drawing" width="300"/>
+<img src="images/Extension_Remediation_Guidance.png" alt="Extension Remediation Guidance" width="300"/>
 <br/>
 10. License Information
-<img src="images/Extension_Licensing.png" alt="drawing" width="300"/>
+<img src="images/Extension_Licensing.png" alt="Extension Licensing" width="300"/>
+<br/>
+11. Unsupported page.
+If you click on an unsupported page then the following screen will appear.
+<img src="images/unsupported_page.png" alt="Unsupported Page" width="300"/>
 <br/>
 
 ## Examples
