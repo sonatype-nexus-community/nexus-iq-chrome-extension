@@ -7,6 +7,8 @@
 - [Usage](#usage)
 - [Examples](#examples)
 - [Installation](#installation)
+- [Fine Print](#The-Fine-Print)
+
 
 ## Purpose
 To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
