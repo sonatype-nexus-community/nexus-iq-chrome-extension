@@ -1,5 +1,3 @@
-
-
 console.log ('popup.js');
 
 var artifact
@@ -7,7 +5,7 @@ var nexusArtifact
 var hasVulns
 var settings
 var hasLoadedHistory
-if (typeof chrome !== "undefined"){
+if (typeof chrome !== undefined){
     chrome.runtime.onMessage.addListener(gotMessage);
 }
 
@@ -244,7 +242,7 @@ function createAllversionsHTML(data, remediation, currentVersion){
         if (remediation === version) {remediationRow = rowId}
         if (currentVersion === version) {currentVersionRow = rowId}
         let popularity = element.relativePopularity
-        let license = (typeof element.policyMaxThreatLevelsByCategory.LICENSE === "undefined" ? 0 : element.policyMaxThreatLevelsByCategory.LICENSE )
+        let license = (typeof element.policyMaxThreatLevelsByCategory.LICENSE === undefined ? 0 : element.policyMaxThreatLevelsByCategory.LICENSE )
         let myDate = new Date(element.catalogDate)
         let catalogDate = myDate.toLocaleDateString()
         let security = element.highestSecurityVulnerabilitySeverity
@@ -340,10 +338,15 @@ async function createHTML(message, settings)
     }
 };
 function renderComponentDataOSSIndex(message){
-    console.log('renderComponentData');
-    console.log(message);
+    console.log('renderComponentData', message);
+    let package = unescape(message.artifact.name);
+    if (message.artifact.format === formats.golang){        
+        //pkg:github/etcd-io/etcd@3.3.1
+        let goFormat= `github/${message.artifact.namespace}/${message.artifact.name}`;
+        package = unescape(goFormat);
+    }
     $("#format").html(message.artifact.format);
-    $("#package").html(unescape(message.artifact.name));
+    $("#package").html(package);
     $("#version").html(message.artifact.version);
 
     $("#hash").html(message.message.response.description);
@@ -385,7 +388,7 @@ function renderSecurityDataOSSIndex(message){
             //console.log(securityIssue.reference);
             //console.log(i);
             let vulnerabilityCode = ''
-            if(typeof securityIssue.cve === "undefined") {
+            if(typeof securityIssue.cve === undefined) {
                 vulnerabilityCode = " No CVE ";
             }else{
                 vulnerabilityCode = securityIssue.cve
@@ -405,7 +408,7 @@ function renderSecurityDataOSSIndex(message){
             strAccordion += '</table>';
             strAccordion += '</div>';            
         }
-        console.log(strAccordion);
+        // console.log(strAccordion);
         $("#accordion").html(strAccordion);
         //$('#accordion').accordion({heightStyle: 'content'});
         $('#accordion').accordion({heightStyle: 'panel'});
@@ -424,16 +427,14 @@ function renderSecurityDataOSSIndex(message){
 
 }
 function renderComponentData(message){
-    console.log('renderComponentData');
-    console.log(message);
+    console.log('renderComponentData-message:', message);
     var thisComponent = message.message.response.componentDetails["0"];
     let component = thisComponent.component;
-    console.log("component");
-    console.log(component);
+    console.log('component:', component);
     let format = component.componentIdentifier.format;
     $("#format").html(format);
     let coordinates = component.componentIdentifier.coordinates;
-    console.log(coordinates);
+    console.log('coordinates:', coordinates);
     switch(format){
         case formats.npm:
             $("#package").html(coordinates.packageId);
@@ -454,7 +455,7 @@ function renderComponentData(message){
             $("#package").html('Unknown format');
             break
     };
-    console.log(coordinates.version);
+    console.log('coordinates.version:', coordinates.version);
     $("#version").html(coordinates.version);
     artifact.hash = component.hash;
     $("#hash").html(component.hash);
@@ -520,7 +521,7 @@ function Highest_CVSS_Score(message){
     console.log('highestSecurityIssue');
     console.log(highestSecurityIssue);
     
-    if (typeof highestSecurityIssue === "undefined" || highestSecurityIssue == -Infinity){
+    if (typeof highestSecurityIssue === undefined || highestSecurityIssue == -Infinity){
         highestSecurityIssue = 'NA'
     }
     console.log('Highest_CVSS_Score(ending)', highestSecurityIssue);
@@ -537,7 +538,7 @@ function Highest_CVSS_ScoreOSSIndex(message){
     console.log('highestSecurityIssue');
     console.log(highestSecurityIssue);
     
-    if (typeof highestSecurityIssue === "undefined" || highestSecurityIssue == -Infinity){
+    if (typeof highestSecurityIssue === undefined || highestSecurityIssue == -Infinity){
         highestSecurityIssue = 'NA'
     }
     console.log('Highest_CVSS_Score(ending)', highestSecurityIssue);
@@ -612,7 +613,8 @@ function renderSecurityData(message){
             //console.log(i);
             let className = styleCVSS(securityIssue.severity);
             let strVulnerability = securityIssue.reference;
-            strAccordion += '<h3><span class="headingreference">' + strVulnerability + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.severity + '</span></h3>';
+            
+            strAccordion += '<h3><span class="headingreference">' + strVulnerability.toUpperCase() + '</span><span class="headingseverity ' + className +'">CVSS:' + securityIssue.severity + '</span></h3>';
             strAccordion += '<div>';
             strAccordion += '<table>'
             strAccordion += '<tr>'
@@ -862,13 +864,13 @@ function showError(error)
     // $("#error").removeClass("hidden");
     //OSSINdex responds with HTML and not JSON if there is an error
     let errorText
-    if (typeof error.statusText !== "undefined"){
+    if (typeof error.statusText !== undefined){
         errorText = error.statusText;
     }else{
         errorText = error;
     }
     if (errorText.search('<html>')>-1){
-        if (typeof error.responseText !== "undefined"){
+        if (typeof error.responseText !== undefined){
             let errorText = error.responseText;
             var el = document.createElement( 'html' );
             el.innerHTML = errorText;

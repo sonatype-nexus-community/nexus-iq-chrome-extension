@@ -1,5 +1,5 @@
 console.log('background.js');
-if (typeof chrome !== "undefined"){
+if (typeof chrome !== undefined){
     chrome.runtime.onMessage.addListener(gotMessage);
 }
 window.serverBaseURL = ""
@@ -44,20 +44,6 @@ function gotMessage(message, sender, sendResponse){
         case messageTypes.evaluate:
             //evaluate
             artifact = message.artifact;
-            // window.baseURL = "http://iq-server:8070/"
-            // window.username = "admin"
-            // window.password = "admin123"
-
-
-            // baseURL = window.baseURL;//"http://localhost:8070/"
-            // username = window.username; //"admin"
-            // password = window.password;//"admin123"
-            // settings = BuildSettings(baseURL, username, password)
-            // window.baseURL = baseURL;//"http://localhost:8070/"
-            // window.username = username; //"admin"
-            // window.password = password;//"admin123"
-            // retval = evaluate(artifact, settings);
-            // retval = evaluate2(artifact, settings);
             retval = loadSettingsAndEvaluate(artifact);
             break;
         case messageTypes.displayMessage:            
@@ -73,8 +59,7 @@ function gotMessage(message, sender, sendResponse){
             console.log('background artifact message does not need to respond');
             break;
         default:
-            console.log('unhandled message.messagetype');
-            console.log(message);
+            console.log('unhandled message.messagetype', message);
             // alert('unhandled case');
 
     }
@@ -363,21 +348,25 @@ function ToggleIcon(tab){
 
 function addDataOSSIndex( artifact){// pass your data in method
     //OSSINdex is anonymous
-    console.log('entering addDataOSSIndex', artifact);
+    console.log('entering addDataOSSIndex: artifact', artifact);
     let retVal;
     // https://ossindex.sonatype.org/api/v3/component-report/composer%3Adrupal%2Fdrupal%405
     //type:namespace/name@version?qualifiers#subpath 
     let format = artifact.format;
     let name = artifact.name;
     let version = artifact.version;
-    let OSSIndexURL 
+    let OSSIndexURL;
     if(artifact.format == formats.golang){
         //Example: pkg:github/etcd-io/etcd@3.3.1
-        OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
+        //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
+        //OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
+        let goFormat= `github/${artifact.namespace}/${artifact.name}@${artifact.version}`;
+
+        OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${goFormat}`;
     }else{
         // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
         //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/jquery/jquery@3.0.0
-        OSSIndexURL= `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`
+        OSSIndexURL= `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`;
     }
     let status = false;
     //components[""0""].componentIdentifier.coordinates.packageId
@@ -454,33 +443,6 @@ function addDataOSSIndex( artifact){// pass your data in method
 };
 
 
-chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
-    //page was updated
-    console.log('chrome.tabs.onUpdated.addListener', tabId, changeInfo, tab)
-    chrome.pageAction.hide(tabId);
-    if (changeInfo.status == 'complete' && tab.active && changeInfo.url) {  
-      // do your things
-        console.log('chrome.tabs.onUpdated.addListener');
-        //need to tell the content script to reevaluate
-        //send a message to content.js
-        ToggleIcon(tab);
-    }
-});
- 
-
-// var p = new Promise(function (resolve, reject) {
-//     var permission = true;
-//     chrome.storage.sync.get({
-//         history: true
-//     }, function (items) {
-//         permission = items.history;
-//         resolve(permission);
-//     });
-// });
-// p.then(function (permission) {
-//     loadStuff(permission);
-// });
-
 async function quickTest(){
     let artifact = {
         format :"maven",        
@@ -519,24 +481,51 @@ async function quickTest2(){
     console.log(myResp3);
 }
 
-chrome.tabs.onSelectionChanged.addListener(function(tabId) {
-    console.log('chrome.tabs.onSelectionChanged.addListener', tabId)
-    chrome.pageAction.hide(tabId);
-});
-/////////////////Listeners///////////////////////////////////
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-    console.log('chrome.tabs.onActivated.addListener(function(activeInfo) tabId', activeInfo);
-    let tabId = activeInfo.tabId;
-    // chrome.pageAction.hide(tabId)
-    // var tab = chrome.tabs.get(activeInfo.tabId, function(tab) {
-    //     let url = tab.url;
-    //     if (typeof url !== "undefined" && checkPageIsHandled(url)){
-    //         installScripts();
-    //     }    
-    // });
-});
+//does not work unfortunately
+// chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+//     //page was updated
+//     console.log('chrome.tabs.onUpdated.addListener', tabId, changeInfo, tab)
+//     chrome.pageAction.hide(tabId);
+//     if (changeInfo.status == 'complete' && tab.active && changeInfo.url) {  
+//       // do your things
+//         console.log('chrome.tabs.onUpdated.addListener');
+//         //need to tell the content script to reevaluate
+//         //send a message to content.js
+//         ToggleIcon(tab);
+//     }
+// });
+ 
 
+// var p = new Promise(function (resolve, reject) {
+//     var permission = true;
+//     chrome.storage.sync.get({
+//         history: true
+//     }, function (items) {
+//         permission = items.history;
+//         resolve(permission);
+//     });
+// });
+// p.then(function (permission) {
+//     loadStuff(permission);
+// });
+// chrome.tabs.onSelectionChanged.addListener(function(tabId) {
+//     console.log('chrome.tabs.onSelectionChanged.addListener', tabId)
+//     chrome.pageAction.hide(tabId);
+// });
+// /////////////////Listeners///////////////////////////////////
+// chrome.tabs.onActivated.addListener(function(activeInfo) {
+//     console.log('chrome.tabs.onActivated.addListener(function(activeInfo) tabId', activeInfo);
+//     let tabId = activeInfo.tabId;
+//     // chrome.pageAction.hide(tabId)
+//     // var tab = chrome.tabs.get(activeInfo.tabId, function(tab) {
+//     //     let url = tab.url;
+//     //     if (typeof url !== "undefined" && checkPageIsHandled(url)){
+//     //         installScripts();
+//     //     }    
+//     // });
+// });
 
+//this does work
 chrome.runtime.onInstalled.addListener(function() {
     // loadSettings();
     // let tabId = 0;
@@ -609,6 +598,7 @@ chrome.runtime.onInstalled.addListener(function() {
                     pathContains: "crates"
                 }
         }),
+        //perhaps add support for https://go-search.org/view?id=github.com%2fetcd-io%2fetcd
         new chrome.declarativeContent.PageStateMatcher({
         pageUrl: {hostEquals: 'search.gocenter.io', 
                     schemes: ['https'],

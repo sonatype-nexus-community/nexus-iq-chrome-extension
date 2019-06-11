@@ -9,12 +9,28 @@ var formats = {
     composer: "composer", //packagist website but composer format
     cocoapods: "cocoapods",
     cran: "cran",
-    cargo: "cargo", //cargo == crates 
+    cargo: "cargo", //cargo == crates == rust
     golang: "golang",
     github: "github"
 }
-  
 
+//This is the format in nexus repo for proxy repos
+var nexusRepoformats = {
+    maven: "maven2",
+    npm: "npm",
+    nuget: "nuget",
+    gem: "rubygems",
+    pypi: "pypi"
+}
+
+//This is the format in artifactory repo for proxy repos
+var artifactoryRepoformats = {
+    maven: "maven2",
+    npm: "npm",
+    nuget: "nuget",
+    gem: "rubygems",
+    pypi: "pypi"
+}
 const dataSources = {
     NEXUSIQ: 'NEXUSIQ',
     OSSINDEX: 'OSSINDEX'
@@ -136,7 +152,7 @@ function ParsePageURL(url){
     }
     //https://github.com/jquery/jquery/releases/tag/3.0.0
     else if (url.search('https://github.com/') >=0){      
-      format = formats.golang;
+      format = formats.github;
       artifact = parseGitHubURL(url);
     }
     //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
@@ -686,7 +702,7 @@ function parseNexusRepoURL(url){
         let groupId 
         let artifactId 
         let version
-        let extension = "jar"
+        let extension
 
         let classifier = "";
         let datasource = dataSources.NEXUSIQ;
@@ -839,7 +855,7 @@ function parseArtifactoryURL(url) {
             groupId = elements[groupIdIndex] + '.' + elements[groupIdIndex+1];
             artifactId = elements[artifactIdIndex];
             version = elements[versionIndex];
-            extension = "jar"
+            extension = 'jar';
         }
         else if (numElements ==4 && lastElementIsFileName){
             //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar

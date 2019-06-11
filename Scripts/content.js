@@ -2,7 +2,7 @@
 console.log('contentscript.js');
 
 
-chrome.runtime.onMessage.addListener(gotMessage);
+// chrome.runtime.onMessage.addListener(gotMessage);
 var message
 function gotMessage(receivedMessage, sender, sendResponse){
     console.log('gotMessage');
@@ -16,26 +16,21 @@ function processPage(message = {messagetype: messageTypes.beginevaluate}){
   console.log(message);
 
     //please tell what is my url and what is my content
-    console.log("url");
     var url  = window.location.href;     
-    console.log(url);
+    console.log('url', url);
     //this page will hear the Evaluate message as well, so ignore it
     if (message.messagetype !== messageTypes.evaluate){
-      let requestmessage = ParsePage()
-      console.log('requestmessage');
-      console.log(requestmessage);
+      let artifact = ParsePage()
+      // console.log('requestmessage', requestmessage);
       //{messageType: "artifact", payload: artifact};
-      let artifact = requestmessage.payload;
-      console.log('artifact');
-      console.log(artifact);
+      // let artifact = requestmessage.payload;
+      console.log('artifact', artifact);
       let format = artifact.format;
       let evaluatemessage = {
           artifact: artifact,        
           messagetype: messageTypes.evaluate
       }
-      console.log('chrome.runtime.sendMessage(evaluatemessage)');
-      console.log(evaluatemessage);
-      
+      console.log('chrome.runtime.sendMessage(evaluatemessage)', evaluatemessage);      
       chrome.runtime.sendMessage(evaluatemessage);
     }
 }
@@ -51,7 +46,7 @@ function ParsePage(){
     let format;
     // let datasource = dataSources.NEXUSIQ;
     let url = location.href;
-    console.log(url);
+    console.log('url', url);
 
     if (url.search('search.maven.org/artifact/') >=0){
       format = formats.maven;
@@ -130,14 +125,12 @@ function ParsePage(){
       messagetype: messageTypes.artifact,       
       payload: artifact
     };
-    chrome.runtime.sendMessage(message, function(response){
-        //sends a message to background handler
-        //what should I do with the callback?
-        console.log('chrome.runtime.sendMessage');
-        console.log(response);
-        console.log(message);
-    });
-    return message;
+    // chrome.runtime.sendMessage(message, function(response){
+    //     //sends a message to background handler
+    //     //what should I do with the callback?
+    //     console.log('chrome.runtime.sendMessage', response, message);
+    // });
+    return artifact;
 };
 
 
@@ -163,7 +156,7 @@ function parseMaven(format, url) {
     version = encodeURIComponent(version);
     
     let extension = elements[7];
-    if (typeof extension === "undefined"){
+    if (typeof extension === undefined){
       //mvnrepository doesnt have it
       extension = "jar"
     }
@@ -202,12 +195,12 @@ function parseNPM(format, url) {
     // found = $('h1.package-name-redundant', doc);
     found = $("h2 span")
     console.log(found);
-    if (typeof found !== "undefined" && found !== ""){
+    if (typeof found !== undefined && found !== ""){
       packageName = found.text().trim();        
       // let foundV = $("h2", doc);
       //https://www.npmjs.com/package/jest
       newV = $("h2").next("span")
-      if (typeof newV !== "undefined" && newV !== ""){
+      if (typeof newV !== undefined && newV !== ""){
         newV = newV.text()
         //produces "24.5.0 • "
         let findnbsp = newV.search(String.fromCharCode(160))
@@ -429,6 +422,11 @@ function parseGoLang(format, url) {
   //server is non-defined, language is go/golang
   //index of github stored at jfrog
   //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
+  /////////Todo get this working better
+  //https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
+  //becomes
+  //https://ossindex.sonatype.org/component/pkg:golang/github.com/etcd-io:etcd@v3.3.13
+
   // pkg:golang/github.com/etcd-io/etcd@3.3.1
   // pkg:github/etcd-io/etcd@3.3.1
   console.log('parseGolang:', format,  url);
@@ -452,10 +450,10 @@ function parseGoLang(format, url) {
     name = nameElements[2]
   }
  
-  versionHTML = $("span.version-name").first().text()
+  let versionHTML = $("span.version-name").first().text()
   console.log('versionHTML');
   console.log(versionHTML);
-  version=versionHTML.trim();
+  let version=versionHTML.trim();
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
   let datasource = dataSources.OSSINDEX;
@@ -523,7 +521,7 @@ function parseNexusRepo(url) {
   //#nx-info-1179 > div > table > tbody > tr:nth-child(2) > td.nx-info-entry-value
   let nexusRepoformat = $("div.nx-info > table > tbody > tr:nth-child(2) > td.nx-info-entry-value").html();
   switch(nexusRepoformat){
-    case "pypi":
+    case nexusRepoformats.pypi:
       format = formats.pypi;
       datasource = dataSources.NEXUSIQ;
       
@@ -536,7 +534,7 @@ function parseNexusRepo(url) {
         version: version    
       };
       break;
-    case "maven2":
+    case nexusRepoformats.maven:
       format = formats.maven;
       datasource = dataSources.NEXUSIQ;
       groupId = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
@@ -551,7 +549,7 @@ function parseNexusRepo(url) {
         extension: 'jar'    
       };
       break;
-    case "npm":
+    case nexusRepoformats.npm:
       format = formats.npm;
       datasource = dataSources.NEXUSIQ;
       name = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
@@ -561,8 +559,9 @@ function parseNexusRepo(url) {
         datasource: datasource,
         packageName: name,    
         version: version    
-      };  
-    case "nuget":
+      };
+      break;
+    case nexusRepoformats.nuget:
       format = formats.nuget;
       datasource = dataSources.NEXUSIQ;
       name = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
@@ -574,8 +573,19 @@ function parseNexusRepo(url) {
         version: version    
       };             
       break;
-    default:
-
+    case nexusRepoformats.gem:
+        format = formats.gem;
+        datasource = dataSources.NEXUSIQ;
+        name = $("div.nx-info > table > tbody > tr:nth-child(3) > td.nx-info-entry-value").html();
+        version = $("div.nx-info > table > tbody > tr:nth-child(4) > td.nx-info-entry-value").html();
+        artifact = {
+          format: format, 
+          datasource: datasource,
+          name: name,    
+          version: version    
+        };             
+        break;
+      default:
   }
   console.log('component', artifact);
   return artifact;
