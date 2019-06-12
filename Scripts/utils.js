@@ -400,7 +400,7 @@ function parseMavenURL(url) {
       version = encodeURIComponent(version);
       
       let extension = elements[7];
-      if (typeof extension === "undefined"){
+      if (typeof extension === undefined || extension==="bundle"){
         //mvnrepository doesnt have it
         extension = "jar"
       }
