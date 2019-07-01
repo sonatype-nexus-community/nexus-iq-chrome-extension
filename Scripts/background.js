@@ -1,5 +1,5 @@
 console.log('background.js');
-if (typeof chrome !== undefined){
+if (typeof chrome !== "undefined"){
     chrome.runtime.onMessage.addListener(gotMessage);
 }
 window.serverBaseURL = ""

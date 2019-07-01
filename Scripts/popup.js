@@ -5,7 +5,7 @@ var nexusArtifact
 var hasVulns
 var settings
 var hasLoadedHistory
-if (typeof chrome !== undefined){
+if (typeof chrome !== "undefined"){
     chrome.runtime.onMessage.addListener(gotMessage);
 }
 
@@ -243,7 +243,7 @@ function createAllversionsHTML(data, remediation, currentVersion){
         if (remediation === version) {remediationRow = rowId}
         if (currentVersion === version) {currentVersionRow = rowId}
         let popularity = element.relativePopularity
-        let license = (typeof element.policyMaxThreatLevelsByCategory.LICENSE === undefined ? 0 : element.policyMaxThreatLevelsByCategory.LICENSE )
+        let license = (typeof element.policyMaxThreatLevelsByCategory.LICENSE === "undefined" ? 0 : element.policyMaxThreatLevelsByCategory.LICENSE )
         let myDate = new Date(element.catalogDate)
         let catalogDate = myDate.toLocaleDateString()
         let security = element.highestSecurityVulnerabilitySeverity
@@ -391,7 +391,7 @@ function renderSecurityDataOSSIndex(message){
             //console.log(securityIssue.reference);
             //console.log(i);
             let vulnerabilityCode = ''
-            if(typeof securityIssue.cve === undefined) {
+            if(typeof securityIssue.cve === "undefined") {
                 vulnerabilityCode = " No CVE ";
             }else{
                 vulnerabilityCode = securityIssue.cve
@@ -524,7 +524,7 @@ function Highest_CVSS_Score(message){
     console.log('highestSecurityIssue');
     console.log(highestSecurityIssue);
     
-    if (typeof highestSecurityIssue === undefined || highestSecurityIssue == -Infinity){
+    if (typeof highestSecurityIssue === "undefined" || highestSecurityIssue == -Infinity){
         highestSecurityIssue = 'NA'
     }
     console.log('Highest_CVSS_Score(ending)', highestSecurityIssue);
@@ -541,7 +541,7 @@ function Highest_CVSS_ScoreOSSIndex(message){
     console.log('highestSecurityIssue');
     console.log(highestSecurityIssue);
     
-    if (typeof highestSecurityIssue === undefined || highestSecurityIssue == -Infinity){
+    if (typeof highestSecurityIssue === "undefined" || highestSecurityIssue == -Infinity){
         highestSecurityIssue = 'NA'
     }
     console.log('Highest_CVSS_Score(ending)', highestSecurityIssue);
@@ -867,13 +867,15 @@ function showError(error)
     // $("#error").removeClass("hidden");
     //OSSINdex responds with HTML and not JSON if there is an error
     let errorText
-    if (typeof error.statusText !== undefined){
+    // console.log('error.statusText', (typeof error.statusText === "undefined"));
+    if (typeof error.statusText !== "undefined"){
         errorText = error.statusText;
     }else{
         errorText = error;
     }
+    // console.log('errorText', errorText);
     if (errorText.search('<html>')>-1){
-        if (typeof error.responseText !== undefined){
+        if (typeof error.responseText !== "undefined"){
             let errorText = error.responseText;
             var el = document.createElement( 'html' );
             el.innerHTML = errorText;

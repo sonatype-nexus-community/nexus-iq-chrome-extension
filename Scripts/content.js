@@ -156,7 +156,7 @@ function parseMaven(format, url) {
     version = encodeURIComponent(version);
     
     let extension = elements[7];
-    if (typeof extension === undefined){
+    if (typeof extension === "undefined"){
       //mvnrepository doesnt have it
       extension = "jar"
     }
@@ -195,12 +195,12 @@ function parseNPM(format, url) {
     // found = $('h1.package-name-redundant', doc);
     found = $("h2 span")
     console.log(found);
-    if (typeof found !== undefined && found !== ""){
+    if (typeof found !== "undefined" && found !== ""){
       packageName = found.text().trim();        
       // let foundV = $("h2", doc);
       //https://www.npmjs.com/package/jest
       newV = $("h2").next("span")
-      if (typeof newV !== undefined && newV !== ""){
+      if (typeof newV !== "undefined" && newV !== ""){
         newV = newV.text()
         //produces "24.5.0 • "
         let findnbsp = newV.search(String.fromCharCode(160))
@@ -223,18 +223,30 @@ function parseNPM(format, url) {
 };
 
 function parseNuget(format, url) {
+    console.log('parseNuget:', format, url);
     //we can parse the URL or the DOM
     //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
     let elements = url.split('/')
+    console.log('elements', elements)
     let packageId
     let version
     let datasource
-    if(elements.length <= 5){
+    if(elements.length <= 5 || (elements.length === 6 && elements[5] === "")) {
       //we are on the latest version - no version in the url
       //https://www.nuget.org/packages/LibGit2Sharp/
-      packageId = elements[4];
+      // packageId = elements[4];
+      //version = $(".package-title .text-nowrap").text();
+
+      //case sensitive problem
+      //HDS is case sensitive, URLs are not
+      //ouch
+      //going to parse the document.title
+      //document.title.split(' ')
+      //title: "NuGet Gallery | Polly 7.1.0"
+      let titleElements = document.title.split(' ')
+      packageId = titleElements[3];
       //#skippedToContent > section > div > article > div.package-title > h1 > small
-      version = $(".package-title .text-nowrap").text();
+      version = titleElements[4];
     }
     else{
       packageId = elements[4];
