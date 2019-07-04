@@ -133,19 +133,16 @@ function login(settings){
             // let retval = evaluate(artifact, settings);
             
             if (retVal.error){
-                console.log('WebRequest error');
-                console.log(retval);
+                console.log('WebRequest error', retval);
             }else{
-                console.log('happy days');
-                console.log(retVal);
+                console.log('happy days', retVal);
             }
             let loggedInMessage = {
                 messagetype: messageTypes.loggedIn,
                 message: retVal
             }
             window.haveLoggedIn = true;
-            console.log('sendmessage');
-            console.log(loggedInMessage);
+            console.log('sendmessage: loggedInMessage', loggedInMessage);
             chrome.runtime.sendMessage(loggedInMessage);
             return(retVal);
         }
@@ -191,11 +188,7 @@ function evaluate(artifact, settings){
 
 function callIQ(artifact, settings){
     console.log("evaluate", settings.auth, artifact);
-    var requestdata = NexusFormat(artifact);
-    
- 
-  
-    
+    var requestdata = NexusFormat(artifact);   
     let inputStr = JSON.stringify(requestdata);
     var retVal
     console.log(inputStr);

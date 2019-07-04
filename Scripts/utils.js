@@ -1,3 +1,4 @@
+"use strict";
 console.log('utils.js');
 
 var formats = {
@@ -81,11 +82,10 @@ function ParsePageURL(url){
     //artifact varies depending on eco-system
     //returns an artifact if URL contains the version
     //if not a version specific URL then returns a falsy value
-    console.log('ParsePageURL');
+    console.log('ParsePageURL', url);
     //who I am what is my address?
     let artifact;
     let format;
-    console.log(url);
 
     if (url.search('search.maven.org/artifact/') >=0){
         //https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar  
@@ -224,21 +224,22 @@ function removeCookies(settings_url){
 
 function NexusFormat(artifact){
     let format = artifact.format;
+    let requestdata;
     switch (format){
-        case formats.npm:
-            requestdata = NexusFormatNPM(artifact);
-            break;
         case formats.maven:
             requestdata = NexusFormatMaven(artifact);
             break;
-        case formats.gem:
-            requestdata = NexusFormatRuby(artifact);
+        case formats.npm:
+            requestdata = NexusFormatNPM(artifact);
+            break;
+        case formats.nuget:
+            requestdata = NexusFormatNuget(artifact);
             break;
         case formats.pypi:
             requestdata = NexusFormatPyPI(artifact);
             break;
-        case formats.nuget:
-            requestdata = NexusFormatNuget(artifact);
+        case formats.gem:
+            requestdata = NexusFormatRuby(artifact);
             break;
         
         default:
@@ -251,6 +252,7 @@ function NexusFormat(artifact){
 function NexusFormatMaven(artifact){  
 	//return a dictionary in Nexus Format
     //return dictionary of components
+    let componentDict, component;
     componentDict = {components:[	
 		component = {
 			hash: artifact.hash, 
@@ -274,6 +276,7 @@ function NexusFormatMaven(artifact){
 function NexusFormatNPM(artifact){  
 	//return a dictionary in Nexus Format
     //return dictionary of components
+    let componentDict, component;
     componentDict = {"components":[	
         component = {
             "hash": artifact.hash, 
@@ -294,6 +297,7 @@ function NexusFormatNPM(artifact){
 function NexusFormatNuget(artifact){
 	//return a dictionary in Nexus Format ofr Nuget
     //return dictionary of components
+    let componentDict, component;
     componentDict = {
         "components":[
             component = {
@@ -314,8 +318,8 @@ function NexusFormatPyPI(artifact){
 	//return a dictionary in Nexus Format
     //return dictionary of components
     //TODO: how to determine the qualifier and the extension??
-    componentDict = {"components":[	
-
+    let component
+    let componentDict = {"components":[	
             component = {
                 "hash": artifact.hash, 
                 "componentIdentifier": 
@@ -324,9 +328,9 @@ function NexusFormatPyPI(artifact){
                     "coordinates" : 
                         {
                             "name": artifact.name, 
-                            "qualifier": 'py2.py3-none-any',
+                            "qualifier": artifact.qualifier || 'py2.py3-none-any',
                             "version" : artifact.version,
-                            "extension" : 'whl'
+                            "extension" : artifact.extension || 'whl'
                         }
                     }
             }
@@ -338,6 +342,7 @@ function NexusFormatRuby(artifact){
 	//return a dictionary in Nexus Format
     //return dictionary of components
     //TODO: how to determine the qualifier and the extension??
+    let componentDict, component;    
     componentDict = {"components":[	
 		component = {
 			"hash": artifact.hash, 
@@ -382,7 +387,8 @@ function encodeComponentIdentifier(nexusArtifact){
 
 
 function parseMavenURL(url) {
-    console.log('parseMavenURL')      
+    console.log('parseMavenURL')
+          
       //maven repo https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
       //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
       //CURRENTLY both have the same format in the URL version, except maven central also has the packaging type  
@@ -400,7 +406,7 @@ function parseMavenURL(url) {
       version = encodeURIComponent(version);
       
       let extension = elements[7];
-      if (typeof extension === undefined || extension==="bundle"){
+      if (typeof extension === "undefined" || extension==="bundle"){
         //mvnrepository doesnt have it
         extension = "jar"
       }
@@ -461,9 +467,8 @@ function parseNugetURL(url) {
     //https://www.nuget.org/packages/LibGit2Sharp/0.20.1
     let format = formats.nuget;
     let datasource = dataSources.NEXUSIQ;
-
+    let packageId, version, artifact;
     var elements = url.split('/')
-    var artifact    = ""
     if (elements.length==6){
       packageId = elements[4];
       //  packageName=url.substr(url.lastIndexOf('/')+1);
@@ -491,7 +496,12 @@ function parsePyPIURL(url) {
     let datasource = dataSources.NEXUSIQ;
 
     let elements = url.split('/')
-    let artifact = ""
+    let artifact;
+    let extension = 'whl';
+    let qualifier = 'py2.py3-none-any';
+    let name, version;
+
+
     if (elements[5]==""){
         artifact = ""
     }
@@ -502,11 +512,13 @@ function parsePyPIURL(url) {
       name = encodeURIComponent(name);
       version = encodeURIComponent(version);
       artifact = {
-          format: format, 
-          name: name, 
-          version: version,
-          datasource: datasource
-        };
+        format: format, 
+        name: name, 
+        version: version, 
+        datasource: datasource,
+        extension: extension,
+        qualifier: qualifier     
+      }
     }
     return artifact;
 };

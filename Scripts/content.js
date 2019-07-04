@@ -261,24 +261,26 @@ function parseNuget(format, url) {
 
 
 function parsePyPI(format, url) {
-    console.log('parsePyPI');
+    console.log('parsePyPI', format, url);
     let version
     let name
     let datasource
+    let extension
+    let qualifier
     //https://pypi.org/project/Django/1.6/
     //https://pypi.org/project/Django/
     let elements = url.split('/')
-    if (elements[5]==""){
+    if (elements[5]==''){
+      //empty in element 5 means no version in the url
       //then we will try to parse
       //#content > section.banner > div > div.package-header__left > h1
       //Says Django 2.0.5
       name = elements[4];
       let versionHTML = $("h1.package-header__name").text().trim();
-      console.log('versionHTML');
-      console.log(versionHTML);
+      console.log('versionHTML', versionHTML);
       let versionElements = versionHTML.split(' ');
       version = versionElements[1];
-      console.log(version);
+      console.log('version', version);
     }
     else{
       name = elements[4];
@@ -288,7 +290,16 @@ function parsePyPI(format, url) {
     name = encodeURIComponent(name);
     version = encodeURIComponent(version);
     datasource = dataSources.NEXUSIQ;
-    return {format: format, name:name, version:version, datasource:datasource}
+    extension = 'whl';//'zip';
+    let artifact = {
+      format: format, 
+      name: name, 
+      version: version, 
+      datasource: datasource,
+      extension: extension,
+      qualifier: ''      
+    }
+    return artifact;    
 };  
 
 function parseRuby(format, url) {
@@ -543,7 +554,9 @@ function parseNexusRepo(url) {
         format: format, 
         datasource: datasource,
         name: name,    
-        version: version    
+        version: version,
+        extension: 'zip', //whl or zip, how to tell
+        qualifier: ''
       };
       break;
     case nexusRepoformats.maven:
