@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 console.log('contentscript.js');
 
 
@@ -262,11 +262,7 @@ function parseNuget(format, url) {
 
 function parsePyPI(format, url) {
     console.log('parsePyPI', format, url);
-    let version
-    let name
-    let datasource
-    let extension
-    let qualifier
+    let version, name, datasource, extension, qualifier
     //https://pypi.org/project/Django/1.6/
     //https://pypi.org/project/Django/
     let elements = url.split('/')
@@ -281,23 +277,31 @@ function parsePyPI(format, url) {
       let versionElements = versionHTML.split(' ');
       version = versionElements[1];
       console.log('version', version);
+      //will try and get qualifier and extension
+      //#files > table > tbody > tr:nth-child(1) > td:nth-child(1) > a:nth-child(1)
     }
     else{
       name = elements[4];
       //  packageName=url.substr(url.lastIndexOf('/')+1);    
-      version = elements[5];
+      version = elements[5]; 
     }
+    let qualifierHTML = $("#files > table > tbody > tr:nth-child(1) > td:nth-child(1) > a:nth-child(1)").text().trim();
+    //"numpy-1.16.4-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"
+    let name_ver = `${name}-${version}-`
+    qualifier = qualifierHTML.substr(name_ver.length, qualifierHTML.lastIndexOf('.') - name_ver.length);
+    extension = qualifierHTML.substr(qualifierHTML.lastIndexOf('.') + 1);
+
+
     name = encodeURIComponent(name);
     version = encodeURIComponent(version);
     datasource = dataSources.NEXUSIQ;
-    extension = 'whl';//'zip';
     let artifact = {
       format: format, 
       name: name, 
       version: version, 
       datasource: datasource,
       extension: extension,
-      qualifier: ''      
+      qualifier: qualifier
     }
     return artifact;    
 };  

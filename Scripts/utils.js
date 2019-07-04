@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 console.log('utils.js');
 
 var formats = {
@@ -51,8 +51,7 @@ var messageTypes = {
 
 
 function checkPageIsHandled(url){
-    console.log("checkPageIsHandled")
-    console.log(url)
+    console.log("checkPageIsHandled", url);
     //check the url of the tab is in this collection
     // let url = tab.url
     let found = false
@@ -61,7 +60,7 @@ function checkPageIsHandled(url){
         url.search("https://www.npmjs.com/") >= 0 ||
         url.search("https://www.nuget.org/") >= 0 ||
         url.search("https://rubygems.org/") >= 0 ||
-        url.search("https://pypi.org/") >= 0 ||
+        url.search("https://pypi.org/") >= 0 ||  
         url.search("https://packagist.org/") >= 0 ||
         url.search("https://cran.r-project.org/") >= 0 ||
         url.search("https://crates.io/") >= 0 ||
@@ -110,12 +109,13 @@ function ParsePageURL(url){
       artifact =  parseNugetURL( url);
     }    
     
-    else if (url.search('pypi.org/project/') >=0){
-      //https://pypi.org/project/Django/1.6/
-      format = formats.pypi;
-      artifact = parsePyPIURL(url);
+    //pypi url can not be parsed now, as i need to read the html to determine the extension and qualifier
+    // else if (url.search('pypi.org/project/') >=0){
+    //   //https://pypi.org/project/Django/1.6/
+    //   format = formats.pypi;
+    //   artifact = parsePyPIURL(url);
 
-    }
+    // }
     
     else if (url.search('rubygems.org/gems/') >=0){
       //https://rubygems.org/gems/bundler/versions/1.16.1

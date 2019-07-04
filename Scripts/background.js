@@ -1,3 +1,4 @@
+'use strict';
 console.log('background.js');
 if (typeof chrome !== "undefined"){
     chrome.runtime.onMessage.addListener(gotMessage);
@@ -77,6 +78,7 @@ function loadSettingsAndEvaluate(artifact){
         let baseURL = data.url;
         let appId = data.appId;
         let settings;
+        let retval;
         if (!username){
             // settings = BuildEmptySettings();
             
@@ -169,6 +171,7 @@ function login(settings){
 
 function evaluate(artifact, settings){
     console.log('evaluate', artifact, settings);
+    let resp;
 
     // console.log(artifact.datasource)
     switch(artifact.datasource) {
@@ -342,7 +345,7 @@ function ToggleIcon(tab){
 function addDataOSSIndex( artifact){// pass your data in method
     //OSSINdex is anonymous
     console.log('entering addDataOSSIndex: artifact', artifact);
-    let retVal;
+    let retVal, inputStr;
     // https://ossindex.sonatype.org/api/v3/component-report/composer%3Adrupal%2Fdrupal%405
     //type:namespace/name@version?qualifiers#subpath 
     let format = artifact.format;
