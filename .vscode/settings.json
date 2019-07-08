@@ -1,6 +1,5 @@
 {
     "jshint.options": {
-        "esversion": 8,
-        "tabs": "2"
+        "esversion": 8
     }
 }
