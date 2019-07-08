@@ -41,9 +41,9 @@ class MavenArtifact {
     this.datasource = dataSources.NEXUSIQ;
     // super(format, hash, datasource);
   }
-    display(){
-        return `coordinates.groupId + ":" + coordinates.artifactId`
-    }
+  // display(){
+  //     return `coordinates.groupId + ":" + coordinates.artifactId`
+  // }
 }
 class NPMArtifact {
   constructor(packageName, version, format, hash, datasource) {
@@ -56,9 +56,9 @@ class NPMArtifact {
     this.datasource = datasource;
     this.packageName = packageName;
     this.version = version;
-    display(){
-        coordinates.packageId
-    }
+    // display(){
+    //     coordinates.packageId
+    // }
   }
 }
 class NugetArtifact extends Artifact {

@@ -1083,6 +1083,7 @@ const evaluateComponent = async (artifact, settings) => {
   let error = 0;
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/details`;
+  let responseVal;
   browser.cookies.remove({ url: settings.baseURL, name: "CLMSESSIONID" });
   let response = await axios(url, {
     method: "post",
@@ -1093,12 +1094,30 @@ const evaluateComponent = async (artifact, settings) => {
       username: settings.username,
       password: settings.password
     }
-  });
+  })
+    .then(data => {
+      console.log("then", data);
+      retVal = { error: error, responseVal: data };
+    })
+    .catch(error => {
+      console.log("error", error);
+      let code, response;
+      if (!error.response) {
+        // network error
+        code = 1;
+        responseVal = `Server unreachable ${url}. ${error.toString()}`;
+      } else {
+        // http status code
+        code = error.response.status;
+        // response data
+        responseVal = error.response.data;
+      }
+      retVal = { error: code, response: responseVal }; // error = error.response;
+    });
   //handle error
   // console.log(xhr);
   // error = xhr.status;
   // response = xhr.responseText;
-  retVal = { error: error, response: response.data };
   let displayMessage = {
     messagetype: messageTypes.displayMessage,
     message: retVal,
