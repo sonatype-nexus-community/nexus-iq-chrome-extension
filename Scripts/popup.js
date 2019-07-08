@@ -1097,7 +1097,8 @@ const evaluateComponent = async (artifact, settings) => {
   })
     .then(data => {
       console.log("then", data);
-      retVal = { error: error, responseVal: data };
+      responseVal = data.data;
+      retVal = { error: error, response: responseVal };
     })
     .catch(error => {
       console.log("error", error);
