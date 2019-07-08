@@ -37,7 +37,7 @@ class MavenArtifact {
     this.extension = extension;
     this.classifier = classifier;
     this.format = formats.maven;
-    this.hash = "";
+    this.hash = null;
     this.datasource = dataSources.NEXUSIQ;
     // super(format, hash, datasource);
   }
