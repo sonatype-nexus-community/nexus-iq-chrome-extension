@@ -1084,10 +1084,14 @@ const evaluateComponent = async (artifact, settings) => {
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/details`;
   let responseVal;
-  browser.cookies.remove({ url: settings.baseURL, name: "CLMSESSIONID" });
+  browser.cookies.remove({
+    url: settings.baseURL,
+    name: "CLMSESSIONID"
+  });
+  delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
+
   let response = await axios(url, {
     method: "post",
-    //xhr.setRequestHeader("Content-Type", "application/json");
     data: nexusArtifact,
     withCredentials: true,
     auth: {
