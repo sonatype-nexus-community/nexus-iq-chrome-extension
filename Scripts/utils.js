@@ -1,90 +1,6 @@
 "use strict";
 console.log("utils.js");
 
-class Artifact {
-  constructor(format, hash, datasource) {
-    this.format = format;
-    this.hash = hash;
-    this.datasource = datasource;
-  }
-  //I have a few properties
-  //the hash is not always known
-
-  set hash(value) {
-    this.hash = value;
-  }
-  get hash() {
-    return this.hash;
-  }
-  set datasource(value) {
-    this.datasource = value;
-  }
-  get datasource() {
-    return this.datasource;
-  }
-  set format(value) {
-    this.format = value;
-  }
-  get format() {
-    return this.format;
-  }
-}
-class MavenArtifact {
-  constructor(groupId, artifactId, version, extension, classifier) {
-    this.groupId = groupId;
-    this.artifactId = artifactId;
-    this.version = version;
-    this.extension = extension;
-    this.classifier = classifier;
-    this.format = formats.maven;
-    this.hash = null;
-    this.datasource = dataSources.NEXUSIQ;
-    // super(format, hash, datasource);
-  }
-  // display(){
-  //     return `coordinates.groupId + ":" + coordinates.artifactId`
-  // }
-}
-class NPMArtifact {
-  constructor(packageName, version, format, hash, datasource) {
-    // let format = formats.npm;
-    // let hash = "";
-    // let datasource = dataSources.NEXUSIQ;
-    // super(format, hash, datasource);
-    this.format = format;
-    this.hash = hash;
-    this.datasource = datasource;
-    this.packageName = packageName;
-    this.version = version;
-    // display(){
-    //     coordinates.packageId
-    // }
-  }
-}
-class NugetArtifact extends Artifact {
-  constructor(packageId, version) {
-    this.packageId = packageId;
-    this.version = version;
-    let format = formats.nuget;
-    let hash = "";
-    let datasource = dataSources.NEXUSIQ;
-    super(format, hash, datasource);
-  }
-}
-class PyPIArtifact extends Artifact {
-  //Pypi
-  // name: artifact.name,
-  // qualifier: artifact.qualifier || "py2.py3-none-any",
-  // version: artifact.version,
-  // extension: artifact.extension || "whl"
-
-  constructor(name, version, qualifier, extension) {
-    this.name = name;
-    this.version = version;
-    this.qualifier = qualifier;
-    this.extension = extension;
-  }
-}
 var formats = {
   maven: "maven",
   npm: "npm",
@@ -131,6 +47,156 @@ var messageTypes = {
   artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
   evaluateComponent: "evaluateComponent" //used to evaluate on the popup only
 };
+class Component {
+  constructor(hash) {}
+}
+
+class ComponentIdentifier {
+  constructor(format, coordinates) {}
+}
+class Coordinates {
+  constructor() {}
+  display() {
+    return undefined;
+  }
+}
+class NPMCoordinates extends Coordinates {
+  constructor(packageId, version) {}
+  display() {
+    return `${this.packageId}:${this.version}`;
+  }
+}
+
+class MavenCoodinates extends Coordinates {
+  constructor(groupId, artifactId, version) {
+    // console.log("groupId", groupId);
+    super();
+    this.groupId = groupId;
+    this.artifactId = artifactId;
+    this.version = version;
+  }
+  display() {
+    console.log("groupId", this.groupId);
+    return `<tr>
+                            <td class="label">Group:</td>
+                            <td class="data"><span id="group">${
+                              this.groupId
+                            }</span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Artifact:</td>
+                            <td class="data"><span id="artifact">${
+                              this.artifactId
+                            }</span></td>
+                        </tr>                        
+                        <tr>
+                            <td class="label">Version:</td>
+                            <td class="data"><span id="version">${
+                              this.version
+                            }</span></td>
+                        </tr>`;
+  }
+}
+
+class Artifact {
+  constructor(format, hash, datasource) {
+    this.format = format;
+    this.hash = hash;
+    this.datasource = datasource;
+  }
+  //I have a few properties
+  //the hash is not always known
+  display() {
+    return this.format;
+  }
+  set hash(value) {
+    this._hash = value;
+  }
+  get hash() {
+    return this._hash;
+  }
+  set datasource(value) {
+    this._datasource = value;
+  }
+  get datasource() {
+    return this._datasource;
+  }
+  set format(value) {
+    this._format = value;
+  }
+  get format() {
+    return this._format;
+  }
+}
+class MavenArtifact extends Artifact {
+  constructor(groupId, artifactId, version, extension, classifier) {
+    let _format = formats.maven;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.groupId = groupId;
+    this.artifactId = artifactId;
+    this.version = version;
+    this.extension = extension;
+    this.classifier = classifier;
+    // this.format = formats.maven;
+    // this.hash = null;
+    // this.datasource = dataSources.NEXUSIQ;
+  }
+}
+class NPMArtifact extends Artifact {
+  constructor(packageName, version) {
+    let _format = formats.npm;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+
+    // this.format = format;
+    // this.hash = hash;
+    // this.datasource = datasource;
+    this.packageName = packageName;
+    this.version = version;
+  }
+  display() {
+    return this.packageId;
+  }
+}
+class NugetArtifact extends Artifact {
+  constructor(packageId, version) {
+    let _format = formats.nuget;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+
+    this.packageId = packageId;
+    this.version = version;
+  }
+  display() {
+    return this.packageId;
+  }
+}
+class PyPIArtifact extends Artifact {
+  //Pypi
+  // name: artifact.name,
+  // qualifier: artifact.qualifier || "py2.py3-none-any",
+  // version: artifact.version,
+  // extension: artifact.extension || "whl"
+
+  constructor(name, version, qualifier, extension) {
+    let _format = formats.pypi;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+
+    this.name = name;
+    this.version = version;
+    this.qualifier = qualifier;
+    this.extension = extension;
+  }
+  display() {
+    return this.name;
+  }
+}
 
 const checkPageIsHandled = url => {
   console.log("checkPageIsHandled", url);
@@ -234,8 +300,7 @@ const ParsePageURL = url => {
   //nexus Repo
   // http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
   else if (url.search("#browse/browse:") >= 0) {
-    // artifact = parseNexusRepoURL(url);
-    artifact = undefined;
+    artifact = parseNexusRepoURL(url);
   }
 
   console.log("ParsePageURL Complete");
@@ -290,6 +355,7 @@ const removeCookies = settings_url => {
 };
 
 const NexusFormat = artifact => {
+  console.log("NexusFormat", artifact);
   let format = artifact.format;
   let requestdata;
   switch (format) {
@@ -310,8 +376,8 @@ const NexusFormat = artifact => {
       break;
 
     default:
+      console.log("Unexpected format", format);
       return;
-      break;
   }
   return requestdata;
 };
@@ -595,7 +661,7 @@ const parseRubyURL = url => {
   console.log("parseRubyURL");
   let format = formats.gem;
   let datasource = dataSources.NEXUSIQ;
-
+  let name, version;
   let elements = url.split("/");
   let artifact;
   if (elements.length < 6) {
@@ -724,6 +790,7 @@ const parseGitHubURL = url => {
 
 const parseNexusRepoURL = url => {
   console.log("parseNexusRepoURL", url);
+  return undefined;
   //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
   //http://nexus:8081/#browse/browse:npm-proxy:%40akryum%2Fwinattr%2Fwinattr-3.0.0.tgz
   //http://nexus:8081/#browse/search=keyword%3Dlodash:2a59043ed2ea556e86a68efbf920b14d:40292acdebc01b836aa6c0988697aca5
@@ -767,7 +834,7 @@ const parseNexusRepoURL = url => {
       fileName.search("-") + 1,
       fileName.lastIndexOf(".")
     );
-    datasource = dataSources.NEXUSIQ;
+    let datasource = dataSources.NEXUSIQ;
     artifact = {
       format: format,
       packageName: packageName,
@@ -977,7 +1044,7 @@ const parseArtifactoryURL = url => {
 const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
   //let settings = {};
   console.log("BuildSettings");
-  let tok = username + ":" + password;
+  let tok = `${username}:${password}`;
   let hash = btoa(tok);
   let auth = "Basic " + hash;
   let restEndPoint = "api/v2/components/details";
@@ -1020,8 +1087,10 @@ const parseCratesURL = url => {
 if (typeof module !== "undefined") {
   module.exports = {
     BuildEmptySettings: BuildEmptySettings,
+    BuildSettings: BuildSettings,
     checkPageIsHandled: checkPageIsHandled,
     removeCookies: removeCookies,
+    NexusFormat: NexusFormat,
     NexusFormatMaven: NexusFormatMaven,
     NexusFormatNPM: NexusFormatNPM,
     NexusFormatNuget: NexusFormatNuget,
@@ -1040,6 +1109,16 @@ if (typeof module !== "undefined") {
     parseCRANURL: parseCRANURL,
     parseGoLangURL: parseGoLangURL,
     parseCratesURL: parseCratesURL,
-    ParsePageURL: ParsePageURL
+    parseArtifactoryURL: parseArtifactoryURL,
+    parseGitHubURL: parseGitHubURL,
+    parseNexusRepoURL: parseNexusRepoURL,
+    ParsePageURL: ParsePageURL,
+    Artifact: Artifact,
+    MavenArtifact: MavenArtifact,
+    NPMArtifact: NPMArtifact,
+    NugetArtifact: NugetArtifact,
+    PyPIArtifact: PyPIArtifact,
+    formats: formats,
+    dataSources: dataSources
   };
 }

@@ -1,5 +1,6 @@
 "use strict";
 console.log("contentscript.js");
+var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
   browser.runtime.onMessage.addListener(gotMessage);

@@ -13,6 +13,8 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
 
   switch (respMessage.messagetype) {
     case messageTypes.evaluateComponent:
+      console.log("messageTypes.evaluateComponent", artifact);
+      artifact = respMessage.artifact;
       let displayMessage = await evaluateComponent(artifact, settings);
       await displayMessageData(displayMessage);
       break;
@@ -327,7 +329,7 @@ const createHTML = async (message, settings) => {
     case dataSources.NEXUSIQ:
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
-
+      // let thisComponent = message.message.response.componentDetails["0"];
       renderComponentData(message);
       renderLicenseData(message);
       hasVulns = renderSecurityData(message);
@@ -472,17 +474,26 @@ const renderSecurityDataOSSIndex = message => {
 };
 
 const renderComponentData = message => {
-  console.log("renderComponentData-message:", message);
-  var thisComponent = message.message.response.componentDetails["0"];
+  console.log("renderComponentData-thisComponent:", message);
+  let thisComponent = message.message.response.componentDetails["0"];
   let component = thisComponent.component;
   console.log("component:", component);
   let format = component.componentIdentifier.format;
   $("#format").html(format);
   let coordinates = component.componentIdentifier.coordinates;
   console.log("coordinates:", coordinates);
+  let display, thisCoords;
   switch (format) {
     case formats.maven:
-      $("#package").html(coordinates.groupId + ":" + coordinates.artifactId);
+      // console.log(coordinates.groupId);
+      thisCoords = new MavenCoodinates(
+        coordinates.groupId,
+        coordinates.artifactId,
+        coordinates.version
+      );
+      display = thisCoords.display();
+      // $("#package").html(display);
+      $("#package").html(`${coordinates.groupId}:${coordinates.artifactId}`);
       break;
     case formats.npm:
       $("#package").html(coordinates.packageId);
@@ -1074,7 +1085,7 @@ const GetActiveTab = async () => {
 };
 
 const evaluateComponent = async (artifact, settings) => {
-  console.log("evaluateComponent", settings.auth, artifact);
+  console.log("evaluateComponent", artifact, settings.auth);
   let nexusArtifact = NexusFormat(artifact);
   console.log("nexusArtifact", nexusArtifact);
   let inputStr = JSON.stringify(nexusArtifact);
@@ -1088,6 +1099,7 @@ const evaluateComponent = async (artifact, settings) => {
     url: settings.baseURL,
     name: "CLMSESSIONID"
   });
+  //This is supposed to fix the error - invalid XSRF token
   delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
 
   let response = await axios(url, {
