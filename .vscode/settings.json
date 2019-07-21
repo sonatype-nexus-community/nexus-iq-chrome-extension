@@ -2,6 +2,7 @@
     "jshint.options": {
         "esversion": 9,
         "node": true,
-        "predef": ["browser", "chrome", "btoa"]
+        "predef": ["browser", "chrome", "btoa"],
+        "enable": false
     }
 }
