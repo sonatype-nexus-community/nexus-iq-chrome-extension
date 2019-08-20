@@ -1,6 +1,47 @@
 // "use strict";
 console.log("background.js");
 if (typeof chrome !== "undefined") {
+  // Todo
+  // This is copied from content.js
+  // Must be removed from here and properly called from content.js
+  const parseMavenURL = url => {
+    let datasource = dataSources.NEXUSIQ;
+    let elements = url.split("/");
+    let groupId = elements[4];
+    groupId = encodeURIComponent(groupId);
+    let artifactId = elements[5];
+    artifactId = encodeURIComponent(artifactId);
+    let version = elements[6];
+    version = encodeURIComponent(version);
+    let extension = elements[7];
+    if (typeof extension === "undefined" || extension === "bundle") {
+      extension = "jar";
+    }
+    extension = encodeURIComponent(extension);
+    let classifier = "";
+    return new MavenArtifact(
+        groupId,
+        artifactId,
+        version,
+        extension,
+        classifier,
+        datasource
+    );
+  };
+
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, function(tabs) {
+      let tab = tabs[0];
+      let url = tab.url;
+
+      if (url.search("https://mvnrepository.com/artifact/") >= 0) {
+        loadSettingsAndEvaluate(parseMavenURL(url));
+      }
+    });
+  });
   browser = chrome;
 }
 const gotMessage = (message, sender, sendResponse) => {
@@ -232,6 +273,10 @@ const callIQ = (artifact, settings) => {
         error = 0;
         // response = xhr.responseText
         response = JSON.parse(xhr.responseText);
+        // TODO: Quick and dirty to show first severity only
+        if (response.componentDetails['0'].securityData.securityIssues['0'].severity) {
+          alert(response.componentDetails['0'].securityData.securityIssues['0'].severity);
+        }
       } else {
         console.log(xhr);
         error = xhr.status;
