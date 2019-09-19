@@ -1,4 +1,4 @@
-// "use strict";
+"use strict";
 console.log("background.js");
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -307,17 +307,13 @@ const addDataOSSIndex = artifact => {
     //Example: pkg:github/etcd-io/etcd@3.3.1
     //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
     //OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
-    let goFormat = `github/${artifact.namespace}/${artifact.name}@${
-      artifact.version
-    }`;
+    let goFormat = `github/${artifact.namespace}/${artifact.name}@${artifact.version}`;
 
     OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${goFormat}`;
   } else {
     // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
     //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/jquery/jquery@3.0.0
-    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${
-      artifact.format
-    }/${artifact.name}@${artifact.version}`;
+    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`;
   }
   let status = false;
   //components[""0""].componentIdentifier.coordinates.packageId

@@ -9,15 +9,22 @@ if (typeof chrome !== "undefined") {
 // chrome.runtime.onMessage.addListener(gotMessage);
 var message;
 function gotMessage(receivedMessage, sender, sendResponse) {
-  console.log("gotMessage");
-  console.log(receivedMessage);
-  message = receivedMessage;
-  processPage(message);
+  try {
+    console.log("gotMessage", receivedMessage);
+    message = receivedMessage;
+    processPage(message);
+  } catch (err) {
+    let errmessage = {
+      artifact: null,
+      message: err.message,
+      messagetype: messageTypes.error
+    };
+    browser.runtime.sendMessage(errmessage);
+  }
 }
 
 function processPage(message = { messagetype: messageTypes.beginevaluate }) {
-  console.log("processPage");
-  console.log(message);
+  console.log("processPage - message:", message);
 
   //please tell what is my url and what is my content
   var url = window.location.href;
@@ -118,8 +125,7 @@ function ParsePage() {
 
     artifact = parseNexusRepo(url);
   }
-  console.log("ParsePage Complete");
-  console.log(artifact);
+  console.log("ParsePage Complete - artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
   message = {
@@ -130,7 +136,7 @@ function ParsePage() {
 }
 
 function parseMaven(format, url) {
-  console.log("parseMaven");
+  console.log("parseMaven - format, url:", format, url);
   //old format below
   //for now we have to parse the URL, I cant get the page source??
   //it's in an iframe
@@ -191,7 +197,7 @@ function parseNPM(format, url) {
     //var found = $('h1.package-name-redundant', doc);
     // found = $('h1.package-name-redundant', doc);
     found = $("h2 span");
-    console.log(found);
+    console.log("h2 span found", found);
     if (typeof found !== "undefined" && found !== "") {
       packageName = found.text().trim();
       // let foundV = $("h2", doc);
@@ -206,8 +212,7 @@ function parseNPM(format, url) {
         }
         version = newV;
       }
-      console.log("newV");
-      console.log(newV);
+      console.log("newV:", newV);
     }
   }
   //
@@ -331,8 +336,7 @@ function parseRuby(format, url) {
     //https://rubygems.org/gems/bundler
     name = elements[4];
     versionHTML = $("i.page__subheading").text();
-    console.log("versionHTML");
-    console.log(versionHTML);
+    console.log("versionHTML:", versionHTML);
     version = versionHTML.trim();
   } else {
     //https://rubygems.org/gems/bundler/versions/1.16.1
@@ -354,7 +358,7 @@ function parseRuby(format, url) {
 ///OSSIndex////
 function parsePackagist(format, url) {
   //server is packagist, format is composer
-  console.log("parsePackagist:" + url);
+  console.log("parsePackagist:", url);
   let name;
   let version;
   var elements = url.split("/");
@@ -375,8 +379,7 @@ function parsePackagist(format, url) {
     let versionHTML = $("span.version-number")
       .first()
       .text();
-    console.log("versionHTML");
-    console.log(versionHTML);
+    console.log("versionHTML:", versionHTML);
     version = versionHTML.trim();
   }
   // name = encodeURIComponent(name);
@@ -391,17 +394,14 @@ function parsePackagist(format, url) {
 }
 
 function parseCocoaPods(format, url) {
-  console.log("parseCocoaPods");
-  var elements = url.split("/");
+  console.log("parseCocoaPods. format, url:", format, url);
+  let elements = url.split("/");
   //https://cocoapods.org/pods/TestFairy
-  name = elements[4];
-  //#headline > div > h1 > span
-  versionHTML = $("H1 span")
+  let versionHTML = $("H1 span")
     .first()
     .text();
-  console.log("versionHTML");
-  console.log(versionHTML);
-  version = versionHTML.trim();
+  console.log("versionHTML:", versionHTML);
+  let version = versionHTML.trim();
 
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
@@ -447,8 +447,7 @@ function parseCRAN(format, url) {
   let versionHTML = $("table tr:nth-child(1) td:nth-child(2)")
     .first()
     .text();
-  console.log("versionHTML");
-  console.log(versionHTML);
+  console.log("versionHTML:", versionHTML);
   version = versionHTML.trim();
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
@@ -488,20 +487,37 @@ function parseGoLang(format, url) {
     // 0: "github.com"
     // 1: "hansrodtang"
     // 2: "randomcolor"
-    type = "github";
+    type = "github.com";
     namespace = nameElements[1];
     name = nameElements[2];
   }
 
-  let versionHTML = $("span.version-name")
-    .first()
-    .text();
-  console.log("versionHTML");
-  console.log(versionHTML);
+  //CPT 19/09/19 - Gocenter keep changing their markup for golang so we are having trouble
+  //parsing.
+  let versionHTMLElement;
+  if (elements[4] == "versions") {
+    //last element in array is versions
+    //then we parse for latest version in the document
+    //e.g. https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
+    versionHTMLElement = $(
+      "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
+    )[0];
+  } else {
+    //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    versionHTMLElement = $(
+      "#select-header > span > span.ui-select-match-text.pull-left"
+    )[0];
+  }
+  let versionHTML = versionHTMLElement.innerText;
+  console.log("versionHTML", versionHTML);
   let version = versionHTML.trim();
+  //keep the v in version
+  // if (version.substr(0, 1) === "v") {
+  //   version = version.substr(1);
+  // }
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
   return {
     format: format,
     datasource: datasource,
@@ -516,7 +532,7 @@ function parseCrates(format, url) {
   //server is crates, language is rust
   //https://crates.io/crates/rand
 
-  console.log("parseCrates:" + url);
+  console.log("parseCrates url:", url);
   let elements = url.split("/");
   //CRAN may have the packagename in the URL
   //but not the version in URL
@@ -528,8 +544,7 @@ function parseCrates(format, url) {
     //need to parse the HTML
     //
     let versionHTML = $("div.info h2").text();
-    console.log("versionHTML");
-    console.log(versionHTML);
+    console.log("versionHTML", versionHTML);
     version = versionHTML.trim();
   } else if (elements.length == 6) {
     //version is in the Path

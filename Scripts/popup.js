@@ -1,4 +1,6 @@
+// "use strict";
 console.log("popup.js");
+
 var browser;
 var artifact, nexusArtifact, hasVulns, settings, hasLoadedHistory;
 if (typeof chrome !== "undefined") {
@@ -112,6 +114,7 @@ const beginEvaluation = async () => {
   //I need to call sendMessage from within there as it is async
   let tab = await GetActiveTab();
   let url = tab.url;
+  console.log("url", url);
   //   alert(checkPageIsHandled(url));
 
   let message = {
@@ -141,6 +144,7 @@ const beginEvaluation = async () => {
       //    browser.runtime.sendMessage(evaluatemessage);
       await BuildSettingsFromGlobal();
       let displayMessage = await evaluateComponent(artifact, settings);
+      console.log("beginEvaluation - displayMessage:", displayMessage);
       await displayMessageData(displayMessage);
     } else {
       //this sends a message to the content tab
@@ -156,8 +160,7 @@ const beginEvaluation = async () => {
 };
 
 const executeScripts = (tabId, injectDetailsArray) => {
-  console.log("executeScripts(tabId, injectDetailsArray");
-  console.log(tabId);
+  console.log("executeScripts(tabId, injectDetailsArray)", tabId);
 
   function createCallback(tabId, injectDetails, innerCallback) {
     return function() {
@@ -339,7 +342,7 @@ const createHTML = async (message, settings) => {
       //     remediation = await showRemediation(nexusArtifact, settings)
       // }
       // let allVersions = await GetAllVersions(nexusArtifact, settings, remediation)
-
+      renderGraph(message);
       break;
     case dataSources.OSSINDEX:
       //from OSSINdex
@@ -362,9 +365,7 @@ const renderComponentDataOSSIndex = message => {
   let package = unescape(message.artifact.name);
   if (message.artifact.format === formats.golang) {
     //pkg:github/etcd-io/etcd@3.3.1
-    let goFormat = `github/${message.artifact.namespace}/${
-      message.artifact.name
-    }`;
+    let goFormat = `github/${message.artifact.namespace}/${message.artifact.name}`;
     package = unescape(goFormat);
   }
   $("#format").html(message.artifact.format);
@@ -395,11 +396,10 @@ const renderLicenseDataOSSIndex = message => {
 };
 
 const renderSecurityDataOSSIndex = message => {
+  console.log("renderSecurityDataOSSIndex", message);
   let securityIssues = message.message.response.vulnerabilities;
   let strAccordion = "";
-  console.log("renderSecurityDataOSSIndex");
-  console.log(message);
-  console.log(securityIssues.length);
+  // console.log("renderSecurityDataOSSIndex", message, securityIssues.length);
   securityIssues.sort((securityIssues1, securityIssues2) => {
     // console.log(securityIssues1.severity);
     return securityIssues2.cvssScore - securityIssues1.cvssScore;
@@ -507,6 +507,10 @@ const renderComponentData = message => {
     case formats.pypi:
       $("#package").html(coordinates.name);
       break;
+    case formats.golang:
+      $("#package").html(coordinates.name);
+      break;
+
     default:
       $("#package").html("Unknown format");
       break;
@@ -818,9 +822,7 @@ const showRemediation = async (nexusArtifact, settings) => {
   console.log("settings", settings);
   ///api/v2/components/remediation/application/{applicationInternalId}
   let servername = settings.baseURL;
-  let url = `${servername}api/v2/components/remediation/application/${
-    settings.appInternalId
-  }`;
+  let url = `${servername}api/v2/components/remediation/application/${settings.appInternalId}`;
   browser.cookies.remove({ url: settings.baseURL, name: "CLMSESSIONID" });
   let response = await axios(url, {
     method: "post",
@@ -887,9 +889,7 @@ const GetAllVersions = async (nexusArtifact, settings, remediation) => {
   //let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123")
   let servername = settings.baseURL;
   // let url = `${servername}rest/ci/componentDetails/application/${appId}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&reportId=${report}&timestamp=${timestamp}`
-  let url = `${servername}rest/ide/componentDetails/application/${
-    settings.appId
-  }/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&timestamp=${timestamp}&proprietary=false`;
+  let url = `${servername}rest/ide/componentDetails/application/${settings.appId}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&timestamp=${timestamp}&proprietary=false`;
   // let url = `${servername}rest/ide/componentDetails/application/${appId}/allVersions?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22commons-fileupload%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22commons-fileupload%22%2C%22version%22%3A%221.3.1%22%7D%7D&hash=c621b54583719ac03104&matchState=exact&proprietary=false HTTP/1.1`
   let response = await axios.get(url, {
     auth: {
@@ -975,14 +975,17 @@ const showError = error => {
   // $("#error").text(error);
   // $("#error").removeClass("hidden");
   //OSSINdex responds with HTML and not JSON if there is an error
-  let errorText;
+  let errorText = "";
   // console.log('error.statusText', (typeof error.statusText === "undefined"));
   if (typeof error.statusText !== "undefined") {
     errorText = error.statusText;
+  }
+  if (typeof error.response !== "undefined") {
+    errorText = response;
   } else {
     errorText = error;
   }
-  // console.log('errorText', errorText);
+  console.log("errorText", errorText);
   if (errorText.search("<html>") > -1) {
     if (typeof error.responseText !== "undefined") {
       let errorText = error.responseText;
@@ -1085,6 +1088,22 @@ const GetActiveTab = async () => {
 };
 
 const evaluateComponent = async (artifact, settings) => {
+  let resp;
+  switch (artifact.datasource) {
+    case dataSources.NEXUSIQ:
+      removeCookies(settings.url);
+      resp = await evaluatePackage(artifact, settings);
+      break;
+    case dataSources.OSSINDEX:
+      resp = await addDataOSSIndex(artifact);
+      break;
+    default:
+      alert("Unhandled datasource" + artifact.datasource);
+  }
+  return resp;
+};
+
+const evaluatePackage = async (artifact, settings) => {
   console.log("evaluateComponent", artifact, settings.auth);
   let nexusArtifact = NexusFormat(artifact);
   console.log("nexusArtifact", nexusArtifact);
@@ -1101,7 +1120,7 @@ const evaluateComponent = async (artifact, settings) => {
   });
   //This is supposed to fix the error - invalid XSRF token
   delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
-
+  console.log("Calling url", url);
   let response = await axios(url, {
     method: "post",
     data: nexusArtifact,
@@ -1140,11 +1159,12 @@ const evaluateComponent = async (artifact, settings) => {
     message: retVal,
     artifact: artifact
   };
-  console.log("displayMessage", displayMessage);
+  console.log("evaluatePackage - displayMessage", displayMessage);
   return displayMessage;
 };
 
 const displayMessageData = async respMessage => {
+  console.log("displayMessageData", respMessage);
   let hasError = false;
   if (respMessage.message.error) {
     showError(respMessage.message.response);
@@ -1164,4 +1184,94 @@ const displayMessageData = async respMessage => {
     let htmlCreated = await createHTML(respMessage, settings);
   }
   hideLoader(hasError);
+};
+const renderGraph = async message => {
+  console.log("renderGraph", message);
+  // var vis = new pv.Panel().width(150).height(150);
+  // console.log("vis", vis);
+  // vis.render();
+  var known = { a: "b" };
+  var config = {};
+  var mycanvas = $("#myGraph");
+  ////////
+  ///////
+  config.element = mycanvas;
+  ////////
+  artifactsChart(known, config);
+  ///////
+  // vis.$canvas = mycanvas;
+  // vis.render();
+  // console.log("vis", vis, mycanvas);
+};
+
+const addDataOSSIndex = async artifact => {
+  // pass your data in method
+  //OSSINdex is anonymous
+  console.log("entering addDataOSSIndex: artifact", artifact);
+  let retVal, inputStr;
+  // https://ossindex.sonatype.org/api/v3/component-report/composer%3Adrupal%2Fdrupal%405
+  //type:namespace/name@version?qualifiers#subpath
+  let format = artifact.format;
+  let name = artifact.name;
+  let version = artifact.version;
+  let OSSIndexURL;
+  if (artifact.format == formats.golang) {
+    //Example: pkg:github/etcd-io/etcd@3.3.1
+    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
+    //OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
+    let goFormat = `github/${artifact.namespace}/${artifact.name}@${artifact.version}`;
+
+    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${goFormat}`;
+  } else {
+    // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
+    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/jquery/jquery@3.0.0
+    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`;
+  }
+  let status = false;
+  //components[""0""].componentIdentifier.coordinates.packageId
+  // console.log('settings');
+  // console.log(settings);
+  // console.log(settings.auth);
+  // console.log("inputdata");
+  console.log("artifact request", artifact);
+  console.log("OSSIndexURL request", OSSIndexURL);
+  inputStr = JSON.stringify(artifact);
+
+  let response = await axios(OSSIndexURL, {
+    method: "get",
+    data: inputStr
+    // withCredentials: true,
+    // auth: {
+    //   username: settings.username,
+    //   password: settings.password
+    // }
+  })
+    .then(data => {
+      console.log("then", data);
+      responseVal = data.data;
+      let error = 0;
+      retVal = { error: error, response: responseVal };
+    })
+    .catch(error => {
+      console.log("error", error);
+      let code, response;
+      if (!error.response) {
+        // network error
+        code = 1;
+        responseVal = `Server unreachable ${url}. ${error.toString()}`;
+      } else {
+        // http status code
+        code = error.response.status;
+        // response data
+        responseVal = error.response.data;
+      }
+      retVal = { error: code, response: responseVal }; // error = error.response;
+    });
+  let displayMessage = {
+    messagetype: messageTypes.displayMessage,
+    message: retVal,
+    artifact: artifact
+  };
+  console.log("addDataOSSIndex - displayMessage:", displayMessage);
+  return displayMessage;
 };

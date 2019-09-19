@@ -1,5 +1,5 @@
 // import BuildEmptySettings from '../Scripts/util';
-
+/*jslint es6 */
 const {
   BuildEmptySettings,
   BuildSettings,
@@ -103,6 +103,18 @@ test("CheckPageIsHandled positive test - maven", () => {
   let expected = true;
   expect(expected).toBe(actual);
 });
+
+test("CheckPageIsHandled positive test - maven", () => {
+  let actual = checkPageIsHandled("https://repo1.maven.org/maven2/");
+  let expected = true;
+  expect(expected).toBe(actual);
+});
+test("CheckPageIsHandled positive test - maven", () => {
+  let actual = checkPageIsHandled("http://repo2.maven.org/maven2/");
+  let expected = true;
+  expect(expected).toBe(actual);
+});
+
 test("CheckPageIsHandled positive test - nuget", () => {
   let actual = checkPageIsHandled("https://www.nuget.org/");
   let expected = true;
@@ -545,6 +557,58 @@ test("Check parseMavenURL(format, mvnrepository) positive test", () => {
   expect(actual).toEqual(expected);
 });
 
+test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () => {
+  let format = "maven";
+  let groupId = "commons-collections";
+  let artifactId = "commons-collections";
+  let version = "3.2.1";
+  let classifier = "";
+  let extension = "jar";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new MavenArtifact(
+    // format: format,
+    groupId,
+    artifactId,
+    version,
+    extension,
+    classifier,
+    datasource
+  );
+
+  let url =
+    "https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/";
+  let actual = parseMavenURL(url);
+  let expected = artifact;
+  expect(actual).toEqual(expected);
+});
+
+test("Check parseMavenURL(format, http://repo2.maven.org) positive test", () => {
+  let format = "maven";
+  let groupId = "commons-collections";
+  let artifactId = "commons-collections";
+  let version = "3.2.1";
+  let classifier = "";
+  let extension = "jar";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new MavenArtifact(
+    // format: format,
+    groupId,
+    artifactId,
+    version,
+    extension,
+    classifier,
+    datasource
+  );
+
+  let url =
+    "http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/";
+  let actual = parseMavenURL(url);
+  let expected = artifact;
+  expect(actual).toEqual(expected);
+});
+
 test("Check parseNPMURL(npmjs.com) positive test", () => {
   let format = "npm";
   let artifact = {
@@ -592,7 +656,7 @@ test("Check parseNPMURL(npmjs.com) negative test", () => {
   expect(actual).toBeFalsy();
 });
 
-test("Check parseNPMURL(www.nuget.org) positive test", () => {
+test("Check parseNugetURL (www.nuget.org) positive test", () => {
   //https://www.nuget.org/packages/LibGit2Sharp/0.20.1
   let format = "nuget";
   let artifact = {
@@ -755,7 +819,7 @@ test("Check parseCRANURL(cran.r-project.org) negative test", () => {
   expect(actual).toBeFalsy();
 });
 
-test("Check parseGoLangURL(cran.r-project.org) negative test", () => {
+test("Check parseGoLangURL(GOCENTER GOLANG) negative test", () => {
   // parseGoLangURL ->falsy only
   let format = "golang";
   let artifact = {
@@ -891,6 +955,96 @@ test("Check ParsePageURL( mvnrepository) positive test", () => {
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).toEqual(expected);
+});
+
+test("Check ParsePageURL( https://repo1.maven.org) positive test", () => {
+  let format = "maven";
+  let groupId = "commons-collections";
+  let artifactId = "commons-collections";
+  let version = "3.2.1";
+  let classifier = "";
+  let extension = "jar";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new MavenArtifact(
+    // format: format,
+    groupId,
+    artifactId,
+    version,
+    extension,
+    classifier,
+    datasource
+  );
+
+  let url =
+    "https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/";
+  let actual = ParsePageURL(url);
+  let expected = artifact;
+  expect(actual).toEqual(expected);
+});
+
+test("Check ParsePageURL(https://repo1.maven.org) negative test", () => {
+  //can not parse a URL as the extension is unknown
+  let format = "maven";
+  let artifact = {
+    format: format,
+    artifactId: "commons-collections",
+    classifier: "",
+    extension: "jar",
+    groupId: "commons-collections",
+    version: "3.2.1",
+    datasource: "NEXUSIQ"
+  };
+  //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
+  let url = "https://repo1.maven.org/maven2/";
+  let actual = ParsePageURL(url);
+  let expected = artifact;
+  expect(actual).not.toEqual(expected);
+});
+
+test("Check ParsePageURL( http://repo2.maven.org) positive test", () => {
+  let format = "maven";
+  let groupId = "commons-collections";
+  let artifactId = "commons-collections";
+  let version = "3.2.1";
+  let classifier = "";
+  let extension = "jar";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new MavenArtifact(
+    // format: format,
+    groupId,
+    artifactId,
+    version,
+    extension,
+    classifier,
+    datasource
+  );
+
+  let url =
+    "http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/";
+  let actual = ParsePageURL(url);
+  let expected = artifact;
+  expect(actual).toEqual(expected);
+});
+
+test("Check ParsePageURL(http://repo2.maven.org) negative test", () => {
+  //I am going to assume jar extension for now
+  let format = "maven";
+  let artifact = {
+    format: format,
+    artifactId: "commons-collections",
+    classifier: "",
+    extension: "jar",
+    groupId: "commons-collections",
+    version: undefined,
+    datasource: "NEXUSIQ"
+  };
+  //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
+  let url = "http://repo2.maven.org/maven2/";
+  let actual = ParsePageURL(url);
+  let expected = artifact;
+  expect(actual).not.toEqual(expected);
 });
 
 test("Check ParsePageURL(npmjs.com) positive test", () => {

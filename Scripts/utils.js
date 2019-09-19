@@ -32,6 +32,7 @@ var artifactoryRepoformats = {
   gem: "rubygems",
   pypi: "pypi"
 };
+
 const dataSources = {
   NEXUSIQ: "NEXUSIQ",
   OSSINDEX: "OSSINDEX"
@@ -45,7 +46,8 @@ var messageTypes = {
   loginFailedMessage: "loginFailedMessage", //message to send that login failed
   beginevaluate: "beginevaluate", //message to send that we are beginning the evaluation process, it's different to the evaluatew message for a readon that TODO I fgogot
   artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
-  evaluateComponent: "evaluateComponent" //used to evaluate on the popup only
+  evaluateComponent: "evaluateComponent", //used to evaluate on the popup only
+  error: "error" //used to pass errors from background and content script to the popup
 };
 class Component {
   constructor(hash) {}
@@ -79,21 +81,15 @@ class MavenCoodinates extends Coordinates {
     console.log("groupId", this.groupId);
     return `<tr>
                             <td class="label">Group:</td>
-                            <td class="data"><span id="group">${
-                              this.groupId
-                            }</span></td>
+                            <td class="data"><span id="group">${this.groupId}</span></td>
                         </tr>
                         <tr>
                             <td class="label">Artifact:</td>
-                            <td class="data"><span id="artifact">${
-                              this.artifactId
-                            }</span></td>
+                            <td class="data"><span id="artifact">${this.artifactId}</span></td>
                         </tr>                        
                         <tr>
                             <td class="label">Version:</td>
-                            <td class="data"><span id="version">${
-                              this.version
-                            }</span></td>
+                            <td class="data"><span id="version">${this.version}</span></td>
                         </tr>`;
   }
 }
@@ -206,6 +202,8 @@ const checkPageIsHandled = url => {
   if (
     url.search("https://search.maven.org/") >= 0 ||
     url.search("https://mvnrepository.com/") >= 0 ||
+    url.search("https://repo1.maven.org/maven2/") >= 0 ||
+    url.search("http://repo2.maven.org/maven2/") >= 0 ||
     url.search("https://www.npmjs.com/") >= 0 ||
     url.search("https://www.nuget.org/") >= 0 ||
     url.search("https://rubygems.org/") >= 0 ||
@@ -243,6 +241,15 @@ const ParsePageURL = url => {
     //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
     format = formats.maven;
     artifact = parseMavenURL(url);
+  } else if (url.search("https://repo1.maven.org/maven2/") >= 0) {
+    //https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/
+    format = formats.maven;
+    artifact = parseMavenURL(url);
+  } else if (url.search("http://repo2.maven.org/maven2/") >= 0) {
+    //can not be parsed need to inject script and parse html
+    //http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/
+    format = formats.maven;
+    artifact = parseMavenURL(url);
   } else if (url.search("www.npmjs.com/package/") >= 0) {
     //'https://www.npmjs.com/package/lodash'};
     format = formats.npm;
@@ -253,20 +260,16 @@ const ParsePageURL = url => {
     format = formats.nuget;
     artifact = parseNugetURL(url);
   }
-
   //pypi url can not be parsed now, as i need to read the html to determine the extension and qualifier
-  // else if (url.search('pypi.org/project/') >=0){
-  //   //https://pypi.org/project/Django/1.6/
-  //   format = formats.pypi;
-  //   artifact = parsePyPIURL(url);
-
-  // }
-  else if (url.search("rubygems.org/gems/") >= 0) {
+  else if (url.search("pypi.org/project/") >= 0) {
+    //https://pypi.org/project/Django/1.6/
+    format = formats.pypi;
+    artifact = null;
+  } else if (url.search("rubygems.org/gems/") >= 0) {
     //https://rubygems.org/gems/bundler/versions/1.16.1
     format = formats.gem;
     artifact = parseRubyURL(url);
   }
-
   //OSSIndex
   else if (url.search("packagist.org/packages/") >= 0) {
     //https: packagist ???
@@ -296,15 +299,12 @@ const ParsePageURL = url => {
   else if (url.search("webapp/#/artifacts") >= 0 || url.search("/list/") >= 0) {
     artifact = parseArtifactoryURL(url);
   }
-
   //nexus Repo
   // http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
   else if (url.search("#browse/browse:") >= 0) {
     artifact = parseNexusRepoURL(url);
   }
-
-  console.log("ParsePageURL Complete");
-  console.log(artifact);
+  console.log("ParsePageURL Complete. artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
   return artifact;
@@ -374,7 +374,9 @@ const NexusFormat = artifact => {
     case formats.gem:
       requestdata = NexusFormatRuby(artifact);
       break;
-
+    case formats.golang:
+      requestdata = NexusFormatGolang(artifact);
+      break;
     default:
       console.log("Unexpected format", format);
       return;
@@ -495,6 +497,29 @@ const NexusFormatRuby = artifact => {
   return componentDict;
 };
 
+const NexusFormatGolang = artifact => {
+  //return a dictionary in Nexus Format
+  //return dictionary of components
+  // "name": "github.com/gorilla/mux",
+  //"version": "v1.7.0"
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.type}/${artifact.namespace}/${artifact.name}`,
+            version: artifact.version
+          }
+        }
+      })
+    ]
+  };
+  return componentDict;
+};
+
 const epochToJsDate = ts => {
   // ts = epoch timestamp
   // returns date obj
@@ -525,6 +550,8 @@ const parseMavenURL = url => {
 
   //maven repo https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
+  //https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/
+  //http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/
   //CURRENTLY both have the same format in the URL version, except maven central also has the packaging type
   let format = formats.maven;
   let datasource = dataSources.NEXUSIQ;
@@ -540,7 +567,11 @@ const parseMavenURL = url => {
   version = encodeURIComponent(version);
 
   let extension = elements[7];
-  if (typeof extension === "undefined" || extension === "bundle") {
+  if (
+    typeof extension === "undefined" ||
+    extension === "bundle" ||
+    extension === ""
+  ) {
     //mvnrepository doesnt have it
     extension = "jar";
   }
@@ -751,7 +782,7 @@ const parseGoLangURL = url => {
   //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
   //https://search.gocenter.io/github.com~2Fbazelbuild~2Fbazel-integration-testing/versions
   let format = formats.golang;
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
   return false;
 };
 

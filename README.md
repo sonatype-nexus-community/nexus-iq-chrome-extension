@@ -30,6 +30,8 @@ The plugin can scan packages at the following repositories:
 12. Nexus Proxy Repos - supported repository formats are maven2, npm, rubygems and nuget e.g. http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
 13. Artifactory Proxy Repos - supported repository formats are maven2 and npm e.g. https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
 14. Artifactory Repo lists - e.g. https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+15. Maven Repo1 - https://repo1.maven.org/maven2/
+16. Maven Repo2 - http://repo.maven.org/maven2/
 
 ## Data
 
@@ -86,10 +88,14 @@ The list of pages that are supported are here.
 Pattern - `https://search.maven.org/artifact/<group>/<artifact>/<version>/<extension>`
 <br/>e.g. <https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar>
 
-### Java - maven
-
 Pattern -`https://mvnrepository.com/artifact/<group>/<artifact>/<version>`
 <br/>e.g. <https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1>
+
+Pattern - `https://repo1.maven.org/maven2/<group>/<artifact>/<version>/`
+<br/> e.g. <https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/>
+
+Pattern - `http://repo2.maven.org/maven2/<group>/<artifact>/<version>/`
+<br/> e.g. <http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/>
 
 ### JS/Node - npm
 
@@ -188,7 +194,7 @@ If you do not want to use the extension then you can right click on the icon and
 
 ### Version History
 
-No longer documented here. Go to the releases tab
+No longer documented here. Go to the releases tab in github
 
 #### Version 1.7.7
 
@@ -244,8 +250,8 @@ I will think about a change which gives access to all URLS like so below
 
 Add `*://*/*` to permissions section like so
 
-`"permissions": [ "*://*/*",`  
-  
+`"permissions": [ "*://*/*",`
+
 This would then mean you would not need to alias Nexus IQ.
 
 Supports scanning components in the following repos

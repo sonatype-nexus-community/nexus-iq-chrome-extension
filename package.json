@@ -28,6 +28,11 @@
   },
   "homepage": "https://github.com/ctownshend/chrome-extension-nexus-iq#readme",
   "devDependencies": {
-    "jest": "^24.5.0"
+    "jest": "^24.8.0"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "puppeteer": "^1.19.0",
+    "selenium-webdriver": "^4.0.0-alpha.4"
   }
 }
