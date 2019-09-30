@@ -552,21 +552,39 @@ const parseMavenURL = url => {
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
   //https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/
   //http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/
+  //https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
   //CURRENTLY both have the same format in the URL version, except maven central also has the packaging type
   let format = formats.maven;
   let datasource = dataSources.NEXUSIQ;
 
   let elements = url.split("/");
-  let groupId = elements[4];
+  let groupId = "";
+  let artifactId = "";
+  let version = "";
+  let extension = "";
+  let classifier = "";
+  if (elements.length >= 9) {
+    //then we have a massive groupid in the url
+    let el = "";
+    while (el == "") {
+      el = elements.pop();
+    }
+    version = el;
+    artifactId = elements.pop();
+    while (el != "maven2") {
+      groupId = el + "." + groupId;
+      el = elements.pop();
+    }
+  } else {
+    groupId = elements[4];
+    artifactId = elements[5];
+    version = elements[6];
+    extension = elements[7];
+  }
   //  packageName=url.substr(url.lastIndexOf('/')+1);
   groupId = encodeURIComponent(groupId);
-  let artifactId = elements[5];
   artifactId = encodeURIComponent(artifactId);
-
-  let version = elements[6];
   version = encodeURIComponent(version);
-
-  let extension = elements[7];
   if (
     typeof extension === "undefined" ||
     extension === "bundle" ||
@@ -576,7 +594,7 @@ const parseMavenURL = url => {
     extension = "jar";
   }
   extension = encodeURIComponent(extension);
-  let classifier = "";
+  classifier = "";
   let artifact = new MavenArtifact(
     // format: format,
     groupId,

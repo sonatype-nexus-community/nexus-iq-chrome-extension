@@ -583,6 +583,32 @@ test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () =>
   expect(actual).toEqual(expected);
 });
 
+test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () => {
+  let format = "maven";
+  let groupId = "com.github.jedis-lock";
+  let artifactId = "jedis-lock";
+  let version = "1.0.0";
+  let classifier = "";
+  let extension = "jar";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new MavenArtifact(
+    // format: format,
+    groupId,
+    artifactId,
+    version,
+    extension,
+    classifier,
+    datasource
+  );
+
+  let url =
+    "https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/";
+  let actual = parseMavenURL(url);
+  let expected = artifact;
+  expect(actual).toEqual(expected);
+});
+
 test("Check parseMavenURL(format, http://repo2.maven.org) positive test", () => {
   let format = "maven";
   let groupId = "commons-collections";
@@ -604,6 +630,32 @@ test("Check parseMavenURL(format, http://repo2.maven.org) positive test", () => 
 
   let url =
     "http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/";
+  let actual = parseMavenURL(url);
+  let expected = artifact;
+  expect(actual).toEqual(expected);
+});
+
+test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () => {
+  let format = "maven";
+  let groupId = "com.github.jedis-lock";
+  let artifactId = "jedis-lock";
+  let version = "1.0.0";
+  let classifier = "";
+  let extension = "jar";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new MavenArtifact(
+    // format: format,
+    groupId,
+    artifactId,
+    version,
+    extension,
+    classifier,
+    datasource
+  );
+
+  let url =
+    "http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/";
   let actual = parseMavenURL(url);
   let expected = artifact;
   expect(actual).toEqual(expected);

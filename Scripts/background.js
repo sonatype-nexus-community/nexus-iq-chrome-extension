@@ -1,5 +1,6 @@
 "use strict";
 console.log("background.js");
+var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
@@ -490,7 +491,6 @@ browser.runtime.onInstalled.addListener(function() {
               pathContains: "artifact"
             }
           }),
-
           new browser.declarativeContent.PageStateMatcher({
             //https://search.maven.org/#artifactdetails%7Corg.apache.struts%7Cstruts2-core%7C2.3.31%7Cjar
             //bug in Chrome extensions dont handle hashes https://bugs.chromium.org/p/chromium/issues/detail?id=84024
@@ -499,6 +499,23 @@ browser.runtime.onInstalled.addListener(function() {
               hostEquals: "search.maven.org",
               schemes: ["https"],
               pathContains: "artifact"
+            }
+          }),
+          new browser.declarativeContent.PageStateMatcher({
+            //https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
+
+            pageUrl: {
+              hostEquals: "repo1.maven.org",
+              schemes: ["https"],
+              pathContains: "maven2"
+            }
+          }),
+          new browser.declarativeContent.PageStateMatcher({
+            //http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
+            pageUrl: {
+              hostEquals: "repo2.maven.org",
+              schemes: ["http"],
+              pathContains: "maven2"
             }
           }),
           new browser.declarativeContent.PageStateMatcher({
