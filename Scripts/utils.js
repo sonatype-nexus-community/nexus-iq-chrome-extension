@@ -546,7 +546,7 @@ const encodeComponentIdentifier = nexusArtifact => {
 };
 
 const parseMavenURL = url => {
-  console.log("parseMavenURL");
+  console.log("parseMavenURL:", url);
 
   //maven repo https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
@@ -571,8 +571,14 @@ const parseMavenURL = url => {
     }
     version = el;
     artifactId = elements.pop();
+    el = "";
+    console.log("groupId:", groupId);
     while (el != "maven2") {
-      groupId = el + "." + groupId;
+      if (groupId !== "") {
+        groupId = el + "." + groupId;
+      } else {
+        groupId = el;
+      }
       el = elements.pop();
     }
   } else {
