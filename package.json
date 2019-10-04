@@ -24,9 +24,9 @@
   "author": "Cameron Townshend",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ctownshend/chrome-extension-nexus-iq/issues"
+    "url": "https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/issues"
   },
-  "homepage": "https://github.com/ctownshend/chrome-extension-nexus-iq#readme",
+  "homepage": "https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension#readme",
   "devDependencies": {
     "jest": "^24.8.0"
   },
