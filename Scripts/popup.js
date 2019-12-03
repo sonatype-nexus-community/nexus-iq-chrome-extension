@@ -1,8 +1,8 @@
 // "use strict";
 console.log("popup.js");
 
-var browser;
 var artifact, nexusArtifact, hasVulns, settings, hasLoadedHistory;
+var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
@@ -823,7 +823,8 @@ const showRemediation = async (nexusArtifact, settings) => {
   ///api/v2/components/remediation/application/{applicationInternalId}
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/remediation/application/${settings.appInternalId}`;
-  browser.cookies.remove({ url: settings.baseURL, name: "CLMSESSIONID" });
+  removeCookies(servername);
+  let uuid = uuidv4();
   let response = await axios(url, {
     method: "post",
     data: nexusArtifact.component,
@@ -831,9 +832,12 @@ const showRemediation = async (nexusArtifact, settings) => {
     auth: {
       username: settings.username,
       password: settings.password
+    },
+    headers: {
+      "X-CSRF-TOKEN": uuid
     }
   });
-
+  addCookies(servername);
   let respData = response.data;
   console.log("respData", respData);
   let newVersion;
@@ -1093,6 +1097,7 @@ const evaluateComponent = async (artifact, settings) => {
     case dataSources.NEXUSIQ:
       removeCookies(settings.url);
       resp = await evaluatePackage(artifact, settings);
+      addCookies(settings.url);
       break;
     case dataSources.OSSINDEX:
       resp = await addDataOSSIndex(artifact);
@@ -1114,12 +1119,9 @@ const evaluatePackage = async (artifact, settings) => {
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/details`;
   let responseVal;
-  browser.cookies.remove({
-    url: settings.baseURL,
-    name: "CLMSESSIONID"
-  });
+  removeCookies(servername);
   //This is supposed to fix the error - invalid XSRF token
-  delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
+  // delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
   console.log("Calling url", url);
   let response = await axios(url, {
     method: "post",
@@ -1128,12 +1130,16 @@ const evaluatePackage = async (artifact, settings) => {
     auth: {
       username: settings.username,
       password: settings.password
+    },
+    headers: {
+      "X-CSRF-TOKEN": "FOO"
     }
   })
     .then(data => {
       console.log("then", data);
       responseVal = data.data;
       retVal = { error: error, response: responseVal };
+      addCookies(servername);
     })
     .catch(error => {
       console.log("error", error);
@@ -1197,7 +1203,7 @@ const renderGraph = async message => {
   ///////
   config.element = mycanvas;
   ////////
-  artifactsChart(known, config);
+  // artifactsChart(known, config);
   ///////
   // vis.$canvas = mycanvas;
   // vis.render();

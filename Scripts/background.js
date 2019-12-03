@@ -190,6 +190,7 @@ const evaluate = (artifact, settings) => {
     case dataSources.NEXUSIQ:
       removeCookies(settings.url);
       resp = callIQ(artifact, settings);
+      addCookies(settings.url);
       break;
     case dataSources.OSSINDEX:
       resp = addDataOSSIndex(artifact);

@@ -109,7 +109,8 @@ function canLogin(url, username, password) {
   message("");
   let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
   let urlEndPoint = baseURL + "rest/user/session";
-  chrome.cookies.remove({ url: url, name: "CLMSESSIONID" });
+  //no need to remove cookies
+  // removeCookies(baseURL);
   axios
     .get(urlEndPoint, {
       auth: {
@@ -133,7 +134,7 @@ function addApps(url, username, password, appId, appInternalId) {
   let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
   let urlListApp =
     baseURL + "rest/integration/applications?goal=EVALUATE_COMPONENT";
-  chrome.cookies.remove({ url: url, name: "CLMSESSIONID" });
+  // removeCookies(baseURL);
   axios
     .get(urlListApp, {
       auth: {
@@ -188,7 +189,7 @@ function load_data() {
         document.getElementById("password").value = password;
         appId = data.appId;
         appInternalId = data.appInternalId;
-        console.log("canLogin", canLogin);
+        console.log("load_data canLogin", canLogin);
         //Appid is a selection? maybe should just be a free text box
         //Need to login to get the list of apps
         if (canLogin) {

@@ -1,5 +1,9 @@
 "use strict";
 console.log("utils.js");
+var browser;
+if (typeof chrome !== "undefined") {
+  browser = chrome;
+}
 
 var formats = {
   maven: "maven",
@@ -326,9 +330,29 @@ const BuildEmptySettings = () => {
   return settings;
 };
 
+function addCookies(url) {
+  return;
+
+  console.log("addCookies", url);
+  browser.cookies.set({
+    url: url,
+    name: "CLMSESSIONID", //"CLM-CSRF-TOKEN"
+    value: "foo"
+  });
+  return;
+}
+
 const removeCookies = settings_url => {
   console.log("removeCookies");
   console.log(settings_url);
+  //as of IQ 63 it allows cookies to be present in public API
+  //Going to exit here
+  return;
+  browser.cookies.remove({
+    url: settings_url,
+    name: "CLMSESSIONID" //"CLM-CSRF-TOKEN"
+  });
+  return;
   //settings.url = http://iq-server:8070/
   let leftPart = settings_url.search("//") + 2;
   let server = settings_url.substring(leftPart);
@@ -347,11 +371,14 @@ const removeCookies = settings_url => {
     for (var i = 0; i < cookies.length; i++) {
       console.log(cookies[i]);
 
-      chrome.cookies.remove({ url: settings_url, name: cookies[i].name });
+      browser.cookies.remove({
+        url: settings_url,
+        name: cookies[i].name
+      });
     }
   });
-  //the only one to remove is this one.
-  chrome.cookies.remove({ url: settings_url, name: "CLMSESSIONID" });
+  //the only one to remove is this one. The CLM SessionID
+  browser.cookies.remove({ url: settings_url, name: "CLMSESSIONID" });
 };
 
 const NexusFormat = artifact => {
@@ -1138,6 +1165,14 @@ const parseCratesURL = url => {
 
   return false;
 };
+
+function uuidv4() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 
 if (typeof module !== "undefined") {
   module.exports = {
