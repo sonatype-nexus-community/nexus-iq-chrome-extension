@@ -748,8 +748,8 @@ test("Check parsePyPIURL(pypi.org) positive test", () => {
     name: "Django",
     version: "1.6",
     datasource: "NEXUSIQ",
-    extension: "whl",
-    qualifier: "py2.py3-none-any"
+    extension: "",
+    qualifier: ""
   };
 
   let url = "https://pypi.org/project/Django/1.6/";
