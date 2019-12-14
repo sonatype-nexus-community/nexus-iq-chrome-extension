@@ -41,5 +41,5 @@ jobs:
           command: npm test
 
       - run:
-          name: "semantic-release-dry-run"
-          command: npx semantic-release -d -b master
+          name: "semantic-release"
+          command: npx semantic-release -b master

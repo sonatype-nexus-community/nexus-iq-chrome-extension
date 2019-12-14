@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "0.0.0-semantic-release",
+  "version": "0.0.0-development",
   "description": "Chrome Extension for IQ Validation",
   "main": "background.js",
   "scripts": {
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "^3.0.6",
     "@semantic-release/git": "^7.0.18",
+    "@semantic-release/github": "^5.5.5",
     "jest": "^24.8.0",
     "semantic-release": "^15.13.31"
   },
