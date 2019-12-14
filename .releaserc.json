@@ -1,26 +1,5 @@
 {
   "verifyConditions": ["@semantic-release/github"],
-  "prepare": [
-    {
-      "path": "semantic-release-chrome",
-      "asset": "sonatype-nexus-iq.zip"
-    }
-  ],
-  "publish": [
-    {
-      "path": "semantic-release-chrome",
-      "asset": "sonatype-nexus-iq.zip",
-      "extensionId": "mjehedmoboadebjmbmobpedkdgenmlhd"
-    },
-    {
-      "path": "@semantic-release/github",
-      "assets": [
-        {
-          "path": "sonatype-nexus-iq.zip"
-        }
-      ]
-    }
-  ],
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
