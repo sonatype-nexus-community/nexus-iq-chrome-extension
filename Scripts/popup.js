@@ -2,6 +2,7 @@
 console.log("popup.js");
 
 var artifact, nexusArtifact, hasVulns, settings, hasLoadedHistory;
+var valueCSRF;
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -18,7 +19,7 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
       console.log("messageTypes.evaluateComponent", artifact);
       artifact = respMessage.artifact;
       let displayMessage = await evaluateComponent(artifact, settings);
-      await displayMessageData(displayMessage);
+      // await displayMessageData(displayMessage);
       break;
     case messageTypes.displayMessage:
       // alert("displayMessage");
@@ -144,8 +145,8 @@ const beginEvaluation = async () => {
       //    browser.runtime.sendMessage(evaluatemessage);
       await BuildSettingsFromGlobal();
       let displayMessage = await evaluateComponent(artifact, settings);
-      console.log("beginEvaluation - displayMessage:", displayMessage);
-      await displayMessageData(displayMessage);
+      // console.log("beginEvaluation - displayMessage:", displayMessage);
+      // await displayMessageData(displayMessage);
     } else {
       //this sends a message to the content tab
       //hopefully it will tell me what it sees
@@ -216,6 +217,7 @@ const BuildSettingsFromGlobal = async () => {
 const createAllversionsHTML = async (data, remediation, currentVersion) => {
   console.log("createAllversionsHTML", remediation, currentVersion);
   // console.log('data:', data);
+
   let strData = "";
   var grid;
 
@@ -342,7 +344,7 @@ const createHTML = async (message, settings) => {
       //     remediation = await showRemediation(nexusArtifact, settings)
       // }
       // let allVersions = await GetAllVersions(nexusArtifact, settings, remediation)
-      renderGraph(message);
+      // renderGraph(data, remediation, currentVersion);
       break;
     case dataSources.OSSINDEX:
       //from OSSINdex
@@ -823,8 +825,8 @@ const showRemediation = async (nexusArtifact, settings) => {
   ///api/v2/components/remediation/application/{applicationInternalId}
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/remediation/application/${settings.appInternalId}`;
-  removeCookies(servername);
-  let uuid = uuidv4();
+  // removeCookies(servername);
+  let xsrfHeaderName = "X-CSRF-TOKEN";
   let response = await axios(url, {
     method: "post",
     data: nexusArtifact.component,
@@ -834,12 +836,13 @@ const showRemediation = async (nexusArtifact, settings) => {
       password: settings.password
     },
     headers: {
-      "X-CSRF-TOKEN": uuid
+      [xsrfHeaderName]: valueCSRF
     }
   });
-  addCookies(servername);
+  // add
+  servername;
   let respData = response.data;
-  console.log("respData", respData);
+  console.log("showRemediation respData", respData);
   let newVersion;
   let advice;
   if (respData.remediation.versionChanges.length > 0) {
@@ -848,7 +851,7 @@ const showRemediation = async (nexusArtifact, settings) => {
         .coordinates.version;
     advice = `<span id="remediation">Remediation advice Upgrade to the new version:<strong> ${newVersion}</strong></span>`;
   } else {
-    advice = "";
+    advice = `<span id="remediation">Remediation advice. Not available</span>`;
   }
 
   $("#remediation").html(advice);
@@ -856,7 +859,6 @@ const showRemediation = async (nexusArtifact, settings) => {
 };
 
 const GetSettings = keys => {
-  let settings;
   let promise = new Promise((resolve, reject) => {
     browser.storage.sync.get(keys, items => {
       let err = browser.runtime.lastError;
@@ -866,6 +868,26 @@ const GetSettings = keys => {
         resolve(items);
       }
     });
+  });
+  return promise;
+};
+
+const GetCookie = (domain, cookieName) => {
+  let promise = new Promise((resolve, reject) => {
+    browser.cookies.getAll(
+      {
+        domain: domain,
+        name: cookieName
+      },
+      cookies => {
+        let err = browser.runtime.lastError;
+        if (err) {
+          reject(err);
+        } else {
+          resolve(cookies[0]);
+        }
+      }
+    );
   });
   return promise;
 };
@@ -905,7 +927,8 @@ const GetAllVersions = async (nexusArtifact, settings, remediation) => {
 
   let currentVersion =
     nexusArtifact.component.componentIdentifier.coordinates.version;
-  createAllversionsHTML(data, remediation, currentVersion);
+  // createAllversionsHTML(data, remediation, currentVersion);
+  renderGraph(data, remediation, currentVersion);
 };
 
 const GetCVEDetails = async (cve, nexusArtifact, settings) => {
@@ -1095,9 +1118,9 @@ const evaluateComponent = async (artifact, settings) => {
   let resp;
   switch (artifact.datasource) {
     case dataSources.NEXUSIQ:
-      removeCookies(settings.url);
+      // removeCookies(settings.url);
       resp = await evaluatePackage(artifact, settings);
-      addCookies(settings.url);
+      // addCookies(settings.url);
       break;
     case dataSources.OSSINDEX:
       resp = await addDataOSSIndex(artifact);
@@ -1109,7 +1132,28 @@ const evaluateComponent = async (artifact, settings) => {
 };
 
 const evaluatePackage = async (artifact, settings) => {
+  // removeCookies(servername);
+  //This is supposed to fix the error - invalid XSRF token
+  // delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
+  // axios.defaults.xsrfHeaderName = "X-CSRF-TOKEN";
+  // axios.defaults.xsrfCookieName = "CLM-CSRF-TOKEN";
   console.log("evaluateComponent", artifact, settings.auth);
+
+  let cookieName = "CLM-CSRF-TOKEN";
+  let xsrfHeaderName = "X-CSRF-TOKEN";
+  let servername = settings.baseURL;
+  let domain = getDomainName(servername);
+  console.log("browser.cookies.getAll", domain, cookieName);
+
+  let cookie = await GetCookie(domain, cookieName);
+  console.log("GetCookies.promise", cookie);
+  valueCSRF = cookie.value;
+  console.log("cookie", cookie);
+  await callServer(valueCSRF);
+};
+
+const callServer = async valueCSRF => {
+  console.log("callServer", valueCSRF, artifact, settings);
   let nexusArtifact = NexusFormat(artifact);
   console.log("nexusArtifact", nexusArtifact);
   let inputStr = JSON.stringify(nexusArtifact);
@@ -1119,24 +1163,26 @@ const evaluatePackage = async (artifact, settings) => {
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/details`;
   let responseVal;
-  removeCookies(servername);
-  //This is supposed to fix the error - invalid XSRF token
-  // delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
-  console.log("Calling url", url);
+
+  console.log("CSRF", valueCSRF);
+  let cookieName = "CLM-CSRF-TOKEN";
+  let xsrfHeaderName = "X-CSRF-TOKEN";
   let response = await axios(url, {
     method: "post",
     data: nexusArtifact,
     withCredentials: true,
+    xsrfCookieName: cookieName,
+    xsrfHeaderName: xsrfHeaderName,
     auth: {
       username: settings.username,
       password: settings.password
     },
     headers: {
-      "X-CSRF-TOKEN": "FOO"
+      [xsrfHeaderName]: valueCSRF
     }
   })
     .then(data => {
-      console.log("then", data);
+      console.log("axios then", data);
       responseVal = data.data;
       retVal = { error: error, response: responseVal };
       addCookies(servername);
@@ -1166,6 +1212,7 @@ const evaluatePackage = async (artifact, settings) => {
     artifact: artifact
   };
   console.log("evaluatePackage - displayMessage", displayMessage);
+  await displayMessageData(displayMessage);
   return displayMessage;
 };
 
@@ -1191,25 +1238,23 @@ const displayMessageData = async respMessage => {
   }
   hideLoader(hasError);
 };
-const renderGraph = async message => {
-  console.log("renderGraph", message);
-  // var vis = new pv.Panel().width(150).height(150);
-  // console.log("vis", vis);
-  // vis.render();
-  var known = { a: "b" };
-  var config = {};
-  var mycanvas = $("#myGraph");
-  ////////
-  ///////
-  config.element = mycanvas;
-  ////////
-  // artifactsChart(known, config);
-  ///////
-  // vis.$canvas = mycanvas;
-  // vis.render();
-  // console.log("vis", vis, mycanvas);
-};
 
+const renderGraph = async (versionsData, remediation, currentVersion) => {
+  console.log("renderGraph", versionsData, remediation, currentVersion);
+  Insight.ComponentInformation({
+    selectable: false,
+    data: {
+      version: currentVersion,
+      nextMajorRevisionIndex: undefined,
+      versions: versionsData
+    }
+  });
+  //didn't work, so I toggle it in appcheck
+  // let details = $("#aiVersionChartLabels > svg > g > g:nth-child(5)");
+  // console.log("details", details.text());
+  // details.click();
+  // $("#aiVersionChartLabels > svg > g > g:nth-child(5)").click();
+};
 const addDataOSSIndex = async artifact => {
   // pass your data in method
   //OSSINdex is anonymous

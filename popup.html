@@ -15,13 +15,13 @@
       rel="stylesheet"
       href="Scripts/jquery-ui-themes-1.12.1/themes/base/jquery-ui.min.css"
     />
-    <link rel="stylesheet" href="Scripts/slick.grid.css" type="text/css" />
+    <!-- <link rel="stylesheet" href="Scripts/slick.grid.css" type="text/css" /> -->
     <script src="Scripts/jquery-3.3.1.min.js"></script>
     <script src="Scripts/jquery-ui-1.12.1/jquery-ui.min.js"></script>
-    <script src="Scripts/jquery.event.drag-2.3.0.js"></script>
+    <!-- <script src="Scripts/jquery.event.drag-2.3.0.js"></script> -->
 
-    <!-- <script src="Scripts/protovis.min.js"></script> -->
-    <!-- <script src="Scripts/appcheck.js"></script> -->
+    <script src="Scripts/protovis.min.js"></script>
+    <script src="Scripts/appcheck.js"></script>
     <title>Component Info</title>
   </head>
   <body>
@@ -33,14 +33,18 @@
       <ul>
         <li><a href="#tabs-1">Component Info</a></li>
         <li><a href="#tabs-2">Security</a></li>
-        <li><a href="#tabs-4">Remediation</a></li>
-        <li><a href="#tabs-3">Licensing</a></li>
+        <li><a href="#tabs-3">Remediation</a></li>
+        <li><a href="#tabs-4">Licensing</a></li>
         <!-- <li><a href="#tabs-5">Graph</a></li> -->
       </ul>
       <!-- Graph -->
-      <!-- <div id="tabs-5">        
-        <div id="myGraph" class="graph">                       
-        </div>
+      <!-- <div id="tabs-5">
+        <div>
+          <div id="aiVersionChartContainer">
+            <div id="aiVersionChartLabels"></div>
+            <div id="aiVersionChartViz" style="overflow:hidden"></div>
+          </div>
+        </div> 
       </div>       -->
       <div id="tabs-1" class="component-tab">
         <div class="info-display">
@@ -97,8 +101,19 @@
         <div id="accordion"></div>
         <div id="dialog" title="Security Details" class="dialog"></div>
       </div>
-      <!-- License -->
+      <!-- Remediation -->
       <div id="tabs-3">
+        <div id="remediation"></div>
+        <!-- <div id="myGrid" class="slick-grid"></div> -->
+        <div>
+          <div id="aiVersionChartContainer">
+            <div id="aiVersionChartLabels"></div>
+            <div id="aiVersionChartViz" style="overflow:hidden"></div>
+          </div>
+        </div> 
+      </div>      
+      <!-- License -->
+      <div id="tabs-4">
         <table class="optionstable" id="licensetable">
           <tr>
             <td colspan="2"><strong>DeclaredLicenses</strong></td>
@@ -139,11 +154,7 @@
         </table>
       </div>
 
-      <!-- Remediation -->
-      <div id="tabs-4">
-        <div id="remediation"></div>
-        <div id="myGrid" class="slick-grid"></div>
-      </div>
+
       
     <div id="error" class="error"><p>Some error occurred</p></div>
 
@@ -155,13 +166,14 @@
     <![endif]-->
     <!--First cut of this code will only handle a single npm component-->
 
-    <script src="Scripts/slick.core.js"></script>
-    <script src="Scripts/slick.cellselectionmodel.js"></script>
-    <script src="Scripts/slick.rowmovemanager.js"></script>
-    <script src="Scripts/slick.grid.js"></script>
+    <!-- <script src="Scripts/slick.core.js"></script> -->
+    <!-- <script src="Scripts/slick.cellselectionmodel.js"></script> -->
+    <!-- <script src="Scripts/slick.rowmovemanager.js"></script> -->
+    <!-- <script src="Scripts/slick.grid.js"></script> -->
     <script src="Scripts/axios.min.js"></script>
 
     <script src="Scripts/utils.js"></script>
     <script src="Scripts/popup.js"></script>
+    <!-- <script src="Scripts/graph.js"></script> -->
   </body>
 </html>

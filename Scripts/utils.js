@@ -342,6 +342,39 @@ function addCookies(url) {
   return;
 }
 
+const getDomainName = servername => {
+  console.log("getDomainName", servername);
+  let leftPart = servername.search("//") + 2;
+  let server = servername.substring(leftPart);
+  let rightPart = server.search(":") - 1;
+  if (rightPart < 0) {
+    rightPart = server.search(leftPart, "/") - 1;
+    if (rightPart < 0) {
+      rightPart = server.length;
+    }
+  }
+  server = server.substring(0, rightPart + 1);
+  //".iq-server"
+  let domain = "." + server;
+  return domain;
+};
+
+const getCookieValue = async (url, cookieName) => {
+  console.log("getCookieValue", url, cookieName);
+
+  let domain = getDomainName(url);
+  browser.cookies.getAll({ domain: domain, name: cookieName }, cookies => {
+    console.log("cookies.getAll here", domain, cookieName);
+    for (var i = 0; i < cookies.length; i++) {
+      console.log(cookies[i]);
+      if (cookies[i].name === cookieName) {
+        return cookies[i].value;
+      }
+    }
+  });
+  return undefined;
+};
+
 const removeCookies = settings_url => {
   console.log("removeCookies");
   console.log(settings_url);
