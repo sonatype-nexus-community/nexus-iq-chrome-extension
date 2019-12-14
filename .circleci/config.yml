@@ -39,3 +39,7 @@ jobs:
       - run:
           name: tests!
           command: npm test
+
+      - run:
+          name: "What was my custom environment variable?"
+          command: echo ${GH_TOKEN} # prints: XXXXXXX
