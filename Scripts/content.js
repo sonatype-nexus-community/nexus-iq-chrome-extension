@@ -275,7 +275,8 @@ function parsePyPI(format, url) {
   //https://pypi.org/project/Django/1.6/
   //https://pypi.org/project/Django/
   let elements = url.split("/");
-  if (elements[5] == "") {
+  console.log("elements", elements);
+  if (elements[5] == "" || elements[5] == "#files") {
     //empty in element 5 means no version in the url
     //then we will try to parse
     //#content > section.banner > div > div.package-header__left > h1
@@ -306,8 +307,24 @@ function parsePyPI(format, url) {
     name_ver.length,
     qualifierHTML.lastIndexOf(".") - name_ver.length
   );
-  extension = qualifierHTML.substr(qualifierHTML.lastIndexOf(".") + 1);
-
+  // extension = qualifierHTML.substr(qualifierHTML.lastIndexOf(".") + 1);
+  //$("#files > table > tbody:contains('.zip')").text()
+  extension = "tar.gz";
+  let whatExtension = $(
+    `#files > table > tbody:contains('${extension}')`
+  ).text();
+  if (whatExtension != "") {
+    extension = "tar.gz";
+  } else {
+    extension = "zip";
+    whatExtension = $(`#files > table > tbody:contains('${extension}')`).text();
+    if (whatExtension != "") {
+      extension = "zip";
+    } else {
+      extension = "whl";
+    }
+  }
+  console.log("extension", extension);
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
   datasource = dataSources.NEXUSIQ;

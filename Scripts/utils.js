@@ -190,8 +190,10 @@ class PyPIArtifact extends Artifact {
 
     this.name = name;
     this.version = version;
-    this.qualifier = qualifier;
-    this.extension = extension;
+    // this.qualifier = qualifier;
+    // this.extension = extension;
+    this.extension = "tar.gz";
+    this.qualifier = "";
   }
   display() {
     return this.name;
@@ -516,6 +518,11 @@ const NexusFormatPyPI = artifact => {
   //return dictionary of components
   //TODO: how to determine the qualifier and the extension??
   let component;
+  //artifact.qualifier || "py2.py3-none-any"
+  //artifact.extension = "whl";
+  // artifact.extension = "zip";
+  // artifact.qualifier = "";
+
   let componentDict = {
     components: [
       (component = {
@@ -524,9 +531,9 @@ const NexusFormatPyPI = artifact => {
           format: artifact.format,
           coordinates: {
             name: artifact.name,
-            qualifier: artifact.qualifier || "py2.py3-none-any",
+            qualifier: artifact.qualifier,
             version: artifact.version,
-            extension: artifact.extension || "whl"
+            extension: artifact.extension
           }
         }
       })
@@ -748,8 +755,11 @@ const parsePyPIURL = url => {
 
   let elements = url.split("/");
   let artifact;
-  let extension = "whl";
-  let qualifier = "py2.py3-none-any";
+  // let extension = "whl";
+  // let qualifier = "py2.py3-none-any";
+  let extension = "";
+  let qualifier = "";
+
   let name, version;
 
   if (elements[5] == "") {

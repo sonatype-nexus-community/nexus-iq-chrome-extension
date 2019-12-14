@@ -303,9 +303,9 @@ test("Check NexusFormatPyPI positive test", () => {
           format: artifact.format,
           coordinates: {
             name: artifact.name,
-            qualifier: "py2.py3-none-any",
+            qualifier: artifact.qualifier,
             version: artifact.version,
-            extension: "whl"
+            extension: artifact.extension
           }
         }
       })
