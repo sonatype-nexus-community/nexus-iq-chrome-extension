@@ -41,5 +41,5 @@ jobs:
           command: npm test
 
       - run:
-          name: "What was my custom environment variable?"
-          command: echo ${GH_TOKEN} # prints: XXXXXXX
+          name: "semantic-release-dry-run"
+          command: npx semantic-release -d -b master
