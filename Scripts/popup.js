@@ -3,6 +3,9 @@ console.log("popup.js");
 
 var artifact, nexusArtifact, hasVulns, settings, hasLoadedHistory;
 var valueCSRF;
+
+const xsrfCookieName = "CLM-CSRF-TOKEN";
+const xsrfHeaderName = "X-CSRF-TOKEN";
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -797,7 +800,6 @@ const showCVEDetail = async cveReference => {
   console.log("showCVEDetail", cveReference);
   console.log("artifact", artifact);
   //  alert(cveReference)
-  //get CVEetail with Axios
   // let newElement = document.createElement("div");
   // newNode=document.body.appendChild(newElement);
   // newNode.setAttribute("id", "dialog");
@@ -826,7 +828,7 @@ const showRemediation = async (nexusArtifact, settings) => {
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/remediation/application/${settings.appInternalId}`;
   // removeCookies(servername);
-  let xsrfHeaderName = "X-CSRF-TOKEN";
+  // let xsrfHeaderName = "X-CSRF-TOKEN";
   let response = await axios(url, {
     method: "post",
     data: nexusArtifact.component,
@@ -872,12 +874,12 @@ const GetSettings = keys => {
   return promise;
 };
 
-const GetCookie = (domain, cookieName) => {
+const GetCookie = (domain, xsrfCookieName) => {
   let promise = new Promise((resolve, reject) => {
     browser.cookies.getAll(
       {
         domain: domain,
-        name: cookieName
+        name: xsrfCookieName
       },
       cookies => {
         let err = browser.runtime.lastError;
@@ -917,10 +919,14 @@ const GetAllVersions = async (nexusArtifact, settings, remediation) => {
   // let url = `${servername}rest/ci/componentDetails/application/${appId}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&reportId=${report}&timestamp=${timestamp}`
   let url = `${servername}rest/ide/componentDetails/application/${settings.appId}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&timestamp=${timestamp}&proprietary=false`;
   // let url = `${servername}rest/ide/componentDetails/application/${appId}/allVersions?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22commons-fileupload%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22commons-fileupload%22%2C%22version%22%3A%221.3.1%22%7D%7D&hash=c621b54583719ac03104&matchState=exact&proprietary=false HTTP/1.1`
+  // let xsrfHeaderName = "";
   let response = await axios.get(url, {
     auth: {
       username: settings.username,
       password: settings.password
+    },
+    headers: {
+      [xsrfHeaderName]: valueCSRF
     }
   });
   let data = response.data;
@@ -950,11 +956,14 @@ const GetCVEDetails = async (cve, nexusArtifact, settings) => {
   //servername has a slash
 
   let url = `${servername}rest/vulnerability/details/${vulnerability_source}/${cve}?componentIdentifier=${componentIdentifier}&hash=${hash}&timestamp=${timestamp}`;
-
+  // let xsrfHeaderName = "";
   let data = await axios.get(url, {
     auth: {
       username: settings.username,
       password: settings.password
+    },
+    headers: {
+      [xsrfHeaderName]: valueCSRF
     }
   });
   console.log("data", data);
@@ -1139,16 +1148,11 @@ const evaluatePackage = async (artifact, settings) => {
   // axios.defaults.xsrfCookieName = "CLM-CSRF-TOKEN";
   console.log("evaluateComponent", artifact, settings.auth);
 
-  let cookieName = "CLM-CSRF-TOKEN";
-  let xsrfHeaderName = "X-CSRF-TOKEN";
   let servername = settings.baseURL;
   let domain = getDomainName(servername);
-  console.log("browser.cookies.getAll", domain, cookieName);
-
-  let cookie = await GetCookie(domain, cookieName);
-  console.log("GetCookies.promise", cookie);
-  valueCSRF = cookie.value;
+  let cookie = await GetCookie(domain, xsrfCookieName);
   console.log("cookie", cookie);
+  valueCSRF = cookie.value;
   await callServer(valueCSRF);
 };
 
@@ -1165,13 +1169,13 @@ const callServer = async valueCSRF => {
   let responseVal;
 
   console.log("CSRF", valueCSRF);
-  let cookieName = "CLM-CSRF-TOKEN";
-  let xsrfHeaderName = "X-CSRF-TOKEN";
+  // let cookieName = "CLM-CSRF-TOKEN";
+  // let xsrfHeaderName = "X-CSRF-TOKEN";
   let response = await axios(url, {
     method: "post",
     data: nexusArtifact,
     withCredentials: true,
-    xsrfCookieName: cookieName,
+    xsrfCookieName: xsrfCookieName,
     xsrfHeaderName: xsrfHeaderName,
     auth: {
       username: settings.username,
@@ -1291,6 +1295,7 @@ const addDataOSSIndex = async artifact => {
   let response = await axios(OSSIndexURL, {
     method: "get",
     data: inputStr
+
     // withCredentials: true,
     // auth: {
     //   username: settings.username,

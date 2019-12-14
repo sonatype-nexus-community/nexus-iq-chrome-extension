@@ -33,7 +33,8 @@ const {
   NugetArtifact,
   PyPIArtifact,
   formats,
-  dataSources
+  dataSources,
+  getExtensionVersion
 } = require("../Scripts/utils");
 
 test("Can build empty Settings", () => {
@@ -1312,6 +1313,13 @@ test("Check ParsePageURL(crates.io) negative test", () => {
   let expected = artifact;
   expect(actual).toBeFalsy();
 });
+
+//cant unit test chrome app apis
+// test("Check getExtensionVersion positive test", () => {
+//   let actual = getExtensionVersion();
+//   let expected = "1.7.17";
+//   expect(actual).toEqual(expected);
+// });
 
 // test('Check removeCookies(settings_url) positive test', () => {
 //   //to do: Implement unit test to delete cookie
