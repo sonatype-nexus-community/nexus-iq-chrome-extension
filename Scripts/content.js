@@ -276,7 +276,7 @@ function parsePyPI(format, url) {
   //https://pypi.org/project/Django/
   let elements = url.split("/");
   console.log("elements", elements);
-  if (elements[5] == "" || elements[5] == "#files") {
+  if (elements[5] == "" || elements[5].includes("#")) {
     //empty in element 5 means no version in the url
     //then we will try to parse
     //#content > section.banner > div > div.package-header__left > h1
