@@ -33,6 +33,10 @@ The plugin can scan packages at the following repositories:
 15. Maven Repo1 - https://repo1.maven.org/maven2/
 16. Maven Repo2 - http://repo.maven.org/maven2/
 
+## Documentation
+
+[Sonatype Nexus Lifecycle nexus-iq-chrome-extension](https://sonatype-nexus-community.github.io/nexus-iq-chrome-extension/)
+
 ## Data
 
 The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems, currently 1-6 & 12-13. Systems 7-11 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
