@@ -158,38 +158,25 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
 
 ## Installation
 
-1. Download the plugin from GitHub
-   `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
-2. Open Chrome Browser
-3. Click on the three dots, then More Tools, then Extensions
-   <br/>
-   <img src="images/Extensions.png" alt="drawing" width="300"/>
-   <br/>
-4. Click on load unpacked (requires "Developper Mode" to be enabled)
-   <img src="images/Extension_Develop_Mode.png" alt="drawing" width="300"/>
-   <br/>
-   <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
-   <br/>
-5. Navigate to the folder where you downloaded the plugin from GitHub onto your local machine.
-   <br/>
-   <img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
-   <br/>
-6. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it.)
+1. Navigate to Chrome store
+2. Search for Sonatype
+3. Link is <https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd>
+4. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it. You can use a token for your password though. <https://help.sonatype.com/iqserver/managing/user-management/user-tokens>)
    <br/>
    <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
    <br/>
-7. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
+5. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
    <br/>
    <img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
    <br/>
-8. Click Save to save your credentials.
+6. Click Save to save your credentials.
    <br/>
 
-9. You will be advised that your details are saved. Click Close when you are done and You will be taken back to the Extensions Install screen in Chrome. Close the screen and begin using.
-10. The installer will have created a new icon in your Chrome Menu Bar.
-    <br/>
-    <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
-    <br/>
+7. You will be advised that your details are saved. Click Close when you are done and You will be taken back to the Extensions Install screen in Chrome. Close the screen and begin using.
+8. The installer will have created a new icon in your Chrome Menu Bar.
+   <br/>
+   <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
+   <br/>
 
 ### Uninstall
 
