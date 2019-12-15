@@ -160,7 +160,13 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
 
 1. Navigate to Chrome store
 2. Search for Sonatype
-3. Link is <https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd>
+
+- Link is <https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd>
+
+3. Click `Add to Chrome`
+
+Note: You will be asked to "Add Sonatype Nexus IQ Extension". Click "Add extension"
+
 4. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it. You can use a token for your password though. <https://help.sonatype.com/iqserver/managing/user-management/user-tokens>)
    <br/>
    <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>

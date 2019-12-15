@@ -16,7 +16,7 @@
 
 - added semantic-release ([f86fd87](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/commit/f86fd876a2ee1a3f002dbbf36184a5ffcfc6c7bf))
 
-## [1.7.16](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.0.0...v1.7.16) (2019-12-14)
+## [1.7.16](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.7.15...v1.7.16) (2019-09-30)
 
 ### Bug Fixes
 
