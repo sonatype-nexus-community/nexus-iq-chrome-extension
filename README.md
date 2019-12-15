@@ -71,11 +71,10 @@ The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses th
    <br/>
 8. Remediation
    The version history is available for each component.
-   <img src="images/Extension_Version_History.png" alt="Extension Version History" width="300"/>
+   <img src="images/Extension_VersionHistoryGraph.png" alt="Extension Version History" width="300"/>
    <br/>
 9. Remediation Guidance
-   The remediation guidance API has been added. The recommended fix version will be highlighted in green.
-   <img src="images/Extension_Remediation_Guidance.png" alt="Extension Remediation Guidance" width="300"/>
+   The remediation guidance API has been added. The recommended fix version will be listed at the top of the screen.
    <br/>
 10. License Information
     <img src="images/Extension_Licensing.png" alt="Extension Licensing" width="300"/>
