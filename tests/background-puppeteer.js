@@ -19,7 +19,7 @@ const puppeteer = require("puppeteer");
   // Can we navigate to a chrome-extension page? YES!
   const page = await browser.newPage();
   await page.goto(
-    "chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/options.html"
+    "chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/html/options.html"
   );
   // click buttons, test UI elements, etc.
   //click login
