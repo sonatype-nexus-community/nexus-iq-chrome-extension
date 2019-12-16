@@ -36,7 +36,7 @@ describe("test chrome extension", () => {
     //chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/options.html
     //chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/popup.html
     await driver.get(
-      "chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/options.html"
+      "chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/html/options.html"
     );
     driver.getTitle().then(title => {
       expect(title).stringMatching(/^chrome-extension/);

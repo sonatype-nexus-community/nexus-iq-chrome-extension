@@ -1,4 +1,4 @@
-// import BuildEmptySettings from '../Scripts/util';
+// import BuildEmptySettings from '../dist/Scripts/util';
 /*jslint es6 */
 const {
   BuildEmptySettings,
@@ -35,7 +35,7 @@ const {
   formats,
   dataSources,
   getExtensionVersion
-} = require("../Scripts/utils");
+} = require("../src/Scripts/utils");
 
 test("Can build empty Settings", () => {
   let actual = BuildEmptySettings();

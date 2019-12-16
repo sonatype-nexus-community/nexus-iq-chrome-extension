@@ -32,14 +32,14 @@
   ],
   "background": {
     "scripts": [
-      "Scripts/jquery-3.3.1.min.js",
+      "Scripts/jquery.min.js",
       "Scripts/utils.js",
       "Scripts/background.js"
     ],
     "persistent": true
   },
   "page_action": {
-    "default_popup": "popup.html",
+    "default_popup": "html/popup.html",
     "default_icon": {
       "16": "images/SON_logo_favicon.png",
       "32": "images/SON_logo_favicon.png",
@@ -54,5 +54,5 @@
     "128": "images/SON_logo_favicon.png"
   },
 
-  "options_page": "options.html?ver=1.7.17"
+  "options_page": "html/options.html?ver=1.7.17"
 }

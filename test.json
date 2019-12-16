@@ -1,7 +1,0 @@
-{
-  "applicationId" : "chrome-extension-nexus-iq",
-  "scanId" : "9a0b8047c3cd458b96f98fb8d7839c76",
-  "reportHtmlUrl" : "http://iq-server:8070/ui/links/application/chrome-extension-nexus-iq/report/9a0b8047c3cd458b96f98fb8d7839c76",
-  "reportPdfUrl" : "http://iq-server:8070/ui/links/application/chrome-extension-nexus-iq/report/9a0b8047c3cd458b96f98fb8d7839c76/pdf",
-  "reportDataUrl" : "http://iq-server:8070/api/v2/applications/chrome-extension-nexus-iq/reports/9a0b8047c3cd458b96f98fb8d7839c76"
-}

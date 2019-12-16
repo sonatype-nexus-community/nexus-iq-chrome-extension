@@ -36,7 +36,9 @@ function processPage(message = { messagetype: messageTypes.beginevaluate }) {
     //{messageType: "artifact", payload: artifact};
     // let artifact = requestmessage.payload;
     console.log("artifact", artifact);
-    let format = artifact.format;
+    if (artifact != undefined) {
+      let format = artifact.format;
+    }
     let evaluatemessage = {
       artifact: artifact,
       messagetype: messageTypes.evaluateComponent
@@ -599,6 +601,7 @@ function parseNexusRepo(url) {
   let nexusRepoformat = $(
     "div.nx-info > table > tbody > tr:nth-child(2) > td.nx-info-entry-value"
   ).html();
+  console.log("nexusRepoformat", nexusRepoformat);
   switch (nexusRepoformat) {
     case nexusRepoformats.pypi:
       format = formats.pypi;
@@ -689,6 +692,8 @@ function parseNexusRepo(url) {
       };
       break;
     default:
+      //Houston I have a problem
+      console.log("Unhandled so exit gracefully", nexusRepoformat);
   }
   console.log("component", artifact);
   return artifact;

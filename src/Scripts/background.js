@@ -68,7 +68,7 @@ const install_notice = () => {
 
   var now = new Date().getTime();
   localStorage.setItem("install_time", now);
-  browser.tabs.create({ url: "options.html" });
+  browser.tabs.create({ url: "html/options.html" });
 };
 install_notice();
 

@@ -22,7 +22,7 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
       console.log("messageTypes.evaluateComponent", artifact);
       artifact = respMessage.artifact;
       let displayMessage = await evaluateComponent(artifact, settings);
-      // await displayMessageData(displayMessage);
+      await displayMessageData(displayMessage);
       break;
     case messageTypes.displayMessage:
       // alert("displayMessage");
@@ -188,7 +188,7 @@ const installScripts = message => {
     background.message = message;
     console.log("sending message:", message);
     executeScripts(null, [
-      { file: "Scripts/jquery-3.3.1.min.js" },
+      { file: "Scripts/jquery.min.js" },
       { file: "Scripts/utils.js" },
       // { code: "var message = " + message  + ";"},
       { file: "Scripts/content.js" },
@@ -1328,6 +1328,7 @@ const addDataOSSIndex = async artifact => {
     message: retVal,
     artifact: artifact
   };
+  await displayMessageData(displayMessage);
   console.log("addDataOSSIndex - displayMessage:", displayMessage);
   return displayMessage;
 };
