@@ -12,7 +12,7 @@
       "path": "semantic-release-chrome",
       "asset": "nexus-iq-chrome-extension.zip",
       "extensionId": "mjehedmoboadebjmbmobpedkdgenmlhd",
-      "target": "default"
+      "target": "trustedTesters"
     },
     {
       "path": "@semantic-release/github",
@@ -63,7 +63,7 @@
     [
       "@semantic-release/github",
       {
-        "assets": "pack/*.tgz"
+        "assets": "src"
       }
     ],
     [

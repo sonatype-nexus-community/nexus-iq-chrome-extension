@@ -1,3 +1,9 @@
+## [1.7.18](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.7.9...v1.7.18) (2019-12-16)
+
+### Bug Fixes
+
+- **chrome publish:** automatically push to chrome store ([d5ade2c](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/commit/d5ade2c))
+
 ## [1.7.17](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.7.16...v1.7.17) (2019-12-14)
 
 ### Features
