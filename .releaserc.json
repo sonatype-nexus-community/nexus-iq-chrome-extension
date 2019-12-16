@@ -1,5 +1,28 @@
 {
-  "verifyConditions": ["@semantic-release/github"],
+  "verifyConditions": ["semantic-release-chrome", "@semantic-release/github"],
+  "prepare": [
+    {
+      "path": "semantic-release-chrome",
+      "distFolder": "src",
+      "asset": "nexus-iq-chrome-extension.zip"
+    }
+  ],
+  "publish": [
+    {
+      "path": "semantic-release-chrome",
+      "asset": "nexus-iq-chrome-extension.zip",
+      "extensionId": "mjehedmoboadebjmbmobpedkdgenmlhd",
+      "target": "default"
+    },
+    {
+      "path": "@semantic-release/github",
+      "assets": [
+        {
+          "path": "nexus-iq-chrome-extension.zip"
+        }
+      ]
+    }
+  ],
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
