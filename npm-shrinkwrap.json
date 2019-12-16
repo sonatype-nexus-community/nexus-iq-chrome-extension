@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "1.7.17",
+  "version": "0.0.1-semantic-release",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
