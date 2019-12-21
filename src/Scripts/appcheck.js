@@ -746,7 +746,10 @@
       let labels = componentInfoBars
         .anchor("bottom")
         .add(pv.Label)
-        .visible(false)
+        .visible(function() {
+          return config.data.currentVersionIndex === this.index;
+        })
+        .textAlign("center")
         .textBaseline("top");
       let leftPositionFn = getLeftPositionFn(config);
       componentInfoSelectedIndex = null;
@@ -767,26 +770,22 @@
         .fillStyle("transparent")
         .events("all")
         .event("mouseover", function() {
-          console.log("mouse over version", this.index, inner.i(), this);
           inner.i(this.index);
           this.render();
           labels
             .visible(function() {
               return inner.i() === this.index;
             })
-            .textAlign(
-              this.index === 0
-                ? "left"
-                : this.index === config.data.versions.length - 1
-                ? "right"
-                : "center"
-            )
             .render();
         })
         .event("mouseout", function() {
           inner.i(-1);
           this.render();
-          labels.visible(false).render();
+          labels
+            .visible(function() {
+              return config.data.currentVersionIndex === this.index;
+            })
+            .render();
         })
         .fillStyle(function() {
           if (inner.i() === this.index) {
@@ -985,231 +984,313 @@
     }
 
     function loadVersionChart(config) {
-      var gridLines = [],
-        node = $("#aiVersionChartContainer"),
-        panWrapper,
-        panningFn,
-        vizLabels,
-        vizContent,
-        i;
-      componentInfoVizContent = null;
+                                        var gridLines = [],
+                                          node = $("#aiVersionChartContainer"),
+                                          panWrapper,
+                                          panningFn,
+                                          vizLabels,
+                                          vizContent,
+                                          i;
+                                        componentInfoVizContent = null;
 
-      showThreatCategories = true;
-      config = $.extend({}, defaults, config);
+                                        showThreatCategories = true;
+                                        config = $.extend({}, defaults, config);
 
-      if (node.length === 0) {
-        return;
-      }
+                                        if (node.length === 0) {
+                                          return;
+                                        }
 
-      $.each(derivedValues, function(name, fn) {
-        config[name] = fn.call(derivedValues, config);
-      });
+                                        $.each(derivedValues, function(
+                                          name,
+                                          fn
+                                        ) {
+                                          config[name] = fn.call(
+                                            derivedValues,
+                                            config
+                                          );
+                                        });
 
-      node.height(config.actualHeight);
+                                        node.height(config.actualHeight);
 
-      //create the main viz container with the blue background
-      vizLabels = new pv.Panel()
-        .canvas("aiVersionChartLabels")
-        .overflow("hidden")
-        .height(config.actualHeight)
-        .width(config.labelWidth)
-        .fillStyle(bgBlue)
-        .strokeStyle(bgBlue);
+                                        //create the main viz container with the blue background
+                                        vizLabels = new pv.Panel()
+                                          .canvas("aiVersionChartLabels")
+                                          .overflow("hidden")
+                                          .height(config.actualHeight)
+                                          .width(config.labelWidth)
+                                          .fillStyle(bgBlue)
+                                          .strokeStyle(bgBlue);
 
-      //create the inner panel
-      vizContent = new pv.Panel()
-        .canvas("aiVersionChartViz")
-        .overflow("hidden")
-        .height(config.actualHeight)
-        .width(config.contentWidth)
-        .fillStyle(bgBlue)
-        .strokeStyle(bgBlue);
+                                        //create the inner panel
+                                        vizContent = new pv.Panel()
+                                          .canvas("aiVersionChartViz")
+                                          .overflow("hidden")
+                                          .height(config.actualHeight)
+                                          .width(config.contentWidth)
+                                          .fillStyle(bgBlue)
+                                          .strokeStyle(bgBlue);
 
-      if (config.panning) {
-        panWrapper = vizContent;
-        vizContent = panWrapper
-          .add(pv.Panel)
-          .overflow("hidden")
-          .height(config.actualHeight)
-          .width(config.contentWidth - 30)
-          .fillStyle(bgBlue)
-          .strokeStyle(bgBlue)
-          .left(15);
-      }
+                                        if (config.panning) {
+                                          panWrapper = vizContent;
+                                          vizContent = panWrapper
+                                            .add(pv.Panel)
+                                            .overflow("hidden")
+                                            .height(config.actualHeight)
+                                            .width(config.contentWidth - 30)
+                                            .fillStyle(bgBlue)
+                                            .strokeStyle(bgBlue)
+                                            .left(15);
+                                        }
 
-      // Horizontal gridlines
-      for (i = 0; i <= config.spacer * config.contentRows; i += config.spacer) {
-        gridLines.push(i);
-      }
-      vizContent
-        .add(pv.Rule)
-        .data(gridLines)
-        .left(0)
-        .width(config.width)
-        .top(function(d) {
-          return d + config.topPadding;
-        })
-        .height(1)
-        .strokeStyle(gridLine)
-        .strokeDasharray("1 1");
+                                        // Horizontal gridlines
+                                        for (
+                                          i = 0;
+                                          i <=
+                                          config.spacer * config.contentRows;
+                                          i += config.spacer
+                                        ) {
+                                          gridLines.push(i);
+                                        }
+                                        vizContent
+                                          .add(pv.Rule)
+                                          .data(gridLines)
+                                          .left(0)
+                                          .width(config.width)
+                                          .top(function(d) {
+                                            return d + config.topPadding;
+                                          })
+                                          .height(1)
+                                          .strokeStyle(gridLine)
+                                          .strokeDasharray("1 1");
 
-      // Vertical gridlines
-      config.vGridLines = [0];
+                                        // Vertical gridlines
+                                        config.vGridLines = [0];
 
-      for (
-        i = ((config.width / 2 - 1) % config.spacer) - config.spacer / 2 - 0.5;
-        i < config.width;
-        i += config.spacer
-      ) {
-        config.vGridLines.push(i);
-      }
-      vizContent
-        .add(pv.Rule)
-        .data(config.vGridLines)
-        .left(function(d) {
-          return d;
-        })
-        .height(config.height - config.topPadding)
-        .top(config.top)
-        .strokeStyle(gridLine)
-        .strokeDasharray("1 1");
+                                        for (
+                                          i =
+                                            ((config.width / 2 - 1) %
+                                              config.spacer) -
+                                            config.spacer / 2 -
+                                            0.5;
+                                          i < config.width;
+                                          i += config.spacer
+                                        ) {
+                                          config.vGridLines.push(i);
+                                        }
+                                        vizContent
+                                          .add(pv.Rule)
+                                          .data(config.vGridLines)
+                                          .left(function(d) {
+                                            return d;
+                                          })
+                                          .height(
+                                            config.height - config.topPadding
+                                          )
+                                          .top(config.top)
+                                          .strokeStyle(gridLine)
+                                          .strokeDasharray("1 1");
 
-      // fill in default heatmap rows
-      $.each(config.partialDisplay ? [] : [6, 8, 9, 10, 11], function(
-        index,
-        row
-      ) {
-        fillRow(
-          vizContent,
-          $.extend({}, config, { top: config.top + (row - 1) * config.spacer }),
-          lightGrey
-        );
-      });
+                                        // fill in default heatmap rows
+                                        $.each(
+                                          config.partialDisplay
+                                            ? []
+                                            : [6, 8, 9, 10, 11],
+                                          function(index, row) {
+                                            fillRow(
+                                              vizContent,
+                                              $.extend({}, config, {
+                                                top:
+                                                  config.top +
+                                                  (row - 1) * config.spacer
+                                              }),
+                                              lightGrey
+                                            );
+                                          }
+                                        );
 
-      // fill in empty rows
-      $.each(config.partialDisplay ? [] : [4, 5, 7, 12], function(index, row) {
-        fillRow(
-          vizContent,
-          $.extend({}, config, { top: config.top + (row - 1) * config.spacer }),
-          bgBlue,
-          true
-        );
-      });
+                                        // fill in empty rows
+                                        $.each(
+                                          config.partialDisplay
+                                            ? []
+                                            : [4, 5, 7, 12],
+                                          function(index, row) {
+                                            fillRow(
+                                              vizContent,
+                                              $.extend({}, config, {
+                                                top:
+                                                  config.top +
+                                                  (row - 1) * config.spacer
+                                              }),
+                                              bgBlue,
+                                              true
+                                            );
+                                          }
+                                        );
 
-      if (config.versionCount !== 0) {
-        //the current version vertical rule
-        verticalRule = vizContent
-          .add(pv.Rule)
-          .left(config.width / 2 - 1)
-          .top(config.topPadding)
-          .height(config.height - config.topPadding)
-          .strokeStyle("#949599");
+                                        if (config.versionCount !== 0) {
+                                          //the current version vertical rule
+                                          verticalRule = vizContent
+                                            .add(pv.Rule)
+                                            .left(config.width / 2 - 1)
+                                            .top(config.topPadding)
+                                            .height(
+                                              config.height - config.topPadding
+                                            )
+                                            .strokeStyle("#949599");
 
-        //put in the version labels
-        vizContent
-          .add(pv.Label)
-          .left(config.width / 2 - 70)
-          .top(15)
-          .textAlign("center")
-          .text("Older");
-        vizContent
-          .add(pv.Label)
-          .left(config.width / 2)
-          .top(15)
-          .textAlign("center")
-          .text("This Version");
-        vizContent
-          .add(pv.Label)
-          .left(config.width / 2 + 70)
-          .top(15)
-          .textAlign("center")
-          .text("Newer");
-      }
-      vizLabels
-        .add(pv.Label)
-        .left(5)
-        .top(config.top + config.labelTop)
-        .textAlign("left")
-        .font("bold 10px arial")
-        .text("Popularity");
-      config.top += 1;
-      createPopularityPanel(vizContent, config);
+                                          //put in the version labels
+                                          vizContent
+                                            .add(pv.Label)
+                                            .left(config.width / 2 - 70)
+                                            .top(15)
+                                            .textAlign("center")
+                                            .text("Older");
+                                          vizContent
+                                            .add(pv.Label)
+                                            .left(config.width / 2)
+                                            .top(15)
+                                            .textAlign("center")
+                                            .text("This Version");
+                                          vizContent
+                                            .add(pv.Label)
+                                            .left(config.width / 2 + 70)
+                                            .top(15)
+                                            .textAlign("center")
+                                            .text("Newer");
+                                        }
+                                        vizLabels
+                                          .add(pv.Label)
+                                          .left(5)
+                                          .top(config.top + config.labelTop)
+                                          .textAlign("left")
+                                          .font("bold 10px arial")
+                                          .text("Popularity");
+                                        config.top += 1;
+                                        createPopularityPanel(
+                                          vizContent,
+                                          config
+                                        );
 
-      config.top += config.spacer * 2 + 1;
-      vizLabels
-        .add(pv.Label)
-        .left(5)
-        .top(config.top + 1)
-        .textAlign("left")
-        .font("bold 10px arial")
-        .text("Policy Threat");
+                                        config.top += config.spacer * 2 + 1;
+                                        vizLabels
+                                          .add(pv.Label)
+                                          .left(5)
+                                          .top(config.top + 1)
+                                          .textAlign("left")
+                                          .font("bold 10px arial")
+                                          .text("Policy Threat");
 
-      createPolicyThreatPanel(vizContent, config, "HIGHEST_THREAT");
+                                        createPolicyThreatPanel(
+                                          vizContent,
+                                          config,
+                                          "HIGHEST_THREAT"
+                                        );
 
-      vizLabels
-        .add(pv.Label)
-        .left(15)
-        .top(config.top + 1)
-        .textAlign("left")
-        .font("10px arial")
-        .text("Details")
-        .textDecoration("underline")
-        .textStyle(blue)
-        .cursor("pointer")
-        .event("all")
-        .events("all")
-        .event("click", function() {
-          toggleThreatCategories(config, vizLabels, vizContent);
-          this.text(showThreatCategories ? "Hide Details" : "Details").render();
-          return;
-        });
+                                        vizLabels
+                                          .add(pv.Label)
+                                          .left(15)
+                                          .top(config.top + 1)
+                                          .textAlign("left")
+                                          .font("10px arial")
+                                          .text("Details")
+                                          .textDecoration("underline")
+                                          .textStyle(blue)
+                                          .cursor("pointer")
+                                          .event("all")
+                                          .events("all")
+                                          .event("click", function() {
+                                            toggleThreatCategories(
+                                              config,
+                                              vizLabels,
+                                              vizContent
+                                            );
+                                            this.text(
+                                              showThreatCategories
+                                                ? "Hide Details"
+                                                : "Details"
+                                            ).render();
+                                            return;
+                                          });
 
-      //these values are all hidden unless paid for
-      if (!config.partialDisplay) {
-        config.top += config.spacer; // skip past the details link
-        createPolicyThreatDetailRow(vizLabels, vizContent, config, "Security");
-        createPolicyThreatDetailRow(vizLabels, vizContent, config, "License");
-        createPolicyThreatDetailRow(vizLabels, vizContent, config, "Quality");
-        createPolicyThreatDetailRow(vizLabels, vizContent, config, "Other");
-      }
+                                        //these values are all hidden unless paid for
+                                        if (!config.partialDisplay) {
+                                          config.top += config.spacer; // skip past the details link
+                                          createPolicyThreatDetailRow(
+                                            vizLabels,
+                                            vizContent,
+                                            config,
+                                            "Security"
+                                          );
+                                          createPolicyThreatDetailRow(
+                                            vizLabels,
+                                            vizContent,
+                                            config,
+                                            "License"
+                                          );
+                                          createPolicyThreatDetailRow(
+                                            vizLabels,
+                                            vizContent,
+                                            config,
+                                            "Quality"
+                                          );
+                                          createPolicyThreatDetailRow(
+                                            vizLabels,
+                                            vizContent,
+                                            config,
+                                            "Other"
+                                          );
+                                        }
 
-      if (config.versionCount === 0) {
-        _createLabel(vizContent, "No Data", {
-          width: config.contentWidth,
-          height: config.actualHeight
-        });
-        vizLabels.render();
-        vizContent.render();
-        return;
-      }
+                                        if (config.versionCount === 0) {
+                                          _createLabel(vizContent, "No Data", {
+                                            width: config.contentWidth,
+                                            height: config.actualHeight
+                                          });
+                                          vizLabels.render();
+                                          vizContent.render();
+                                          return;
+                                        }
 
-      createHighlights(vizContent, config);
+                                        createHighlights(vizContent, config);
 
-      if (config.panning) {
-        //add in the panning controls
-        panningFn = createPanControls(
-          vizLabels,
-          vizContent,
-          panWrapper,
-          config
-        );
-        config.contentWidth -= 15;
-      }
+                                        if (config.panning) {
+                                          //add in the panning controls
+                                          panningFn = createPanControls(
+                                            vizLabels,
+                                            vizContent,
+                                            panWrapper,
+                                            config
+                                          );
+                                          config.contentWidth -= 15;
+                                        }
 
-      toggleThreatCategories(config, vizLabels, vizContent);
-      //CPT Hack to expand the Threat Categories out to show it
-      //Also I want to hack mouse event over the the current version to display the tooltip
-      toggleThreatCategories(config, vizLabels, vizContent);
-      //automatically pan to the center current version of the dataset
-      if (config.panning) {
-        //here we need to move the panel so that the center is centered in the viewable panel
-        panningFn(
-          -(config.width / 2 - config.contentWidth + config.contentWidth / 2)
-        );
-      }
-      componentInfoVizContent = vizContent;
-      componentInfoConfig = config;
-    }
+                                        toggleThreatCategories(
+                                          config,
+                                          vizLabels,
+                                          vizContent
+                                        );
+                                        //CPT Hack to expand the Threat Categories out to show it
+                                        //Also I want to hack mouse event over the the current version to display the tooltip
+                                        toggleThreatCategories(
+                                          config,
+                                          vizLabels,
+                                          vizContent
+                                        );
+
+                                        //automatically pan to the center current version of the dataset
+                                        if (config.panning) {
+                                          //here we need to move the panel so that the center is centered in the viewable panel
+                                          panningFn(
+                                            -(
+                                              config.width / 2 -
+                                              config.contentWidth +
+                                              config.contentWidth / 2
+                                            )
+                                          );
+                                        }
+                                        componentInfoVizContent = vizContent;
+                                        componentInfoConfig = config;
+                                      }
 
     return function(config) {
       componentInfoXIndex = 0;
@@ -1235,17 +1316,11 @@
       requiredXIndexMove =
         xAxisShiftFromCurrentVersion - xAxisShiftAlreadyMoved;
     panToXIndex(requiredXIndexMove);
-    console.log(
-      "componentInfoSelectedIndex",
-      componentInfoSelectedIndex,
-      index
-    );
     componentInfoSelectedIndex = index;
     componentInfoBars.render();
   }
 
   function panToXIndex(val) {
-    console.log("panToXIndex", val);
     let m = componentInfoVizContent.transform().translate(val, 0),
       temp = componentInfoXIndex + val;
     //Only pan the graph if the new x index is one of the last two displayed versions on either side of the graph currently
