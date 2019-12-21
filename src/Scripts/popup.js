@@ -367,14 +367,14 @@ const createHTML = async (message, settings) => {
 
 const renderComponentDataOSSIndex = message => {
   console.log("renderComponentDataOSSIndex", message);
-  let package = unescape(message.artifact.name);
+  let packageName = unescape(message.artifact.name);
   if (message.artifact.format === formats.golang) {
     //pkg:github/etcd-io/etcd@3.3.1
     let goFormat = `github/${message.artifact.namespace}/${message.artifact.name}`;
-    package = unescape(goFormat);
+    packageName = unescape(goFormat);
   }
   $("#format").html(message.artifact.format);
-  $("#package").html(package);
+  $("#package").html(packageName);
   $("#version").html(message.artifact.version);
 
   $("#hash").html(message.message.response.description);
