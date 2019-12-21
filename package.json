@@ -1,11 +1,12 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "1.7.17",
+  "version": "0.0.1-semantic-release",
   "description": "Chrome Extension for IQ Validation",
   "main": "background.js",
   "scripts": {
     "test": "jest",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "jest": {
     "verbose": true,
@@ -33,6 +34,7 @@
     "@semantic-release/git": "^7.0.18",
     "@semantic-release/github": "^5.5.5",
     "jest": "^24.8.0",
+    "jsdoc": "^3.6.3",
     "puppeteer": "^2.0.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "semantic-release": "^15.13.31",

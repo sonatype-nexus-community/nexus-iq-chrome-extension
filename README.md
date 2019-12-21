@@ -45,6 +45,10 @@ The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses th
 
 ## Usage
 
+When you browse to a website that is covered by the tool, such as maven central and click on the plugin, it will open with the Sonatype Lifecycle data relevant to that library.
+<img src="images/PluginRun.gif" alt="Open Plugin" width="300"/>
+<br/>
+
 1. The install will create a new icon in your Chrome Browser next to the location box.
    <img src="images/Extensions_Icon_created.png" alt="Extensions Icon Created" width="300"/>
    <br/>

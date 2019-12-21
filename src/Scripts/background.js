@@ -4,6 +4,13 @@ var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
+/**
+ * This function is the message handler from other pages
+ *
+ * @param {message} message -message from message sender
+ * @param {*} sender -the sender
+ * @param {*} sendResponse -callback handler
+ */
 const gotMessage = (message, sender, sendResponse) => {
   console.log("gotMessage", message);
   var settings;
@@ -62,7 +69,11 @@ window.username = "";
 window.password = "";
 window.haveLoggedIn = false;
 window.message = "";
-
+/**
+ *When installing the plugin this is called. We go straight to the options page to show the login screen
+ *
+ * @returns
+ */
 const install_notice = () => {
   if (localStorage.getItem("install_time")) return;
 
