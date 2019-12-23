@@ -1,13 +1,15 @@
+/*jslint es6  -W024 */
 "use strict";
+
 console.log("contentscript.js");
 var browser;
+var message;
 if (typeof chrome !== "undefined") {
   browser = chrome;
   browser.runtime.onMessage.addListener(gotMessage);
 }
 
 // chrome.runtime.onMessage.addListener(gotMessage);
-var message;
 function gotMessage(receivedMessage, sender, sendResponse) {
   try {
     console.log("gotMessage", receivedMessage);
@@ -350,9 +352,10 @@ function parseRuby(format, url) {
   let versionHTML;
   let version;
   let datasource;
-  if (elements.length < 6) {
+  if (elements.length < 6 || elements[5] == "") {
     //current version is inside the dom
     //https://rubygems.org/gems/bundler
+    //https://rubygems.org/gems/omniauth/
     name = elements[4];
     versionHTML = $("i.page__subheading").text();
     console.log("versionHTML:", versionHTML);

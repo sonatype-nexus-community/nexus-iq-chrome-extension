@@ -1,3 +1,4 @@
+/*jslint es6  -W024 */
 window.onload = function() {
   console.log("window.onload");
   message("");

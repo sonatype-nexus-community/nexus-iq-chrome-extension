@@ -2,10 +2,11 @@
   "name": "Sonatype Nexus IQ Evaluation",
   "description": "Sonatype Nexus IQ Evaluation-community developed",
   "author": "Cameron Townshend - ctownshend@sonatype.com",
-  "version": "0.0.1-semantic-release",
+  "version": "0.0.1",
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "permissions": [
+    "notifications",
     "storage",
     "activeTab",
     "declarativeContent",
@@ -32,7 +33,8 @@
   ],
   "background": {
     "scripts": [
-      "Scripts/jquery.min.js",
+      "Scripts/lib/jquery.min.js",
+      "Scripts/lib/axios.min.js",
       "Scripts/utils.js",
       "Scripts/background.js"
     ],
@@ -54,5 +56,5 @@
     "128": "images/SON_logo_favicon.png"
   },
 
-  "options_page": "html/options.html?ver=1.7.17"
+  "options_page": "html/options.html?ver=1.7.19"
 }

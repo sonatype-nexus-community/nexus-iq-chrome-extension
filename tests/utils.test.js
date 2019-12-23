@@ -1,5 +1,5 @@
-// import BuildEmptySettings from '../dist/Scripts/util';
 /*jslint es6 */
+// import BuildEmptySettings from '../dist/Scripts/util';
 const {
   BuildEmptySettings,
   BuildSettings,
@@ -34,6 +34,7 @@ const {
   PyPIArtifact,
   formats,
   dataSources,
+  getUserAgentHeader,
   getExtensionVersion
 } = require("../src/Scripts/utils");
 
@@ -1312,6 +1313,14 @@ test("Check ParsePageURL(crates.io) negative test", () => {
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();
+});
+
+test("Check GetActiveTab positive test", () => {
+  // GetActiveTab
+
+  let actual = true;
+  let expected = true;
+  expect(actual).toEqual();
 });
 
 //cant unit test chrome app apis

@@ -1,5 +1,13 @@
+/*jslint es6  -W024 */
 "use strict";
+
 console.log("utils.js");
+var artifact, nexusArtifact, hasVulns, settings, hasLoadedHistory;
+var valueCSRF;
+
+var xsrfCookieName = "CLM-CSRF-TOKEN";
+var xsrfHeaderName = "X-CSRF-TOKEN";
+
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -37,7 +45,7 @@ var artifactoryRepoformats = {
   pypi: "pypi"
 };
 
-const dataSources = {
+var dataSources = {
   NEXUSIQ: "NEXUSIQ",
   OSSINDEX: "OSSINDEX"
 };
@@ -206,19 +214,20 @@ const checkPageIsHandled = url => {
   // let url = tab.url
   let found = false;
   if (
-    url.search("https://search.maven.org/") >= 0 ||
-    url.search("https://mvnrepository.com/") >= 0 ||
+    url.search("https://search.maven.org/artifact/") >= 0 ||
+    url.search("https://mvnrepository.com/artifact/") >= 0 ||
     url.search("https://repo1.maven.org/maven2/") >= 0 ||
     url.search("http://repo2.maven.org/maven2/") >= 0 ||
-    url.search("https://www.npmjs.com/") >= 0 ||
-    url.search("https://www.nuget.org/") >= 0 ||
-    url.search("https://rubygems.org/") >= 0 ||
-    url.search("https://pypi.org/") >= 0 ||
-    url.search("https://packagist.org/") >= 0 ||
+    url.search("https://www.npmjs.com/package/") >= 0 ||
+    url.search("https://www.nuget.org/packages/") >= 0 ||
+    url.search("https://pypi.org/project/") >= 0 ||
+    url.search("https://packagist.org/packages/") >= 0 ||
+    url.search("https://rubygems.org/gems/") >= 0 ||
     url.search("https://cran.r-project.org/") >= 0 ||
     url.search("https://crates.io/") >= 0 ||
     url.search("https://search.gocenter.io/") >= 0 ||
-    url.search("https://github.com/") >= 0 || //https://github.com/jquery/jquery/releases/tag/3.0.0
+    (url.search("https://github.com/") >= 0 &&
+      url.search("/releases/tag/") >= 0) || //https://github.com/jquery/jquery/releases/tag/3.0.0
     url.search("/webapp/#/artifacts/") >= 0 || //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
     url.search("/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
     url.search("/#browse/browse:") >= 0 //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
@@ -231,11 +240,9 @@ const checkPageIsHandled = url => {
 const ParsePageURL = url => {
   //artifact varies depending on eco-system
   //returns an artifact if URL contains the version
-  //if not a version specific URL then returns a falsy value
+  //if it is not a version specific URL then returns a falsy value
   console.log("ParsePageURL", url);
-
   //who I am what is my address?
-
   let artifact; // = new Artifact();
   let format;
 
@@ -271,12 +278,15 @@ const ParsePageURL = url => {
     //https://pypi.org/project/Django/1.6/
     format = formats.pypi;
     artifact = null;
-  } else if (url.search("rubygems.org/gems/") >= 0) {
+  } else if (
+    url.search("rubygems.org/gems/") >= 0 &&
+    url.search("/versions/") >= 0
+  ) {
     //https://rubygems.org/gems/bundler/versions/1.16.1
     format = formats.gem;
     artifact = parseRubyURL(url);
   }
-  //OSSIndex
+  //OSSIndex/php
   else if (url.search("packagist.org/packages/") >= 0) {
     //https: packagist ???
     format = formats.composer;
@@ -1199,6 +1209,428 @@ const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
   return settings;
 };
 
+const BuildSettingsFromGlobal = async () => {
+  let promise = await GetSettings([
+    "url",
+    "username",
+    "password",
+    "appId",
+    "appInternalId"
+  ]);
+  settings = BuildSettings(
+    promise.url,
+    promise.username,
+    promise.password,
+    promise.appId,
+    promise.appInternalId
+  );
+  console.log("settings", settings);
+};
+
+const GetSettings = keys => {
+  let promise = new Promise((resolve, reject) => {
+    browser.storage.sync.get(keys, items => {
+      let err = browser.runtime.lastError;
+      if (err) {
+        reject(err);
+      } else {
+        resolve(items);
+      }
+    });
+  });
+  return promise;
+};
+
+const GetCookie = (domain, xsrfCookieName) => {
+  let promise = new Promise((resolve, reject) => {
+    browser.cookies.getAll(
+      {
+        domain: domain,
+        name: xsrfCookieName
+      },
+      cookies => {
+        let err = browser.runtime.lastError;
+        if (err) {
+          reject(err);
+        } else {
+          resolve(cookies[0]);
+        }
+      }
+    );
+  });
+  return promise;
+};
+
+const GetCVEDetails = async (cve, nexusArtifact, settings) => {
+  console.log("begin GetCVEDetails", cve, nexusArtifact, settings);
+  // let url="http://iq-server:8070/rest/vulnerability/details/cve/CVE-2018-3721?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D&hash=4c854c86c91ab36c86fc&timestamp=1553676800618"
+  let servername = settings.baseURL; // + (settings.baseURL[settings.baseURL.length-1]=='/' ? '' : '/') ;//'http://iq-server:8070'
+  //let CVE = 'CVE-2018-3721'
+  let timestamp = Date.now();
+  let hash = nexusArtifact.components[0].hash; //'4c854c86c91ab36c86fc'
+  // let componentIdentifier = '%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D'
+  let componentIdentifier = encodeComponentIdentifier(nexusArtifact);
+  let vulnerability_source;
+  if (cve.search("sonatype") >= 0) {
+    vulnerability_source = "sonatype";
+  } else {
+    //CVE type
+    vulnerability_source = "cve";
+  }
+  //servername has a slash
+
+  let url = `${servername}rest/vulnerability/details/${vulnerability_source}/${cve}?componentIdentifier=${componentIdentifier}&hash=${hash}&timestamp=${timestamp}`;
+  // let xsrfHeaderName = "";
+  let data = await axios.get(url, {
+    auth: {
+      username: settings.username,
+      password: settings.password
+    },
+    headers: {
+      [xsrfHeaderName]: valueCSRF
+    }
+  });
+  console.log("data", data);
+  let retVal;
+  retVal = data;
+  return { cvedetail: retVal };
+};
+
+const evaluateComponent = async (artifact, settings) => {
+  let resp;
+  switch (artifact.datasource) {
+    case dataSources.NEXUSIQ:
+      resp = await evaluatePackage(artifact, settings);
+      break;
+    case dataSources.OSSINDEX:
+      resp = await addDataOSSIndex(artifact);
+      break;
+    default:
+      alert("Unhandled datasource" + artifact.datasource);
+  }
+  return resp;
+};
+
+const evaluatePackage = async (artifact, settings) => {
+  // removeCookies(servername);
+  //This is supposed to fix the error - invalid XSRF token
+  // delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
+  // axios.defaults.xsrfHeaderName = "X-CSRF-TOKEN";
+  // axios.defaults.xsrfCookieName = "CLM-CSRF-TOKEN";
+  console.log("evaluateComponent", artifact, settings.auth);
+  let servername = settings.baseURL;
+  let domain = getDomainName(servername);
+  let cookie = await GetCookie(domain, xsrfCookieName);
+  console.log("cookie", cookie);
+  valueCSRF = cookie.value;
+  let displayMessage = await callServer(valueCSRF);
+  return displayMessage;
+};
+
+const callServer = async valueCSRF => {
+  console.log("callServer", valueCSRF, artifact, settings);
+  let nexusArtifact = NexusFormat(artifact);
+  console.log("nexusArtifact", nexusArtifact);
+  let inputStr = JSON.stringify(nexusArtifact);
+  console.log("inputStr", inputStr);
+  let retVal;
+  let error = 0;
+  let servername = settings.baseURL;
+  let url = `${servername}api/v2/components/details`;
+  let responseVal;
+  let displayMessage;
+  console.log("CSRF", valueCSRF);
+  // let cookieName = "CLM-CSRF-TOKEN";
+  // let xsrfHeaderName = "X-CSRF-TOKEN";
+  let response = await axios(url, {
+    method: "post",
+    data: nexusArtifact,
+    withCredentials: true,
+    xsrfCookieName: xsrfCookieName,
+    xsrfHeaderName: xsrfHeaderName,
+    auth: {
+      username: settings.username,
+      password: settings.password
+    },
+    headers: {
+      [xsrfHeaderName]: valueCSRF
+    }
+  })
+    .then(data => {
+      console.log("axios then", data);
+      responseVal = data.data;
+      retVal = { error: error, response: responseVal };
+      addCookies(servername);
+    })
+    .catch(error => {
+      console.log("error", error);
+      let code, response;
+      if (!error.response) {
+        // network error
+        code = 1;
+        responseVal = `Server unreachable ${url}. ${error.toString()}`;
+      } else {
+        // http status code
+        code = error.response.status;
+        // response data
+        responseVal = error.response.data;
+      }
+      retVal = { error: code, response: responseVal }; // error = error.response;
+    });
+  //handle error
+  // console.log(xhr);
+  // error = xhr.status;
+  // response = xhr.responseText;
+  displayMessage = {
+    messagetype: messageTypes.displayMessage,
+    message: retVal,
+    artifact: artifact
+  };
+  console.log("evaluatePackage - displayMessage", displayMessage);
+
+  return displayMessage;
+};
+
+/////////////
+
+const beginEvaluation = async tab => {
+  //return values
+  //return 0 was handled
+  //return 1 injected script
+  //return 2 failed
+
+  console.log("beginEvaluation", tab);
+  let url = tab.url;
+  console.log("url", url);
+  let message = {
+    messagetype: messageTypes.beginevaluate
+  };
+
+  //so first I have to make sure that it is a URL that we care about
+  if (checkPageIsHandled(url)) {
+    //yes we know about this sort of URL so continue
+    //next check if I can simply parse the URL
+    artifact = ParsePageURL(url);
+    console.log("artifact set", artifact);
+    if (artifact && artifact.version) {
+      //evaluate now
+      //as the page has the version so no need to insert dom
+      //just parse the URL
+      let evaluatemessage = {
+        artifact: artifact,
+        messagetype: messageTypes.evaluateComponent
+      };
+      await BuildSettingsFromGlobal();
+      let displayMessage = await evaluateComponent(artifact, settings);
+      return displayMessage;
+    } else {
+      //this sends a message to the content tab
+      //hopefully it will tell me what it sees
+      //this fixes a bug where we did not get the right DOM because we did not know what page we were on
+      installScripts(tab, message);
+      //install scripts will run, and I hope that we receive a message back
+      return "installScripts";
+    }
+  } else {
+    console.log("This page is not currently handled by this extension.");
+    return "notvalid";
+  }
+};
+
+const executeScripts = (tabId, injectDetailsArray) => {
+  console.log("executeScripts(tabId, injectDetailsArray)", tabId);
+
+  function createCallback(tabId, injectDetails, innerCallback) {
+    return function() {
+      browser.tabs.executeScript(tabId, injectDetails, innerCallback);
+    };
+  }
+
+  var callback = null;
+
+  for (var i = injectDetailsArray.length - 1; i >= 0; --i)
+    callback = createCallback(tabId, injectDetailsArray[i], callback);
+
+  if (callback !== null) callback(); // execute outermost function
+};
+
+const installScripts = (tab, message) => {
+  console.log("begin installScripts", tab, message);
+  // var background = browser.extension.getBackgroundPage();
+  // background.message = message;
+  // console.log("sending message:", message);
+  executeScripts(null, [
+    { file: "Scripts/lib/jquery.min.js" },
+    { file: "Scripts/utils.js" },
+    // { code: "var message = " + message  + ";"},
+    { file: "Scripts/content.js" },
+    { code: "processPage();" }
+  ]);
+  // browser.tabs.sendMessage(tab.tabId, message);
+  console.log("end installScripts");
+};
+/////////////
+
+const getRemediation = async (nexusArtifact, settings) => {
+  console.log("getRemediation", nexusArtifact, settings);
+  let servername = settings.baseURL;
+  let url = `${servername}api/v2/components/remediation/application/${settings.appInternalId}`;
+  let response = await axios(url, {
+    method: "post",
+    data: nexusArtifact.component,
+    withCredentials: true,
+    auth: {
+      username: settings.username,
+      password: settings.password
+    },
+    headers: {
+      [xsrfHeaderName]: valueCSRF
+    }
+  });
+  let respData = response.data;
+  console.log("getRemediation: respData", respData);
+  let newVersion = "";
+  if (respData.remediation.versionChanges.length > 0) {
+    newVersion =
+      respData.remediation.versionChanges[0].data.component.componentIdentifier
+        .coordinates.version;
+  }
+  return newVersion;
+};
+
+const GetAllVersions = async (nexusArtifact, settings, remediation) => {
+  console.log("GetAllVersions", nexusArtifact);
+  let retVal;
+  let comp = encodeURI(
+    JSON.stringify(nexusArtifact.component.componentIdentifier)
+  );
+  // console.log('nexusArtifact', nexusArtifact);
+  console.log("comp", comp);
+  var d = new Date();
+  var timestamp = d.getDate();
+  let hash = nexusArtifact.component.hash;
+  let matchstate = "exact";
+  let servername = settings.baseURL;
+  let url = `${servername}rest/ide/componentDetails/application/${settings.appId}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&timestamp=${timestamp}&proprietary=false`;
+  let response = await axios.get(url, {
+    auth: {
+      username: settings.username,
+      password: settings.password
+    },
+    headers: {
+      [xsrfHeaderName]: valueCSRF
+    }
+  });
+  let data = response.data;
+  return data;
+};
+
+const ChangeIconMessage = showVulnerable => {
+  if (showVulnerable) {
+    // send message to background script
+    browser.runtime.sendMessage({
+      messagetype: "newIcon",
+      newIconPath: "images/IQ_Vulnerable.png"
+    });
+  } else {
+    // send message to background script
+    browser.runtime.sendMessage({
+      messagetype: "newIcon",
+      newIconPath: "images/IQ_Default.png"
+    });
+  }
+};
+
+const addDataOSSIndex = async artifact => {
+  // pass your data in method
+  //OSSINdex is anonymous
+  console.log("entering addDataOSSIndex: artifact", artifact);
+  let retVal, inputStr;
+  // https://ossindex.sonatype.org/api/v3/component-report/composer%3Adrupal%2Fdrupal%405
+  //type:namespace/name@version?qualifiers#subpath
+  let format = artifact.format;
+  let name = artifact.name;
+  let version = artifact.version;
+  let OSSIndexURL;
+  if (artifact.format == formats.golang) {
+    //Example: pkg:github/etcd-io/etcd@3.3.1
+    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
+    //OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
+    let goFormat = `github/${artifact.namespace}/${artifact.name}@${artifact.version}`;
+
+    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${goFormat}`;
+  } else {
+    // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
+    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/jquery/jquery@3.0.0
+    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`;
+  }
+  let status = false;
+  console.log("artifact request", artifact);
+  console.log("OSSIndexURL request", OSSIndexURL);
+  inputStr = JSON.stringify(artifact);
+  let response = await axios(OSSIndexURL, {
+    method: "get",
+    data: inputStr
+  })
+    .then(data => {
+      console.log("then", data);
+      responseVal = data.data;
+      let error = 0;
+      retVal = {
+        error: error,
+        response: responseVal
+      };
+    })
+    .catch(error => {
+      console.log("error", error);
+      let code, response;
+      if (!error.response) {
+        // network error
+        code = 1;
+        responseVal = `Server unreachable ${url}. ${error.toString()}`;
+      } else {
+        // http status code
+        code = error.response.status;
+        // response data
+        responseVal = error.response.data;
+      }
+      retVal = {
+        error: code,
+        response: responseVal
+      }; // error = error.response;
+    });
+  let displayMessage = {
+    messagetype: messageTypes.displayMessage,
+    message: retVal,
+    artifact: artifact
+  };
+  // await displayMessageDataHTML(displayMessage);
+  console.log("addDataOSSIndex - displayMessage:", displayMessage);
+  return displayMessage;
+};
+
+const styleCVSS = severity => {
+  let className;
+  switch (true) {
+    case severity >= 10:
+      className = "criticalSeverity";
+      break;
+    case severity >= 7:
+      className = "highSeverity";
+      break;
+    case severity >= 5:
+      className = "mediumSeverity";
+      break;
+    case severity >= 0:
+      className = "lowSeverity";
+      break;
+    default:
+      className = "noneSeverity";
+      break;
+  }
+  return className;
+};
+
 const parseCratesURL = url => {
   //server is crates, language is rust
   //https://crates.io/crates/rand
@@ -1209,7 +1641,176 @@ const parseCratesURL = url => {
   return false;
 };
 
-function getUserAgentHeader() {
+const GetActiveTab = async () => {
+  let params = {
+    currentWindow: true,
+    active: true
+  };
+
+  let promise = new Promise((resolve, reject) => {
+    let tabs = browser.tabs.query(params, gotTabs);
+    function gotTabs(tabs) {
+      let thisTab = tabs[0];
+      let err = browser.runtime.lastError;
+      if (err) {
+        reject(err);
+      } else {
+        resolve(thisTab);
+      }
+    }
+  });
+  return promise;
+};
+
+function CVSSDetails(cvssText) {
+  cvssText = cvssText.toUpperCase();
+  console.log("CVSSDetails:" + cvssText);
+  var url = "https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator";
+  //showNotice:CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+  var cvssTextArray;
+  var response = "";
+  console.log("here");
+  cvssTextArray = cvssText.split("/");
+  var CR = "<br>";
+  var exploitabilityMetrics = "";
+  var attackVector = "";
+  var attackComplexity = "";
+  var privilegesRequired = "";
+  var userInteraction = "";
+  var scope = "";
+  var impactMetrics = "";
+  var confidentialityImpact = "";
+  var integrityImpact = "";
+  var availabilityImpact = "";
+
+  // response += 'Exploitability Metrics' + CR
+  // response += 'Impact Metrics' + CR
+  //Confidentiality Impact (C)*
+
+  var line = "-";
+  var tab = "\t";
+  var linebreak = "<hr></hr>";
+  var sectionBreak = "<hr></hr>";
+  exploitabilityMetrics +=
+    "<center><b>" + "Exploitability Metrics" + "</b></center>";
+  attackVector += tab + "Attack vector: ";
+  attackComplexity += tab + "Attack complexity: ";
+  privilegesRequired = tab + "Privileges Required (PR)*: ";
+  userInteraction = tab + "User Interaction (UI)*: ";
+  scope += tab + "Scope (S)*: ";
+  impactMetrics += "<center><b>" + "Impact Metrics" + "</b></center>";
+  confidentialityImpact += tab + "Confidentiality Impact (C)*: ";
+  integrityImpact += tab + "Integrity Impact (I)*: ";
+  availabilityImpact += tab + "Availability Impact (A)*: ";
+
+  cvssTextArray.forEach(element => {
+    // Attack vector
+    if (element == "AV:N") {
+      attackVector += "Network (AV:N)" + CR.repeat(1);
+    }
+    if (element == "AV:A") {
+      attackVector += "Adjacent Network (AV:N)" + CR.repeat(1);
+    }
+    if (element == "AV:L") {
+      attackVector += "Local (AV:L)" + CR.repeat(1);
+    }
+    if (element == "AV:P") {
+      attackVector += "Physical (AV:P)" + CR.repeat(1);
+    }
+
+    // Attack complexity
+    if (element == "AC:L") {
+      attackComplexity += "Low (AC:L)" + CR.repeat(1);
+    }
+    if (element == "AC:H") {
+      attackComplexity += "High (AC:H)" + CR.repeat(1);
+    }
+    //Privileges Required (PR)*
+    if (element == "PR:N") {
+      privilegesRequired += "None (PR:N)" + CR.repeat(1);
+    }
+    if (element == "PR:L") {
+      privilegesRequired += "Low (PR:L)" + CR.repeat(1);
+    }
+    if (element == "PR:H") {
+      privilegesRequired += "High (PR:H)" + CR.repeat(1);
+    }
+    // User Interaction (UI)*
+    if (element == "UI:N") {
+      userInteraction += "None (UI:N)" + CR.repeat(1);
+    }
+    if (element == "UI:R") {
+      userInteraction += "Required (UI:R)" + CR.repeat(1);
+    }
+    // Scope (S)*
+    if (element == "S:U") {
+      scope += "Unchanged (S:U)" + CR.repeat(1);
+    }
+    if (element == "S:C") {
+      scope += "Changed (S:C)" + CR.repeat(1);
+    }
+
+    // Confidentiality Impact (C)*
+    if (element == "C:N") {
+      confidentialityImpact += "None (C:N)" + CR.repeat(1);
+    }
+    if (element == "C:L") {
+      confidentialityImpact += "Low (C:L)" + CR.repeat(1);
+    }
+    if (element == "C:H") {
+      confidentialityImpact += "High (C:H)" + CR.repeat(1);
+    }
+    // Integrity Impact (I)*
+    if (element == "I:N") {
+      integrityImpact += "None (I:N)" + CR.repeat(1);
+    }
+    if (element == "I:L") {
+      integrityImpact += "Low (I:L)" + CR.repeat(1);
+    }
+    if (element == "I:H") {
+      integrityImpact += "High (I:H)" + CR.repeat(1);
+    }
+    // Availability Impact (A)*
+    if (element == "A:N") {
+      availabilityImpact += "None (A:N)" + CR.repeat(1);
+    }
+    if (element == "A:L") {
+      availabilityImpact += "Low (A:L)" + CR.repeat(1);
+    }
+    if (element == "A:H") {
+      availabilityImpact += "High (A:H)" + CR.repeat(1);
+    }
+  });
+  var score = CVSS.calculateCVSSFromVector(cvssText);
+  //alert(score.baseMetricScore);
+  var baseScore = "";
+  if (score.success) {
+    baseScore += "<center><b>" + "CVSS Score" + "</b></center>";
+    baseScore += "Base Score: " + score.baseMetricScore;
+    baseScore += "= Impact: " + score.impactMetricScore;
+    baseScore += "+ Exploitability: " + score.exploitabilityMetricScore;
+  }
+  response =
+    cvssText +
+    // CR +
+    sectionBreak +
+    exploitabilityMetrics +
+    attackVector +
+    attackComplexity +
+    privilegesRequired +
+    userInteraction +
+    scope +
+    sectionBreak +
+    impactMetrics +
+    confidentialityImpact +
+    integrityImpact +
+    availabilityImpact +
+    sectionBreak +
+    baseScore;
+  return response;
+}
+
+const getUserAgentHeader = () => {
   var nVer = navigator.appVersion;
   var nAgt = navigator.userAgent;
   var browserName = navigator.appName;
@@ -1293,16 +1894,16 @@ function getUserAgentHeader() {
 
   return;
   `Nexus_IQ_Chrome_Extension/${getExtensionVersion()} (${environment} ${environmentVersion}; ${system}; Browser: ${fullVersion})`;
-}
+};
 
-function getExtensionVersion() {
+const getExtensionVersion = () => {
   var version = chrome.app.getDetails().version;
   if (version != undefined) {
     return version;
   } else {
     return "0.0.0";
   }
-}
+};
 
 if (typeof module !== "undefined") {
   module.exports = {
@@ -1340,6 +1941,8 @@ if (typeof module !== "undefined") {
     PyPIArtifact: PyPIArtifact,
     formats: formats,
     dataSources: dataSources,
-    getExtensionVersion: getExtensionVersion
+    getUserAgentHeader: getUserAgentHeader,
+    getExtensionVersion: getExtensionVersion,
+    GetActiveTab: GetActiveTab
   };
 }

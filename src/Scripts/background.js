@@ -1,5 +1,7 @@
+/*jslint es6  -W024 */
 "use strict";
 console.log("background.js");
+
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -84,6 +86,39 @@ const install_notice = () => {
 install_notice();
 
 // getActiveTab();
+
+const sendNotification = componentDetails => {
+  console.log("sendNotification", componentDetails.securityData.securityIssues);
+  var options = {
+    type: "basic",
+    title: "Vulnerable library",
+    message: "Dear User this library is vulnerable",
+    iconUrl: "http://www.google.com/favicon.ico"
+  };
+
+  chrome.notifications.create(
+    "id1",
+    {
+      type: "basic",
+      iconUrl: "http://www.google.com/favicon.ico",
+      title: "User Update",
+      message: "Dear User XYZ U have recieved an update",
+      priority: 1,
+      buttons: [
+        {
+          title: "call"
+        },
+        {
+          title: "send mail"
+        }
+      ],
+      isClickable: true
+    },
+    function() {
+      console.log(chrome.runtime.lastError);
+    }
+  );
+};
 
 const loadSettingsAndEvaluate = artifact => {
   console.log("loadSettingsAndEvaluate", artifact);
@@ -305,102 +340,6 @@ const ToggleIcon = tab => {
   console.log(found);
 };
 
-const addDataOSSIndex = artifact => {
-  // pass your data in method
-  //OSSINdex is anonymous
-  console.log("entering addDataOSSIndex: artifact", artifact);
-  let retVal, inputStr;
-  // https://ossindex.sonatype.org/api/v3/component-report/composer%3Adrupal%2Fdrupal%405
-  //type:namespace/name@version?qualifiers#subpath
-  let format = artifact.format;
-  let name = artifact.name;
-  let version = artifact.version;
-  let OSSIndexURL;
-  if (artifact.format == formats.golang) {
-    //Example: pkg:github/etcd-io/etcd@3.3.1
-    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
-    //OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
-    let goFormat = `github/${artifact.namespace}/${artifact.name}@${artifact.version}`;
-
-    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${goFormat}`;
-  } else {
-    // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
-    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/jquery/jquery@3.0.0
-    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`;
-  }
-  let status = false;
-  //components[""0""].componentIdentifier.coordinates.packageId
-  // console.log('settings');
-  // console.log(settings);
-  // console.log(settings.auth);
-  // console.log("inputdata");
-  console.log("artifact request", artifact);
-  console.log("OSSIndexURL request", OSSIndexURL);
-  inputStr = JSON.stringify(artifact);
-
-  // if (!settings.baseURL){
-  //     retVal = {error: 1001, response: "Problem retrieving URL"};
-  //     console.log('no base url');
-  //     return (retVal);
-  // }
-  let displayMessage;
-
-  $.ajax({
-    type: "GET",
-    // beforeSend: function (request)
-    // {
-    //     //request.withCredentials = true;
-    //     // request.setRequestHeader("Authorization", settings.auth);
-    // },
-    async: true,
-    url: OSSIndexURL,
-    data: inputStr,
-
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-    crossDomain: true,
-    success: function(responseData, status, jqXHR) {
-      console.log("ajax success");
-      console.log(responseData);
-      status = true;
-      retVal = { error: 0, response: responseData }; //no error
-      //return (retVal);
-      //handleResponseData(responseData);
-      //alert("success");// write success in " "
-      displayMessage = {
-        messagetype: messageTypes.displayMessage,
-        artifact: artifact,
-        message: retVal
-      };
-      console.log("sendmessage displayMessage", displayMessage);
-      browser.runtime.sendMessage(displayMessage);
-      return retVal;
-    },
-
-    error: function(jqXHR, status) {
-      // error handler
-      console.log("$.ajax get error");
-      console.log(jqXHR);
-      //console.log(jqXHR.responseText  + jqXHR.responseText + jqXHR.status);
-      //alert('fail' + jqXHR.responseText  + '\r\n' + jqXHR.statusText + '\r\n' + 'Code:' +  jqXHR.status);
-      let error = jqXHR.status;
-      let timeout = jqXHR.statusText === "timeout" && error === 0;
-      if (timeout) {
-        error = true;
-      }
-      retVal = { error: error, response: jqXHR };
-      displayMessage = {
-        messagetype: messageTypes.displayMessage,
-        artifact: artifact,
-        message: retVal
-      };
-      browser.runtime.sendMessage(displayMessage);
-      return retVal;
-    },
-    timeout: 3000 // sets timeout to 3 seconds
-  });
-};
-
 const quickTest = async () => {
   let artifact = {
     format: "maven",
@@ -437,6 +376,42 @@ const quickTest2 = async () => {
   console.log(myResp3);
 };
 
+browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  console.log("browser.tabs.onUpdated.addListener", tabId, changeInfo, tab);
+  // let tab = await GetActiveTab();
+  if (changeInfo.status == "complete") {
+    let url = tab.url;
+
+    if (checkPageIsHandled(url)) {
+      // loadSettingsAndEvaluate(parseMavenURL(url));
+      let displayMessageData = await beginEvaluation(tab);
+
+      console.log("displayMessageData", displayMessageData);
+      let responseData = displayMessageData.message.response;
+      let componentDetails = responseData.componentDetails[0];
+      let hasVulnerability =
+        componentDetails.securityData.securityIssues.length > 0;
+      console.log("hasVulnerability", hasVulnerability);
+      if (hasVulnerability) {
+        browser.pageAction.setIcon({
+          path: "../images/SON_logo_favicon_Vulnerable.png",
+          tabId: tabId
+        });
+        sendNotification(componentDetails);
+      } else {
+        browser.pageAction.setIcon({
+          path: "../images/SON_logo_favicon_not_vuln.png",
+          tabId: tabId
+        });
+      }
+    } else {
+      browser.pageAction.setIcon({
+        path: "../images/SON_logo_favicon_not_vuln.png",
+        tabId: tabId
+      });
+    }
+  }
+});
 //does not work unfortunately
 // chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 //     //page was updated
