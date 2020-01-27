@@ -7,21 +7,21 @@
       "asset": "nexus-iq-chrome-extension.zip"
     }
   ],
-  "publish": [
-    {
-      "path": "semantic-release-chrome",
-      "asset": "nexus-iq-chrome-extension.zip",
-      "extensionId": "mjehedmoboadebjmbmobpedkdgenmlhd"
-    },
-    {
-      "path": "@semantic-release/github",
-      "assets": [
-        {
-          "path": "nexus-iq-chrome-extension.zip"
-        }
-      ]
-    }
-  ],
+  // "publish": [
+  //   {
+  //     "path": "semantic-release-chrome",
+  //     "asset": "nexus-iq-chrome-extension.zip",
+  //     "extensionId": "mjehedmoboadebjmbmobpedkdgenmlhd"
+  //   },
+  //   {
+  //     "path": "@semantic-release/github",
+  //     "assets": [
+  //       {
+  //         "path": "nexus-iq-chrome-extension.zip"
+  //       }
+  //     ]
+  //   }
+  // ],
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
