@@ -1518,7 +1518,13 @@ const GetAllVersions = async (nexusArtifact, settings, remediation) => {
       [xsrfHeaderName]: valueCSRF
     }
   });
-  let data = response.data;
+  let data;
+  if (response.data.allVersions !== "undefined") {
+    data = response.data.allVersions;
+  } else {
+    data = response.data;
+  }
+  console.log("data", data);
   return data;
 };
 

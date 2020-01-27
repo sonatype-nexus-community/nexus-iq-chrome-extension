@@ -133,7 +133,7 @@ const sendNotification = componentDetails => {
       isClickable: true
     },
     function() {
-      console.log(chrome.runtime.lastError);
+      console.log('chrome.runtime.lastError', browser.runtime.lastError);
     }
   );
 };
