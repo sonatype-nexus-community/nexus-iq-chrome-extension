@@ -516,6 +516,7 @@ div.slick-cell.l0.r0 {
 
 }
 
+/* This is for the CVSS lookup */
 /* Tooltip container */
 .tooltip {
     position: relative;
@@ -562,4 +563,10 @@ div.slick-cell.l0.r0 {
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+
+/*TODO: Swap this out to none after demo*/
+/* This will put a hand cursor over the rectangles in the Version history*/
+rect {
+    cursor: pointer;
 }

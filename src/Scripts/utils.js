@@ -56,7 +56,7 @@ var messageTypes = {
   loggedIn: "loggedIn", //message to send that we are in the loggedin
   displayMessage: "displayMessage", //message to send that we have data from REST and wish to display it
   loginFailedMessage: "loginFailedMessage", //message to send that login failed
-  beginevaluate: "beginevaluate", //message to send that we are beginning the evaluation process, it's different to the evaluatew message for a readon that TODO I fgogot
+  beginEvaluate: "beginEvaluate", //message to send that we are beginning the evaluation process, it's different to the evaluatew message for a readon that TODO I fgogot
   artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
   evaluateComponent: "evaluateComponent", //used to evaluate on the popup only
   error: "error" //used to pass errors from background and content script to the popup
@@ -1210,6 +1210,7 @@ const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
 };
 
 const BuildSettingsFromGlobal = async () => {
+  console.log("BuildSettingsFromGlobal");
   let promise = await GetSettings([
     "url",
     "username",
@@ -1225,6 +1226,7 @@ const BuildSettingsFromGlobal = async () => {
     promise.appInternalId
   );
   console.log("settings", settings);
+  return settings;
 };
 
 const GetSettings = keys => {
@@ -1394,16 +1396,11 @@ const callServer = async valueCSRF => {
 /////////////
 
 const beginEvaluation = async tab => {
-  //return values
-  //return 0 was handled
-  //return 1 injected script
-  //return 2 failed
-
   console.log("beginEvaluation", tab);
   let url = tab.url;
   console.log("url", url);
   let message = {
-    messagetype: messageTypes.beginevaluate
+    messagetype: messageTypes.beginEvaluate
   };
 
   //so first I have to make sure that it is a URL that we care about

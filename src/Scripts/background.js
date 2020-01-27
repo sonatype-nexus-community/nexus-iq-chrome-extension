@@ -13,19 +13,34 @@ if (typeof chrome !== "undefined") {
  * @param {*} sender -the sender
  * @param {*} sendResponse -callback handler
  */
-const gotMessage = (message, sender, sendResponse) => {
+const gotMessage = async (message, sender, sendResponse) => {
   console.log("gotMessage", message);
-  var settings;
+  // var settings;
   var retval;
   var baseURL, username, password;
-  var artifact;
+  // var artifact;
   // console.log('message')
   // console.log(message)
   switch (message.messagetype) {
     case messageTypes.evaluateComponent:
-      console.log(
-        "Background does not handle this message type. This is handled by the popup only."
-      );
+      //changed this to now be handled by the background
+      //if we install the script in to the content script
+      //background handles it not popup
+      artifact = message.artifact;
+            let evaluatemessage = {
+        artifact: artifact,
+        messagetype: messageTypes.evaluateComponent
+      };
+      await BuildSettingsFromGlobal();
+      console.log("settings", settings);
+      let displayMessage = await evaluateComponent(artifact, settings);
+      let tab = await GetActiveTab();
+      let tabId = tab.id;
+      displayEvaluationReults(displayMessage, tabId);
+      return displayMessage;
+
+
+
       browser.runtime.sendMessage(message);
       break;
     case messageTypes.login:
@@ -88,28 +103,31 @@ install_notice();
 // getActiveTab();
 
 const sendNotification = componentDetails => {
+  if (1 === 2) { 
+    return;
+  }
   console.log("sendNotification", componentDetails.securityData.securityIssues);
   var options = {
     type: "basic",
     title: "Vulnerable library",
     message: "Dear User this library is vulnerable",
-    iconUrl: "http://www.google.com/favicon.ico"
+    iconUrl: "../images/SON_logo_favicon_Vulnerable.png"
   };
 
-  chrome.notifications.create(
-    "id1",
+  browser.notifications.create(
+    "NexusIQNotification",
     {
       type: "basic",
-      iconUrl: "http://www.google.com/favicon.ico",
-      title: "User Update",
-      message: "Dear User XYZ U have recieved an update",
+      iconUrl: "../images/SON_logo_favicon_Vulnerable.png",
+      title: "Sonatype Nexus IQ Scan",
+      message: "Dear User this library is vulnerable",
       priority: 1,
       buttons: [
         {
-          title: "call"
+          title: "close"
         },
         {
-          title: "send mail"
+          title: "Close"
         }
       ],
       isClickable: true
@@ -385,24 +403,10 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (checkPageIsHandled(url)) {
       // loadSettingsAndEvaluate(parseMavenURL(url));
       let displayMessageData = await beginEvaluation(tab);
-
-      console.log("displayMessageData", displayMessageData);
-      let responseData = displayMessageData.message.response;
-      let componentDetails = responseData.componentDetails[0];
-      let hasVulnerability =
-        componentDetails.securityData.securityIssues.length > 0;
-      console.log("hasVulnerability", hasVulnerability);
-      if (hasVulnerability) {
-        browser.pageAction.setIcon({
-          path: "../images/SON_logo_favicon_Vulnerable.png",
-          tabId: tabId
-        });
-        sendNotification(componentDetails);
-      } else {
-        browser.pageAction.setIcon({
-          path: "../images/SON_logo_favicon_not_vuln.png",
-          tabId: tabId
-        });
+      //this may need to install scripts into the background page so the next stuff
+      //will be handled by the send message from the content script
+      if (displayMessageData !== "installScripts") {
+        displayEvaluationReults(displayMessageData, tabId);
       }
     } else {
       browser.pageAction.setIcon({
@@ -457,152 +461,291 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
 //this does work
 browser.runtime.onInstalled.addListener(function() {
-  // loadSettings();
-  // let tabId = 0;
-  // if (checkPageIsHandled(url)){
-  //     // browser.pageAction.hide();
-  // }else{
-  //     browser.pageAction.hide(tabId);
-  // }
+                                                     // loadSettings();
+                                                     // let tabId = 0;
+                                                     // if (checkPageIsHandled(url)){
+                                                     //     // browser.pageAction.hide();
+                                                     // }else{
+                                                     //     browser.pageAction.hide(tabId);
+                                                     // }
+                                                     // https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
+                                                     const isChrome = /Chrome/.test(
+                                                       navigator.userAgent
+                                                     );
+                                                     const isFirefox = /Firefox/.test(
+                                                       navigator.userAgent
+                                                     );
 
-  console.log("browser.runtime.onInstalled.addListener");
-  browser.declarativeContent.onPageChanged.removeRules(undefined, function() {
-    browser.declarativeContent.onPageChanged.addRules([
-      {
-        conditions: [
-          //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "mvnrepository.com",
-              schemes: ["https"],
-              pathContains: "artifact"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            //https://search.maven.org/#artifactdetails%7Corg.apache.struts%7Cstruts2-core%7C2.3.31%7Cjar
-            //bug in Chrome extensions dont handle hashes https://bugs.chromium.org/p/chromium/issues/detail?id=84024
+                                                     if (isFirefox) {
+                                                       return;
+                                                     }
+                                                     console.log(
+                                                       "browser.runtime.onInstalled.addListener"
+                                                     );
+                                                     browser.declarativeContent.onPageChanged.removeRules(
+                                                       undefined,
+                                                       function() {
+                                                         browser.declarativeContent.onPageChanged.addRules(
+                                                           [
+                                                             {
+                                                               conditions: [
+                                                                 //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "mvnrepository.com",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "artifact"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     //https://search.maven.org/#artifactdetails%7Corg.apache.struts%7Cstruts2-core%7C2.3.31%7Cjar
+                                                                     //bug in Chrome extensions dont handle hashes https://bugs.chromium.org/p/chromium/issues/detail?id=84024
 
-            pageUrl: {
-              hostEquals: "search.maven.org",
-              schemes: ["https"],
-              pathContains: "artifact"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            //https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "search.maven.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "artifact"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     //https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
 
-            pageUrl: {
-              hostEquals: "repo1.maven.org",
-              schemes: ["https"],
-              pathContains: "maven2"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            //http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
-            pageUrl: {
-              hostEquals: "repo2.maven.org",
-              schemes: ["http"],
-              pathContains: "maven2"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "www.npmjs.com",
-              schemes: ["https"],
-              pathContains: "package"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "www.nuget.org",
-              schemes: ["https"],
-              pathContains: "packages"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "pypi.org",
-              schemes: ["https"],
-              pathContains: "project"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "rubygems.org",
-              schemes: ["https"],
-              pathContains: "gems"
-            }
-          }),
-          //OSSINDEX
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "packagist.org",
-              schemes: ["https"],
-              pathContains: "packages"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "cocoapods.org",
-              schemes: ["https"],
-              pathContains: "pods"
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "cran.r-project.org",
-              schemes: ["https"]
-            }
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "crates.io",
-              schemes: ["https"],
-              pathContains: "crates"
-            }
-          }),
-          //perhaps add support for https://go-search.org/view?id=github.com%2fetcd-io%2fetcd
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "search.gocenter.io",
-              schemes: ["https"],
-              pathContains: "github.com"
-            }
-          }),
-          //https://github.com/jquery/jquery/releases/tag/3.0.0
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "github.com",
-              schemes: ["https"],
-              pathContains: "releases/tag"
-            }
-          }),
-          //Artifactory could be any URL but has the
-          //webapp/#/artifacts pattern
-          //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
-          //https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: { pathContains: "webapp" }
-          }),
-          //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: { pathContains: "list" },
-            css: ["address"]
-          }),
-          //Nexus Repo
-          //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
-          //#browse/browse:
-          //Chrome does not support parsing after the # in these PageMatchers
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "repo1.maven.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "maven2"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     //http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "repo2.maven.org",
+                                                                       schemes: [
+                                                                         "http"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "maven2"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "www.npmjs.com",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "package"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "www.nuget.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "packages"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "pypi.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "project"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "rubygems.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "gems"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 //OSSINDEX
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "packagist.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "packages"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "cocoapods.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "pods"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "cran.r-project.org",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ]
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "crates.io",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "crates"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 //perhaps add support for https://go-search.org/view?id=github.com%2fetcd-io%2fetcd
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "search.gocenter.io",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "github.com"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 //https://github.com/jquery/jquery/releases/tag/3.0.0
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       hostEquals:
+                                                                         "github.com",
+                                                                       schemes: [
+                                                                         "https"
+                                                                       ],
+                                                                       pathContains:
+                                                                         "releases/tag"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 //Artifactory could be any URL but has the
+                                                                 //webapp/#/artifacts pattern
+                                                                 //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+                                                                 //https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       pathContains:
+                                                                         "webapp"
+                                                                     }
+                                                                   }
+                                                                 ),
+                                                                 //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     pageUrl: {
+                                                                       pathContains:
+                                                                         "list"
+                                                                     },
+                                                                     css: [
+                                                                       "address"
+                                                                     ]
+                                                                   }
+                                                                 ),
+                                                                 //Nexus Repo
+                                                                 //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
+                                                                 //#browse/browse:
+                                                                 //Chrome does not support parsing after the # in these PageMatchers
 
-          new browser.declarativeContent.PageStateMatcher({
-            css: ["label.x-component"]
-          })
-        ],
-        actions: [new browser.declarativeContent.ShowPageAction()]
-      }
-    ]);
-  });
-});
+                                                                 new browser.declarativeContent.PageStateMatcher(
+                                                                   {
+                                                                     css: [
+                                                                       "label.x-component"
+                                                                     ]
+                                                                   }
+                                                                 )
+                                                               ],
+                                                               actions: [
+                                                                 new browser.declarativeContent.ShowPageAction()
+                                                               ]
+                                                             }
+                                                           ]
+                                                         );
+                                                       }
+                                                     );
+                                                   });
+
+function displayEvaluationReults(displayMessageData, tabId) {
+  console.log("displayEvaluationReults", displayMessageData, tabId);
+  let responseData = displayMessageData.message.response;
+  let componentDetails = responseData.componentDetails[0];
+  let hasVulnerability = componentDetails.securityData.securityIssues.length > 0;
+  console.log("hasVulnerability", hasVulnerability);
+  if (hasVulnerability) {
+    browser.pageAction.setIcon({
+      path: "../images/SON_logo_favicon_Vulnerable.png",
+      tabId: tabId
+    });
+    sendNotification(componentDetails);
+  }
+  else {
+    browser.pageAction.setIcon({
+      path: "../images/SON_logo_favicon_not_vuln.png",
+      tabId: tabId
+    });
+  }
+}
 
 function receiveText(resultsArray) {
   console.log(resultsArray[0]);

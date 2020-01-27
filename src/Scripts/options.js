@@ -8,6 +8,7 @@ window.onload = function() {
   document.getElementById("cancel").onclick = function() {
     var ok = true;
     if (ok) {
+      // open(location, "_self").close();
       window.close();
     }
   };

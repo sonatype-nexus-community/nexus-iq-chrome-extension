@@ -25,7 +25,7 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   }
 }
 
-function processPage(message = { messagetype: messageTypes.beginevaluate }) {
+function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   console.log("processPage - message:", message);
 
   //please tell what is my url and what is my content
