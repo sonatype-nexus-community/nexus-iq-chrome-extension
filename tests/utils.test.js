@@ -1,5 +1,5 @@
-// import BuildEmptySettings from '../dist/Scripts/util';
 /*jslint es6 */
+// import BuildEmptySettings from '../dist/Scripts/util';
 const {
   BuildEmptySettings,
   BuildSettings,
@@ -34,6 +34,7 @@ const {
   PyPIArtifact,
   formats,
   dataSources,
+  getUserAgentHeader,
   getExtensionVersion
 } = require("../src/Scripts/utils");
 
@@ -93,14 +94,14 @@ test("Can BuildSettings", () => {
   expect(expected.appId).toBe(actual.appId);
 });
 
-test("CheckPageIsHandled positive test - maven", () => {
-  let actual = checkPageIsHandled("https://search.maven.org/");
+test("CheckPageIsHandled positive test - search.maven.org", () => {
+  let actual = checkPageIsHandled("https://search.maven.org/artifact/");
   let expected = true;
   expect(expected).toBe(actual);
 });
 
-test("CheckPageIsHandled positive test - maven", () => {
-  let actual = checkPageIsHandled("https://mvnrepository.com/");
+test("CheckPageIsHandled positive test - mvnrepository.com", () => {
+  let actual = checkPageIsHandled("https://mvnrepository.com/artifact/");
   let expected = true;
   expect(expected).toBe(actual);
 });
@@ -117,31 +118,31 @@ test("CheckPageIsHandled positive test - maven", () => {
 });
 
 test("CheckPageIsHandled positive test - nuget", () => {
-  let actual = checkPageIsHandled("https://www.nuget.org/");
+  let actual = checkPageIsHandled("https://www.nuget.org/packages/");
   let expected = true;
   expect(expected).toBe(actual);
 });
 
 test("CheckPageIsHandled positive test - NPM", () => {
-  let actual = checkPageIsHandled("https://www.npmjs.com/");
+  let actual = checkPageIsHandled("https://www.npmjs.com/package/");
   let expected = true;
   expect(expected).toBe(actual);
 });
 
-test("CheckPageIsHandled positive test - https://rubygems.org/", () => {
-  let actual = checkPageIsHandled("https://rubygems.org/");
+test("CheckPageIsHandled positive test - https://rubygems.org/gems/", () => {
+  let actual = checkPageIsHandled("https://rubygems.org/gems/");
   let expected = true;
   expect(expected).toBe(actual);
 });
 
-test("CheckPageIsHandled positive test - https://pypi.org/", () => {
-  let actual = checkPageIsHandled("https://pypi.org/");
+test("CheckPageIsHandled positive test - https://pypi.org/project/", () => {
+  let actual = checkPageIsHandled("https://pypi.org/project/");
   let expected = true;
   expect(expected).toBe(actual);
 });
 
-test("CheckPageIsHandled positive test - https://packagist.org/", () => {
-  let actual = checkPageIsHandled("https://packagist.org/");
+test("CheckPageIsHandled positive test - https://packagist.org/packages/", () => {
+  let actual = checkPageIsHandled("https://packagist.org/packages/");
   let expected = true;
   expect(expected).toBe(actual);
 });
@@ -1312,6 +1313,14 @@ test("Check ParsePageURL(crates.io) negative test", () => {
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();
+});
+
+test("Check GetActiveTab positive test", () => {
+  // GetActiveTab
+
+  let actual = true;
+  let expected = true;
+  expect(actual).toEqual(expected);
 });
 
 //cant unit test chrome app apis

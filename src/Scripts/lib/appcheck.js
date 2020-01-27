@@ -567,7 +567,8 @@
         }
       };
 
-      $.each(json.versions, function(index, item) {
+      $.each(json.versions, function (index, item) {
+        console.log("index, item", index,  item);
         data.versions.push(item.componentIdentifier.coordinates.version);
         data.versionPopularity.push(
           item.popularity || item.relativePopularity || 0
@@ -1297,7 +1298,7 @@
       componentInfoVizContent = null;
       componentInfoXIndexInitial = null;
       componentInfoConfig = null;
-
+      console.log("config.data", config.data);
       config.data = parseJsonData(config.data);
       loadVersionChart(config);
     };

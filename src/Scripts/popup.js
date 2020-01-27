@@ -1,11 +1,7 @@
-// "use strict";
+/*jslint es6  -W024 */
+"use strict";
 console.log("popup.js");
 
-var artifact, nexusArtifact, hasVulns, settings, hasLoadedHistory;
-var valueCSRF;
-
-const xsrfCookieName = "CLM-CSRF-TOKEN";
-const xsrfHeaderName = "X-CSRF-TOKEN";
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -22,16 +18,16 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
       console.log("messageTypes.evaluateComponent", artifact);
       artifact = respMessage.artifact;
       let displayMessage = await evaluateComponent(artifact, settings);
-      await displayMessageData(displayMessage);
+      await displayMessageDataHTML(displayMessage);
       break;
     case messageTypes.displayMessage:
       // alert("displayMessage");
-      await displayMessageData(respMessage);
+      await displayMessageDataHTML(respMessage);
       break;
     case messageTypes.loggedIn:
       //logged in so now we evaluate
       console.log("logged in, now evaluate");
-      let evalBegan = beginEvaluation();
+      // let evalBegan = beginEvaluation();
       hideLoader(hasError);
       break;
     case messageTypes.loginFailedMessage:
@@ -48,42 +44,22 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
 
 browser.runtime.onMessage.addListener(gotMessage);
 
-//var settings;
-//var componentInfoData;
-$(async function() {
-  //whenever I open I begin an evaluation immediately
-  //the icon is disabled for pages that I dont parse
-  console.log("ready!");
-  //setupAccordion();
-  showLoader();
-  $("#error").hide();
+const showLoader = () => {
+  $(".loader").fadeIn("slow");
+};
 
-  let tabOptions = {
-    beforeActivate: selectHandler
-  };
-  $("#tabs").tabs(tabOptions);
-  hasLoadedHistory = false;
-  $("div#dialog").dialog({
-    show: "slide",
-    hide: "puff",
-    autoOpen: false,
-    closeOnEscape: true,
-    width: 425
-  });
+const hideLoader = hasError => {
+  //$(".loader").fadeOut("slow");
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("tabs").style.display = "block";
+};
 
-  //begin evaluation sends a message to the background script
-  //amd to the content script
-  //I may be able to cheat and just get the URL, which simplifies the logic
-  //if the URL is not parseable then I will have to go the content script to read the DOM
-  await beginEvaluation();
-});
-
-selectHandler = async function(e, tab) {
+const selectTabHandler = async (e, tab) => {
   //lazy loading of history
   //only do it if the user clicks on the tab
   showLoader();
   const remediationTab = 2;
-  console.log("selectHandler", nexusArtifact, artifact);
+  console.log("selectTabHandler", nexusArtifact, artifact);
   if (
     tab.newTab.index() === remediationTab &&
     !hasLoadedHistory &&
@@ -106,225 +82,154 @@ selectHandler = async function(e, tab) {
       settings,
       remediation
     );
+    let currentVersion =
+      nexusArtifact.component.componentIdentifier.coordinates.version;
+
+    await renderGraph(allVersions, remediation, currentVersion);
     hasLoadedHistory = true;
   }
   hideLoader();
 };
 
-const beginEvaluation = async () => {
-  console.log("beginEvaluation");
-  //need to run query across the tabs
-  //to determine the top tab.
-  //I need to call sendMessage from within there as it is async
+//var settings;
+//var componentInfoData;
+$(async function() {
+  //whenever I open I begin an evaluation immediately
+  //the icon is disabled for pages that I dont parse
+  console.log("ready!");
+  //setupAccordion();
+  showLoader();
+  $("#error").hide();
+
+  let tabOptions = {
+    beforeActivate: selectTabHandler
+  };
+  $("#tabs").tabs(tabOptions);
+  hasLoadedHistory = false;
+  $("div#dialogSecurityDetails").dialog({
+    autoOpen: false
+  });
+
+  //begin evaluation sends a message to the background script
+  //and to the content script
+  //I may be able to cheat and just get the URL, which simplifies the logic
+  //if the URL is not parseable then I will have to go the content script to read the DOM
   let tab = await GetActiveTab();
   let url = tab.url;
-  console.log("url", url);
-  //   alert(checkPageIsHandled(url));
-
-  let message = {
-    messagetype: messageTypes.beginevaluate
-  };
-
-  if (checkPageIsHandled(url)) {
-    //yes we know about this sort of URL so continue
-
-    artifact = ParsePageURL(url);
-    console.log("artifact set", artifact);
-
-    if (artifact && artifact.version) {
-      //evaluate now
-      //as the page has the version so no need to insert dom
-      //just parse the URL
-      let evaluatemessage = {
-        artifact: artifact,
-        messagetype: messageTypes.evaluateComponent
-      };
-      console.log(
-        "browser.runtime.sendMessage(evaluatemessage)",
-        evaluatemessage
-      );
-
-      //try to evaluate async
-      //    browser.runtime.sendMessage(evaluatemessage);
-      await BuildSettingsFromGlobal();
-      let displayMessage = await evaluateComponent(artifact, settings);
-      // console.log("beginEvaluation - displayMessage:", displayMessage);
-      // await displayMessageData(displayMessage);
-    } else {
-      //this sends a message to the content tab
-      //hopefully it will tell me what it sees
-      //this fixes a bug where we did not get the right DOM because we did not know what page we were on
-      installScripts(message);
-    }
-  } else {
-    alert("This page is not currently handled by this extension.");
-    //close this document
-    window.close();
+  let displayMessageData = await beginEvaluation(tab);
+  if (displayMessageData) {
+    await displayMessageDataHTML(displayMessageData);
   }
-};
+});
 
-const executeScripts = (tabId, injectDetailsArray) => {
-  console.log("executeScripts(tabId, injectDetailsArray)", tabId);
+// const createAllversionsHTML = async (data, remediation, currentVersion) => {
+//   console.log("createAllversionsHTML", remediation, currentVersion);
+//   // console.log('data:', data);
 
-  function createCallback(tabId, injectDetails, innerCallback) {
-    return function() {
-      browser.tabs.executeScript(tabId, injectDetails, innerCallback);
-    };
-  }
+//   let strData = "";
+//   var grid;
 
-  var callback = null;
+//   var options = {
+//     enableColumnReorder: false,
+//     autoHeight: false,
+//     enableCellNavigation: false,
+//     cellHighlightCssClass: "changed",
+//     cellFlashingCssClass: "remediation-version"
+//   };
 
-  for (var i = injectDetailsArray.length - 1; i >= 0; --i)
-    callback = createCallback(tabId, injectDetailsArray[i], callback);
+//   var slickData = [];
 
-  if (callback !== null) callback(); // execute outermost function
-};
+//   var columns = [
+//     { id: "version", name: "version", field: "version" },
+//     { id: "security", name: "security", field: "security" },
+//     { id: "license", name: "license", field: "license" },
+//     { id: "popularity", name: "popularity", field: "popularity" },
+//     { id: "catalogDate", name: "catalogDate", field: "catalogDate" },
+//     {
+//       id: "majorRevisionStep",
+//       name: "majorRevisionStep",
+//       field: "majorRevisionStep"
+//     }
+//   ];
+//   var colId = 0;
+//   let rowId = 0;
+//   let remediationRow = -1;
+//   let currentVersionRow = -1;
+//   //let sortedData = sortByProperty(data, 'componentIdentifier.coordinates.version', 'descending')
+//   data.forEach(element => {
+//     // console.log('element.componentIdentifier.coordinates.version', element.componentIdentifier.coordinates.version)
+//     let version = element.componentIdentifier.coordinates.version;
+//     if (remediation === version) {
+//       remediationRow = rowId;
+//     }
+//     if (currentVersion === version) {
+//       currentVersionRow = rowId;
+//     }
+//     let popularity = element.relativePopularity;
+//     let license =
+//       typeof element.policyMaxThreatLevelsByCategory.LICENSE === "undefined"
+//         ? 0
+//         : element.policyMaxThreatLevelsByCategory.LICENSE;
+//     let myDate = new Date(element.catalogDate);
+//     let catalogDate = myDate.toLocaleDateString();
+//     let security = element.highestSecurityVulnerabilitySeverity;
+//     let majorRevisionStep = element.majorRevisionStep;
+//     strData += version + ", ";
+//     slickData[rowId] = {
+//       version: version,
+//       security: security,
+//       license: license,
+//       popularity: popularity,
+//       catalogDate: catalogDate,
+//       majorRevisionStep: majorRevisionStep
+//     };
+//     rowId++;
+//   });
+//   // console.log('strData', strData)
+//   // console.table(slickData)
 
-const installScripts = message => {
-  browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    let tabId = tabs[0].id;
-    console.log("begin installScripts");
-    var background = browser.extension.getBackgroundPage();
-    background.message = message;
-    console.log("sending message:", message);
-    executeScripts(null, [
-      { file: "Scripts/jquery.min.js" },
-      { file: "Scripts/utils.js" },
-      // { code: "var message = " + message  + ";"},
-      { file: "Scripts/content.js" },
-      { code: "processPage();" }
-    ]);
-    browser.tabs.sendMessage(tabId, message);
-    console.log("end installScripts");
-  });
-};
+//   let currentVersionColor = "#85B6D5";
+//   let remediationVersionColor = "lawngreen";
+//   grid = new Slick.Grid("#myGrid", slickData, columns, options);
+//   if (remediationRow >= 0) {
+//     console.log("remediationRow", remediationRow);
+//     grid.scrollRowIntoView(remediationRow);
+//     grid.flashCell(remediationRow, grid.getColumnIndex("version"), 250);
 
-const BuildSettingsFromGlobal = async () => {
-  let promise = await GetSettings([
-    "url",
-    "username",
-    "password",
-    "appId",
-    "appInternalId"
-  ]);
-  settings = BuildSettings(
-    promise.url,
-    promise.username,
-    promise.password,
-    promise.appId,
-    promise.appInternalId
-  );
-  console.log("settings", settings);
-};
+//     // $($('.grid-canvas').children()[remediationRow]).addClass('remediation-version');
+//     // $($('.grid-canvas').children()[remediationRow]).css("background-color", "lawngreen");
 
-const createAllversionsHTML = async (data, remediation, currentVersion) => {
-  console.log("createAllversionsHTML", remediation, currentVersion);
-  // console.log('data:', data);
+//     paintRow(remediation, remediationVersionColor);
+//     paintRow(currentVersion, currentVersionColor);
+//   } else {
+//     //no remediation
+//     grid.scrollRowIntoView(currentVersionRow);
+//     paintRow(currentVersion, currentVersionColor);
+//   }
 
-  let strData = "";
-  var grid;
+//   grid.onViewportChanged.subscribe(function(e, args) {
+//     //event handling code.
+//     //find the fix
+//     console.log("grid.onViewportChanged");
 
-  var options = {
-    enableColumnReorder: false,
-    autoHeight: false,
-    enableCellNavigation: false,
-    cellHighlightCssClass: "changed",
-    cellFlashingCssClass: "remediation-version"
-  };
+//     paintRow(remediation, remediationVersionColor);
+//     paintRow(currentVersion, currentVersionColor);
+//   });
+//   // paintRow (remediation, remediationVersionColor);
+//   // paintRow (currentVersion, currentVersionColor)
+//   // $("#remediation").html(strData);
+// };
 
-  var slickData = [];
-
-  var columns = [
-    { id: "version", name: "version", field: "version" },
-    { id: "security", name: "security", field: "security" },
-    { id: "license", name: "license", field: "license" },
-    { id: "popularity", name: "popularity", field: "popularity" },
-    { id: "catalogDate", name: "catalogDate", field: "catalogDate" },
-    {
-      id: "majorRevisionStep",
-      name: "majorRevisionStep",
-      field: "majorRevisionStep"
-    }
-  ];
-  var colId = 0;
-  let rowId = 0;
-  let remediationRow = -1;
-  let currentVersionRow = -1;
-  //let sortedData = sortByProperty(data, 'componentIdentifier.coordinates.version', 'descending')
-  data.forEach(element => {
-    // console.log('element.componentIdentifier.coordinates.version', element.componentIdentifier.coordinates.version)
-    let version = element.componentIdentifier.coordinates.version;
-    if (remediation === version) {
-      remediationRow = rowId;
-    }
-    if (currentVersion === version) {
-      currentVersionRow = rowId;
-    }
-    let popularity = element.relativePopularity;
-    let license =
-      typeof element.policyMaxThreatLevelsByCategory.LICENSE === "undefined"
-        ? 0
-        : element.policyMaxThreatLevelsByCategory.LICENSE;
-    let myDate = new Date(element.catalogDate);
-    let catalogDate = myDate.toLocaleDateString();
-    let security = element.highestSecurityVulnerabilitySeverity;
-    let majorRevisionStep = element.majorRevisionStep;
-    strData += version + ", ";
-    slickData[rowId] = {
-      version: version,
-      security: security,
-      license: license,
-      popularity: popularity,
-      catalogDate: catalogDate,
-      majorRevisionStep: majorRevisionStep
-    };
-    rowId++;
-  });
-  // console.log('strData', strData)
-  // console.table(slickData)
-
-  let currentVersionColor = "#85B6D5";
-  let remediationVersionColor = "lawngreen";
-  grid = new Slick.Grid("#myGrid", slickData, columns, options);
-  if (remediationRow >= 0) {
-    console.log("remediationRow", remediationRow);
-    grid.scrollRowIntoView(remediationRow);
-    grid.flashCell(remediationRow, grid.getColumnIndex("version"), 250);
-
-    // $($('.grid-canvas').children()[remediationRow]).addClass('remediation-version');
-    // $($('.grid-canvas').children()[remediationRow]).css("background-color", "lawngreen");
-
-    paintRow(remediation, remediationVersionColor);
-    paintRow(currentVersion, currentVersionColor);
-  } else {
-    //no remediation
-    grid.scrollRowIntoView(currentVersionRow);
-    paintRow(currentVersion, currentVersionColor);
-  }
-
-  grid.onViewportChanged.subscribe(function(e, args) {
-    //event handling code.
-    //find the fix
-    console.log("grid.onViewportChanged");
-
-    paintRow(remediation, remediationVersionColor);
-    paintRow(currentVersion, currentVersionColor);
-  });
-  // paintRow (remediation, remediationVersionColor);
-  // paintRow (currentVersion, currentVersionColor)
-  // $("#remediation").html(strData);
-};
-
-const paintRow = (currentVersion, color) => {
-  let currentVersionCell = $("div").filter(function() {
-    // Matches exact string
-    return $(this).text() === currentVersion;
-  });
-  let currentVersionCellParent = $(currentVersionCell).parents(
-    "div .slick-row"
-  );
-  currentVersionCellParent.css("background-color", color);
-};
+// const paintRow = (currentVersion, color) => {
+//   let currentVersionCell = $("div").filter(function() {
+//     // Matches exact string
+//     return $(this).text() === currentVersion;
+//   });
+//   let currentVersionCellParent = $(currentVersionCell).parents(
+//     "div .slick-row"
+//   );
+//   currentVersionCellParent.css("background-color", color);
+// };
 
 const createHTML = async (message, settings) => {
   console.log("createHTML(message)", message, settings);
@@ -666,49 +571,23 @@ const Count_CVSS_Issues = message => {
   return countCVSSIssues;
 };
 
-const styleCVSS = severity => {
-  let className;
-  switch (true) {
-    case severity >= 10:
-      className = "criticalSeverity";
-      break;
-    case severity >= 7:
-      className = "highSeverity";
-      break;
-    case severity >= 5:
-      className = "mediumSeverity";
-      break;
-    case severity >= 0:
-      className = "lowSeverity";
-      break;
-    default:
-      className = "noneSeverity";
-      break;
-  }
-  return className;
-};
-
 const renderSecurityData = message => {
-  let retVal = false;
+  let hasVulnerability = false;
   var thisComponent = message.message.response.componentDetails["0"];
-
-  //document.getElementById("securityData_securityIssues").innerHTML = componentInfoData.componentDetails["0"].component.componentIdentifier.coordinates.securityData_securityIssues;
   let securityIssues = thisComponent.securityData.securityIssues;
   let strAccordion = "";
   console.log(securityIssues.length);
   securityIssues.sort((securityIssues1, securityIssues2) => {
-    // console.log(securityIssues1.severity);
     return securityIssues2.severity - securityIssues1.severity;
   });
   if (securityIssues.length > 0) {
-    retVal = true;
+    hasVulnerability = true;
     console.log(securityIssues);
-    for (i = 0; i < securityIssues.length; i++) {
-      let securityIssue = securityIssues[i];
+    let index;
+    for (index = 0; index < securityIssues.length; index++) {
+      let securityIssue = securityIssues[index];
       console.log(securityIssue);
 
-      //console.log(securityIssue.reference);
-      //console.log(i);
       let className = styleCVSS(securityIssue.severity);
       let strVulnerability = securityIssue.reference;
 
@@ -745,7 +624,6 @@ const renderSecurityData = message => {
         securityIssue.threatCategory +
         "</td>";
       strAccordion += "</tr><tr>";
-      //strAccordion += '<p>url:</p><a href="' + securityIssue.url + '">' + securityIssue.url + '</a>';
       strAccordion +=
         '<td class="label">url:</td><td class="data">' +
         securityIssue.url +
@@ -754,255 +632,73 @@ const renderSecurityData = message => {
       strAccordion += "</table>";
       strAccordion += "</div>";
     }
-    // console.log(strAccordion);
     $("#accordion").html(strAccordion);
-    //$('#accordion').accordion({heightStyle: 'content'});
     $("#accordion").accordion({ heightStyle: "panel" });
-    // var autoHeight = $( "#accordion" ).accordion( "option", "autoHeight" );
-    // $( "#accordion" ).accordion( "option", "autoHeight", false );
-    // $("#accordion").accordion();
-    //add event listeners
-    for (i = 0; i < securityIssues.length; i++) {
-      let securityIssue = securityIssues[i];
-      // console.log(securityIssue);
-
-      //console.log(securityIssue.reference);
-      //console.log(i);
+    for (index = 0; index < securityIssues.length; index++) {
+      let securityIssue = securityIssues[index];
       let strVulnerability = securityIssue.reference;
       var createButton = document.getElementById(`info_${strVulnerability}`);
       createButton.addEventListener("click", function() {
-        showCVEDetail(strVulnerability);
+        showCVEDetail(strVulnerability, artifact);
       });
       console.log(createButton);
     }
   } else {
     strAccordion += "<h3>No Security Issues Found</h3>";
     $("#accordion").html(strAccordion);
-    //$('#accordion').accordion({heightStyle: 'content'});
     $("#accordion").accordion({ heightStyle: "panel" });
   }
 
-  return retVal;
-  //securityurl=<a href="{{{url}}}" target="_blank">url</a>
+  return hasVulnerability;
 };
 
-const showLoader = () => {
-  $(".loader").fadeIn("slow");
-};
-
-const hideLoader = hasError => {
-  //$(".loader").fadeOut("slow");
-  document.getElementById("loader").style.display = "none";
-  document.getElementById("tabs").style.display = "block";
-};
-
-const showCVEDetail = async cveReference => {
-  console.log("showCVEDetail", cveReference);
-  console.log("artifact", artifact);
-  //  alert(cveReference)
-  // let newElement = document.createElement("div");
-  // newNode=document.body.appendChild(newElement);
-  // newNode.setAttribute("id", "dialog");
+const showCVEDetail = async (cveReference, artifact) => {
+  console.log("showCVEDetail", cveReference, artifact);
   let nexusArtifact = NexusFormat(artifact);
   console.log("nexusArtifact", nexusArtifact);
-  // if (artifact.hash) {nexusArtifact.hash = artifact.hash};
-  // let promise =  await GetSettings(['url', 'username', 'password', 'appId', 'appInternalId' ])
-  // let settings = BuildSettings(promise.url, promise.username, promise.password, promise.appId, promise.appInternalId)
   console.log("settings", settings);
-  // let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123", 'webgoat7')
   let myResp3 = await GetCVEDetails(cveReference, nexusArtifact, settings);
   console.log("myResp3", myResp3);
   let htmlDetails = myResp3.cvedetail.data.htmlDetails;
-  // document.body.style.height = '600px';
+  //"CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H"
+  let CVSS3 = "CVSS:3.0/";
+  let whereCVSS = htmlDetails.search(CVSS3);
+  if (whereCVSS >= 0) {
+    let cvss = htmlDetails.substring(whereCVSS, whereCVSS + 44);
+    console.log("cvss", cvss);
+    //https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:L/A:L
+    let cvssExplained = CVSSDetails(cvss);
 
-  $("#dialog").html(htmlDetails);
-
-  $("#dialog").dialog("open");
-  $("#dialog").dialog("option", "maxHeight", 400);
+    let cvssLink = `<div class="tooltip"><a target="_blank" rel="noreferrer" href="https://www.first.org/cvss/calculator/3.0#${cvss}">${cvss}</a><span class="tooltiptext">${cvssExplained}</span></div>;`;
+    htmlDetails = htmlDetails.replace(cvss, cvssLink);
+  }
+  $("#dialogSecurityDetails").html(htmlDetails);
+  $("#dialogSecurityDetails").dialog("option", "show", "slide");
+  $("#dialogSecurityDetails").dialog("option", "hide", "puff");
+  $("#dialogSecurityDetails").dialog("option", "closeOnEscape", true);
+  $("#dialogSecurityDetails").dialog("option", "width", 400);
+  $("#dialogSecurityDetails").dialog("option", "height", 400);
+  $("#dialogSecurityDetails").dialog("option", "maxHeight", 600);
+  $("#dialogSecurityDetails").dialog(
+    "option",
+    "title",
+    `CVE Details: ${cveReference}`
+  );
+  $("#dialogSecurityDetails").dialog("open");
 };
 
 const showRemediation = async (nexusArtifact, settings) => {
   console.log("showRemediation", nexusArtifact, settings);
-  console.log("settings", settings);
-  ///api/v2/components/remediation/application/{applicationInternalId}
-  let servername = settings.baseURL;
-  let url = `${servername}api/v2/components/remediation/application/${settings.appInternalId}`;
-  // removeCookies(servername);
-  // let xsrfHeaderName = "X-CSRF-TOKEN";
-  let response = await axios(url, {
-    method: "post",
-    data: nexusArtifact.component,
-    withCredentials: true,
-    auth: {
-      username: settings.username,
-      password: settings.password
-    },
-    headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
-  });
-  // add
-  servername;
-  let respData = response.data;
-  console.log("showRemediation respData", respData);
-  let newVersion;
+  let newVersion = await getRemediation(nexusArtifact, settings);
   let advice;
-  if (respData.remediation.versionChanges.length > 0) {
-    newVersion =
-      respData.remediation.versionChanges[0].data.component.componentIdentifier
-        .coordinates.version;
-    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<strong> ${newVersion}</strong></span>`;
+  if (newVersion == "") {
+    newVersion = "Remediation advice. Not available";
+    advice = `<span id="remediation"><strong> ${newVersion}</strong></span>`;
   } else {
-    advice = `<span id="remediation">Remediation advice. Not available</span>`;
+    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<strong> ${newVersion}</strong></span>`;
   }
-
   $("#remediation").html(advice);
   return newVersion;
-};
-
-const GetSettings = keys => {
-  let promise = new Promise((resolve, reject) => {
-    browser.storage.sync.get(keys, items => {
-      let err = browser.runtime.lastError;
-      if (err) {
-        reject(err);
-      } else {
-        resolve(items);
-      }
-    });
-  });
-  return promise;
-};
-
-const GetCookie = (domain, xsrfCookieName) => {
-  let promise = new Promise((resolve, reject) => {
-    browser.cookies.getAll(
-      {
-        domain: domain,
-        name: xsrfCookieName
-      },
-      cookies => {
-        let err = browser.runtime.lastError;
-        if (err) {
-          reject(err);
-        } else {
-          resolve(cookies[0]);
-        }
-      }
-    );
-  });
-  return promise;
-};
-
-const GetAllVersions = async (nexusArtifact, settings, remediation) => {
-  console.log("GetAllVersions", nexusArtifact);
-  let retVal;
-  // let promise =  await GetSettings(['url', 'username', 'password', 'appId'])
-  // let settings = BuildSettings(promise.url, promise.username, promise.password, promise.appId)
-
-  // let comp = "%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22commons-collections%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22commons-collections%22%2C%22version%22%3A%223.2.1%22%7D%7D"
-  let comp = encodeURI(
-    JSON.stringify(nexusArtifact.component.componentIdentifier)
-  );
-  // console.log('nexusArtifact', nexusArtifact);
-  console.log("comp", comp);
-  // let timestamp = "1554129430974"
-  var d = new Date();
-  var timestamp = d.getDate();
-
-  // let hash = "761ea405b9b37ced573d"
-  let hash = nexusArtifact.component.hash;
-  let matchstate = "exact";
-  // let report = "2d9054219bd549db8700d3bfd027d7fd"
-  //let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123")
-  let servername = settings.baseURL;
-  // let url = `${servername}rest/ci/componentDetails/application/${appId}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&reportId=${report}&timestamp=${timestamp}`
-  let url = `${servername}rest/ide/componentDetails/application/${settings.appId}/allVersions?componentIdentifier=${comp}&hash=${hash}&matchState=${matchstate}&timestamp=${timestamp}&proprietary=false`;
-  // let url = `${servername}rest/ide/componentDetails/application/${appId}/allVersions?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22commons-fileupload%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22commons-fileupload%22%2C%22version%22%3A%221.3.1%22%7D%7D&hash=c621b54583719ac03104&matchState=exact&proprietary=false HTTP/1.1`
-  // let xsrfHeaderName = "";
-  let response = await axios.get(url, {
-    auth: {
-      username: settings.username,
-      password: settings.password
-    },
-    headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
-  });
-  let data = response.data;
-
-  let currentVersion =
-    nexusArtifact.component.componentIdentifier.coordinates.version;
-  // createAllversionsHTML(data, remediation, currentVersion);
-  renderGraph(data, remediation, currentVersion);
-};
-
-const GetCVEDetails = async (cve, nexusArtifact, settings) => {
-  console.log("begin GetCVEDetails", cve, nexusArtifact, settings);
-  // let url="http://iq-server:8070/rest/vulnerability/details/cve/CVE-2018-3721?componentIdentifier=%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D&hash=4c854c86c91ab36c86fc&timestamp=1553676800618"
-  let servername = settings.baseURL; // + (settings.baseURL[settings.baseURL.length-1]=='/' ? '' : '/') ;//'http://iq-server:8070'
-  //let CVE = 'CVE-2018-3721'
-  let timestamp = Date.now();
-  let hash = nexusArtifact.components[0].hash; //'4c854c86c91ab36c86fc'
-  // let componentIdentifier = '%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D'
-  let componentIdentifier = encodeComponentIdentifier(nexusArtifact);
-  let vulnerability_source;
-  if (cve.search("sonatype") >= 0) {
-    vulnerability_source = "sonatype";
-  } else {
-    //CVE type
-    vulnerability_source = "cve";
-  }
-  //servername has a slash
-
-  let url = `${servername}rest/vulnerability/details/${vulnerability_source}/${cve}?componentIdentifier=${componentIdentifier}&hash=${hash}&timestamp=${timestamp}`;
-  // let xsrfHeaderName = "";
-  let data = await axios.get(url, {
-    auth: {
-      username: settings.username,
-      password: settings.password
-    },
-    headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
-  });
-  console.log("data", data);
-  let retVal;
-  retVal = data;
-  return { cvedetail: retVal };
-  // var response = await fetch(url, {
-  //     method: 'GET',
-  //     headers: {"Authorization" : settings.auth}
-  //     } );
-  // var body = await response.json(); // .json() is asynchronous and therefore must be awaited
-  // console.log(body);
-
-  // try
-  // {
-  //     let resp = await fetch(url, {
-  //         method: 'GET',
-  //         headers: {"Authorization" : settings.auth}
-  //         })
-  //         .then(response => {
-  //             return response.json()
-  //         })
-  //         .then(data => {
-  //             retVal =  data
-  //             console.log('retVal', retVal)
-  //         })
-  //         .catch(function(err){
-  //             console.log('Fetch Error:-S', err);
-  //             throw err;
-  //         });
-  // }
-  // catch(err){
-  //     //an error was found
-  //     //retval is null
-  //     //not json
-  //     retval = {error:500, message: "Error parsing json or calling service"}
-  // }
-  // return {cvedetail: retVal};
-  // console.log('complete GetCVEDetails');
 };
 
 const showError = error => {
@@ -1046,22 +742,6 @@ const hideError = () => {
   $("#error").hide();
 };
 
-const ChangeIconMessage = showVulnerable => {
-  if (showVulnerable) {
-    // send message to background script
-    browser.runtime.sendMessage({
-      messagetype: "newIcon",
-      newIconPath: "images/IQ_Vulnerable.png"
-    });
-  } else {
-    // send message to background script
-    browser.runtime.sendMessage({
-      messagetype: "newIcon",
-      newIconPath: "images/IQ_Default.png"
-    });
-  }
-};
-
 const setupAccordion = () => {
   console.log("setupAccordion");
   $("#accordion")
@@ -1102,126 +782,8 @@ const sortByProperty = (objArray, prop, direction) => {
   return clone;
 };
 
-const GetActiveTab = async () => {
-  let params = {
-    currentWindow: true,
-    active: true
-  };
-
-  let promise = new Promise((resolve, reject) => {
-    let tabs = browser.tabs.query(params, gotTabs);
-    function gotTabs(tabs) {
-      let thisTab = tabs[0];
-      let err = browser.runtime.lastError;
-      if (err) {
-        reject(err);
-      } else {
-        resolve(thisTab);
-      }
-    }
-  });
-  return promise;
-};
-
-const evaluateComponent = async (artifact, settings) => {
-  let resp;
-  switch (artifact.datasource) {
-    case dataSources.NEXUSIQ:
-      // removeCookies(settings.url);
-      resp = await evaluatePackage(artifact, settings);
-      // addCookies(settings.url);
-      break;
-    case dataSources.OSSINDEX:
-      resp = await addDataOSSIndex(artifact);
-      break;
-    default:
-      alert("Unhandled datasource" + artifact.datasource);
-  }
-  return resp;
-};
-
-const evaluatePackage = async (artifact, settings) => {
-  // removeCookies(servername);
-  //This is supposed to fix the error - invalid XSRF token
-  // delete axios.defaults.headers.common["Authorization"]; // or which ever header you have to remove
-  // axios.defaults.xsrfHeaderName = "X-CSRF-TOKEN";
-  // axios.defaults.xsrfCookieName = "CLM-CSRF-TOKEN";
-  console.log("evaluateComponent", artifact, settings.auth);
-
-  let servername = settings.baseURL;
-  let domain = getDomainName(servername);
-  let cookie = await GetCookie(domain, xsrfCookieName);
-  console.log("cookie", cookie);
-  valueCSRF = cookie.value;
-  await callServer(valueCSRF);
-};
-
-const callServer = async valueCSRF => {
-  console.log("callServer", valueCSRF, artifact, settings);
-  let nexusArtifact = NexusFormat(artifact);
-  console.log("nexusArtifact", nexusArtifact);
-  let inputStr = JSON.stringify(nexusArtifact);
-  console.log("inputStr", inputStr);
-  let retVal;
-  let error = 0;
-  let servername = settings.baseURL;
-  let url = `${servername}api/v2/components/details`;
-  let responseVal;
-
-  console.log("CSRF", valueCSRF);
-  // let cookieName = "CLM-CSRF-TOKEN";
-  // let xsrfHeaderName = "X-CSRF-TOKEN";
-  let response = await axios(url, {
-    method: "post",
-    data: nexusArtifact,
-    withCredentials: true,
-    xsrfCookieName: xsrfCookieName,
-    xsrfHeaderName: xsrfHeaderName,
-    auth: {
-      username: settings.username,
-      password: settings.password
-    },
-    headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
-  })
-    .then(data => {
-      console.log("axios then", data);
-      responseVal = data.data;
-      retVal = { error: error, response: responseVal };
-      addCookies(servername);
-    })
-    .catch(error => {
-      console.log("error", error);
-      let code, response;
-      if (!error.response) {
-        // network error
-        code = 1;
-        responseVal = `Server unreachable ${url}. ${error.toString()}`;
-      } else {
-        // http status code
-        code = error.response.status;
-        // response data
-        responseVal = error.response.data;
-      }
-      retVal = { error: code, response: responseVal }; // error = error.response;
-    });
-  //handle error
-  // console.log(xhr);
-  // error = xhr.status;
-  // response = xhr.responseText;
-  let displayMessage = {
-    messagetype: messageTypes.displayMessage,
-    message: retVal,
-    artifact: artifact
-  };
-  console.log("evaluatePackage - displayMessage", displayMessage);
-  await displayMessageData(displayMessage);
-  return displayMessage;
-};
-
-const displayMessageData = async respMessage => {
-  console.log("displayMessageData", respMessage);
+const displayMessageDataHTML = async respMessage => {
+  console.log("displayMessageDataHTML", respMessage);
   let hasError = false;
   if (respMessage.message.error) {
     showError(respMessage.message.response);
@@ -1253,82 +815,4 @@ const renderGraph = async (versionsData, remediation, currentVersion) => {
       versions: versionsData
     }
   });
-  //didn't work, so I toggle it in appcheck
-  // let details = $("#aiVersionChartLabels > svg > g > g:nth-child(5)");
-  // console.log("details", details.text());
-  // details.click();
-  // $("#aiVersionChartLabels > svg > g > g:nth-child(5)").click();
-};
-const addDataOSSIndex = async artifact => {
-  // pass your data in method
-  //OSSINdex is anonymous
-  console.log("entering addDataOSSIndex: artifact", artifact);
-  let retVal, inputStr;
-  // https://ossindex.sonatype.org/api/v3/component-report/composer%3Adrupal%2Fdrupal%405
-  //type:namespace/name@version?qualifiers#subpath
-  let format = artifact.format;
-  let name = artifact.name;
-  let version = artifact.version;
-  let OSSIndexURL;
-  if (artifact.format == formats.golang) {
-    //Example: pkg:github/etcd-io/etcd@3.3.1
-    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
-    //OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
-    let goFormat = `github/${artifact.namespace}/${artifact.name}@${artifact.version}`;
-
-    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${goFormat}`;
-  } else {
-    // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
-    //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/jquery/jquery@3.0.0
-    OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${artifact.format}/${artifact.name}@${artifact.version}`;
-  }
-  let status = false;
-  //components[""0""].componentIdentifier.coordinates.packageId
-  // console.log('settings');
-  // console.log(settings);
-  // console.log(settings.auth);
-  // console.log("inputdata");
-  console.log("artifact request", artifact);
-  console.log("OSSIndexURL request", OSSIndexURL);
-  inputStr = JSON.stringify(artifact);
-
-  let response = await axios(OSSIndexURL, {
-    method: "get",
-    data: inputStr
-
-    // withCredentials: true,
-    // auth: {
-    //   username: settings.username,
-    //   password: settings.password
-    // }
-  })
-    .then(data => {
-      console.log("then", data);
-      responseVal = data.data;
-      let error = 0;
-      retVal = { error: error, response: responseVal };
-    })
-    .catch(error => {
-      console.log("error", error);
-      let code, response;
-      if (!error.response) {
-        // network error
-        code = 1;
-        responseVal = `Server unreachable ${url}. ${error.toString()}`;
-      } else {
-        // http status code
-        code = error.response.status;
-        // response data
-        responseVal = error.response.data;
-      }
-      retVal = { error: code, response: responseVal }; // error = error.response;
-    });
-  let displayMessage = {
-    messagetype: messageTypes.displayMessage,
-    message: retVal,
-    artifact: artifact
-  };
-  await displayMessageData(displayMessage);
-  console.log("addDataOSSIndex - displayMessage:", displayMessage);
-  return displayMessage;
 };

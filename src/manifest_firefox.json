@@ -9,11 +9,9 @@
     "notifications",
     "storage",
     "activeTab",
-    "declarativeContent",
     "webRequest",
     "webRequestBlocking",
     "cookies",
-    "background",
     "tabs",
     "https://search.maven.org/",
     "https://mvnrepository.com/",
@@ -42,12 +40,14 @@
   },
   "page_action": {
     "default_popup": "html/popup.html",
+
     "default_icon": {
       "16": "images/SON_logo_favicon.png",
       "32": "images/SON_logo_favicon.png",
       "48": "images/SON_logo_favicon.png",
       "128": "images/SON_logo_favicon.png"
-    }
+    },
+    "show_matches": ["<all_urls>"]
   },
   "icons": {
     "16": "images/SON_logo_favicon.png",
@@ -58,5 +58,11 @@
   "options_ui": {
     "page": "html/options.html?ver=1.7.19",
     "open_in_tab": false
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ctownshend@sonatype.com",
+      "strict_min_version": "42.0"
+    }
   }
 }

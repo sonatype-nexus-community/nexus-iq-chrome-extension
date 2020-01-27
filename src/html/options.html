@@ -23,8 +23,10 @@
           <tr>
             <td colspan="2">
               Please note: This version stores the username and password in
-              Chrome Storage. This is not secure and you can see the password if
-              you debug the Extension.
+              Browser Storage. This is <strong>not</strong> secure and you can
+              see the password in clear text if you debug the Extension. As of
+              release 76, NexusIQ does support user tokens for passwords though.
+              https://help.sonatype.com/iqserver/managing/user-management/user-tokens
             </td>
           </tr>
           <tr>
@@ -74,10 +76,10 @@
       </div>
     </form>
     <span id="error"></span>
-    <script src="../Scripts/jquery.min.js"></script>
-    <script src="../Scripts/axios.min.js"></script>
+    <script src="../Scripts/lib/jquery.min.js"></script>
+    <script src="../Scripts/lib/axios.min.js"></script>
     <!-- <link rel="stylesheet" href="../css/styles.css" /> -->
-    <script src="../Scripts/utils.js?ver=1.7.17"></script>
-    <script src="../Scripts/options.js?ver=1.7.17"></script>
+    <script src="../Scripts/utils.js?ver=1.7.19"></script>
+    <script src="../Scripts/options.js?ver=1.7.19"></script>
   </body>
 </html>
