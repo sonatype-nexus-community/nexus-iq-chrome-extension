@@ -1519,7 +1519,6 @@ const GetAllVersions = async (nexusArtifact, settings, remediation) => {
     }
   });
   let data;
-  // console.log("response", response.data);
   if (typeof response.data.allVersions !== "undefined") {
     // console.log("allversions");
     data = response.data.allVersions;
