@@ -567,6 +567,6 @@ div.slick-cell.l0.r0 {
 
 /*TODO: Swap this out to none after demo*/
 /* This will put a hand cursor over the rectangles in the Version history*/
-rect {
+/* rect {
     cursor: pointer;
-}
+} */
