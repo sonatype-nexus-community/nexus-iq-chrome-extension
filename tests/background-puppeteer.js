@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 
 (async () => {
-  const pathToExtension = require("path").join(__dirname, "../");
+  const pathToExtension = require("path").join(__dirname, "../src");
   const browser = await puppeteer.launch({
     headless: false,
     args: [
@@ -18,9 +18,8 @@ const puppeteer = require("puppeteer");
   //how to write a test of the bg page?
   // Can we navigate to a chrome-extension page? YES!
   const page = await browser.newPage();
-  await page.goto(
-    "chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/html/options.html"
-  );
+  var extensionId = chrome.runtime.id;
+  await page.goto(`chrome-extension://${extensionId}/html/options.html`);
   // click buttons, test UI elements, etc.
   //click login
   //enter the address - URL, username, password, appId
@@ -44,7 +43,7 @@ const puppeteer = require("puppeteer");
   await page.waitForNavigation({ waitUntil: "load" });
 
   let appId = page.$("#appId");
-  console.log("appId:", appId);
+  console.log("appId:", appId.length);
   //appId should have items
   await browser.close();
 })();

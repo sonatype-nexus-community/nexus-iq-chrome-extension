@@ -3,3 +3,4 @@ node_modules
 .circleci/zzconfig.yml
 .circleci/local-config.yml
 coverage
+data
