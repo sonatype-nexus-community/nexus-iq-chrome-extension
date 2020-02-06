@@ -200,7 +200,11 @@ function parseNuget(format, url) {
     //going to parse the document.title
     //document.title.split(' ')
     //title: "NuGet Gallery | Polly 7.1.0"
-    let titleElements = document.title.split(" ");
+    let titleElements = document.title
+      .trim()
+      .split(" ")
+
+      .filter(el => el != "");
     packageId = titleElements[3];
     //#skippedToContent > section > div > article > div.package-title > h1 > small
     version = titleElements[4];
@@ -212,12 +216,14 @@ function parseNuget(format, url) {
   packageId = encodeURIComponent(packageId);
   version = encodeURIComponent(version);
   datasource = dataSources.NEXUSIQ;
-  return {
+  let nugetArtifact = {
     format: format,
     packageId: packageId,
     version: version,
     datasource: datasource
   };
+  console.log("nugetArtifact", nugetArtifact);
+  return nugetArtifact;
 }
 
 function parsePyPI(format, url) {
@@ -247,12 +253,14 @@ function parsePyPI(format, url) {
     //  packageName=url.substr(url.lastIndexOf('/')+1);
     version = elements[5];
   }
-  let qualifierHTML = $(
-    "#files > table > tbody > tr:nth-child(1) > td:nth-child(1) > a:nth-child(1)"
-  )
-    .text()
-    .trim();
+  //qualifier is
+  let qualifierHTML = document.querySelectorAll(
+    "#files > table > tbody > tr > th > a"
+  )[0].href;
+  qualifierHTML = qualifierHTML.split("/")[qualifierHTML.split("/").length - 1];
+  console.log("qualifierHTML", qualifierHTML);
   //"numpy-1.16.4-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"
+  //qualifier is ->cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64
   let name_ver = `${name}-${version}-`;
   qualifier = qualifierHTML.substr(
     name_ver.length,
@@ -260,21 +268,8 @@ function parsePyPI(format, url) {
   );
   // extension = qualifierHTML.substr(qualifierHTML.lastIndexOf(".") + 1);
   //$("#files > table > tbody:contains('.zip')").text()
-  extension = "tar.gz";
-  let whatExtension = $(
-    `#files > table > tbody:contains('${extension}')`
-  ).text();
-  if (whatExtension != "") {
-    extension = "tar.gz";
-  } else {
-    extension = "zip";
-    whatExtension = $(`#files > table > tbody:contains('${extension}')`).text();
-    if (whatExtension != "") {
-      extension = "zip";
-    } else {
-      extension = "whl";
-    }
-  }
+  console.log("qualifier", qualifier);
+  extension = qualifierHTML.substring(qualifierHTML.lastIndexOf(".") + 1);
   console.log("extension", extension);
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
