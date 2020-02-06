@@ -41,6 +41,8 @@ test("npmjs lodash dom parse", async () => {
     console.log("version", version);
     assert.equal(title, "lodash");
     assert(version != null);
+    //latest version is determined by this
+    //npm show lodash time --json
   } catch (err) {
     console.log("err", err);
   } finally {

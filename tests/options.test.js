@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const CRX_PATH = require("path").join(__dirname, "../src/");
-test("Options Page applications list", async () => {
+xtest("Options Page applications list", async () => {
   const browserPuppeteer = await puppeteer.launch({
     headless: false,
     args: [
