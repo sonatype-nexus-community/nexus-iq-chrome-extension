@@ -1,43 +1,50 @@
 const puppeteer = require("puppeteer");
+const assert = require("assert");
 const fs = require("fs");
 // const CRX_PATH = require("path").join(__dirname, "../src/");
-(async () => {
-  var browser;
+var browser;
+beforeAll(async () => {
+  browser = await puppeteer.launch({
+    headless: false,
+    args: ["--no-sandbox", "--disable-web-security", `--user-data-dir=data`]
+  });
+});
+afterAll(async () => {
+  await browser.close();
+});
+
+test("npmjs lodash dom parse", async () => {
   try {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-web-security", `--user-data-dir=data`]
-    });
     const page = await browser.newPage();
 
     let url = "https://www.npmjs.com/package/lodash/";
     // return;
     await page.goto(url);
-    // get local jQuery
-    var jquery_code_str = fs.readFileSync(
-      "src/Scripts/lib/jquery.min.js",
-      "utf8"
-    );
+    const titleEl = await page.$("h2 span");
+    const title = await page.evaluate(el => el.innerText, titleEl);
+    console.log("title", title);
 
-    // go to page
-
-    // inject jQuery
-    var jquery_ev_fn = await page.evaluate(function(code_str) {
-      return code_str;
-    }, jquery_code_str);
-    await page.evaluate(jquery_ev_fn);
-
-    const title = await page.evaluate(() => {
-      const $ = window.$; //otherwise the transpiler will rename it and won't work
-      console.log("H2", $("h2 span").text());
-    });
-    // (await page.$("#hs-eu-confirmation-button")).click();
-    // let actual = parseNPMURL(url);
-    await page.screenshot({ path: "example.png" });
+    //version
+    const elArray = await page.$$("h2 + span");
+    const versionParent = elArray[0];
+    console.log("versionParent", versionParent);
+    // var next = versionParent.next("span");
+    // console.log("next", next);
+    let newV = await page.evaluate(el => el.innerText, versionParent);
+    console.log("newV", newV);
+    let version;
+    let findnbsp = newV.search(String.fromCharCode(160));
+    if (findnbsp >= 0) {
+      newV = newV.substring(0, findnbsp);
+    }
+    version = newV;
+    console.log("version", version);
+    assert.equal(title, "lodash");
+    assert(version != null);
   } catch (err) {
     console.log("err", err);
   } finally {
-    await browser.close();
+    // await browser.close();
   }
   return;
   //found = $("h2 span");
@@ -66,7 +73,7 @@ const fs = require("fs");
   //   console.log("Dom changed");
   // }
   await browser.close();
-})();
+});
 
 // await page.setRequestInterception(true);
 // page.on("request", async request => {

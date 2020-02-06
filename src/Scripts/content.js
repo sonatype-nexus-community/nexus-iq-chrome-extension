@@ -51,6 +51,10 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
     );
 
     browser.runtime.sendMessage(evaluatemessage);
+  } else if (message.messagetype !== messageTypes.annotateComponent) {
+    console.log("message.messagetype", message.messagetype);
+  } else {
+    console.log("message.messagetype", message.messagetype);
   }
 }
 
@@ -171,63 +175,6 @@ function parseMaven(format, url) {
     artifactId: artifactId,
     version: version,
     extension: extension,
-    datasource: datasource
-  };
-}
-
-function parseNPM(format, url) {
-  //ADD SIMPLE CODE THAT CHECLS THE URL?
-  //note that this changed as of 19/03/19
-  //version in URL
-  //https://www.npmjs.com/package/lodash/v/4.17.9
-  //No version in URL so read DOM
-  //https://www.npmjs.com/package/lodash/
-  let doc = $("html")[0].outerHTML;
-  // let docelements = $(doc);
-
-  let found;
-  let newV;
-  let elements;
-  let packageName;
-  let version;
-  if (url.search("/v/") > 0) {
-    //has version in URL
-    var urlElements = url.split("/");
-    packageName = urlElements[4];
-    version = urlElements[6];
-  } else {
-    //try to parse the URL
-    //Seems like node has changed their selector
-    //var found = $('h1.package-name-redundant', doc);
-    // found = $('h1.package-name-redundant', doc);
-    found = $("h2 span");
-    console.log("h2 span found", found);
-    if (typeof found !== "undefined" && found !== "") {
-      packageName = found.text().trim();
-      // let foundV = $("h2", doc);
-      //https://www.npmjs.com/package/jest
-      newV = $("h2").next("span");
-      if (typeof newV !== "undefined" && newV !== "") {
-        newV = newV.text();
-        //produces "24.5.0 • "
-        let findnbsp = newV.search(String.fromCharCode(160));
-        if (findnbsp >= 0) {
-          newV = newV.substring(0, findnbsp);
-        }
-        version = newV;
-      }
-      console.log("newV:", newV);
-    }
-  }
-  //
-  //  packageName=url.substr(url.lastIndexOf('/')+1);
-  packageName = encodeURIComponent(packageName);
-  version = encodeURIComponent(version);
-  let datasource = dataSources.NEXUSIQ;
-  return {
-    format: format,
-    packageName: packageName,
-    version: version,
     datasource: datasource
   };
 }
