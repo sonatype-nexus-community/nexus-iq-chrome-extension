@@ -1,15 +1,19 @@
 const puppeteer = require("puppeteer");
-const assert = require("assert");
 const fs = require("fs");
-// const CRX_PATH = require("path").join(__dirname, "../src/");
+const CRX_PATH = require("path").join(__dirname, "../src/");
 var browser;
-beforeAll(async () => {
+beforeEach(async () => {
   browser = await puppeteer.launch({
     headless: false,
-    args: ["--no-sandbox", "--disable-web-security", `--user-data-dir=data`]
+    args: [
+      `--disable-extensions-except=${CRX_PATH}`,
+      `--load-extension=${CRX_PATH}`
+    ],
+    slowMo: 25 // slow
   });
 });
-afterAll(async () => {
+
+afterEach(async () => {
   await browser.close();
 });
 
@@ -22,7 +26,8 @@ const urls = [
   "https://wikipedia.org"
 ];
 
-test("Content script injection", () => {
+test("Content script injection", async () => {
+  const page = await browser.newPage();
   for (let url of urls) {
   }
 });

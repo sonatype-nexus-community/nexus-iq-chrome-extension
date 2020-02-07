@@ -8,13 +8,10 @@ beforeAll(async () => {
   browser = await puppeteer.launch({
     headless: false,
     args: [
-      "--no-sandbox",
-      "--disable-web-security",
-      `--user-data-dir=data`,
       `--disable-extensions-except=${CRX_PATH}`,
       `--load-extension=${CRX_PATH}`
     ],
-    slowMo: 25 // slow
+    slowMo: 0 // slow
   });
 });
 afterAll(async () => {
@@ -134,7 +131,7 @@ xtest("Options test navigate", async () => {
   expect(numElements).toBeGreaterThan(0);
 }, 10000);
 
-test("Options test bug duplicate items", async () => {
+xtest("Options test bug duplicate items", async () => {
   console.log("CRX_PATH", CRX_PATH);
   const targets = await browser.targets();
   // console.log("targets", targets);
@@ -148,7 +145,12 @@ test("Options test bug duplicate items", async () => {
   //  // Test the background page as you would any other page.
   //  //how to write a test of the bg page?
   //  // Can we navigate to a chrome-extension page? YES!
-  const optionsPage = await browser.newPage();
+  // get list of tabs
+  let pages = await browser.pages();
+  // initially the default empty tab
+  let optionsPage = pages[0];
+
+  //  const optionsPage = await browser.newPage();
   await optionsPage.goto(
     `chrome-extension://${extensionId}/html/options.html`,
     {

@@ -45,7 +45,7 @@ test("npmjs lodash dom parse", async () => {
   //npm show lodash time --json
 });
 
-test("parseNuget LibGit2Sharp dom parse", async () => {
+xtest("parseNuget LibGit2Sharp dom parse", async () => {
   const page = await browser.newPage();
 
   let url = "https://www.nuget.org/packages/LibGit2Sharp/";
@@ -65,7 +65,7 @@ test("parseNuget LibGit2Sharp dom parse", async () => {
   assert.equal(version, "0.26.2");
   assert.equal(packageId, "LibGit2Sharp");
   assert(version != null);
-});
+}, 5000);
 
 test("parsePyPI Django dom parse", async () => {
   const page = await browser.newPage();
