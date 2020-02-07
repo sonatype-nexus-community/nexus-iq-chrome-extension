@@ -366,7 +366,7 @@ function parseCocoaPods(format, url) {
     .text();
   console.log("versionHTML:", versionHTML);
   let version = versionHTML.trim();
-
+  let name = elements[4];
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
   let datasource = dataSources.OSSINDEX;
@@ -427,7 +427,6 @@ function parseCRAN(format, url) {
 function parseGoLang(format, url) {
   //server is non-defined, language is go/golang
   //index of github stored at jfrog
-  //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
   /////////Todo get this working better
   //https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
   //becomes
@@ -463,18 +462,25 @@ function parseGoLang(format, url) {
     //last element in array is versions
     //then we parse for latest version in the document
     //e.g. https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
-    versionHTMLElement = $(
-      "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
-    )[0];
+    // versionHTMLElement = $(
+    //   "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
+    // )[0];
+    versionHTMLElement = $(".version-name")[0];
+    console.log("if versionHTMLElement", versionHTMLElement);
   } else {
     //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
     versionHTMLElement = $(
       "#select-header > span > span.ui-select-match-text.pull-left"
     )[0];
+    console.log("else versionHTMLElement", versionHTMLElement);
+  }
+  if (typeof versionHTMLElement === "undefined") {
+    //raiserror  "DOM changed"
   }
   let versionHTML = versionHTMLElement.innerText;
   console.log("versionHTML", versionHTML);
   let version = versionHTML.trim();
+  console.log("version", version);
   //keep the v in version
   // if (version.substr(0, 1) === "v") {
   //   version = version.substr(1);
@@ -482,7 +488,7 @@ function parseGoLang(format, url) {
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
   let datasource = dataSources.NEXUSIQ;
-  return {
+  let artifact = {
     format: format,
     datasource: datasource,
     type: type,
@@ -490,6 +496,7 @@ function parseGoLang(format, url) {
     name: name,
     version: version
   };
+  return artifact;
 }
 
 function parseCrates(format, url) {

@@ -65,8 +65,6 @@ test("parseNuget LibGit2Sharp dom parse", async () => {
   assert.equal(version, "0.26.2");
   assert.equal(packageId, "LibGit2Sharp");
   assert(version != null);
-  //latest version is determined by this
-  //npm show lodash time --json
 });
 
 test("parsePyPI Django dom parse", async () => {
@@ -107,4 +105,178 @@ test("parsePyPI Django dom parse", async () => {
   assert.equal(extension, "whl");
   //latest version is determined by this
   //npm show lodash time --json
+});
+
+test("parseRuby bundler dom parse", async () => {
+  //https://rubygems.org/gems/bundler
+  // https://rubygems.org/gems/omniauth/
+
+  const page = await browser.newPage();
+  let url = "https://rubygems.org/gems/bundler";
+  await page.goto(url);
+  let elements = url.split("/");
+  let name = elements[4];
+  let versionHTML = await page.$eval("i.page__subheading", el => el.innerText);
+  console.log("versionHTML", versionHTML);
+  let version = versionHTML;
+  console.log("version", version);
+  assert.equal(version, "2.1.4");
+  assert.equal(name, "bundler");
+  assert(version != null);
+});
+
+test("parsePackagist drupal dom parse", async () => {
+  //server is packagist, format is composer
+  //https://packagist.org/packages/drupal/drupal
+
+  const page = await browser.newPage();
+  let url = "https://packagist.org/packages/drupal/drupal";
+  await page.goto(url);
+  let elements = url.split("/");
+  var namePt1 = elements[4];
+  var namePt2 = elements[5];
+  let name = namePt1 + "/" + namePt2;
+  let versionHTML = await page.$eval("span.version-number", el => el.innerText);
+  console.log("versionHTML:", versionHTML);
+  let version = versionHTML.trim();
+  assert.equal(version, "8.8.1");
+  assert.equal(name, "drupal/drupal");
+  assert(version != null);
+});
+
+xtest("parseCocoaPods TestFairy dom parse", async () => {
+  //https://cocoapods.org/pods/TestFairy
+
+  const page = await browser.newPage();
+  let url = "https://cocoapods.org/pods/TestFairy";
+  await page.goto(url);
+  let elements = url.split("/");
+  let name = elements[4];
+  let versionHTML = await page.$eval("H1 span", el => el.innerText);
+  console.log("versionHTML:", versionHTML);
+  let version = versionHTML.trim();
+  assert.equal(version, "1.22.0");
+  assert.equal(name, "TestFairy");
+  assert(version != null);
+});
+
+test("parseCRAN clustcurv dom parse", async () => {
+  // https://cran.r-project.org/package=clustcurv
+
+  const page = await browser.newPage();
+  let url = "https://cran.r-project.org/package=clustcurv";
+  await page.goto(url);
+  let elements = url.split("/");
+
+  let nameHTML = await page.$eval("h2", el => el.innerText);
+  let name = nameHTML.split(":")[0];
+  let versionHTML = await page.$eval(
+    "table tr:nth-child(1) td:nth-child(2)",
+    el => el.innerText
+  );
+  console.log("versionHTML:", versionHTML);
+  let version = versionHTML.trim();
+  assert.equal(version, "1.0.0");
+  assert.equal(name, "clustcurv");
+  assert(version != null);
+});
+
+xtest("parseGoLang github.com/etcd-io/etcd dom parse", async () => {
+  //7/2/20 - could not get it to work for GoCenter, keeps disconnecting
+  const page = await browser.newPage();
+  let url = "https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions";
+  await page.goto(url, { waitUntil: ["load", "networkidle0"] });
+  await page.waitForSelector("span.version-name", {
+    visible: true
+  });
+  let elements = url.split("/");
+  if (url.search("search.gocenter.io") >= 0) {
+    //has packagename in 5
+    let fullname = elements[3];
+    //"github.com~2Fhansrodtang~2Frandomcolor"
+    let nameElements = fullname.split("~2F");
+    // 0: "github.com"
+    // 1: "hansrodtang"
+    // 2: "randomcolor"
+    type = nameElements[0]; //"github.com";
+    namespace = nameElements[1];
+    name = nameElements[2];
+  }
+  name = `${type}/${namespace}/${name}`;
+  let versionHTMLElement;
+
+  let elArray = await page.$$("span.version-name");
+  const versionElement = elArray[0];
+  let version = await page.evaluate(el => el.innerText, versionElement);
+
+  assert.equal(version, "v3.4.2+incompatible");
+  assert.equal(name, "github.com/etcd-io/etcd");
+  assert(version != null);
+});
+
+xtest("parseCrates rand dom parse", async () => {
+  const page = await browser.newPage();
+  let url = "https://crates.io/crates/rand";
+  let elements = url.split("/");
+  let name = elements[4];
+
+  await page.goto(url, { waitUntil: ["load", "networkidle2", "networkidle0"] });
+  await page.waitForSelector("div.info h2", {
+    visible: true
+  });
+  let elArray = await page.$$("div.info h2");
+  const versionElement = elArray[0];
+  // console.log("versionParent", versionParent);
+  // var next = versionParent.next("span");
+  // console.log("next", next);
+  let version = await page.evaluate(el => el.innerText, versionElement);
+  // console.log("versionElement", versionElement);
+  // let version = versionHTML.trim();
+  assert.equal(version, "0.7.3");
+  assert.equal(name, "rand");
+  assert(version != null);
+});
+
+xtest("parseNexusRepo commons collections  dom parse", async () => {
+  const page = await browser.newPage();
+  let url =
+    "http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1";
+  //https://ec.europa.eu/cefdigital/artifact/#browse/browse:public:commons-collections%2Fcommons-collections%2F3.2%2Fcommons-collections-3.2.jar
+  await page.goto(url);
+  // await page.waitFor(1000);
+  let elements = url.split("/");
+  if (url.search("search.gocenter.io") >= 0) {
+    //has packagename in 5
+    let fullname = elements[3];
+    //"github.com~2Fhansrodtang~2Frandomcolor"
+    let nameElements = fullname.split("~2F");
+    // 0: "github.com"
+    // 1: "hansrodtang"
+    // 2: "randomcolor"
+    type = "github.com";
+    namespace = nameElements[1];
+    name = nameElements[2];
+  }
+  let versionHTMLElement;
+  if (elements[4] == "versions") {
+    //last element in array is versions
+    //then we parse for latest version in the document
+    //e.g. https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
+
+    versionHTMLElement = await page.$$("span.version-name");
+    console.log("if versionHTMLElement", versionHTMLElement);
+  } else {
+    //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    versionHTMLElement = await page.$$eval(
+      "#select-header > span > span.ui-select-match-text.pull-left",
+      el => el[0].innerText
+    );
+    console.log("else versionHTMLElement", versionHTMLElement);
+  }
+  let versionHTML = versionHTMLElement[0].innerText;
+  console.log("versionHTML:", versionHTML);
+  let version = versionHTML.trim();
+  assert.equal(version, "v3.4.2+incompatible");
+  assert.equal(name, "github.com/etcd-io/etcd");
+  assert(version != null);
 });
