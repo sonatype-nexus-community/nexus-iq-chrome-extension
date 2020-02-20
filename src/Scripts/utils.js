@@ -59,6 +59,7 @@ var messageTypes = {
   beginEvaluate: "beginEvaluate", //message to send that we are beginning the evaluation process, it's different to the evaluatew message for a readon that TODO I fgogot
   artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
   evaluateComponent: "evaluateComponent", //used to evaluate on the popup only
+  vulnerability: "vulnerability", // vuln scan results
   error: "error" //used to pass errors from background and content script to the popup
 };
 class Component {

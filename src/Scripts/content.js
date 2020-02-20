@@ -14,7 +14,20 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   try {
     console.log("gotMessage", receivedMessage);
     message = receivedMessage;
-    processPage(message);
+    switch (message.messagetype) {
+      case messageTypes.beginEvaluate:
+        console.debug("begin evaluate message");
+        processPage(message);
+        break;
+      case messageTypes.vulnerability:
+        console.log("vulnearability message");
+        processVulnerability(message);
+        break;
+      default:
+        console.log("Unknown message type: " + message.messagetype);
+        break;
+    }
+
   } catch (err) {
     let errmessage = {
       artifact: null,
@@ -25,18 +38,33 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   }
 }
 
+function processVulnerability(message) {
+  let vulnClass = message.message.vulnClass;
+  console.debug("Setting vuln class: " + vulnClass);
+  console.debug('browser: ', browser);
+  var repoDetails = findRepoType();
+  if (repoDetails) {
+    var x = document.querySelectorAll(repoDetails.titleSelector);
+    console.debug("found titles", x);
+    for (var i = 0; i < x.length; i++) {
+      console.debug("adding to class: " + vulnClass);
+      x[i].classList.add(vulnClass);
+      x[i].classList.add("vuln");
+    }
+  }
+}
+
 function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   console.log("processPage - message:", message);
+
+  // var faScript = $(document.createElement('script')).attr('src', 'https://kit.fontawesome.com/a076d05399.js');
+  // $(body).append(faScript);
 
   //please tell what is my url and what is my content
   var url = window.location.href;
   console.log("url", url);
-  //this page will hear the Evaluate message as well, so ignore it
   if (message.messagetype !== messageTypes.evaluateComponent) {
     let artifact = ParsePage();
-    // console.log('requestmessage', requestmessage);
-    //{messageType: "artifact", payload: artifact};
-    // let artifact = requestmessage.payload;
     console.log("artifact", artifact);
     if (artifact != undefined) {
       let format = artifact.format;
@@ -54,6 +82,90 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   }
 }
 
+var repoTypes = [
+  {
+    url: "search.maven.org/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: ".artifact-title"
+  },
+  {
+    url: "https://mvnrepository.com/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: ""
+  },
+  {
+    url: "www.npmjs.com/package/",
+    repoFormat: formats.npm,
+    parseFunction: parseNPM,
+    titleSelector: ".package-name-redundant"
+  },
+  {
+    url: "nuget.org/packages/",
+    repoFormat: formats.nuget,
+    parseFunction: parseNuget,
+    titleSelector: ".package-title > h1"
+  },
+  {
+    url: "pypi.org/project/",
+    repoFormat: formats.pypi,
+    parseFunction: parsePyPI,
+    titleSelector: ""
+  },
+  {
+    url: "rubygems.org/gems/",
+    repoFormat: formats.ruby,
+    parseFunction: parseRuby,
+    titleSelector: ""
+  },
+  {
+    url: "packagist.org/packages/",
+    repoFormat: formats.composer,
+    parseFunction: parsePackagist,
+    titleSelector: ""
+  },
+  {
+    url: "cocoapods.org/pods/",
+    repoFormat: formats.cocoapods,
+    parseFunction: parseCocoaPods,
+    titleSelector: ""
+  },
+  {
+    url: "cran.r-project.org/",
+    repoFormat: formats.cran,
+    parseFunction: parseCRAN,
+    titleSelector: ""
+  },
+  {
+    url: "https://crates.io/crates/",
+    repoFormat: formats.cargo,
+    parseFunction:parseCrates,
+    titleSelector: ""
+  },
+  {
+    url: "https://search.gocenter.io/",
+    repoFormat: formats.golang,
+    parseFunction: parseGoLang,
+    titleSelector: ""
+  },
+  {
+    url: "/#browse/browse:",
+    parseFunction: parseNexusRepo,
+    titleSelector: ""
+  }
+];
+
+function findRepoType() {
+  let url = location.href;
+  for (let i = 0; i < repoTypes.length; i++) {
+    if (url.search(repoTypes[i].url) >= 0) {
+      return repoTypes[i];
+    }
+  }
+  return undefined;
+}
+
 function ParsePage() {
   //returns message in format like this {messageType: "artifact", payload: artifact};
   //artifact varies depending on eco-system
@@ -61,74 +173,16 @@ function ParsePage() {
   //who I am what is my address?
   let artifact;
   let format;
-  // let datasource = dataSources.NEXUSIQ;
   let url = location.href;
   console.log("url", url);
 
-  if (url.search("search.maven.org/artifact/") >= 0) {
-    format = formats.maven;
-    // datasource = dataSources.NEXUSIQ;
-    artifact = parseMaven(format, url);
-  }
-  //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
-  if (url.search("https://mvnrepository.com/artifact/") >= 0) {
-    format = formats.maven;
-    datasource = dataSources.NEXUSIQ;
-    artifact = parseMaven(format, url);
+  var repoDetails = findRepoType();
+  console.debug("found repo details",repoDetails);
+  if (repoDetails) {
+    format = repoDetails.repoFormat;
+    artifact = repoDetails.parseFunction(format, url);
   }
 
-  if (url.search("www.npmjs.com/package/") >= 0) {
-    //'https://www.npmjs.com/package/lodash'};
-    format = formats.npm;
-    artifact = parseNPM(format, url);
-  }
-  if (url.search("nuget.org/packages/") >= 0) {
-    //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
-    format = formats.nuget;
-    artifact = parseNuget(format, url);
-  }
-  if (url.search("pypi.org/project/") >= 0) {
-    //https://pypi.org/project/Django/1.6/
-    format = formats.pypi;
-    artifact = parsePyPI(format, url);
-  }
-
-  if (url.search("rubygems.org/gems/") >= 0) {
-    //https://rubygems.org/gems/bundler/versions/1.16.1
-    format = formats.gem;
-    artifact = parseRuby(format, url);
-  }
-
-  //OSSIndex
-  if (url.search("packagist.org/packages/") >= 0) {
-    //https: packagist ???
-    format = formats.composer;
-    artifact = parsePackagist(format, url);
-  }
-  if (url.search("cocoapods.org/pods/") >= 0) {
-    //https:// cocoapods ???
-    format = formats.cocoapods;
-    artifact = parseCocoaPods(format, url);
-  }
-  if (url.search("cran.r-project.org/") >= 0) {
-    format = formats.cran;
-    artifact = parseCRAN(format, url);
-  }
-
-  if (url.search("https://crates.io/crates/") >= 0) {
-    format = formats.cargo;
-    artifact = parseCrates(format, url);
-  }
-  if (url.search("https://search.gocenter.io/") >= 0) {
-    format = formats.golang;
-    artifact = parseGoLang(format, url);
-  }
-  //nexusRepo ->http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
-  if (url.search("/#browse/browse:") >= 0) {
-    //format = formats.golang;
-
-    artifact = parseNexusRepo(url);
-  }
   console.log("ParsePage Complete - artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
@@ -176,6 +230,7 @@ function parseMaven(format, url) {
 }
 
 function parseNPM(format, url) {
+  console.debug("parseNPM", format, url);
   //ADD SIMPLE CODE THAT CHECLS THE URL?
   //note that this changed as of 19/03/19
   //version in URL
