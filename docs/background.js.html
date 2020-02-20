@@ -6,7 +6,6 @@
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
-  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -49,11 +48,6 @@ const gotMessage = (message, sender, sendResponse) => {
   // console.log('message')
   // console.log(message)
   switch (message.messagetype) {
-      var x = document.getElementsByClassName("package-title");
-      for (i = 0; i < x.length; i++) {
-        x[i].style.backgroundColor = "red";
-      }
-      // .addClass("fas fa-exclamation-triangle");
     case messageTypes.evaluateComponent:
       console.log(
         "Background does not handle this message type. This is handled by the popup only."

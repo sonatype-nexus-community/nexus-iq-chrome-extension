@@ -120,15 +120,6 @@ const sendNotification = componentDetails => {
     vulnClass = "vuln-med";
   }
 
-  // console.debug("Setting vuln class: " + vulnClass);
-  // console.debug('browser: ', browser);
-  // var x = document.getElementsByClassName("package-name-redundant");
-  // console.debug("found titles", x);
-  // for (var i = 0; i < x.length; i++) {
-  //   console.debug("adding to class: " + vulnClass);
-  //   x[i].classList.add(vulnClass);
-  // }
-
   let vulnMessage = {
     messagetype: messageTypes.vulnerability,
     message: {
@@ -756,7 +747,6 @@ function displayEvaluationReults(displayMessageData, tabId) {
       path: "../images/SON_logo_favicon_Vulnerable.png",
       tabId: tabId
     });
-    //chrome.browserAction.setBadgeText({text: "!"});
     sendNotification(componentDetails);
   }
   else {
