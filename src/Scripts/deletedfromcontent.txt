@@ -1,0 +1,65 @@
+
+  if (url.search("search.maven.org/artifact/") >= 0) {
+    format = formats.maven;
+    // datasource = dataSources.NEXUSIQ;
+    artifact = parseMaven(format, url);
+  }
+  //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+  if (url.search("https://mvnrepository.com/artifact/") >= 0) {
+    format = formats.maven;
+    datasource = dataSources.NEXUSIQ;
+    artifact = parseMaven(format, url);
+  }
+
+  if (url.search("www.npmjs.com/package/") >= 0) {
+    //'https://www.npmjs.com/package/lodash'};
+    format = formats.npm;
+    artifact = parseNPM(format, url);
+  }
+  if (url.search("nuget.org/packages/") >= 0) {
+    //https://www.nuget.org/packages/LibGit2Sharp/0.1.0
+    format = formats.nuget;
+    artifact = parseNuget(format, url);
+  }
+  if (url.search("pypi.org/project/") >= 0) {
+    //https://pypi.org/project/Django/1.6/
+    format = formats.pypi;
+    artifact = parsePyPI(format, url);
+  }
+
+  if (url.search("rubygems.org/gems/") >= 0) {
+    //https://rubygems.org/gems/bundler/versions/1.16.1
+    format = formats.gem;
+    artifact = parseRuby(format, url);
+  }
+
+  //OSSIndex
+  if (url.search("packagist.org/packages/") >= 0) {
+    //https: packagist ???
+    format = formats.composer;
+    artifact = parsePackagist(format, url);
+  }
+  if (url.search("cocoapods.org/pods/") >= 0) {
+    //https:// cocoapods ???
+    format = formats.cocoapods;
+    artifact = parseCocoaPods(format, url);
+  }
+  if (url.search("cran.r-project.org/") >= 0) {
+    format = formats.cran;
+    artifact = parseCRAN(format, url);
+  }
+
+  if (url.search("https://crates.io/crates/") >= 0) {
+    format = formats.cargo;
+    artifact = parseCrates(format, url);
+  }
+  if (url.search("https://search.gocenter.io/") >= 0) {
+    format = formats.golang;
+    artifact = parseGoLang(format, url);
+  }
+  //nexusRepo ->http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
+  if (url.search("/#browse/browse:") >= 0) {
+    //format = formats.golang;
+
+    artifact = parseNexusRepo(url);
+  }

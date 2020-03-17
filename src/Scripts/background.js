@@ -35,11 +35,13 @@ const gotMessage = async (message, sender, sendResponse) => {
       console.log("settings", settings);
       let displayMessage = await evaluateComponent(artifact, settings);
       let tab = await GetActiveTab();
-      let tabId = tab.id;
-      displayEvaluationReults(displayMessage, tabId);
+      if (tab) {
+        let tabId = tab.id;
+        displayEvaluationReults(displayMessage, tabId);
+      }
+      browser.runtime.sendMessage(message);
       return displayMessage;
 
-      browser.runtime.sendMessage(message);
       break;
     case messageTypes.login:
       //login attempt
@@ -112,13 +114,51 @@ const sendNotification = componentDetails => {
     iconUrl: "../images/SON_logo_favicon_Vulnerable.png"
   };
 
+  //////////////
+  let securityData = componentDetails.securityData.securityIssues;
+  let severity = 0;
+  if (securityData && securityData.length > 0) {
+    severity = securityData[0].severity;
+  }
+  console.debug("detected severity " + severity);
+  let vulnClass = "vuln-low";
+  if (severity >= 9) {
+    vulnClass = "vuln-severe";
+  } else if (severity >= 7) {
+    vulnClass = "vuln-high";
+  } else if (severity >= 5) {
+    vulnClass = "vuln-med";
+  }
+
+  // console.debug("Setting vuln class: " + vulnClass);
+  // console.debug('browser: ', browser);
+  // var x = document.getElementsByClassName("package-name-redundant");
+  // console.debug("found titles", x);
+  // for (var i = 0; i < x.length; i++) {
+  //   console.debug("adding to class: " + vulnClass);
+  //   x[i].classList.add(vulnClass);
+  // }
+
+  let vulnMessage = {
+    messagetype: messageTypes.vulnerability,
+    message: {
+      severity: severity,
+      vulnClass: vulnClass
+    }
+  };
+
+  browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    browser.tabs.sendMessage(tabs[0].id, vulnMessage);
+  });
+  //////////////
+
   browser.notifications.create(
     "NexusIQNotification",
     {
       type: "basic",
       iconUrl: "../images/SON_logo_favicon_Vulnerable.png",
       title: "Sonatype Nexus IQ Scan",
-      message: "Dear User this library is vulnerable",
+      message: "IQ found vulnerabilities in this version",
       priority: 1,
       buttons: [
         {
@@ -628,6 +668,7 @@ function displayEvaluationReults(displayMessageData, tabId) {
       path: "../images/SON_logo_favicon_Vulnerable.png",
       tabId: tabId
     });
+    //chrome.browserAction.setBadgeText({text: "!"});
     sendNotification(componentDetails);
   } else {
     browser.pageAction.setIcon({

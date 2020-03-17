@@ -29,8 +29,21 @@
     "https://search.gocenter.io/",
     "https://ossindex.sonatype.org/",
     "https://github.com/",
-    "*://*/*"
+    "*://*/*",
+    "https://kit.fontawesome.com/"
   ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.nuget.org/*",
+        "https://www.npmjs.com/*",
+        "https://search.maven.org/*",
+        "https://www.nuget.org/*"
+      ],
+      "css": ["css/pagestyle.css"]
+    }
+  ],
+  "web_accessible_resources": ["images/*"],
   "background": {
     "page": "html/background.html"
   },
