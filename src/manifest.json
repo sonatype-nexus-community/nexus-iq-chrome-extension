@@ -32,13 +32,7 @@
     "*://*/*"
   ],
   "background": {
-    "scripts": [
-      "Scripts/lib/jquery.min.js",
-      "Scripts/lib/axios.min.js",
-      "Scripts/utils.js",
-      "Scripts/background.js"
-    ],
-    "persistent": true
+    "page": "html/background.html"
   },
   "page_action": {
     "default_popup": "html/popup.html",

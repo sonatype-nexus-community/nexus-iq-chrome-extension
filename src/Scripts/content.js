@@ -2,6 +2,8 @@
 "use strict";
 
 console.log("contentscript.js");
+// import * as utils from "./utils.js";
+
 var browser;
 var message;
 if (typeof chrome !== "undefined") {

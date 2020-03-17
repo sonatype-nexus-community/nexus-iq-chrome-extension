@@ -26,8 +26,10 @@ const urls = [
   "https://wikipedia.org"
 ];
 
-test("Content script injection", async () => {
-  const page = await browser.newPage();
-  for (let url of urls) {
-  }
+describe.skip("Content injection scripts", () => {
+  test("Content script injection", async () => {
+    const page = await browser.newPage();
+    for (let url of urls) {
+    }
+  });
 });

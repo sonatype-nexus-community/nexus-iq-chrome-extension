@@ -1,44 +1,116 @@
 /*jslint es6  -W024 */
 "use strict";
 console.log("popup.js");
-
+import * as utils from "./utils.js";
+const timeout = 3000; //3000milliseconds
+let hasLoadedHistory;
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
 
-const gotMessage = async (respMessage, sender, sendResponse) => {
-  //this is the callback handler for a message received
-  console.log("popup got message", respMessage);
-  let hasError = false;
-  await BuildSettingsFromGlobal();
+//var settings;
+//var componentInfoData;
+$(async function() {
+  let displayMessageData;
+  try {
+    //whenever I open I begin an evaluation immediately
+    //the icon is disabled for pages that I dont parse
+    console.log("ready!");
+    //setupAccordion();
+    showLoader();
+    $("#error").hide();
 
-  switch (respMessage.messagetype) {
-    case messageTypes.evaluateComponent:
-      console.log("messageTypes.evaluateComponent", artifact);
-      artifact = respMessage.artifact;
-      let displayMessage = await evaluateComponent(artifact, settings);
-      await displayMessageDataHTML(displayMessage);
-      break;
-    case messageTypes.displayMessage:
-      // alert("displayMessage");
-      await displayMessageDataHTML(respMessage);
-      break;
-    case messageTypes.loggedIn:
-      //logged in so now we evaluate
-      console.log("logged in, now evaluate");
-      // let evalBegan = beginEvaluation();
-      hideLoader(hasError);
-      break;
-    case messageTypes.loginFailedMessage:
-      hasError = true;
-      //display error
-      console.log("display error", respMessage);
-      let errorShown = showError(respMessage.message.response);
-      hideLoader(hasError);
-      break;
-    default:
-    //do nothing for now
+    let tabOptions = {
+      beforeActivate: selectTabHandler
+    };
+    $("#tabs").tabs(tabOptions);
+    hasLoadedHistory = false;
+    $("div#dialogSecurityDetails").dialog({
+      autoOpen: false
+    });
+
+    //begin evaluation sends a message to the background script
+    //and to the content script
+    //I may be able to cheat and just get the URL, which simplifies the logic
+    //if the URL is not parseable then I will have to go the content script to read the DOM
+    let tab = await utils.GetActiveTab();
+    let url = tab.url;
+    displayMessageData = await utils.beginEvaluation(tab);
+    // Promise.race([waitCursorTimeOut, beginEvaluation]).then(function(value) {
+    //   console.log(value);
+    // });
+    if (displayMessageData) {
+      await displayMessageDataHTML(displayMessageData);
+    }
+  } catch (error) {
+    console.log("Popup Error", error);
+    showError(
+      "The display failed. Please contact support. " + "<BR>" + error.stack
+    );
+  } finally {
+    console.log("popup-finally", displayMessageData);
+    // if (typeof displayMessageData === "undefined") {
+    //   //something went wrong and we never displayed the content.
+    //   //the wheel is spinning show an error
+    //   showError("The display failed. Please contact support");
+    // }
+  }
+});
+
+const waitCursorTimeOut = () => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout, "correct100msResult");
+  });
+};
+
+const gotMessage = async (respMessage, sender, sendResponse) => {
+  try {
+    //this is the callback handler for a message received
+    console.log("popup got message", respMessage);
+    let hasError = false;
+    await utils.BuildSettingsFromGlobal();
+    let messageTypes = utils.messageTypes;
+    let artifact = utils.artifact;
+    let settings = utils.settings;
+    switch (respMessage.messagetype) {
+      case messageTypes.evaluateComponent:
+        console.log("messageTypes.evaluateComponent", artifact);
+        utils.setArtifact(respMessage.artifact);
+        let displayMessage = await utils.evaluateComponent(
+          utils.artifact,
+          settings
+        );
+        await displayMessageDataHTML(displayMessage);
+        break;
+      case messageTypes.displayMessage:
+        // alert("displayMessage");
+        await displayMessageDataHTML(respMessage);
+        break;
+      case messageTypes.loggedIn:
+        //logged in so now we evaluate
+        console.log("logged in, now evaluate");
+        // let evalBegan = beginEvaluation();
+        hideLoader(hasError);
+        break;
+      case messageTypes.loginFailedMessage:
+        hasError = true;
+        //display error
+        console.log("display error", respMessage);
+        let errorShown = showError(respMessage.message.response);
+        hideLoader(hasError);
+        break;
+      default:
+      //do nothing for now
+    }
+  } catch (error) {
+    console.log("error", error);
+    showError(
+      "The display failed. Please contact support. " + "<BR>" + error.stack
+    );
+  } finally {
+    console.log("gotmessage finally");
+    hideLoader("Close loader");
   }
 };
 
@@ -57,9 +129,19 @@ const hideLoader = hasError => {
 const selectTabHandler = async (e, tab) => {
   //lazy loading of history
   //only do it if the user clicks on the tab
+  let nexusArtifact = utils.nexusArtifact;
+  let artifact = utils.artifact;
+  let dataSources = utils.dataSources;
+  let settings = utils.settings;
   showLoader();
   const remediationTab = 2;
-  console.log("selectTabHandler", nexusArtifact, artifact);
+  console.log(
+    "selectTabHandler-nexusArtifact, artifact, dataSources, settings",
+    nexusArtifact,
+    artifact,
+    dataSources,
+    settings
+  );
   if (
     tab.newTab.index() === remediationTab &&
     !hasLoadedHistory &&
@@ -74,53 +156,23 @@ const selectTabHandler = async (e, tab) => {
         $(this).remove();
       });
     let remediation;
-    if (hasVulns) {
+    console.log("utils.hasVulns", utils.hasVulns);
+    if (utils.hasVulns || true) {
       remediation = await showRemediation(nexusArtifact, settings);
     }
-    let allVersions = await GetAllVersions(
+    let allVersions = await utils.GetAllVersions(
       nexusArtifact,
       settings,
       remediation
     );
     let currentVersion =
-      nexusArtifact.component.componentIdentifier.coordinates.version;
+      nexusArtifact.components[0].componentIdentifier.coordinates.version;
 
     await renderGraph(allVersions, remediation, currentVersion);
     hasLoadedHistory = true;
   }
   hideLoader();
 };
-
-//var settings;
-//var componentInfoData;
-$(async function() {
-  //whenever I open I begin an evaluation immediately
-  //the icon is disabled for pages that I dont parse
-  console.log("ready!");
-  //setupAccordion();
-  showLoader();
-  $("#error").hide();
-
-  let tabOptions = {
-    beforeActivate: selectTabHandler
-  };
-  $("#tabs").tabs(tabOptions);
-  hasLoadedHistory = false;
-  $("div#dialogSecurityDetails").dialog({
-    autoOpen: false
-  });
-
-  //begin evaluation sends a message to the background script
-  //and to the content script
-  //I may be able to cheat and just get the URL, which simplifies the logic
-  //if the URL is not parseable then I will have to go the content script to read the DOM
-  let tab = await GetActiveTab();
-  let url = tab.url;
-  let displayMessageData = await beginEvaluation(tab);
-  if (displayMessageData) {
-    await displayMessageDataHTML(displayMessageData);
-  }
-});
 
 // const createAllversionsHTML = async (data, remediation, currentVersion) => {
 //   console.log("createAllversionsHTML", remediation, currentVersion);
@@ -239,13 +291,14 @@ const createHTML = async (message, settings) => {
   // console.log('thisComponent')
   // console.log(thisComponent)
   switch (message.artifact.datasource) {
-    case dataSources.NEXUSIQ:
+    case utils.dataSources.NEXUSIQ:
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
       // let thisComponent = message.message.response.componentDetails["0"];
       renderComponentData(message);
       renderLicenseData(message);
-      hasVulns = renderSecurityData(message);
+      let hasVulns = renderSecurityData(message);
+      utils.setHasVulns(hasVulns);
       //store nexusArtifact in Global variable
       // let remediation
       // if (hasVulns) {
@@ -254,7 +307,7 @@ const createHTML = async (message, settings) => {
       // let allVersions = await GetAllVersions(nexusArtifact, settings, remediation)
       // renderGraph(data, remediation, currentVersion);
       break;
-    case dataSources.OSSINDEX:
+    case utils.dataSources.OSSINDEX:
       //from OSSINdex
       console.log("OSSINDEX");
       renderComponentDataOSSIndex(message);
@@ -273,7 +326,7 @@ const createHTML = async (message, settings) => {
 const renderComponentDataOSSIndex = message => {
   console.log("renderComponentDataOSSIndex", message);
   let packageName = unescape(message.artifact.name);
-  if (message.artifact.format === formats.golang) {
+  if (message.artifact.format === utils.formats.golang) {
     //pkg:github/etcd-io/etcd@3.3.1
     let goFormat = `github/${message.artifact.namespace}/${message.artifact.name}`;
     packageName = unescape(goFormat);
@@ -315,7 +368,7 @@ const renderSecurityDataOSSIndex = message => {
     return securityIssues2.cvssScore - securityIssues1.cvssScore;
   });
   if (securityIssues.length > 0) {
-    for (i = 0; i < securityIssues.length; i++) {
+    for (let i = 0; i < securityIssues.length; i++) {
       let securityIssue = securityIssues[i];
 
       //console.log(securityIssue.reference);
@@ -326,7 +379,7 @@ const renderSecurityDataOSSIndex = message => {
       } else {
         vulnerabilityCode = securityIssue.cve;
       }
-      let className = styleCVSS(securityIssue.cvssScore);
+      let className = utils.styleCVSS(securityIssue.cvssScore);
       // let vulnerabilityCode = (typeof securityIssue.cve === "undefined") ? 'No CVE' : securityIssue.cve;
       strAccordion +=
         '<h3><span class="headingreference">' +
@@ -394,9 +447,9 @@ const renderComponentData = message => {
   console.log("coordinates:", coordinates);
   let display, thisCoords;
   switch (format) {
-    case formats.maven:
+    case utils.formats.maven:
       // console.log(coordinates.groupId);
-      thisCoords = new MavenCoodinates(
+      thisCoords = new utils.MavenCoordinates(
         coordinates.groupId,
         coordinates.artifactId,
         coordinates.version
@@ -405,19 +458,19 @@ const renderComponentData = message => {
       // $("#package").html(display);
       $("#package").html(`${coordinates.groupId}:${coordinates.artifactId}`);
       break;
-    case formats.npm:
+    case utils.formats.npm:
       $("#package").html(coordinates.packageId);
       break;
-    case formats.nuget:
+    case utils.formats.nuget:
       $("#package").html(coordinates.packageId);
       break;
-    case formats.gem:
+    case utils.formats.gem:
       $("#package").html(coordinates.name);
       break;
-    case formats.pypi:
+    case utils.formats.pypi:
       $("#package").html(coordinates.name);
       break;
-    case formats.golang:
+    case utils.formats.golang:
       $("#package").html(coordinates.name);
       break;
 
@@ -427,7 +480,8 @@ const renderComponentData = message => {
   }
   console.log("coordinates.version:", coordinates.version);
   $("#version").html(coordinates.version);
-  artifact.hash = component.hash;
+  utils.SetHash(component.hash);
+  // utils.artifact.hash = component.hash;
   $("#hash").html(component.hash);
 
   //document.getElementById("matchstate").innerHTML = componentInfoData.componentDetails["0"].matchState;
@@ -440,7 +494,7 @@ const renderComponentData = message => {
 
 const renderSecuritySummaryIQ = message => {
   let highest = Highest_CVSS_Score(message);
-  let className = styleCVSS(highest);
+  let className = utils.styleCVSS(highest);
   $("#Highest_CVSS_Score")
     .html(highest)
     .addClass(className);
@@ -452,7 +506,7 @@ const renderSecuritySummaryIQ = message => {
 
 const renderSecuritySummaryOSSIndex = message => {
   let highest = Highest_CVSS_ScoreOSSIndex(message);
-  let className = styleCVSS(highest);
+  let className = utils.styleCVSS(highest);
   $("#Highest_CVSS_Score")
     .html(highest)
     .addClass(className);
@@ -469,13 +523,12 @@ const renderLicenseData = message => {
     if (licenseData.declaredLicenses["0"].licenseId) {
       //$("#declaredlicenses_licenseId").html(licenseData.declaredLicenses["0"].licenseId);
       //<a href="https://en.wikipedia.org/wiki/{{{licenseId}}}_License" target="_blank">https://en.wikipedia.org/wiki/{{{licenseId}}}_License</a>
+      //https://spdx.org/licenses/0BSD.html
       let link =
         "https://en.wikipedia.org/wiki/" +
         licenseData.declaredLicenses["0"].licenseId +
         "_License";
-      console.log("link");
-      console.log(link);
-      console.log(licenseData.declaredLicenses["0"].licenseName);
+      console.log("link", link, licenseData.declaredLicenses["0"].licenseName);
       $("#declaredlicenses_licenseLink").attr("href", link);
       $("#declaredlicenses_licenseLink").html(
         licenseData.declaredLicenses["0"].licenseId
@@ -576,7 +629,7 @@ const renderSecurityData = message => {
   var thisComponent = message.message.response.componentDetails["0"];
   let securityIssues = thisComponent.securityData.securityIssues;
   let strAccordion = "";
-  console.log(securityIssues.length);
+  console.log("securityIssues.length", securityIssues.length);
   securityIssues.sort((securityIssues1, securityIssues2) => {
     return securityIssues2.severity - securityIssues1.severity;
   });
@@ -588,7 +641,7 @@ const renderSecurityData = message => {
       let securityIssue = securityIssues[index];
       console.log(securityIssue);
 
-      let className = styleCVSS(securityIssue.severity);
+      let className = utils.styleCVSS(securityIssue.severity);
       let strVulnerability = securityIssue.reference;
 
       strAccordion +=
@@ -639,7 +692,7 @@ const renderSecurityData = message => {
       let strVulnerability = securityIssue.reference;
       var createButton = document.getElementById(`info_${strVulnerability}`);
       createButton.addEventListener("click", function() {
-        showCVEDetail(strVulnerability, artifact);
+        showCVEDetail(strVulnerability, utils.artifact);
       });
       console.log(createButton);
     }
@@ -654,10 +707,16 @@ const renderSecurityData = message => {
 
 const showCVEDetail = async (cveReference, artifact) => {
   console.log("showCVEDetail", cveReference, artifact);
-  let nexusArtifact = NexusFormat(artifact);
+  // let nexusArtifact = utils.NexusFormat(artifact);
+  let nexusArtifact = utils.nexusArtifact;
+  let settings = utils.settings;
   console.log("nexusArtifact", nexusArtifact);
   console.log("settings", settings);
-  let myResp3 = await GetCVEDetails(cveReference, nexusArtifact, settings);
+  let myResp3 = await utils.GetCVEDetails(
+    cveReference,
+    nexusArtifact,
+    settings
+  );
   console.log("myResp3", myResp3);
   let htmlDetails = myResp3.cvedetail.data.htmlDetails;
   //"CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H"
@@ -667,7 +726,7 @@ const showCVEDetail = async (cveReference, artifact) => {
     let cvss = htmlDetails.substring(whereCVSS, whereCVSS + 44);
     console.log("cvss", cvss);
     //https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:L/A:L
-    let cvssExplained = CVSSDetails(cvss);
+    let cvssExplained = utils.CVSSDetails(cvss);
 
     let cvssLink = `<div class="tooltip"><a target="_blank" rel="noreferrer" href="https://www.first.org/cvss/calculator/3.0#${cvss}">${cvss}</a><span class="tooltiptext">${cvssExplained}</span></div>;`;
     htmlDetails = htmlDetails.replace(cvss, cvssLink);
@@ -689,7 +748,7 @@ const showCVEDetail = async (cveReference, artifact) => {
 
 const showRemediation = async (nexusArtifact, settings) => {
   console.log("showRemediation", nexusArtifact, settings);
-  let newVersion = await getRemediation(nexusArtifact, settings);
+  let newVersion = await utils.getRemediation(nexusArtifact, settings);
   let advice;
   if (newVersion == "") {
     newVersion = "Remediation advice. Not available";
@@ -735,6 +794,7 @@ const showError = error => {
   $("#error").html(displayError);
   $("#error").fadeIn("slow");
   $("#error").show();
+  hideLoader(displayError);
 };
 
 const hideError = () => {
@@ -784,7 +844,13 @@ const sortByProperty = (objArray, prop, direction) => {
 
 const displayMessageDataHTML = async respMessage => {
   console.log("displayMessageDataHTML", respMessage);
+  //this is a horrible kludge, I need to resolve the message properly.
+  if (respMessage === "installScripts") {
+    return;
+  }
   let hasError = false;
+  let artifact = utils.artifact;
+  let nexusArtifact = utils.nexusArtifact;
   if (respMessage.message.error) {
     showError(respMessage.message.response);
   } else {
@@ -796,11 +862,12 @@ const displayMessageDataHTML = async respMessage => {
     var componentDetails = respMessage.message.response;
     console.log("componentDetails", componentDetails);
 
-    if (artifact.datasource === dataSources.NEXUSIQ) {
+    console.log("displayMessageDataHTML: utils.dataSources", utils.dataSources);
+    if (artifact.datasource === utils.dataSources.NEXUSIQ) {
       nexusArtifact = componentDetails.componentDetails[0];
       console.log("nexusArtifact", nexusArtifact);
     }
-    let htmlCreated = await createHTML(respMessage, settings);
+    let htmlCreated = await createHTML(respMessage, utils.settings);
   }
   hideLoader(hasError);
 };

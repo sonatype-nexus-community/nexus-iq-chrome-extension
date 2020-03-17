@@ -82,7 +82,7 @@ class NPMCoordinates extends Coordinates {
   }
 }
 
-class MavenCoordinates extends Coordinates {
+class MavenCoodinates extends Coordinates {
   constructor(groupId, artifactId, version) {
     // console.log("groupId", groupId);
     super();
@@ -368,10 +368,6 @@ const getDomainName = servername => {
   }
   server = server.substring(0, rightPart + 1);
   //".iq-server"
-  //fix trailing backslash bug.
-  if (server.substring(server.length - 1) === "/") {
-    server = server.substring(0, server.length - 1);
-  }
   let domain = "." + server;
   return domain;
 };
@@ -1505,13 +1501,12 @@ const evaluatePackage = async (artifact, settings) => {
   console.log("evaluatePackage", artifact, settings.auth);
   let servername = settings.baseURL;
   let domain = getDomainName(servername);
-  console.log("domain", domain);
   let cookie = await GetCookie(domain, xsrfCookieName);
   console.log("cookie", cookie);
   if (typeof cookie === "undefined") {
     console.log("handled missing cookie");
     //server is not up most probably
-    //do we throw an error here or exit gracefully
+    //do we throw an error here or exit graceully
     throw new Error(
       `Cookie not available. Server ${servername} is probably down`
     );
@@ -1570,7 +1565,7 @@ const getRemediation = async (nexusArtifact, settings) => {
   console.log("getRemediation: url", url);
   let response = await axios(url, {
     method: "post",
-    data: nexusArtifact.components[0],
+    data: nexusArtifact.component,
     withCredentials: true,
     auth: {
       username: settings.username,
@@ -1652,7 +1647,6 @@ const addDataOSSIndex = async artifact => {
   let name = artifact.name;
   let version = artifact.version;
   let OSSIndexURL;
-  let responseVal;
   if (artifact.format == formats.golang) {
     //Example: pkg:github/etcd-io/etcd@3.3.1
     //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
@@ -2017,12 +2011,7 @@ const SetHash = hash => {
   artifact.hash = hash;
 };
 const setHasVulns = flag => {
-  console.log("hasVulns-before", hasVulns);
   hasVulns = flag;
-  console.log("hasVulns-after", hasVulns);
-};
-const setArtifact = respMessageArtifact => {
-  artifact = respMessageArtifact;
 };
 
 if (typeof module !== "undefined") {
@@ -2048,14 +2037,12 @@ if (typeof module !== "undefined") {
     GetCookie: GetCookie,
     GetCVEDetails: GetCVEDetails,
     GetSettings: GetSettings,
-    getDomainName: getDomainName,
     getExtensionVersion: getExtensionVersion,
     getRemediation: getRemediation,
     getUserAgentHeader: getUserAgentHeader,
 
     jsDateToEpoch: jsDateToEpoch,
     MavenArtifact: MavenArtifact,
-    MavenCoordinates: MavenCoordinates,
     NexusFormat: NexusFormat,
     NexusFormatMaven: NexusFormatMaven,
     NexusFormatNPM: NexusFormatNPM,
@@ -2083,34 +2070,6 @@ if (typeof module !== "undefined") {
     removeCookies: removeCookies,
     SetHash: SetHash,
     setHasVulns: setHasVulns,
-    setArtifact: setArtifact,
     styleCVSS: styleCVSS
   };
 }
-
-export {
-  artifact,
-  beginEvaluation,
-  BuildSettingsFromGlobal,
-  checkPageIsHandled,
-  CVSSDetails,
-  dataSources,
-  evaluateComponent,
-  formats,
-  GetActiveTab,
-  GetAllVersions,
-  GetCVEDetails,
-  getDomainName,
-  getRemediation,
-  getUserAgentHeader,
-  hasVulns,
-  MavenCoordinates,
-  messageTypes,
-  nexusArtifact,
-  NexusFormat,
-  setArtifact,
-  settings,
-  SetHash,
-  setHasVulns,
-  styleCVSS
-};

@@ -17,15 +17,16 @@ beforeAll(async () => {
 afterAll(async () => {
   await browser.close();
 });
+describe.skip("testing the Background page", () => {
+  test("Background Page", async () => {
+    const targets = await browser.targets();
+    const backgroundPageTarget = targets.find(
+      target => target.type() === "background_page"
+    );
+    const backgroundPage = await backgroundPageTarget.page();
+    // Test the background page as you would any other page.
 
-test("Background Page", async () => {
-  const targets = await browser.targets();
-  const backgroundPageTarget = targets.find(
-    target => target.type() === "background_page"
-  );
-  const backgroundPage = await backgroundPageTarget.page();
-  // Test the background page as you would any other page.
-
-  //how to write a test of the bg page?
-  // Can we navigate to a chrome-extension page? YES!
-}, 5000);
+    //how to write a test of the bg page?
+    // Can we navigate to a chrome-extension page? YES!
+  }, 5000);
+});

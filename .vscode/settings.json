@@ -5,9 +5,14 @@
         "predef": ["browser", "chrome", "btoa",
             "document", "window", "navigator", "location"
         ],
-        "enable": false
+        "enable": true
     },
     "jest.runAllTestsFirst": false,
     "jest.autoEnable": false,
-    "jest.showCoverageOnLoad": false
+    "jest.showCoverageOnLoad": false,
+    "json.schemas": [{
+        "fileMatch": ["../src/manifest.json", "../src/manifest_chrome.json", "../src/manifest_firefox.json"],
+        "url": "http: //json.schemastore.org/chrome-manifest"
+    }]
+
 }
