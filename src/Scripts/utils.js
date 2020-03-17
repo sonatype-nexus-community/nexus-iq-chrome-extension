@@ -1362,7 +1362,7 @@ const GetCVEDetails = async (cve, nexusArtifact, settings) => {
   return { cvedetail: retVal };
 };
 
-const callServer = async valueCSRF => {
+const callServer = async (valueCSRF, artifact, settings) => {
   console.log("callServer", valueCSRF, artifact, settings);
   nexusArtifact = NexusFormat(artifact);
   console.log("nexusArtifact", nexusArtifact);
@@ -1476,6 +1476,7 @@ const beginEvaluation = async tab => {
   }
 };
 const evaluateComponent = async (artifact, settings) => {
+  console.log("evaluateComponent", artifact, settings);
   try {
     let resp;
     switch (artifact.datasource) {
@@ -1520,7 +1521,7 @@ const evaluatePackage = async (artifact, settings) => {
     return;
   }
   valueCSRF = cookie.value;
-  let displayMessage = await callServer(valueCSRF);
+  let displayMessage = await callServer(valueCSRF, artifact, settings);
   return displayMessage;
   // } catch (error) {
   //   console.log("evaluatePackage-Error", error);
@@ -1529,41 +1530,6 @@ const evaluatePackage = async (artifact, settings) => {
   //   console.log("evaluatePackage-finally");
   // }
 };
-////////////////
-
-const executeScripts = (tabId, injectDetailsArray) => {
-  console.log("executeScripts(tabId, injectDetailsArray)", tabId);
-
-  function createCallback(tabId, injectDetails, innerCallback) {
-    return function() {
-      browser.tabs.executeScript(tabId, injectDetails, innerCallback);
-    };
-  }
-
-  var callback = null;
-
-  for (var i = injectDetailsArray.length - 1; i >= 0; --i)
-    callback = createCallback(tabId, injectDetailsArray[i], callback);
-
-  if (callback !== null) callback(); // execute outermost function
-};
-
-const installScripts = (tab, message) => {
-  console.log("begin installScripts", tab, message);
-  // var background = browser.extension.getBackgroundPage();
-  // background.message = message;
-  // console.log("sending message:", message);
-  executeScripts(null, [
-    { file: "Scripts/lib/jquery.min.js" },
-    { file: "Scripts/utils_original.js" },
-    // { code: "var message = " + message  + ";"},
-    { file: "Scripts/content.js" },
-    { code: "processPage();" }
-  ]);
-  // browser.tabs.sendMessage(tab.tabId, message);
-  console.log("end installScripts");
-};
-/////////////
 
 const getRemediation = async (nexusArtifact, settings) => {
   console.log("getRemediation", nexusArtifact, settings);
@@ -2026,6 +1992,42 @@ const setHasVulns = flag => {
 const setArtifact = respMessageArtifact => {
   artifact = respMessageArtifact;
 };
+
+////////////////
+
+const executeScripts = (tabId, injectDetailsArray) => {
+  console.log("executeScripts(tabId, injectDetailsArray)", tabId);
+
+  function createCallback(tabId, injectDetails, innerCallback) {
+    return function() {
+      browser.tabs.executeScript(tabId, injectDetails, innerCallback);
+    };
+  }
+
+  var callback = null;
+
+  for (var i = injectDetailsArray.length - 1; i >= 0; --i)
+    callback = createCallback(tabId, injectDetailsArray[i], callback);
+
+  if (callback !== null) callback(); // execute outermost function
+};
+
+const installScripts = (tab, message) => {
+  console.log("begin installScripts", tab, message);
+  // var background = browser.extension.getBackgroundPage();
+  // background.message = message;
+  // console.log("sending message:", message);
+  executeScripts(null, [
+    { file: "Scripts/lib/jquery.min.js" },
+    { file: "Scripts/utils_original.js" },
+    // { code: "var message = " + message  + ";"},
+    { file: "Scripts/content.js" },
+    { code: "processPage();" }
+  ]);
+  // browser.tabs.sendMessage(tab.tabId, message);
+  console.log("end installScripts");
+};
+/////////////
 
 if (typeof module !== "undefined") {
   module.exports = {

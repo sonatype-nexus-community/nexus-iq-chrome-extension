@@ -59,7 +59,9 @@ var messageTypes = {
   beginEvaluate: "beginEvaluate", //message to send that we are beginning the evaluation process, it's different to the evaluatew message for a readon that TODO I fgogot
   artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
   evaluateComponent: "evaluateComponent", //used to evaluate on the popup only
+  vulnerability: "vulnerability", // vuln scan results
   error: "error", //used to pass errors from background and content script to the popup
+
   annotateComponent: "annotateComponent"
 };
 class Component {
@@ -82,7 +84,7 @@ class NPMCoordinates extends Coordinates {
   }
 }
 
-class MavenCoodinates extends Coordinates {
+class MavenCoordinates extends Coordinates {
   constructor(groupId, artifactId, version) {
     // console.log("groupId", groupId);
     super();
@@ -368,6 +370,10 @@ const getDomainName = servername => {
   }
   server = server.substring(0, rightPart + 1);
   //".iq-server"
+  //fix trailing backslash bug.
+  if (server.substring(server.length - 1) === "/") {
+    server = server.substring(0, server.length - 1);
+  }
   let domain = "." + server;
   return domain;
 };
@@ -1356,7 +1362,7 @@ const GetCVEDetails = async (cve, nexusArtifact, settings) => {
   return { cvedetail: retVal };
 };
 
-const callServer = async valueCSRF => {
+const callServer = async (valueCSRF, artifact, settings) => {
   console.log("callServer", valueCSRF, artifact, settings);
   nexusArtifact = NexusFormat(artifact);
   console.log("nexusArtifact", nexusArtifact);
@@ -1470,6 +1476,7 @@ const beginEvaluation = async tab => {
   }
 };
 const evaluateComponent = async (artifact, settings) => {
+  console.log("evaluateComponent", artifact, settings);
   try {
     let resp;
     switch (artifact.datasource) {
@@ -1501,19 +1508,20 @@ const evaluatePackage = async (artifact, settings) => {
   console.log("evaluatePackage", artifact, settings.auth);
   let servername = settings.baseURL;
   let domain = getDomainName(servername);
+  console.log("domain", domain);
   let cookie = await GetCookie(domain, xsrfCookieName);
   console.log("cookie", cookie);
   if (typeof cookie === "undefined") {
     console.log("handled missing cookie");
     //server is not up most probably
-    //do we throw an error here or exit graceully
+    //do we throw an error here or exit gracefully
     throw new Error(
       `Cookie not available. Server ${servername} is probably down`
     );
     return;
   }
   valueCSRF = cookie.value;
-  let displayMessage = await callServer(valueCSRF);
+  let displayMessage = await callServer(valueCSRF, artifact, settings);
   return displayMessage;
   // } catch (error) {
   //   console.log("evaluatePackage-Error", error);
@@ -1522,41 +1530,6 @@ const evaluatePackage = async (artifact, settings) => {
   //   console.log("evaluatePackage-finally");
   // }
 };
-////////////////
-
-const executeScripts = (tabId, injectDetailsArray) => {
-  console.log("executeScripts(tabId, injectDetailsArray)", tabId);
-
-  function createCallback(tabId, injectDetails, innerCallback) {
-    return function() {
-      browser.tabs.executeScript(tabId, injectDetails, innerCallback);
-    };
-  }
-
-  var callback = null;
-
-  for (var i = injectDetailsArray.length - 1; i >= 0; --i)
-    callback = createCallback(tabId, injectDetailsArray[i], callback);
-
-  if (callback !== null) callback(); // execute outermost function
-};
-
-const installScripts = (tab, message) => {
-  console.log("begin installScripts", tab, message);
-  // var background = browser.extension.getBackgroundPage();
-  // background.message = message;
-  // console.log("sending message:", message);
-  executeScripts(null, [
-    { file: "Scripts/lib/jquery.min.js" },
-    { file: "Scripts/utils_original.js" },
-    // { code: "var message = " + message  + ";"},
-    { file: "Scripts/content.js" },
-    { code: "processPage();" }
-  ]);
-  // browser.tabs.sendMessage(tab.tabId, message);
-  console.log("end installScripts");
-};
-/////////////
 
 const getRemediation = async (nexusArtifact, settings) => {
   console.log("getRemediation", nexusArtifact, settings);
@@ -1565,7 +1538,7 @@ const getRemediation = async (nexusArtifact, settings) => {
   console.log("getRemediation: url", url);
   let response = await axios(url, {
     method: "post",
-    data: nexusArtifact.component,
+    data: nexusArtifact.components[0],
     withCredentials: true,
     auth: {
       username: settings.username,
@@ -1647,6 +1620,7 @@ const addDataOSSIndex = async artifact => {
   let name = artifact.name;
   let version = artifact.version;
   let OSSIndexURL;
+  let responseVal;
   if (artifact.format == formats.golang) {
     //Example: pkg:github/etcd-io/etcd@3.3.1
     //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
@@ -2011,8 +1985,49 @@ const SetHash = hash => {
   artifact.hash = hash;
 };
 const setHasVulns = flag => {
+  console.log("hasVulns-before", hasVulns);
   hasVulns = flag;
+  console.log("hasVulns-after", hasVulns);
 };
+const setArtifact = respMessageArtifact => {
+  artifact = respMessageArtifact;
+};
+
+////////////////
+
+const executeScripts = (tabId, injectDetailsArray) => {
+  console.log("executeScripts(tabId, injectDetailsArray)", tabId);
+
+  function createCallback(tabId, injectDetails, innerCallback) {
+    return function() {
+      browser.tabs.executeScript(tabId, injectDetails, innerCallback);
+    };
+  }
+
+  var callback = null;
+
+  for (var i = injectDetailsArray.length - 1; i >= 0; --i)
+    callback = createCallback(tabId, injectDetailsArray[i], callback);
+
+  if (callback !== null) callback(); // execute outermost function
+};
+
+const installScripts = (tab, message) => {
+  console.log("begin installScripts", tab, message);
+  // var background = browser.extension.getBackgroundPage();
+  // background.message = message;
+  // console.log("sending message:", message);
+  executeScripts(null, [
+    { file: "Scripts/lib/jquery.min.js" },
+    { file: "Scripts/utils.js" },
+    // { code: "var message = " + message  + ";"},
+    { file: "Scripts/content.js" },
+    { code: "processPage();" }
+  ]);
+  // browser.tabs.sendMessage(tab.tabId, message);
+  console.log("end installScripts");
+};
+/////////////
 
 if (typeof module !== "undefined") {
   module.exports = {
@@ -2037,12 +2052,14 @@ if (typeof module !== "undefined") {
     GetCookie: GetCookie,
     GetCVEDetails: GetCVEDetails,
     GetSettings: GetSettings,
+    getDomainName: getDomainName,
     getExtensionVersion: getExtensionVersion,
     getRemediation: getRemediation,
     getUserAgentHeader: getUserAgentHeader,
 
     jsDateToEpoch: jsDateToEpoch,
     MavenArtifact: MavenArtifact,
+    MavenCoordinates: MavenCoordinates,
     NexusFormat: NexusFormat,
     NexusFormatMaven: NexusFormatMaven,
     NexusFormatNPM: NexusFormatNPM,
@@ -2070,6 +2087,7 @@ if (typeof module !== "undefined") {
     removeCookies: removeCookies,
     SetHash: SetHash,
     setHasVulns: setHasVulns,
+    setArtifact: setArtifact,
     styleCVSS: styleCVSS
   };
 }

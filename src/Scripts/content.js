@@ -2,7 +2,7 @@
 "use strict";
 
 console.log("contentscript.js");
-// import * as utils from "./utils.js";
+// import { formats } as utils from "./utils.js";
 
 var browser;
 var message;
@@ -16,6 +16,11 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   try {
     console.log("gotMessage", receivedMessage);
     message = receivedMessage;
+    console.log(
+      "messageTypes.vulnerability",
+      message.messagetype,
+      message.messagetype === messageTypes.vulnerability
+    );
     switch (message.messagetype) {
       case messageTypes.beginEvaluate:
         console.debug("begin evaluate message");
@@ -39,10 +44,12 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   }
 }
 function processVulnerability(message) {
+  console.log("processVulnerability", message);
   let vulnClass = message.message.vulnClass;
   console.debug("Setting vuln class: " + vulnClass);
   console.debug("browser: ", browser);
   var repoDetails = findRepoType();
+  console.log("repoDetails", repoDetails);
   if (repoDetails) {
     var x = document.querySelectorAll(repoDetails.titleSelector);
     console.debug("found titles", x);

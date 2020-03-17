@@ -1,7 +1,15 @@
 /*jslint es6  -W024 */
 "use strict";
 console.log("background.js");
-import { checkPageIsHandled, beginEvaluation } from "./utils.js";
+import {
+  checkPageIsHandled,
+  beginEvaluation,
+  messageTypes,
+  BuildSettingsFromGlobal,
+  evaluateComponent,
+  GetActiveTab
+} from "./utils.js";
+
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -18,7 +26,7 @@ const gotMessage = async (message, sender, sendResponse) => {
   // var settings;
   var retval;
   var baseURL, username, password;
-  // var artifact;
+  let artifact;
   // console.log('message')
   // console.log(message)
   switch (message.messagetype) {
@@ -31,7 +39,7 @@ const gotMessage = async (message, sender, sendResponse) => {
         artifact: artifact,
         messagetype: messageTypes.evaluateComponent
       };
-      await BuildSettingsFromGlobal();
+      let settings = await BuildSettingsFromGlobal();
       console.log("settings", settings);
       let displayMessage = await evaluateComponent(artifact, settings);
       let tab = await GetActiveTab();
