@@ -41,7 +41,7 @@ const {
   PyPIArtifact
 } = require("../src/Scripts/utils");
 
-test("evaluatePackage does not throw error when server down", async () => {
+xtest("evaluatePackage does not throw error when server down", async () => {
   let message = false;
   try {
     let artifact = {
@@ -105,23 +105,23 @@ const BuildSettingsHelper = () => {
 };
 
 test("Can BuildSettings", () => {
-  // let baseURL = "http://localhost:8070";
-  // let username = "happy";
-  // let password = "world";
-  // let appId = "sand";
-  // let appInternalId = "box";
+  let baseURL = "http://localhost:8070";
+  let username = "happy";
+  let password = "world";
+  let appId = "sand";
+  let appInternalId = "box";
 
-  // let tok = `${username}:${password}`;
-  // let hash = btoa(tok);
-  // let auth = "Basic " + hash;
-  // let restEndPoint = "api/v2/components/details";
-  // if (baseURL.substring(baseURL.length - 1) !== "/") {
-  //   baseURL = baseURL + "/";
-  // }
-  // let url = baseURL + restEndPoint;
-  // //login end point
-  // let loginEndPoint = "rest/user/session";
-  // let loginurl = baseURL + loginEndPoint;
+  let tok = `${username}:${password}`;
+  let hash = btoa(tok);
+  let auth = "Basic " + hash;
+  let restEndPoint = "api/v2/components/details";
+  if (baseURL.substring(baseURL.length - 1) !== "/") {
+    baseURL = baseURL + "/";
+  }
+  let url = baseURL + restEndPoint;
+  //login end point
+  let loginEndPoint = "rest/user/session";
+  let loginurl = baseURL + loginEndPoint;
 
   //whenDone(settings);
   let expected = {
