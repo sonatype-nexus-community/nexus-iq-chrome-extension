@@ -473,6 +473,9 @@ const renderComponentData = message => {
     case utils.formats.golang:
       $("#package").html(coordinates.name);
       break;
+    case utils.formats.rpm:
+      $("#package").html(coordinates.name);
+      break;
 
     default:
       $("#package").html("Unknown format");

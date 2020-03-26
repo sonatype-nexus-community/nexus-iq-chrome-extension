@@ -656,8 +656,17 @@ browser.runtime.onInstalled.addListener(function() {
 
           new browser.declarativeContent.PageStateMatcher({
             css: ["label.x-component"]
+          }),
+          //https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "rpmfind.net",
+              schemes: ["https"],
+              pathContains: "linux/RPM/epel"
+            }
           })
         ],
+
         actions: [new browser.declarativeContent.ShowPageAction()]
       }
     ]);
@@ -688,4 +697,18 @@ function displayEvaluationReults(displayMessageData, tabId) {
 
 function receiveText(resultsArray) {
   console.log(resultsArray[0]);
+}
+
+chrome.contextMenus.create({
+  title: "Scan with NexusIQ",
+  contexts: ["link"], // ContextType
+  onclick: searchUrbanDict // A callback function
+});
+
+function searchUrbanDict(word) {
+  var query = word.selectionText;
+  alert(word.selectionText);
+  // chrome.tabs.create({
+  //   url: "http://www.urbandictionary.com/define.php?term=" + query
+  // });
 }

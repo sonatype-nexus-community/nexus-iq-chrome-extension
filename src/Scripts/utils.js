@@ -24,7 +24,8 @@ var formats = {
   cran: "cran",
   cargo: "cargo", //cargo == crates == rust
   golang: "golang",
-  github: "github"
+  github: "github",
+  rpm: "rpm"
 };
 
 //This is the format in nexus repo for proxy repos
@@ -233,7 +234,8 @@ const checkPageIsHandled = url => {
       url.search("/releases/tag/") >= 0) || //https://github.com/jquery/jquery/releases/tag/3.0.0
     url.search("/webapp/#/artifacts/") >= 0 || //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
     url.search("/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
-    url.search("/#browse/browse:") >= 0 //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
+    url.search("/#browse/browse:") >= 0 || //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
+    url.search("https://rpmfind.net/linux/RPM/epel/7/") >= 0
   ) {
     found = true;
   }
@@ -322,7 +324,10 @@ const ParsePageURL = url => {
   // http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
   else if (url.search("#browse/browse:") >= 0) {
     artifact = parseNexusRepoURL(url);
+  } else if (url.search("https://rpmfind.net/linux/RPM/epel/") >= 0) {
+    artifact = parseRPMRepoURL(url);
   }
+
   console.log("ParsePageURL Complete. artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
@@ -456,6 +461,10 @@ const NexusFormat = artifact => {
     case formats.golang:
       requestdata = NexusFormatGolang(artifact);
       break;
+    case formats.rpm:
+      requestdata = NexusFormatRPM(artifact);
+      break;
+
     default:
       console.log("Unexpected format", format);
       return;
@@ -596,6 +605,30 @@ const NexusFormatGolang = artifact => {
           coordinates: {
             name: `${artifact.type}/${artifact.namespace}/${artifact.name}`,
             version: artifact.version
+          }
+        }
+      })
+    ]
+  };
+  return componentDict;
+};
+
+const NexusFormatRPM = artifact => {
+  //return a dictionary in Nexus Format
+  //return dictionary of components
+  // "name": "github.com/gorilla/mux",
+  //"version": "v1.7.0"
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.name}`,
+            version: artifact.version,
+            architecture: artifact.architecture
           }
         }
       })
@@ -1179,7 +1212,40 @@ const parseArtifactoryURL = url => {
   console.log("artifact", artifact);
   return artifact;
 };
+/////////////////////////
 
+const parseRPMRepoURL = url => {
+  console.log("parseRPMRepoURL", url);
+  //https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
+  let format = formats.rpm;
+  let datasource = dataSources.NEXUSIQ;
+  let name, version, architecture;
+  //11 components
+  let elements = url.split("/");
+  let artifact;
+  if (elements.length < 6) {
+    //current version is inside the dom
+
+    //return falsy
+    artifact = "";
+  } else {
+    //https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
+    name = "mysql-proxy"; //elements[10];
+    version = "0.8.5-2.el7"; //elements[10];
+    architecture = "x86_64";
+    name = encodeURIComponent(name);
+    version = encodeURIComponent(version);
+    artifact = {
+      format: format,
+      name: name,
+      version: version,
+      architecture: architecture,
+      datasource: datasource
+    };
+  }
+  return artifact;
+};
+////////////////////////
 ////////Parse DOM/////////
 
 function parseNPM(format, url) {

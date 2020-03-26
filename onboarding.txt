@@ -1,0 +1,43 @@
+add backround.js
+browser.runtime.onInstalled.addListener(function() {
+,
+          //https://github.com/jquery/jquery/releases/tag/3.0.0
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "github.com",
+              schemes: ["https"],
+              pathContains: "releases/tag"
+            }
+          })
+
+--utils.js
+-checkPageIsHandled
+-ParsePageURL
+--add parseRPMRepoURL
+--add formats.rpm
+--add case to NexusFormat
+--add method to NexusFormatRPM
+--add case to renderComponentData
+
+https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
+
+https://rpmfind.net/linux/RPM/openmandriva/3.0/i586/contrib/release/mysql-5.6.23-2.i586.html
+
+https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/m/
+https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/m/mysql-connector-python-1.1.6-1.el7.noarch.rpm
+
+{
+    "components": [
+        {
+            "hash": null,
+            "componentIdentifier": {
+                "format": "rpm",
+                "coordinates": {
+                    "name": "mysql-proxy",
+                    "version": "0.8.5-2.el7",
+                    "architecture": "x86_64"
+                }
+            }
+        }
+    ]
+}

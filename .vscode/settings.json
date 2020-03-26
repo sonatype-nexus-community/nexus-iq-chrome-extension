@@ -1,18 +1,25 @@
 {
-    "jshint.options": {
-        "esversion": 9,
-        "node": true,
-        "predef": ["browser", "chrome", "btoa",
-            "document", "window", "navigator", "location"
-        ],
-        "enable": true
-    },
-    "jest.runAllTestsFirst": false,
-    "jest.autoEnable": false,
-    "jest.showCoverageOnLoad": false,
-    "json.schemas": [{
-        "fileMatch": ["../src/manifest.json", "../src/manifest_chrome.json", "../src/manifest_firefox.json"],
-        "url": "http: //json.schemastore.org/chrome-manifest"
-    }]
-
+  "jshint.options": {
+    "esversion": 9,
+    "node": true,
+    "predef": [
+      "browser",
+      "chrome",
+      "btoa",
+      "document",
+      "window",
+      "navigator",
+      "location"
+    ],
+    "enable": true
+  },
+  "jest.runAllTestsFirst": false,
+  "jest.autoEnable": false,
+  "jest.showCoverageOnLoad": false,
+  "json.schemas": [
+    {
+      "fileMatch": ["../src/manifest.json", "../src/manifest_chrome.json"],
+      "url": "http://json.schemastore.org/chrome-manifest"
+    }
+  ]
 }
