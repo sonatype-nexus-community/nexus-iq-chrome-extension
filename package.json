@@ -1,14 +1,20 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "1.7.8",
+  "version": "0.0.1-semantic-release",
   "description": "Chrome Extension for IQ Validation",
   "main": "background.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "semantic-release": "semantic-release",
+    "doc": "jsdoc -c jsdoc.json"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ctownshend/chrome-extension-nexus-iq.git"
+    "url": "https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git"
   },
   "keywords": [
     "IQ",
@@ -24,6 +30,15 @@
   },
   "homepage": "https://github.com/ctownshend/chrome-extension-nexus-iq#readme",
   "devDependencies": {
-    "jest": "^24.5.0"
-  }
+    "@semantic-release/changelog": "^3.0.6",
+    "@semantic-release/git": "^7.0.18",
+    "@semantic-release/github": "^5.5.5",
+    "jest": "^24.8.0",
+    "jsdoc": "^3.6.3",
+    "puppeteer": "^2.0.0",
+    "selenium-webdriver": "^4.0.0-alpha.5",
+    "semantic-release": "^15.13.31",
+    "semantic-release-chrome": "^1.1.3"
+  },
+  "dependencies": {}
 }

@@ -1,0 +1,32 @@
+{
+  "source": {
+    "include": [
+      "src/Scripts/background.js",
+      "src/Scripts/content.js",
+      "src/Scripts/options.js",
+      "src/Scripts/popup.js",
+      "src/Scripts/utils.js"
+    ]
+  },
+  "exclude": [
+    "src/scripts/jquery.min.js",
+    "src/scripts/jquery.event.drag-2.3.0.js",
+    "src/scripts/jquery-ui-1.12.1",
+    "src/scripts/jquery-ui-themes-1.12.1",
+    "src/scripts/appcheck.js",
+    "src/scripts/axios.min.js",
+    "src/scripts/protovis.min.js"
+  ],
+  "includePattern": ".+\\.js(doc|x)?$",
+  "excludePattern": "(node_modules|docs|jquery)",
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+  },
+
+  "opts": {
+    "encoding": "utf8",
+    "destination": "./docs/",
+    "recurse": true
+  }
+}

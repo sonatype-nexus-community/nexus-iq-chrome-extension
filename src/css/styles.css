@@ -1,0 +1,572 @@
+body {
+    width: 600px;
+    height: 400px;
+    margin: 2px;
+    padding: 2px;
+    /* background:url(pic1.jpg); */
+    /* background-size: cover; */
+    /* background-position: center; */
+    font-family: sans-serif;
+    border-radius: 5px;
+    border-color: cornflowerblue;
+    border-width: 2px;
+}
+
+#dialog {
+    background-color: white;
+    font-size: 1.33em;
+    /* width: 500px; */
+
+}
+
+#response {
+    width: 300px;
+    height: 300px;
+    /* border: 1px solid blue;  */
+    background-color: lightgrey
+}
+
+#error {
+    width: 300px;
+    height: 100px;
+    color: red;
+    padding: 20px;
+    margin: 20px;
+    font-size: 16px;
+}
+
+#error p {
+    color: red;
+}
+
+.loginbox {
+    width: 300px;
+    height: 400px;
+    background: cadetblue;
+    /* background-color: whitesmoke;  */
+    color: #fff;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 70px 30px;
+    /* background-position: center; */
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+}
+
+.loginbox h1 {
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.loginbox p {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.loginbox input {
+    width: 100%;
+    margin-bottom: 20px;
+
+}
+
+
+.loginbox input[type=submit] {
+    border: none;
+    outline: none;
+    height: 40px;
+    background: #fb2525;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 20px;
+}
+
+.loginbox input[type=submit]:hover {
+    cursor: pointer;
+    background: #ffc107;
+    color: #fff;
+
+}
+
+.invisible {
+    visibility: hidden;
+    position: absolute;
+    top: -9999px;
+}
+
+.visible {
+    visibility: visible;
+    position: static;
+}
+
+button {
+    height: 30px;
+    width: 30px;
+    outline: none;
+    margin: 10px;
+}
+
+.optionstable {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: medium;
+    border-radius: 4px;
+    border-color: blueviolet;
+    border-spacing: 0px;
+    border: 2px;
+}
+
+table {
+    border-spacing: 0px;
+}
+
+#remediation {
+    color: grey;
+    font-size: 1.3em;
+}
+
+.optionstable td,
+.optionstable th {
+    /* border: 1px solid #ddd; */
+    padding: 4px;
+}
+
+.optionstable tr {
+    background-color: white;
+}
+
+
+.optionstable tr:nth-child(even) {
+    /* background-color: rgb(216, 228, 250); */
+    background-color: white;
+}
+
+.optionstable tr:nth-child(odd) {
+    background-color: white;
+}
+
+/* .optionstable tr:hover {
+    background-color: white;
+} */
+
+.optionstable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#password {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    background: transparent;
+    outline: none;
+    /* height:40px; */
+    color: #2f4f4f;
+    font-size: 16px;
+}
+
+#appId {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    background: transparent;
+    outline: none;
+    /* height:40px; */
+    color: #2f4f4f;
+    font-size: 16px;
+}
+
+input[type=text],
+input[type=password] select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    background: transparent;
+    outline: none;
+    /* height:40px; */
+    color: #2f4f4f;
+    font-size: 16px;
+
+}
+
+
+
+input[type=submit],
+input[type=reset],
+input[type=button] {
+    width: 100%;
+    background-color: rgb(25, 74, 209);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=button] {
+    background-color: rgb(25, 74, 209);
+}
+
+input[type=submit]:hover {
+    background-color: rgb(25, 74, 209);
+}
+
+div .optionstable {
+    border-radius: 5px;
+    background-color: white;
+    padding: 20px;
+}
+
+.label {
+    /* font-style: italic; */
+    text-align: right;
+    font-size: medium;
+}
+
+.data {
+    font-weight: bold;
+    text-align: left;
+    overflow: scroll;
+    font-size: medium;
+}
+
+.headingseverity {
+    float: right;
+    padding: 2px 0px 2px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 80px;
+    font-size: 1.2em;
+    border-radius: 2px;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+.headingreference {
+    float: left;
+    font-size: 1.2em;
+}
+
+
+.criticalSeverity {
+    /* color: red; */
+    /* font-weight:bold; */
+    background-color: red;
+}
+
+.highSeverity {
+    background-color: #fb2525;
+
+}
+
+.mediumSeverity {
+    background-color: rgb(243, 134, 45);
+
+}
+
+.lowSeverity {
+    background-color: rgb(240, 210, 76);
+
+}
+
+.noneSeverity {
+    background-color: silver;
+
+}
+
+.numissues {
+    padding: 1px;
+    margin: 1px;
+
+}
+
+.maxIssue {
+    padding: 0px 5px 0px 5px;
+    margin: 2px;
+    border-radius: 2px;
+    color: white;
+
+}
+
+
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid white;
+    border-radius: 50%;
+    border-top: 16px solid white;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+.loader {
+    height: 600px;
+    width: 600px;
+
+
+}
+
+.loader img {
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    overflow: hidden;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+    from {
+        bottom: -100px;
+        opacity: 0
+    }
+
+    to {
+        bottom: 0px;
+        opacity: 1
+    }
+}
+
+@keyframes animatebottom {
+    from {
+        bottom: -100px;
+        opacity: 0
+    }
+
+    to {
+        bottom: 0;
+        opacity: 1
+    }
+}
+
+#tabs {
+    display: none;
+    text-align: center;
+
+    padding: 0px;
+    background: none;
+    border-width: 0px;
+}
+
+#tabs .ui-tabs-nav {
+    padding-left: 0px;
+    background: transparent;
+    border-width: 0px 0px 1px 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+
+#tabs .ui-tabs-panel {
+    background: white;
+    border-width: 0px 1px 1px 1px;
+    border-color: rgb(39, 102, 173);
+    border-radius: 5px;
+    border-width: 2px;
+    margin: 10px 0px 0px 0px;
+}
+
+
+a img {
+    width: 16px;
+    height: 16px;
+    padding: 2px 0px 0px 2px;
+}
+
+.slick-grid {
+    width: "100%";
+    /* width: 600px;  */
+    height: 500px;
+    overflow: auto;
+    outline: 1px;
+    position: relative;
+    /* overflow-y: scroll; */
+}
+
+#myGrid div.slick-viewport {
+    overflow-y: scroll !important;
+    overflow: auto;
+}
+
+/* .slick-viewport {
+    overflow-y: scroll !important;
+} */
+
+.code,
+code {
+    font-family: Consolas, monaco, monospace;
+}
+
+div.slick-cell.l0.r0 {
+    font-family: Consolas, monaco, monospace;
+}
+
+.current-version {
+    color: burlywood;
+}
+
+.remediation-version {
+    color: white;
+    background: lawngreen;
+}
+
+.ui-widget-content.slick-row.current-version {
+    background-color: burlywood;
+}
+
+
+.ui-widget-content.slick-row.remediation-version {
+    background-color: lawngreen;
+}
+
+.ui-widget-content.slick-row.odd {
+    background-color: white;
+}
+
+.ui-widget-content.slick-row.even {
+    background-color: whitesmoke;
+}
+
+.grid-canvas {
+    overflow-y: scroll;
+}
+
+.component-tab {
+    border: blue;
+    border-radius: 4px;
+    background-color: pink;
+}
+
+.info-display {
+    border: salmon;
+
+}
+
+/* This is for the CVSS lookup */
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 280px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    padding: 10px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/*TODO: Swap this out to none after demo*/
+/* This will put a hand cursor over the rectangles in the Version history*/
+/* rect {
+    cursor: pointer;
+} */

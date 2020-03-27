@@ -1,0 +1,10 @@
+{
+    "jshint.options": {
+        "esversion": 9,
+        "node": true,
+        "predef": ["browser", "chrome", "btoa",
+            "document", "window", "navigator", "location"
+        ],
+        "enable": false
+    }
+}

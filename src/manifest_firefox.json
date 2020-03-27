@@ -1,0 +1,68 @@
+{
+  "name": "Sonatype Nexus IQ Evaluation",
+  "description": "Sonatype Nexus IQ Evaluation-community developed",
+  "author": "Cameron Townshend - ctownshend@sonatype.com",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "permissions": [
+    "notifications",
+    "storage",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "cookies",
+    "tabs",
+    "https://search.maven.org/",
+    "https://mvnrepository.com/",
+    "https://repo1.maven.org/",
+    "http://repo2.maven.org/",
+    "https://www.npmjs.com/",
+    "https://www.nuget.org/",
+    "https://rubygems.org/",
+    "https://pypi.org/",
+    "https://packagist.org/",
+    "https://cran.r-project.org/",
+    "https://crates.io/",
+    "https://search.gocenter.io/",
+    "https://ossindex.sonatype.org/",
+    "https://github.com/",
+    "*://*/*"
+  ],
+  "background": {
+    "scripts": [
+      "Scripts/lib/jquery.min.js",
+      "Scripts/lib/axios.min.js",
+      "Scripts/utils.js",
+      "Scripts/background.js"
+    ],
+    "persistent": true
+  },
+  "page_action": {
+    "default_popup": "html/popup.html",
+
+    "default_icon": {
+      "16": "images/SON_logo_favicon.png",
+      "32": "images/SON_logo_favicon.png",
+      "48": "images/SON_logo_favicon.png",
+      "128": "images/SON_logo_favicon.png"
+    },
+    "show_matches": ["<all_urls>"]
+  },
+  "icons": {
+    "16": "images/SON_logo_favicon.png",
+    "32": "images/SON_logo_favicon.png",
+    "48": "images/SON_logo_favicon.png",
+    "128": "images/SON_logo_favicon.png"
+  },
+  "options_ui": {
+    "page": "html/options.html?ver=1.8.1",
+    "open_in_tab": false
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ctownshend@sonatype.com",
+      "strict_min_version": "42.0"
+    }
+  }
+}
