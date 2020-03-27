@@ -3,8 +3,5 @@ node_modules
 .circleci/zzconfig.yml
 .circleci/local-config.yml
 coverage
-<<<<<<< HEAD
 data
-=======
 .idea/*
->>>>>>> 6fe97afd3b1d90597d85ba3fd8a7e89f85a5490f
