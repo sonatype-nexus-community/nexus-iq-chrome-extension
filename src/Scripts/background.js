@@ -698,17 +698,3 @@ function displayEvaluationReults(displayMessageData, tabId) {
 function receiveText(resultsArray) {
   console.log(resultsArray[0]);
 }
-
-chrome.contextMenus.create({
-  title: "Scan with NexusIQ",
-  contexts: ["link"], // ContextType
-  onclick: searchUrbanDict // A callback function
-});
-
-function searchUrbanDict(word) {
-  var query = word.selectionText;
-  alert(word.selectionText);
-  // chrome.tabs.create({
-  //   url: "http://www.urbandictionary.com/define.php?term=" + query
-  // });
-}
