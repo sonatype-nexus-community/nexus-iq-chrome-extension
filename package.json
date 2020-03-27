@@ -24,7 +24,7 @@
     "Lifecycle"
   ],
   "author": "Cameron Townshend",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/ctownshend/chrome-extension-nexus-iq/issues"
   },
