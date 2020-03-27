@@ -1,4 +1,6 @@
 /*jslint es6  -W024 */
+import * as utils from "./utils.js";
+
 window.onload = function() {
   console.log("window.onload");
   message("");
@@ -6,10 +8,16 @@ window.onload = function() {
 
   // document.getElementById('url').focus();
   document.getElementById("cancel").onclick = function() {
-    var ok = true;
-    if (ok) {
-      // open(location, "_self").close();
-      window.close();
+    try {
+      var ok = true;
+      if (ok) {
+        window.close();
+      }
+    } catch (error) {
+      //if error then tell them that this browser does not allow closing popups
+      alert(
+        "Closing forms not allowed by this browser. You will need to close the tab yourself."
+      );
     }
   };
   document.getElementById("login").onclick = function() {
@@ -148,6 +156,7 @@ function addApps(url, username, password, appId, appInternalId) {
       console.log(data.data.applicationSummaries);
       let apps = data.data.applicationSummaries;
       let i = 1;
+      $("#appId").empty();
       apps.forEach(element => {
         $("#appId").append(
           $("<option>", {
@@ -161,6 +170,7 @@ function addApps(url, username, password, appId, appInternalId) {
       document.getElementById("appId").disabled = false;
       // console.log($("#appId").value)
       message("Login successful");
+      return $("#appId").length;
     })
     .catch(appError => {
       console.error(appError);

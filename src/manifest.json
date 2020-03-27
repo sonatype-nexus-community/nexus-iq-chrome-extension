@@ -31,6 +31,7 @@
     "https://github.com/",
     "*://*/*",
     "https://kit.fontawesome.com/"
+
   ],
   "content_scripts": [
     {
@@ -44,15 +45,22 @@
   ],
   "web_accessible_resources": [
     "images/*"
+
   ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.nuget.org/*",
+        "https://www.npmjs.com/*",
+        "https://search.maven.org/*",
+        "https://www.nuget.org/*"
+      ],
+      "css": ["css/pagestyle.css"]
+    }
+  ],
+  "web_accessible_resources": ["images/*"],
   "background": {
-    "scripts": [
-      "Scripts/lib/jquery.min.js",
-      "Scripts/lib/axios.min.js",
-      "Scripts/utils.js",
-      "Scripts/background.js"
-    ],
-    "persistent": true
+    "page": "html/background.html"
   },
   "page_action": {
     "default_popup": "html/popup.html",

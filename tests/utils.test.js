@@ -1,18 +1,29 @@
 /*jslint es6 */
 // import BuildEmptySettings from '../dist/Scripts/util';
 const {
+  Artifact,
   BuildEmptySettings,
   BuildSettings,
   checkPageIsHandled,
+  dataSources,
+  epochToJsDate,
+  encodeComponentIdentifier,
+  evaluatePackage,
+  formats,
+  GetActiveTab,
+  getDomainName,
+  getExtensionVersion,
+  getUserAgentHeader,
+  jsDateToEpoch,
+  MavenArtifact,
+  NPMArtifact,
+  NugetArtifact,
   NexusFormat,
   NexusFormatMaven,
   NexusFormatNPM,
   NexusFormatNuget,
   NexusFormatPyPI,
   NexusFormatRuby,
-  epochToJsDate,
-  jsDateToEpoch,
-  encodeComponentIdentifier,
   parseMavenURL,
   parseNPMURL,
   parseNugetURL,
@@ -27,16 +38,31 @@ const {
   parseGitHubURL,
   parseNexusRepoURL,
   ParsePageURL,
-  Artifact,
-  MavenArtifact,
-  NPMArtifact,
-  NugetArtifact,
-  PyPIArtifact,
-  formats,
-  dataSources,
-  getUserAgentHeader,
-  getExtensionVersion
+  PyPIArtifact
 } = require("../src/Scripts/utils");
+
+xtest("evaluatePackage does not throw error when server down", async () => {
+  let message = false;
+  try {
+    let artifact = {
+      format: "maven",
+      groupId: "commons-collections",
+      artifactId: "commons-collections",
+      version: "3.2.1",
+      extension: "jar",
+      classifier: "",
+      hash: null
+    };
+    let settings = BuildSettingsHelper();
+
+    let actual = await evaluatePackage(artifact, settings);
+    console.log("actual", actual);
+  } catch (error) {
+    message = error.message;
+    //Cannot read property 'cookies' of undefined
+    expect(message).not.toBeTruthy();
+  }
+});
 
 test("Can build empty Settings", () => {
   let actual = BuildEmptySettings();
@@ -54,6 +80,29 @@ test("Can build empty Settings", () => {
   };
   expect(expected).toEqual(actual);
 });
+
+const BuildSettingsHelper = () => {
+  let baseURL = "http://localhost:8070";
+  let username = "happy";
+  let password = "world";
+  let appId = "sand";
+  let appInternalId = "box";
+
+  let tok = `${username}:${password}`;
+  let hash = btoa(tok);
+  let auth = "Basic " + hash;
+  let restEndPoint = "api/v2/components/details";
+  if (baseURL.substring(baseURL.length - 1) !== "/") {
+    baseURL = baseURL + "/";
+  }
+  let url = baseURL + restEndPoint;
+  //login end point
+  let loginEndPoint = "rest/user/session";
+  let loginurl = baseURL + loginEndPoint;
+
+  let actual = BuildSettings(baseURL, username, password, appId, appInternalId);
+  return actual;
+};
 
 test("Can BuildSettings", () => {
   let baseURL = "http://localhost:8070";
@@ -90,7 +139,8 @@ test("Can BuildSettings", () => {
     appInternalId: appInternalId
   };
 
-  let actual = BuildSettings(baseURL, username, password, appId, appInternalId);
+  // let actual = BuildSettings(baseURL, username, password, appId, appInternalId);
+  let actual = BuildSettingsHelper();
   expect(expected.appId).toBe(actual.appId);
 });
 
@@ -1315,20 +1365,44 @@ test("Check ParsePageURL(crates.io) negative test", () => {
   expect(actual).toBeFalsy();
 });
 
+test("Check GetDomainName positive test", () => {
+  // GetDomainName ->
+
+  let expected = ".iq-server";
+  let url = "http://iq-server:8070";
+  let actual = getDomainName(url);
+  expect(actual).toEqual(expected);
+
+  //bug found by Stuart Bishop
+  url = "https://nexusiq.prd.gaff.systems/";
+  expected = ".nexusiq.prd.gaff.systems";
+  actual = getDomainName(url);
+  expect(actual).toEqual(expected);
+});
+
 test("Check GetActiveTab positive test", () => {
   // GetActiveTab
-
+  //TODO write a real test
   let actual = true;
   let expected = true;
   expect(actual).toEqual(expected);
 });
 
+describe.skip("chrome.tabs.update test", () => {
+  it("should have called a webextension API", () => {
+    chrome.tabs.update({
+      url: "https://example.com/"
+    });
+    expect(chrome.tabs.update).toHaveBeenCalled();
+  });
+});
+
 //cant unit test chrome app apis
-// test("Check getExtensionVersion positive test", () => {
-//   let actual = getExtensionVersion();
-//   let expected = "1.7.17";
-//   expect(actual).toEqual(expected);
-// });
+test.skip("Check getExtensionVersion positive test", () => {
+  let actual = getExtensionVersion();
+  let expected = "1.7.17";
+  expect(actual).toEqual(expected);
+});
 
 // test('Check removeCookies(settings_url) positive test', () => {
 //   //to do: Implement unit test to delete cookie

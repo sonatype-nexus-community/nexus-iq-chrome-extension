@@ -2,6 +2,8 @@
 "use strict";
 
 console.log("contentscript.js");
+// import { formats } as utils from "./utils.js";
+
 var browser;
 var message;
 if (typeof chrome !== "undefined") {
@@ -14,6 +16,13 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   try {
     console.log("gotMessage", receivedMessage);
     message = receivedMessage;
+
+    console.log(
+      "messageTypes.vulnerability",
+      message.messagetype,
+      message.messagetype === messageTypes.vulnerability
+    );
+ 
     switch (message.messagetype) {
       case messageTypes.beginEvaluate:
         console.debug("begin evaluate message");
@@ -35,6 +44,23 @@ function gotMessage(receivedMessage, sender, sendResponse) {
       messagetype: messageTypes.error
     };
     browser.runtime.sendMessage(errmessage);
+  }
+}
+function processVulnerability(message) {
+  console.log("processVulnerability", message);
+  let vulnClass = message.message.vulnClass;
+  console.debug("Setting vuln class: " + vulnClass);
+  console.debug("browser: ", browser);
+  var repoDetails = findRepoType();
+  console.log("repoDetails", repoDetails);
+  if (repoDetails) {
+    var x = document.querySelectorAll(repoDetails.titleSelector);
+    console.debug("found titles", x);
+    for (var i = 0; i < x.length; i++) {
+      console.debug("adding to class: " + vulnClass);
+      x[i].classList.add(vulnClass);
+      x[i].classList.add("vuln");
+    }
   }
 }
 
@@ -79,7 +105,95 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
     );
 
     browser.runtime.sendMessage(evaluatemessage);
+  } else if (message.messagetype !== messageTypes.annotateComponent) {
+    console.log("message.messagetype", message.messagetype);
+  } else {
+    console.log("message.messagetype", message.messagetype);
   }
+}
+
+var repoTypes = [
+  {
+    url: "search.maven.org/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: ".artifact-title"
+  },
+  {
+    url: "https://mvnrepository.com/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: ""
+  },
+  {
+    url: "www.npmjs.com/package/",
+    repoFormat: formats.npm,
+    parseFunction: parseNPM,
+    titleSelector: ".package-name-redundant"
+  },
+  {
+    url: "nuget.org/packages/",
+    repoFormat: formats.nuget,
+    parseFunction: parseNuget,
+    titleSelector: ".package-title > h1"
+  },
+  {
+    url: "pypi.org/project/",
+    repoFormat: formats.pypi,
+    parseFunction: parsePyPI,
+    titleSelector: ""
+  },
+  {
+    url: "rubygems.org/gems/",
+    repoFormat: formats.ruby,
+    parseFunction: parseRuby,
+    titleSelector: ""
+  },
+  {
+    url: "packagist.org/packages/",
+    repoFormat: formats.composer,
+    parseFunction: parsePackagist,
+    titleSelector: ""
+  },
+  {
+    url: "cocoapods.org/pods/",
+    repoFormat: formats.cocoapods,
+    parseFunction: parseCocoaPods,
+    titleSelector: ""
+  },
+  {
+    url: "cran.r-project.org/",
+    repoFormat: formats.cran,
+    parseFunction: parseCRAN,
+    titleSelector: ""
+  },
+  {
+    url: "https://crates.io/crates/",
+    repoFormat: formats.cargo,
+    parseFunction: parseCrates,
+    titleSelector: ""
+  },
+  {
+    url: "https://search.gocenter.io/",
+    repoFormat: formats.golang,
+    parseFunction: parseGoLang,
+    titleSelector: ""
+  },
+  {
+    url: "/#browse/browse:",
+    parseFunction: parseNexusRepo,
+    titleSelector: ""
+  }
+];
+
+function findRepoType() {
+  let url = location.href;
+  for (let i = 0; i < repoTypes.length; i++) {
+    if (url.search(repoTypes[i].url) >= 0) {
+      return repoTypes[i];
+    }
+  }
+  return undefined;
 }
 
 var repoTypes = [
@@ -177,7 +291,9 @@ function ParsePage() {
   console.log("url", url);
 
   var repoDetails = findRepoType();
-  console.debug("found repo details",repoDetails);
+ 
+  console.debug("found repo details", repoDetails);
+
   if (repoDetails) {
     format = repoDetails.repoFormat;
     artifact = repoDetails.parseFunction(format, url);
@@ -308,7 +424,11 @@ function parseNuget(format, url) {
     //going to parse the document.title
     //document.title.split(' ')
     //title: "NuGet Gallery | Polly 7.1.0"
-    let titleElements = document.title.split(" ");
+    let titleElements = document.title
+      .trim()
+      .split(" ")
+
+      .filter(el => el != "");
     packageId = titleElements[3];
     //#skippedToContent > section > div > article > div.package-title > h1 > small
     version = titleElements[4];
@@ -320,12 +440,14 @@ function parseNuget(format, url) {
   packageId = encodeURIComponent(packageId);
   version = encodeURIComponent(version);
   datasource = dataSources.NEXUSIQ;
-  return {
+  let nugetArtifact = {
     format: format,
     packageId: packageId,
     version: version,
     datasource: datasource
   };
+  console.log("nugetArtifact", nugetArtifact);
+  return nugetArtifact;
 }
 
 function parsePyPI(format, url) {
@@ -355,12 +477,14 @@ function parsePyPI(format, url) {
     //  packageName=url.substr(url.lastIndexOf('/')+1);
     version = elements[5];
   }
-  let qualifierHTML = $(
-    "#files > table > tbody > tr:nth-child(1) > td:nth-child(1) > a:nth-child(1)"
-  )
-    .text()
-    .trim();
+  //qualifier is
+  let qualifierHTML = document.querySelectorAll(
+    "#files > table > tbody > tr > th > a"
+  )[0].href;
+  qualifierHTML = qualifierHTML.split("/")[qualifierHTML.split("/").length - 1];
+  console.log("qualifierHTML", qualifierHTML);
   //"numpy-1.16.4-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"
+  //qualifier is ->cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64
   let name_ver = `${name}-${version}-`;
   qualifier = qualifierHTML.substr(
     name_ver.length,
@@ -368,21 +492,8 @@ function parsePyPI(format, url) {
   );
   // extension = qualifierHTML.substr(qualifierHTML.lastIndexOf(".") + 1);
   //$("#files > table > tbody:contains('.zip')").text()
-  extension = "tar.gz";
-  let whatExtension = $(
-    `#files > table > tbody:contains('${extension}')`
-  ).text();
-  if (whatExtension != "") {
-    extension = "tar.gz";
-  } else {
-    extension = "zip";
-    whatExtension = $(`#files > table > tbody:contains('${extension}')`).text();
-    if (whatExtension != "") {
-      extension = "zip";
-    } else {
-      extension = "whl";
-    }
-  }
+  console.log("qualifier", qualifier);
+  extension = qualifierHTML.substring(qualifierHTML.lastIndexOf(".") + 1);
   console.log("extension", extension);
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
@@ -479,7 +590,7 @@ function parseCocoaPods(format, url) {
     .text();
   console.log("versionHTML:", versionHTML);
   let version = versionHTML.trim();
-
+  let name = elements[4];
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
   let datasource = dataSources.OSSINDEX;
@@ -540,7 +651,6 @@ function parseCRAN(format, url) {
 function parseGoLang(format, url) {
   //server is non-defined, language is go/golang
   //index of github stored at jfrog
-  //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
   /////////Todo get this working better
   //https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
   //becomes
@@ -576,18 +686,25 @@ function parseGoLang(format, url) {
     //last element in array is versions
     //then we parse for latest version in the document
     //e.g. https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
-    versionHTMLElement = $(
-      "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
-    )[0];
+    // versionHTMLElement = $(
+    //   "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
+    // )[0];
+    versionHTMLElement = $(".version-name")[0];
+    console.log("if versionHTMLElement", versionHTMLElement);
   } else {
     //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
     versionHTMLElement = $(
       "#select-header > span > span.ui-select-match-text.pull-left"
     )[0];
+    console.log("else versionHTMLElement", versionHTMLElement);
+  }
+  if (typeof versionHTMLElement === "undefined") {
+    //raiserror  "DOM changed"
   }
   let versionHTML = versionHTMLElement.innerText;
   console.log("versionHTML", versionHTML);
   let version = versionHTML.trim();
+  console.log("version", version);
   //keep the v in version
   // if (version.substr(0, 1) === "v") {
   //   version = version.substr(1);
@@ -595,7 +712,7 @@ function parseGoLang(format, url) {
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
   let datasource = dataSources.NEXUSIQ;
-  return {
+  let artifact = {
     format: format,
     datasource: datasource,
     type: type,
@@ -603,6 +720,7 @@ function parseGoLang(format, url) {
     name: name,
     version: version
   };
+  return artifact;
 }
 
 function parseCrates(format, url) {
