@@ -118,7 +118,7 @@ const sendNotification = componentDetails => {
   var options = {
     type: "basic",
     title: "Vulnerable library",
-    message: "Dear User this library is vulnerable",
+    message: "IQ found vulnerabilities in this version",
     iconUrl: "../images/SON_logo_favicon_Vulnerable.png"
   };
 
