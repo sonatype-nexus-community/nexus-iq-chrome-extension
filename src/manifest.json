@@ -31,6 +31,21 @@
     "https://github.com/",
     "*://*/*",
     "https://kit.fontawesome.com/"
+
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.nuget.org/*",
+        "https://www.npmjs.com/*",
+        "https://search.maven.org/*",
+        "https://www.nuget.org/*"
+      ],
+      "css": ["css/pagestyle.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    "images/*"
+
   ],
   "content_scripts": [
     {
@@ -63,7 +78,7 @@
     "128": "images/SON_logo_favicon.png"
   },
   "options_ui": {
-    "page": "html/options.html?ver=1.8.1",
+    "page": "html/options.html?ver=1.7.19",
     "open_in_tab": false
   }
 }

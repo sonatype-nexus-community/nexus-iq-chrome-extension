@@ -26,6 +26,7 @@ const gotMessage = async (message, sender, sendResponse) => {
   // var settings;
   var retval;
   var baseURL, username, password;
+
   let artifact;
   // console.log('message')
   // console.log(message)
@@ -122,6 +123,34 @@ const sendNotification = componentDetails => {
     iconUrl: "../images/SON_logo_favicon_Vulnerable.png"
   };
 
+  let securityData = componentDetails.securityData.securityIssues;
+  let severity = 0;
+  if (securityData && securityData.length > 0) {
+    severity = securityData[0].severity;
+  }
+  console.debug("detected severity " + severity);
+  let vulnClass = "vuln-low";
+  if (severity >= 9) {
+    vulnClass = "vuln-severe";
+  } else if (severity >= 7) {
+    vulnClass = "vuln-high";
+  } else if (severity >= 5) {
+    vulnClass = "vuln-med";
+  }
+
+  let vulnMessage = {
+    messagetype: messageTypes.vulnerability,
+    message: {
+      severity: severity,
+      "vulnClass": vulnClass
+    }
+  }
+
+  browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    browser.tabs.sendMessage(tabs[0].id, vulnMessage);
+  });
+
+
   //////////////
   let securityData = componentDetails.securityData.securityIssues;
   let severity = 0;
@@ -169,9 +198,6 @@ const sendNotification = componentDetails => {
       message: "IQ found vulnerabilities in this version",
       priority: 1,
       buttons: [
-        {
-          title: "close"
-        },
         {
           title: "Close"
         }
@@ -507,6 +533,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
 //this does work
 browser.runtime.onInstalled.addListener(function() {
+ 
   // loadSettings();
   // let tabId = 0;
   // if (checkPageIsHandled(url)){
@@ -672,6 +699,7 @@ browser.runtime.onInstalled.addListener(function() {
     ]);
   });
 });
+ 
 
 function displayEvaluationReults(displayMessageData, tabId) {
   console.log("displayEvaluationReults", displayMessageData, tabId);

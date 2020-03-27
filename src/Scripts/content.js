@@ -16,11 +16,13 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   try {
     console.log("gotMessage", receivedMessage);
     message = receivedMessage;
+
     console.log(
       "messageTypes.vulnerability",
       message.messagetype,
       message.messagetype === messageTypes.vulnerability
     );
+ 
     switch (message.messagetype) {
       case messageTypes.beginEvaluate:
         console.debug("begin evaluate message");
@@ -34,6 +36,7 @@ function gotMessage(receivedMessage, sender, sendResponse) {
         console.log("Unknown message type: " + message.messagetype);
         break;
     }
+
   } catch (err) {
     let errmessage = {
       artifact: null,
@@ -61,6 +64,22 @@ function processVulnerability(message) {
   }
 }
 
+function processVulnerability(message) {
+  let vulnClass = message.message.vulnClass;
+  console.debug("Setting vuln class: " + vulnClass);
+  console.debug('browser: ', browser);
+  var repoDetails = findRepoType();
+  if (repoDetails) {
+    var x = document.querySelectorAll(repoDetails.titleSelector);
+    console.debug("found titles", x);
+    for (var i = 0; i < x.length; i++) {
+      console.debug("adding to class: " + vulnClass);
+      x[i].classList.add(vulnClass);
+      x[i].classList.add("vuln");
+    }
+  }
+}
+
 function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   console.log("processPage - message:", message);
 
@@ -70,12 +89,8 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   //please tell what is my url and what is my content
   var url = window.location.href;
   console.log("url", url);
-  //this page will hear the Evaluate message as well, so ignore it
   if (message.messagetype !== messageTypes.evaluateComponent) {
     let artifact = ParsePage();
-    // console.log('requestmessage', requestmessage);
-    //{messageType: "artifact", payload: artifact};
-    // let artifact = requestmessage.payload;
     console.log("artifact", artifact);
     if (artifact != undefined) {
       let format = artifact.format;
@@ -181,6 +196,90 @@ function findRepoType() {
   return undefined;
 }
 
+var repoTypes = [
+  {
+    url: "search.maven.org/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: ".artifact-title"
+  },
+  {
+    url: "https://mvnrepository.com/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: ""
+  },
+  {
+    url: "www.npmjs.com/package/",
+    repoFormat: formats.npm,
+    parseFunction: parseNPM,
+    titleSelector: ".package-name-redundant"
+  },
+  {
+    url: "nuget.org/packages/",
+    repoFormat: formats.nuget,
+    parseFunction: parseNuget,
+    titleSelector: ".package-title > h1"
+  },
+  {
+    url: "pypi.org/project/",
+    repoFormat: formats.pypi,
+    parseFunction: parsePyPI,
+    titleSelector: ""
+  },
+  {
+    url: "rubygems.org/gems/",
+    repoFormat: formats.ruby,
+    parseFunction: parseRuby,
+    titleSelector: ""
+  },
+  {
+    url: "packagist.org/packages/",
+    repoFormat: formats.composer,
+    parseFunction: parsePackagist,
+    titleSelector: ""
+  },
+  {
+    url: "cocoapods.org/pods/",
+    repoFormat: formats.cocoapods,
+    parseFunction: parseCocoaPods,
+    titleSelector: ""
+  },
+  {
+    url: "cran.r-project.org/",
+    repoFormat: formats.cran,
+    parseFunction: parseCRAN,
+    titleSelector: ""
+  },
+  {
+    url: "https://crates.io/crates/",
+    repoFormat: formats.cargo,
+    parseFunction:parseCrates,
+    titleSelector: ""
+  },
+  {
+    url: "https://search.gocenter.io/",
+    repoFormat: formats.golang,
+    parseFunction: parseGoLang,
+    titleSelector: ""
+  },
+  {
+    url: "/#browse/browse:",
+    parseFunction: parseNexusRepo,
+    titleSelector: ""
+  }
+];
+
+function findRepoType() {
+  let url = location.href;
+  for (let i = 0; i < repoTypes.length; i++) {
+    if (url.search(repoTypes[i].url) >= 0) {
+      return repoTypes[i];
+    }
+  }
+  return undefined;
+}
+
 function ParsePage() {
   //returns message in format like this {messageType: "artifact", payload: artifact};
   //artifact varies depending on eco-system
@@ -188,16 +287,18 @@ function ParsePage() {
   //who I am what is my address?
   let artifact;
   let format;
-  // let datasource = dataSources.NEXUSIQ;
   let url = location.href;
   console.log("url", url);
 
   var repoDetails = findRepoType();
+ 
   console.debug("found repo details", repoDetails);
+
   if (repoDetails) {
     format = repoDetails.repoFormat;
     artifact = repoDetails.parseFunction(format, url);
   }
+
   console.log("ParsePage Complete - artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
@@ -240,6 +341,64 @@ function parseMaven(format, url) {
     artifactId: artifactId,
     version: version,
     extension: extension,
+    datasource: datasource
+  };
+}
+
+function parseNPM(format, url) {
+  console.debug("parseNPM", format, url);
+  //ADD SIMPLE CODE THAT CHECLS THE URL?
+  //note that this changed as of 19/03/19
+  //version in URL
+  //https://www.npmjs.com/package/lodash/v/4.17.9
+  //No version in URL so read DOM
+  //https://www.npmjs.com/package/lodash/
+  let doc = $("html")[0].outerHTML;
+  // let docelements = $(doc);
+
+  let found;
+  let newV;
+  let elements;
+  let packageName;
+  let version;
+  if (url.search("/v/") > 0) {
+    //has version in URL
+    var urlElements = url.split("/");
+    packageName = urlElements[4];
+    version = urlElements[6];
+  } else {
+    //try to parse the URL
+    //Seems like node has changed their selector
+    //var found = $('h1.package-name-redundant', doc);
+    // found = $('h1.package-name-redundant', doc);
+    found = $("h2 span");
+    console.log("h2 span found", found);
+    if (typeof found !== "undefined" && found !== "") {
+      packageName = found.text().trim();
+      // let foundV = $("h2", doc);
+      //https://www.npmjs.com/package/jest
+      newV = $("h2").next("span");
+      if (typeof newV !== "undefined" && newV !== "") {
+        newV = newV.text();
+        //produces "24.5.0 • "
+        let findnbsp = newV.search(String.fromCharCode(160));
+        if (findnbsp >= 0) {
+          newV = newV.substring(0, findnbsp);
+        }
+        version = newV;
+      }
+      console.log("newV:", newV);
+    }
+  }
+  //
+  //  packageName=url.substr(url.lastIndexOf('/')+1);
+  packageName = encodeURIComponent(packageName);
+  version = encodeURIComponent(version);
+  let datasource = dataSources.NEXUSIQ;
+  return {
+    format: format,
+    packageName: packageName,
+    version: version,
     datasource: datasource
   };
 }
