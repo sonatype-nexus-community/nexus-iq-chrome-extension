@@ -33,7 +33,7 @@ The plugin can scan packages at the following repositories:
 13. Artifactory Proxy Repos - supported repository formats are maven2 and npm e.g. https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
 14. Artifactory Repo lists - e.g. https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
 15. Maven Repo1 - https://repo1.maven.org/maven2/
-16. Maven Repo2 - http://repo.maven.org/maven2/
+16. Maven Repo - https://repo.maven.apache.org/maven2/
 
 ## Documentation
 
@@ -103,8 +103,8 @@ Pattern -`https://mvnrepository.com/artifact/<group>/<artifact>/<version>`
 Pattern - `https://repo1.maven.org/maven2/<group>/<artifact>/<version>/`
 <br/> e.g. <https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/>
 
-Pattern - `http://repo2.maven.org/maven2/<group>/<artifact>/<version>/`
-<br/> e.g. <http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/>
+Pattern - `https://repo.maven.apache.org/maven2/<group>/<artifact>/<version>/`
+<br/> e.g. <https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/>
 
 ### JS/Node - npm
 

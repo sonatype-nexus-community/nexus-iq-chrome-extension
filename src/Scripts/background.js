@@ -581,10 +581,10 @@ browser.runtime.onInstalled.addListener(function() {
             }
           }),
           new browser.declarativeContent.PageStateMatcher({
-            //http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
+            //https://repo.maven.apache.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
             pageUrl: {
-              hostEquals: "repo2.maven.org",
-              schemes: ["http"],
+              hostEquals: "repo.maven.apache.org",
+              schemes: ["https"],
               pathContains: "maven2"
             }
           }),

@@ -220,7 +220,7 @@ const checkPageIsHandled = url => {
     url.search("https://search.maven.org/artifact/") >= 0 ||
     url.search("https://mvnrepository.com/artifact/") >= 0 ||
     url.search("https://repo1.maven.org/maven2/") >= 0 ||
-    url.search("http://repo2.maven.org/maven2/") >= 0 ||
+    url.search("https://repo.maven.apache.org/maven2/") >= 0 ||
     url.search("https://www.npmjs.com/package/") >= 0 ||
     url.search("https://www.nuget.org/packages/") >= 0 ||
     url.search("https://pypi.org/project/") >= 0 ||
@@ -261,9 +261,9 @@ const ParsePageURL = url => {
     //https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/
     format = formats.maven;
     artifact = parseMavenURL(url);
-  } else if (url.search("http://repo2.maven.org/maven2/") >= 0) {
+  } else if (url.search("https://repo.maven.apache.org/maven2/") >= 0) {
     //can not be parsed need to inject script and parse html
-    //http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/
+    //https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/
     format = formats.maven;
     artifact = parseMavenURL(url);
   } else if (url.search("www.npmjs.com/package/") >= 0) {
@@ -696,7 +696,7 @@ const parseMavenURL = url => {
   //maven repo https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
   //https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/
-  //http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/
+  //https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/
   //https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
   //CURRENTLY both have the same format in the URL version, except maven central also has the packaging type
   let format = formats.maven;
