@@ -156,13 +156,13 @@ test("CheckPageIsHandled positive test - mvnrepository.com", () => {
   expect(expected).toBe(actual);
 });
 
-test("CheckPageIsHandled positive test - maven", () => {
+test("CheckPageIsHandled positive test - maven - repo1", () => {
   let actual = checkPageIsHandled("https://repo1.maven.org/maven2/");
   let expected = true;
   expect(expected).toBe(actual);
 });
-test("CheckPageIsHandled positive test - maven", () => {
-  let actual = checkPageIsHandled("http://repo2.maven.org/maven2/");
+test("CheckPageIsHandled positive test - maven - repo.apache", () => {
+  let actual = checkPageIsHandled("https://repo.maven.apache.org/maven2/");
   let expected = true;
   expect(expected).toBe(actual);
 });
@@ -667,7 +667,7 @@ test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () =>
   expect(actual).toEqual(expected);
 });
 
-test("Check parseMavenURL(format, http://repo2.maven.org) positive test", () => {
+test("Check parseMavenURL(format, https://repo.maven.apache.org/maven2/) positive test", () => {
   let format = "maven";
   let groupId = "commons-collections";
   let artifactId = "commons-collections";
@@ -687,7 +687,7 @@ test("Check parseMavenURL(format, http://repo2.maven.org) positive test", () => 
   );
 
   let url =
-    "http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/";
+    "https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/";
   let actual = parseMavenURL(url);
   let expected = artifact;
   expect(actual).toEqual(expected);
@@ -713,7 +713,7 @@ test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () =>
   );
 
   let url =
-    "http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/";
+    "https://repo.maven.apache.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/";
   let actual = parseMavenURL(url);
   let expected = artifact;
   expect(actual).toEqual(expected);
@@ -1112,7 +1112,7 @@ test("Check ParsePageURL(https://repo1.maven.org) negative test", () => {
   expect(actual).not.toEqual(expected);
 });
 
-test("Check ParsePageURL( http://repo2.maven.org) positive test", () => {
+test("Check ParsePageURL( https://repo.maven.apache.org/maven2/) positive test", () => {
   let format = "maven";
   let groupId = "commons-collections";
   let artifactId = "commons-collections";
@@ -1132,13 +1132,13 @@ test("Check ParsePageURL( http://repo2.maven.org) positive test", () => {
   );
 
   let url =
-    "http://repo2.maven.org/maven2/commons-collections/commons-collections/3.2.1/";
+    "https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/";
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).toEqual(expected);
 });
 
-test("Check ParsePageURL(http://repo2.maven.org) negative test", () => {
+test("Check ParsePageURL(https://repo.maven.apache.org/maven2/) negative test", () => {
   //I am going to assume jar extension for now
   let format = "maven";
   let artifact = {
@@ -1150,8 +1150,8 @@ test("Check ParsePageURL(http://repo2.maven.org) negative test", () => {
     version: undefined,
     datasource: "NEXUSIQ",
   };
-  //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
-  let url = "http://repo2.maven.org/maven2/";
+  //SEARCH      https://repo.maven.apache.org/maven2/
+  let url = "https://repo.maven.apache.org/maven2/";
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).not.toEqual(expected);
