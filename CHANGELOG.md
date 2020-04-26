@@ -1,3 +1,28 @@
+## [1.8.1](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.8.1...v1.8.0) (2020-04-26)
+
+### Bug Fixes
+
+- Fix #83
+- Fix #82
+- Fix #81
+- Fix #78
+- Fix #70
+- Fix #72
+
+## [1.8.0](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.8.0...v1.7.19) (2020-01-28)
+
+### Features
+
+- add 'Continuous Evaluation' (#63)
+
+### Bug Fixes
+
+- fix unit tests
+
+- fix #83
+
+- fix #64
+
 ## [1.7.18](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.7.9...v1.7.18) (2019-12-16)
 
 ### Bug Fixes
