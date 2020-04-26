@@ -38,7 +38,7 @@ const {
   parseGitHubURL,
   parseNexusRepoURL,
   ParsePageURL,
-  PyPIArtifact
+  PyPIArtifact,
 } = require("../src/Scripts/utils");
 
 xtest("evaluatePackage does not throw error when server down", async () => {
@@ -51,7 +51,7 @@ xtest("evaluatePackage does not throw error when server down", async () => {
       version: "3.2.1",
       extension: "jar",
       classifier: "",
-      hash: null
+      hash: null,
     };
     let settings = BuildSettingsHelper();
 
@@ -76,7 +76,7 @@ test("Can build empty Settings", () => {
     baseURL: "",
     url: "",
     loginEndPoint: "",
-    loginurl: ""
+    loginurl: "",
   };
   expect(expected).toEqual(actual);
 });
@@ -136,7 +136,7 @@ test("Can BuildSettings", () => {
     loginEndPoint: loginEndPoint,
     loginurl: loginurl,
     appId: appId,
-    appInternalId: appInternalId
+    appInternalId: appInternalId,
   };
 
   // let actual = BuildSettings(baseURL, username, password, appId, appInternalId);
@@ -229,7 +229,7 @@ test("Check NexusFormat positive test", () => {
     version: "3.2.1",
     extension: "jar",
     classifier: "",
-    hash: null
+    hash: null,
   };
   let actual = NexusFormat(artifact);
   let component;
@@ -244,11 +244,11 @@ test("Check NexusFormat positive test", () => {
             artifactId: artifact.artifactId,
             version: artifact.version,
             extension: artifact.extension,
-            classifier: artifact.classifier
-          }
-        }
-      })
-    ]
+            classifier: artifact.classifier,
+          },
+        },
+      }),
+    ],
   };
   expect(expected).toEqual(actual);
 });
@@ -261,7 +261,7 @@ test("Check NexusFormatMaven positive test", () => {
     version: "3.2.1",
     extension: "jar",
     classifier: "",
-    hash: null
+    hash: null,
   };
   let actual = NexusFormatMaven(artifact);
   let component;
@@ -276,11 +276,11 @@ test("Check NexusFormatMaven positive test", () => {
             artifactId: artifact.artifactId,
             version: artifact.version,
             extension: artifact.extension,
-            classifier: artifact.classifier
-          }
-        }
-      })
-    ]
+            classifier: artifact.classifier,
+          },
+        },
+      }),
+    ],
   };
   expect(expected).toEqual(actual);
 });
@@ -290,7 +290,7 @@ test("Check NexusFormatNPM positive test", () => {
     format: "npm",
     packageName: "lodash",
     version: "4.17.11",
-    hash: null
+    hash: null,
   };
   let actual = NexusFormatNPM(artifact);
   let component;
@@ -302,11 +302,11 @@ test("Check NexusFormatNPM positive test", () => {
           format: artifact.format,
           coordinates: {
             packageId: artifact.packageName,
-            version: artifact.version
-          }
-        }
-      })
-    ]
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
   };
   expect(expected).toEqual(actual);
 });
@@ -316,7 +316,7 @@ test("Check NexusFormatNuget positive test", () => {
     format: "nuget",
     packageId: "LibGit2Sharp",
     version: "0.1.0",
-    hash: null
+    hash: null,
   };
   let actual = NexusFormatNuget(artifact);
   let component;
@@ -330,11 +330,11 @@ test("Check NexusFormatNuget positive test", () => {
           format: artifact.format,
           coordinates: {
             packageId: artifact.packageId,
-            version: artifact.version
-          }
-        }
-      })
-    ]
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
   };
   expect(expected).toEqual(actual);
 });
@@ -344,7 +344,7 @@ test("Check NexusFormatPyPI positive test", () => {
     format: "pypi",
     packageId: "Django",
     version: "1.6",
-    hash: null
+    hash: null,
   };
   let actual = NexusFormatPyPI(artifact);
   let component;
@@ -361,11 +361,11 @@ test("Check NexusFormatPyPI positive test", () => {
             name: artifact.name,
             qualifier: artifact.qualifier,
             version: artifact.version,
-            extension: artifact.extension
-          }
-        }
-      })
-    ]
+            extension: artifact.extension,
+          },
+        },
+      }),
+    ],
   };
   expect(expected).toEqual(actual);
 });
@@ -375,7 +375,7 @@ test("Check NexusFormatRuby positive test", () => {
     format: "gem",
     packageId: "bundler ",
     version: "2.0.1",
-    hash: null
+    hash: null,
   };
   let actual = NexusFormatRuby(artifact);
   let component;
@@ -390,11 +390,11 @@ test("Check NexusFormatRuby positive test", () => {
           format: artifact.format,
           coordinates: {
             name: artifact.name,
-            version: artifact.version
-          }
-        }
-      })
-    ]
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
   };
   expect(expected).toEqual(actual);
 });
@@ -443,11 +443,11 @@ test("Check encodeComponentIdentifier maven - encoder", () => {
     classifier: "",
     extension: "jar",
     groupId: "io.springfox",
-    version: "2.6.1"
+    version: "2.6.1",
   };
   let nexusArtifact = NexusFormatMaven(artifact);
   // let actual =  encodeURIComponent(JSON.stringify(artifact))
-  let actual = encodeComponentIdentifier(nexusArtifact);
+  let actual = encodeComponentIdentifier(nexusArtifact.components[0]);
   let expected =
     "%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22groupId%22%3A%22io.springfox%22%2C%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22version%22%3A%222.6.1%22%2C%22extension%22%3A%22jar%22%2C%22classifier%22%3A%22%22%7D%7D";
   //let ereceived = '%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22groupId%22%3A%22io.springfox%22%2C%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22version%22%3A%222.6.1%22%2C%22extension%22%3A%22jar%22%7D%7D'
@@ -725,7 +725,7 @@ test("Check parseNPMURL(npmjs.com) positive test", () => {
     format: format,
     packageName: "lodash",
     version: "4.17.9",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.npmjs.com/package/lodash/v/4.17.9";
@@ -742,7 +742,7 @@ test("Check parseNPMURL(npmjs.com) positive test @angular/animation", () => {
     format: format,
     packageName: "@angular/animation",
     version: "4.0.0-beta.8",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.npmjs.com/package/@angular/animation/v/4.0.0-beta.8";
@@ -757,7 +757,7 @@ test("Check parseNPMURL(npmjs.com) negative test", () => {
     format: format,
     packageName: "lodash",
     version: undefined,
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.npmjs.com/package/lodash/";
@@ -773,7 +773,7 @@ test("Check parseNugetURL (www.nuget.org) positive test", () => {
     format: format,
     packageId: "LibGit2Sharp",
     version: "0.20.1",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.nuget.org/packages/LibGit2Sharp/0.20.1";
@@ -789,7 +789,7 @@ test("Check parseNPMURL(www.nuget.org) negative test", () => {
     format: format,
     packageName: "LibGit2Sharp",
     version: undefined,
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.nuget.org/packages/LibGit2Sharp";
@@ -806,7 +806,7 @@ test("Check parsePyPIURL(pypi.org) positive test", () => {
     version: "1.6",
     datasource: "NEXUSIQ",
     extension: "",
-    qualifier: ""
+    qualifier: "",
   };
 
   let url = "https://pypi.org/project/Django/1.6/";
@@ -821,7 +821,7 @@ test("Check parsePyPIURL(pypi.org) negative test", () => {
     format: format,
     name: "Django",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://pypi.org/project/Django/";
@@ -838,7 +838,7 @@ test("Check parseRubyURL(rubygems.org) positive test", () => {
     format: format,
     name: "bundler",
     version: "1.16.1",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://rubygems.org/gems/bundler/versions/1.16.1";
@@ -852,7 +852,7 @@ test("Check parseRubyURL(rubygems.org) negative test", () => {
     format: "gem",
     name: "bundler",
     version: undefined,
-    datasource: "IQSERVER"
+    datasource: "IQSERVER",
   };
 
   let url = "https://rubygems.org/gems/bundler";
@@ -866,7 +866,7 @@ test("Check parsePackagistURL(packagist.org/drupal) positive test", () => {
     datasource: "OSSINDEX",
     format: "composer",
     name: "drupal%2Fdrupal",
-    version: "8.6.2"
+    version: "8.6.2",
   };
   let url = "https://packagist.org/packages/drupal/drupal#8.6.2";
   let actual = parsePackagistURL(url);
@@ -878,7 +878,7 @@ test("Check parsePackagistURL(packagist.org/phpbb) positive test", () => {
     datasource: "OSSINDEX",
     format: "composer",
     name: "phpbb%2Fphpbb",
-    version: "3.1.2"
+    version: "3.1.2",
   };
   let url = "https://packagist.org/packages/phpbb/phpbb#3.1.2";
   let actual = parsePackagistURL(url);
@@ -890,7 +890,7 @@ test("Check parsePackagistURL(packagist.org) negative test", () => {
     format: "composer",
     name: "drupal",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://packagist.org/packages/drupal/drupal";
@@ -905,7 +905,7 @@ test("Check parseCocoaPodsURL(cocoapods.org) negative test", () => {
     format: format,
     name: "TestFairy",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
   let url = "https://cocoapods.org/pods/TestFairy";
   let actual = parseCocoaPodsURL(url);
@@ -920,7 +920,7 @@ test("Check parseCRANURL(cran.r-project.org) negative test", () => {
     format: format,
     name: "clustcurv",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://cran.r-project.org/package=clustcurv";
@@ -936,7 +936,7 @@ test("Check parseGoLangURL(GOCENTER GOLANG) negative test", () => {
     format: format,
     name: "hansrodtang",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url =
@@ -953,7 +953,7 @@ test("Check parseCratesURL(crates.io) negative test", () => {
     format: "cargo",
     name: "rand",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://crates.io/crates/rand";
@@ -970,7 +970,7 @@ test("Check parseArtifactoryURL positive test", () => {
     artifactId: "spring-core",
     version: "4.1.7.RELEASE",
     classifier: "",
-    extension: "jar"
+    extension: "jar",
   };
   let url =
     "http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/springframework/spring-core/4.1.7.RELEASE";
@@ -983,7 +983,7 @@ test("Check parseGitHubURL positive test", () => {
     format: formats.github,
     name: "jquery/jquery",
     version: "3.0.0",
-    datasource: dataSources.OSSINDEX
+    datasource: dataSources.OSSINDEX,
   };
   let url = "https://github.com/jquery/jquery/releases/tag/3.0.0";
   let actual = parseGitHubURL(url);
@@ -1032,7 +1032,7 @@ test("Check ParsePageURL(search.maven.org) negative test", () => {
     extension: "jar",
     groupId: "commons-collections",
     version: "3.2.1",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
   let url = "https://search.maven.org/";
@@ -1103,7 +1103,7 @@ test("Check ParsePageURL(https://repo1.maven.org) negative test", () => {
     extension: "jar",
     groupId: "commons-collections",
     version: "3.2.1",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
   let url = "https://repo1.maven.org/maven2/";
@@ -1148,7 +1148,7 @@ test("Check ParsePageURL(http://repo2.maven.org) negative test", () => {
     extension: "jar",
     groupId: "commons-collections",
     version: undefined,
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
   let url = "http://repo2.maven.org/maven2/";
@@ -1163,7 +1163,7 @@ test("Check ParsePageURL(npmjs.com) positive test", () => {
     format: format,
     packageName: "lodash",
     version: "4.17.9",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.npmjs.com/package/lodash/v/4.17.9";
@@ -1178,7 +1178,7 @@ test("Check ParsePageURL(npmjs.com) negative test", () => {
     format: format,
     packageName: "lodash",
     version: undefined,
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.npmjs.com/package/lodash/";
@@ -1194,7 +1194,7 @@ test("Check ParsePageURL(www.nuget.org) positive test", () => {
     format: format,
     packageId: "LibGit2Sharp",
     version: "0.20.1",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.nuget.org/packages/LibGit2Sharp/0.20.1";
@@ -1210,7 +1210,7 @@ test("Check ParsePageURL(www.nuget.org) negative test", () => {
     format: format,
     packageName: "LibGit2Sharp",
     version: undefined,
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://www.nuget.org/packages/LibGit2Sharp";
@@ -1241,7 +1241,7 @@ test("Check ParsePageURL(pypi.org) negative test", () => {
     format: format,
     name: "Django",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://pypi.org/project/Django/";
@@ -1256,7 +1256,7 @@ test("Check ParsePageURL(rubygems.org) positive test", () => {
     format: format,
     name: "bundler",
     version: "1.16.1",
-    datasource: "NEXUSIQ"
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://rubygems.org/gems/bundler/versions/1.16.1";
@@ -1271,7 +1271,7 @@ test("Check ParsePageURL(rubygems.org) negative test", () => {
     format: format,
     name: "bundler",
     version: undefined,
-    datasource: "IQSERVER"
+    datasource: "IQSERVER",
   };
 
   let url = "https://rubygems.org/gems/bundler";
@@ -1285,7 +1285,7 @@ test("Check ParsePageURL(packagist.org) positive test", () => {
     datasource: "OSSINDEX",
     format: "composer",
     name: "drupal%2Fdrupal",
-    version: "8.6.2"
+    version: "8.6.2",
   };
   let url = "https://packagist.org/packages/drupal/drupal#8.6.2";
   let actual = ParsePageURL(url);
@@ -1298,7 +1298,7 @@ test("Check ParsePageURL(packagist.org) negative test", () => {
     format: format,
     name: "drupal",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://packagist.org/packages/drupal/drupal";
@@ -1314,7 +1314,7 @@ test("Check ParsePageURL(cocoapods.org) negative test", () => {
     format: format,
     name: "TestFairy",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
   let url = "https://cocoapods.org/pods/TestFairy";
   let actual = ParsePageURL(url);
@@ -1329,7 +1329,7 @@ test("Check ParsePageURL(cran.r-project.org) negative test", () => {
     format: format,
     name: "clustcurv",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://cran.r-project.org/package=clustcurv";
@@ -1345,7 +1345,7 @@ test("Check ParsePageURL(parseGoLangURL) negative test", () => {
     format: format,
     name: "hansrodtang",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url =
@@ -1362,7 +1362,7 @@ test("Check ParsePageURL(crates.io) negative test", () => {
     format: "cargo",
     name: "rand",
     version: undefined,
-    datasource: "OSSINDEX"
+    datasource: "OSSINDEX",
   };
 
   let url = "https://crates.io/crates/rand";
@@ -1386,13 +1386,11 @@ test("Check GetDomainName positive test", () => {
   expect(actual).toEqual(expected);
 
   //another case by Stuart Bishop issue #70
-  
+
   url = "https://nexus.prd.systems/";
   expected = ".nexus.prd.systems";
   actual = getDomainName(url);
   expect(actual).toEqual(expected);
-
-
 });
 
 test("Check GetActiveTab positive test", () => {
@@ -1406,7 +1404,7 @@ test("Check GetActiveTab positive test", () => {
 describe.skip("chrome.tabs.update test", () => {
   it("should have called a webextension API", () => {
     chrome.tabs.update({
-      url: "https://example.com/"
+      url: "https://example.com/",
     });
     expect(chrome.tabs.update).toHaveBeenCalled();
   });
