@@ -9,16 +9,16 @@
     ]
   },
   "exclude": [
-    "src/scripts/jquery.min.js",
-    "src/scripts/jquery.event.drag-2.3.0.js",
-    "src/scripts/jquery-ui-1.12.1",
-    "src/scripts/jquery-ui-themes-1.12.1",
-    "src/scripts/appcheck.js",
-    "src/scripts/axios.min.js",
-    "src/scripts/protovis.min.js"
+    "src/Scripts/lib/jquery.min.js",
+    "src/Scripts/lib/jquery.event.drag-2.3.0.js",
+    "src/Scripts/lib/jquery-ui-1.12.1",
+    "src/Scripts/lib/jquery-ui-themes-1.12.1",
+    "src/Scripts/lib/appcheck.js",
+    "src/Scripts/lib/axios.min.js",
+    "src/Scripts/lib/protovis.min.js"
   ],
   "includePattern": ".+\\.js(doc|x)?$",
-  "excludePattern": "(node_modules|docs|jquery)",
+  "excludePattern": "(node_modules|docs|jquery|lib)",
   "templates": {
     "cleverLinks": true,
     "monospaceLinks": true

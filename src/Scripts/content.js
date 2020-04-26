@@ -22,7 +22,7 @@ function gotMessage(receivedMessage, sender, sendResponse) {
       message.messagetype,
       message.messagetype === messageTypes.vulnerability
     );
- 
+
     switch (message.messagetype) {
       case messageTypes.beginEvaluate:
         console.debug("begin evaluate message");
@@ -36,38 +36,22 @@ function gotMessage(receivedMessage, sender, sendResponse) {
         console.log("Unknown message type: " + message.messagetype);
         break;
     }
-
   } catch (err) {
     let errmessage = {
       artifact: null,
       message: err.message,
-      messagetype: messageTypes.error
+      messagetype: messageTypes.error,
     };
     browser.runtime.sendMessage(errmessage);
   }
 }
+
+
 function processVulnerability(message) {
   console.log("processVulnerability", message);
   let vulnClass = message.message.vulnClass;
   console.debug("Setting vuln class: " + vulnClass);
   console.debug("browser: ", browser);
-  var repoDetails = findRepoType();
-  console.log("repoDetails", repoDetails);
-  if (repoDetails) {
-    var x = document.querySelectorAll(repoDetails.titleSelector);
-    console.debug("found titles", x);
-    for (var i = 0; i < x.length; i++) {
-      console.debug("adding to class: " + vulnClass);
-      x[i].classList.add(vulnClass);
-      x[i].classList.add("vuln");
-    }
-  }
-}
-
-function processVulnerability(message) {
-  let vulnClass = message.message.vulnClass;
-  console.debug("Setting vuln class: " + vulnClass);
-  console.debug('browser: ', browser);
   var repoDetails = findRepoType();
   if (repoDetails) {
     var x = document.querySelectorAll(repoDetails.titleSelector);
@@ -97,7 +81,7 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
     }
     let evaluatemessage = {
       artifact: artifact,
-      messagetype: messageTypes.evaluateComponent
+      messagetype: messageTypes.evaluateComponent,
     };
     console.log(
       "browser.runtime.sendMessage(evaluatemessage)",
@@ -112,162 +96,81 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   }
 }
 
+
+
+
 var repoTypes = [
   {
     url: "search.maven.org/artifact/",
     repoFormat: formats.maven,
     parseFunction: parseMaven,
-    titleSelector: ".artifact-title"
+    titleSelector: ".artifact-title",
   },
   {
     url: "https://mvnrepository.com/artifact/",
     repoFormat: formats.maven,
     parseFunction: parseMaven,
-    titleSelector: ""
+    titleSelector: "h2.im-title",
   },
   {
     url: "www.npmjs.com/package/",
     repoFormat: formats.npm,
     parseFunction: parseNPM,
-    titleSelector: ".package-name-redundant"
+    titleSelector: ".package-name-redundant",
   },
   {
     url: "nuget.org/packages/",
     repoFormat: formats.nuget,
     parseFunction: parseNuget,
-    titleSelector: ".package-title > h1"
+    titleSelector: ".package-title > h1",
   },
   {
     url: "pypi.org/project/",
     repoFormat: formats.pypi,
     parseFunction: parsePyPI,
-    titleSelector: ""
+    titleSelector: "h1.package-header__name",
   },
   {
     url: "rubygems.org/gems/",
-    repoFormat: formats.ruby,
+    repoFormat: formats.gem,
     parseFunction: parseRuby,
-    titleSelector: ""
+    titleSelector: "h1.t-display",
   },
   {
     url: "packagist.org/packages/",
     repoFormat: formats.composer,
     parseFunction: parsePackagist,
-    titleSelector: ""
+    titleSelector: "",
   },
   {
     url: "cocoapods.org/pods/",
     repoFormat: formats.cocoapods,
     parseFunction: parseCocoaPods,
-    titleSelector: ""
+    titleSelector: "h1",
   },
   {
     url: "cran.r-project.org/",
     repoFormat: formats.cran,
     parseFunction: parseCRAN,
-    titleSelector: ""
+    titleSelector: "h2.title",
   },
   {
     url: "https://crates.io/crates/",
     repoFormat: formats.cargo,
     parseFunction: parseCrates,
-    titleSelector: ""
+    titleSelector: "",
   },
   {
     url: "https://search.gocenter.io/",
     repoFormat: formats.golang,
     parseFunction: parseGoLang,
-    titleSelector: ""
+    titleSelector: "#app div.v-application--wrap h1",
   },
   {
     url: "/#browse/browse:",
     parseFunction: parseNexusRepo,
-    titleSelector: ""
-  }
-];
-
-function findRepoType() {
-  let url = location.href;
-  for (let i = 0; i < repoTypes.length; i++) {
-    if (url.search(repoTypes[i].url) >= 0) {
-      return repoTypes[i];
-    }
-  }
-  return undefined;
-}
-
-var repoTypes = [
-  {
-    url: "search.maven.org/artifact/",
-    repoFormat: formats.maven,
-    parseFunction: parseMaven,
-    titleSelector: ".artifact-title"
+    titleSelector: "",
   },
-  {
-    url: "https://mvnrepository.com/artifact/",
-    repoFormat: formats.maven,
-    parseFunction: parseMaven,
-    titleSelector: ""
-  },
-  {
-    url: "www.npmjs.com/package/",
-    repoFormat: formats.npm,
-    parseFunction: parseNPM,
-    titleSelector: ".package-name-redundant"
-  },
-  {
-    url: "nuget.org/packages/",
-    repoFormat: formats.nuget,
-    parseFunction: parseNuget,
-    titleSelector: ".package-title > h1"
-  },
-  {
-    url: "pypi.org/project/",
-    repoFormat: formats.pypi,
-    parseFunction: parsePyPI,
-    titleSelector: ""
-  },
-  {
-    url: "rubygems.org/gems/",
-    repoFormat: formats.ruby,
-    parseFunction: parseRuby,
-    titleSelector: ""
-  },
-  {
-    url: "packagist.org/packages/",
-    repoFormat: formats.composer,
-    parseFunction: parsePackagist,
-    titleSelector: ""
-  },
-  {
-    url: "cocoapods.org/pods/",
-    repoFormat: formats.cocoapods,
-    parseFunction: parseCocoaPods,
-    titleSelector: ""
-  },
-  {
-    url: "cran.r-project.org/",
-    repoFormat: formats.cran,
-    parseFunction: parseCRAN,
-    titleSelector: ""
-  },
-  {
-    url: "https://crates.io/crates/",
-    repoFormat: formats.cargo,
-    parseFunction:parseCrates,
-    titleSelector: ""
-  },
-  {
-    url: "https://search.gocenter.io/",
-    repoFormat: formats.golang,
-    parseFunction: parseGoLang,
-    titleSelector: ""
-  },
-  {
-    url: "/#browse/browse:",
-    parseFunction: parseNexusRepo,
-    titleSelector: ""
-  }
 ];
 
 function findRepoType() {
@@ -291,7 +194,7 @@ function ParsePage() {
   console.log("url", url);
 
   var repoDetails = findRepoType();
- 
+
   console.debug("found repo details", repoDetails);
 
   if (repoDetails) {
@@ -304,7 +207,7 @@ function ParsePage() {
   //we pass variables through background
   message = {
     messagetype: messageTypes.artifact,
-    payload: artifact
+    payload: artifact,
   };
   return artifact;
 }
@@ -341,7 +244,7 @@ function parseMaven(format, url) {
     artifactId: artifactId,
     version: version,
     extension: extension,
-    datasource: datasource
+    datasource: datasource,
   };
 }
 
@@ -399,7 +302,7 @@ function parseNPM(format, url) {
     format: format,
     packageName: packageName,
     version: version,
-    datasource: datasource
+    datasource: datasource,
   };
 }
 
@@ -428,7 +331,7 @@ function parseNuget(format, url) {
       .trim()
       .split(" ")
 
-      .filter(el => el != "");
+      .filter((el) => el != "");
     packageId = titleElements[3];
     //#skippedToContent > section > div > article > div.package-title > h1 > small
     version = titleElements[4];
@@ -444,7 +347,7 @@ function parseNuget(format, url) {
     format: format,
     packageId: packageId,
     version: version,
-    datasource: datasource
+    datasource: datasource,
   };
   console.log("nugetArtifact", nugetArtifact);
   return nugetArtifact;
@@ -463,9 +366,7 @@ function parsePyPI(format, url) {
     //#content > section.banner > div > div.package-header__left > h1
     //Says Django 2.0.5
     name = elements[4];
-    let versionHTML = $("h1.package-header__name")
-      .text()
-      .trim();
+    let versionHTML = $("h1.package-header__name").text().trim();
     console.log("versionHTML", versionHTML);
     let versionElements = versionHTML.split(" ");
     version = versionElements[1];
@@ -504,7 +405,7 @@ function parsePyPI(format, url) {
     version: version,
     datasource: datasource,
     extension: extension,
-    qualifier: qualifier
+    qualifier: qualifier,
   };
   return artifact;
 }
@@ -539,7 +440,7 @@ function parseRuby(format, url) {
     format: format,
     name: name,
     version: version,
-    datasource: datasource
+    datasource: datasource,
   };
 }
 
@@ -564,9 +465,7 @@ function parsePackagist(format, url) {
   } else {
     //get the version from the HTML as we are on the generic page
     //#headline > div > h1 > span
-    let versionHTML = $("span.version-number")
-      .first()
-      .text();
+    let versionHTML = $("span.version-number").first().text();
     console.log("versionHTML:", versionHTML);
     version = versionHTML.trim();
   }
@@ -577,7 +476,7 @@ function parsePackagist(format, url) {
     format: format,
     datasource: datasource,
     name: name,
-    version: version
+    version: version,
   };
 }
 
@@ -585,9 +484,7 @@ function parseCocoaPods(format, url) {
   console.log("parseCocoaPods. format, url:", format, url);
   let elements = url.split("/");
   //https://cocoapods.org/pods/TestFairy
-  let versionHTML = $("H1 span")
-    .first()
-    .text();
+  let versionHTML = $("H1 span").first().text();
   console.log("versionHTML:", versionHTML);
   let version = versionHTML.trim();
   let name = elements[4];
@@ -598,7 +495,7 @@ function parseCocoaPods(format, url) {
     format: format,
     datasource: datasource,
     name: name,
-    version: version
+    version: version,
   };
 }
 
@@ -632,9 +529,7 @@ function parseCRAN(format, url) {
     }
   }
 
-  let versionHTML = $("table tr:nth-child(1) td:nth-child(2)")
-    .first()
-    .text();
+  let versionHTML = $("table tr:nth-child(1) td:nth-child(2)").first().text();
   console.log("versionHTML:", versionHTML);
   version = versionHTML.trim();
   name = encodeURIComponent(name);
@@ -644,7 +539,7 @@ function parseCRAN(format, url) {
     format: format,
     datasource: datasource,
     name: name,
-    version: version
+    version: version,
   };
 }
 
@@ -658,6 +553,7 @@ function parseGoLang(format, url) {
 
   // pkg:golang/github.com/etcd-io/etcd@3.3.1
   // pkg:github/etcd-io/etcd@3.3.1
+  //https://search.gocenter.io/github.com/go-gitea/gitea
   console.log("parseGolang:", format, url);
   let elements = url.split("/");
   //CRAN may have the packagename in the URL
@@ -670,13 +566,15 @@ function parseGoLang(format, url) {
     //has packagename in 5
     let fullname = elements[3];
     //"github.com~2Fhansrodtang~2Frandomcolor"
-    let nameElements = fullname.split("~2F");
+    //tthe've cleaned it up
+    //now looks like https://search.gocenter.io/github.com/go-gitea/gitea
+    // let nameElements = fullname.split("");
     // 0: "github.com"
     // 1: "hansrodtang"
     // 2: "randomcolor"
-    type = "github.com";
-    namespace = nameElements[1];
-    name = nameElements[2];
+    type = elements[3]; //"github.com";
+    namespace = elements[4];
+    name = elements[5];
   }
 
   //CPT 19/09/19 - Gocenter keep changing their markup for golang so we are having trouble
@@ -689,17 +587,22 @@ function parseGoLang(format, url) {
     // versionHTMLElement = $(
     //   "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
     // )[0];
+    //<span data-v-43be9f46="" class="red--text mr-2">v1.18.0</span>
     versionHTMLElement = $(".version-name")[0];
     console.log("if versionHTMLElement", versionHTMLElement);
   } else {
     //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
-    versionHTMLElement = $(
-      "#select-header > span > span.ui-select-match-text.pull-left"
-    )[0];
+    //<div class="v-select__selection v-select__selection--comma">v1.9.0-dev</div>
+    // versionHTMLElement = $(
+    //   "#select-header > span > span.ui-select-match-text.pull-left"
+    // )[0];
+    versionHTMLElement = $("div.v-select__selection")[0];
     console.log("else versionHTMLElement", versionHTMLElement);
   }
+  console.log("versionHTMLElement", versionHTMLElement);
   if (typeof versionHTMLElement === "undefined") {
     //raiserror  "DOM changed"
+    console.log("DOM changed");
   }
   let versionHTML = versionHTMLElement.innerText;
   console.log("versionHTML", versionHTML);
@@ -718,7 +621,7 @@ function parseGoLang(format, url) {
     type: type,
     namespace: namespace,
     name: name,
-    version: version
+    version: version,
   };
   return artifact;
 }
@@ -753,7 +656,7 @@ function parseCrates(format, url) {
     format: format,
     datasource: datasource,
     name: name,
-    version: version
+    version: version,
   };
 }
 
@@ -795,7 +698,7 @@ function parseNexusRepo(url) {
         name: name,
         version: version,
         extension: "zip", //whl or zip, how to tell
-        qualifier: ""
+        qualifier: "",
       };
       break;
     case nexusRepoformats.maven:
@@ -816,7 +719,7 @@ function parseNexusRepo(url) {
         groupId: groupId,
         artifactId: artifactId,
         version: version,
-        extension: "jar"
+        extension: "jar",
       };
       break;
     case nexusRepoformats.npm:
@@ -832,7 +735,7 @@ function parseNexusRepo(url) {
         format: format,
         datasource: datasource,
         packageName: name,
-        version: version
+        version: version,
       };
       break;
     case nexusRepoformats.nuget:
@@ -848,7 +751,7 @@ function parseNexusRepo(url) {
         format: format,
         datasource: datasource,
         packageId: name,
-        version: version
+        version: version,
       };
       break;
     case nexusRepoformats.gem:
@@ -864,7 +767,7 @@ function parseNexusRepo(url) {
         format: format,
         datasource: datasource,
         name: name,
-        version: version
+        version: version,
       };
       break;
     default:

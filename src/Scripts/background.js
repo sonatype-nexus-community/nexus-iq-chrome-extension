@@ -1,14 +1,23 @@
 /*jslint es6  -W024 */
 "use strict";
 console.log("background.js");
-import {
-  checkPageIsHandled,
-  beginEvaluation,
-  messageTypes,
-  BuildSettingsFromGlobal,
-  evaluateComponent,
-  GetActiveTab
-} from "./utils.js";
+// import {
+//   checkPageIsHandled,
+//   beginEvaluation,
+//   messageTypes,
+//   BuildSettingsFromGlobal,
+//   evaluateComponent,
+//   GetActiveTab,
+// } from "./utils.js";
+
+// const checkPageIsHandled = require('./utils.js');
+// const beginEvaluation = require('./utils.js');
+// const messageTypes = require('./utils.js');
+// const BuildSettingsFromGlobal = require('./utils.js');
+// const evaluateComponent = require('./utils.js');
+// const GetActiveTab = require('./utils.js');
+
+
 
 var browser;
 if (typeof chrome !== "undefined") {
@@ -30,15 +39,16 @@ const gotMessage = async (message, sender, sendResponse) => {
   let artifact;
   // console.log('message')
   // console.log(message)
+  let evaluatemessage;
   switch (message.messagetype) {
     case messageTypes.evaluateComponent:
       //changed this to now be handled by the background
       //if we install the script in to the content script
       //background handles it not popup
       artifact = message.artifact;
-      let evaluatemessage = {
+      evaluatemessage = {
         artifact: artifact,
-        messagetype: messageTypes.evaluateComponent
+        messagetype: messageTypes.evaluateComponent,
       };
       let settings = await BuildSettingsFromGlobal();
       console.log("settings", settings);
@@ -111,22 +121,20 @@ install_notice();
 
 // getActiveTab();
 
-const sendNotification = componentDetails => {
-  if (1 === 2) {
-    return;
-  }
-  console.log("sendNotification", componentDetails.securityData.securityIssues);
+const sendNotification = (securityData) => {
+
+  console.log("sendNotification", securityData);
   var options = {
     type: "basic",
     title: "Vulnerable library",
     message: "IQ found vulnerabilities in this version",
-    iconUrl: "../images/SON_logo_favicon_Vulnerable.png"
+    iconUrl: "../images/SON_logo_favicon_Vulnerable.png",
   };
 
-  let securityData = componentDetails.securityData.securityIssues;
+  // let securityData = componentDetails.securityData.securityIssues;
   let severity = 0;
   if (securityData && securityData.length > 0) {
-    severity = securityData[0].severity;
+    severity = securityData[0].severity || securityData[0].cvssScore;
   }
   console.debug("detected severity " + severity);
   let vulnClass = "vuln-low";
@@ -142,52 +150,14 @@ const sendNotification = componentDetails => {
     messagetype: messageTypes.vulnerability,
     message: {
       severity: severity,
-      "vulnClass": vulnClass
-    }
-  }
-
-  browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    browser.tabs.sendMessage(tabs[0].id, vulnMessage);
-  });
-
-
-  //////////////
-  let securityData = componentDetails.securityData.securityIssues;
-  let severity = 0;
-  if (securityData && securityData.length > 0) {
-    severity = securityData[0].severity;
-  }
-  console.debug("detected severity " + severity);
-  let vulnClass = "vuln-low";
-  if (severity >= 9) {
-    vulnClass = "vuln-severe";
-  } else if (severity >= 7) {
-    vulnClass = "vuln-high";
-  } else if (severity >= 5) {
-    vulnClass = "vuln-med";
-  }
-
-  // console.debug("Setting vuln class: " + vulnClass);
-  // console.debug('browser: ', browser);
-  // var x = document.getElementsByClassName("package-name-redundant");
-  // console.debug("found titles", x);
-  // for (var i = 0; i < x.length; i++) {
-  //   console.debug("adding to class: " + vulnClass);
-  //   x[i].classList.add(vulnClass);
-  // }
-
-  let vulnMessage = {
-    messagetype: messageTypes.vulnerability,
-    message: {
-      severity: severity,
-      vulnClass: vulnClass
-    }
+      vulnClass: vulnClass,
+    },
   };
 
-  browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+  browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     browser.tabs.sendMessage(tabs[0].id, vulnMessage);
   });
-  //////////////
+
 
   browser.notifications.create(
     "NexusIQNotification",
@@ -199,21 +169,21 @@ const sendNotification = componentDetails => {
       priority: 1,
       buttons: [
         {
-          title: "Close"
-        }
+          title: "Close",
+        },
       ],
-      isClickable: true
+      isClickable: true,
     },
-    function() {
+    function () {
       console.log("chrome.runtime.lastError", browser.runtime.lastError);
     }
   );
 };
 
-const loadSettingsAndEvaluate = artifact => {
+const loadSettingsAndEvaluate = (artifact) => {
   console.log("loadSettingsAndEvaluate", artifact);
 
-  browser.storage.sync.get(["url", "username", "password", "appId"], function(
+  browser.storage.sync.get(["url", "username", "password", "appId"], function (
     data
   ) {
     console.log("data: ", data);
@@ -230,9 +200,9 @@ const loadSettingsAndEvaluate = artifact => {
         messagetype: messageTypes.loginFailedMessage,
         message: {
           response:
-            "No Login Settings have been saved yet. Go to the options page."
+            "No Login Settings have been saved yet. Go to the options page.",
         },
-        artifact: artifact
+        artifact: artifact,
       };
       console.log("sendmessage");
       console.log(errorMessage);
@@ -246,7 +216,7 @@ const loadSettingsAndEvaluate = artifact => {
   });
 };
 
-const login = settings => {
+const login = (settings) => {
   console.log("login");
   console.log(settings.auth);
   var retVal;
@@ -263,7 +233,7 @@ const login = settings => {
   // xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
   xhr.setRequestHeader("Authorization", settings.auth);
   // xhr.withCredentials = true;
-  xhr.onload = function(e) {
+  xhr.onload = function (e) {
     let error = 0;
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
@@ -277,19 +247,19 @@ const login = settings => {
       }
       retVal = {
         error: xhr.status !== 200,
-        response: xhr.responseText
+        response: xhr.responseText,
       };
       // return
       // let retval = evaluate(artifact, settings);
 
       if (retVal.error) {
-        console.log("WebRequest error", retval);
+        console.log("WebRequest error", retVal);
       } else {
         console.log("happy days", retVal);
       }
       let loggedInMessage = {
         messagetype: messageTypes.loggedIn,
-        message: retVal
+        message: retVal,
       };
       window.haveLoggedIn = true;
       console.log("sendmessage: loggedInMessage", loggedInMessage);
@@ -297,15 +267,15 @@ const login = settings => {
       return retVal;
     }
   };
-  xhr.onerror = function(e) {
+  xhr.onerror = function (e) {
     console.log(xhr);
     retVal = {
       error: xhr.status,
-      response: xhr.responseText
+      response: xhr.responseText,
     };
     let loginFailedMessage = {
       messagetype: messageTypes.loginFailedMessage,
-      message: retVal
+      message: retVal,
     };
     browser.runtime.sendMessage(loginFailedMessage);
     return retVal;
@@ -359,7 +329,7 @@ const callIQ = (artifact, settings) => {
   // http.setRequestHeader("Connection", "close");
   xhr.setRequestHeader("Authorization", settings.auth);
   xhr.withCredentials = true;
-  xhr.onload = function(e) {
+  xhr.onload = function (e) {
     let error = 0;
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
@@ -389,14 +359,14 @@ const callIQ = (artifact, settings) => {
       let displayMessage = {
         messagetype: messageTypes.displayMessage,
         message: retVal,
-        artifact: artifact
+        artifact: artifact,
       };
       console.log("displayMessage", displayMessage);
       browser.runtime.sendMessage(displayMessage);
       return retVal;
     }
   };
-  xhr.onerror = function(e) {
+  xhr.onerror = function (e) {
     console.log(xhr);
     //let response = JSON.parse(xhr.responseText);
     let response = { errorMessage: xhr.responseText };
@@ -404,7 +374,7 @@ const callIQ = (artifact, settings) => {
     let displayMessage = {
       messagetype: messageTypes.displayMessage,
       message: retVal,
-      artifact: artifact
+      artifact: artifact,
     };
     browser.runtime.sendMessage(displayMessage);
     return retVal;
@@ -418,7 +388,7 @@ const callIQ = (artifact, settings) => {
   console.log(xhr);
 };
 
-const ToggleIcon = tab => {
+const ToggleIcon = (tab) => {
   console.log("ToggleIcon", tab);
   let found = checkPageIsHandled(tab.url);
 
@@ -437,7 +407,7 @@ const quickTest = async () => {
     classifier: "",
     extension: "jar",
     groupId: "io.springfox",
-    version: "2.6.1"
+    version: "2.6.1",
   };
   let nexusArtifact = NexusFormatMaven(artifact);
   nexusArtifact.hash = "4c854c86c91ab36c86fc";
@@ -455,7 +425,7 @@ const quickTest2 = async () => {
     artifactId: "commons-collections",
     version: "3.2.1",
     classifier: "",
-    extension: "jar"
+    extension: "jar",
   };
   let nexusArtifact = NexusFormatMaven(artifact);
   nexusArtifact.hash = "761ea405b9b37ced573d";
@@ -483,7 +453,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     } else {
       browser.pageAction.setIcon({
         path: "../images/SON_logo_favicon_not_vuln.png",
-        tabId: tabId
+        tabId: tabId,
       });
     }
   }
@@ -532,8 +502,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 // });
 
 //this does work
-browser.runtime.onInstalled.addListener(function() {
- 
+browser.runtime.onInstalled.addListener(function () {
   // loadSettings();
   // let tabId = 0;
   // if (checkPageIsHandled(url)){
@@ -549,7 +518,7 @@ browser.runtime.onInstalled.addListener(function() {
     return;
   }
   console.log("browser.runtime.onInstalled.addListener");
-  browser.declarativeContent.onPageChanged.removeRules(undefined, function() {
+  browser.declarativeContent.onPageChanged.removeRules(undefined, function () {
     browser.declarativeContent.onPageChanged.addRules([
       {
         conditions: [
@@ -558,8 +527,8 @@ browser.runtime.onInstalled.addListener(function() {
             pageUrl: {
               hostEquals: "mvnrepository.com",
               schemes: ["https"],
-              pathContains: "artifact"
-            }
+              pathContains: "artifact",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             //https://search.maven.org/#artifactdetails%7Corg.apache.struts%7Cstruts2-core%7C2.3.31%7Cjar
@@ -568,8 +537,8 @@ browser.runtime.onInstalled.addListener(function() {
             pageUrl: {
               hostEquals: "search.maven.org",
               schemes: ["https"],
-              pathContains: "artifact"
-            }
+              pathContains: "artifact",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             //https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
@@ -577,88 +546,88 @@ browser.runtime.onInstalled.addListener(function() {
             pageUrl: {
               hostEquals: "repo1.maven.org",
               schemes: ["https"],
-              pathContains: "maven2"
-            }
+              pathContains: "maven2",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             //http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
             pageUrl: {
               hostEquals: "repo2.maven.org",
               schemes: ["http"],
-              pathContains: "maven2"
-            }
+              pathContains: "maven2",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "www.npmjs.com",
               schemes: ["https"],
-              pathContains: "package"
-            }
+              pathContains: "package",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "www.nuget.org",
               schemes: ["https"],
-              pathContains: "packages"
-            }
+              pathContains: "packages",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "pypi.org",
               schemes: ["https"],
-              pathContains: "project"
-            }
+              pathContains: "project",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "rubygems.org",
               schemes: ["https"],
-              pathContains: "gems"
-            }
+              pathContains: "gems",
+            },
           }),
           //OSSINDEX
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "packagist.org",
               schemes: ["https"],
-              pathContains: "packages"
-            }
+              pathContains: "packages",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "cocoapods.org",
               schemes: ["https"],
-              pathContains: "pods"
-            }
+              pathContains: "pods",
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "cran.r-project.org",
-              schemes: ["https"]
-            }
+              schemes: ["https"],
+            },
           }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "crates.io",
               schemes: ["https"],
-              pathContains: "crates"
-            }
+              pathContains: "crates",
+            },
           }),
           //perhaps add support for https://go-search.org/view?id=github.com%2fetcd-io%2fetcd
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "search.gocenter.io",
               schemes: ["https"],
-              pathContains: "github.com"
-            }
+              pathContains: "github.com",
+            },
           }),
           //https://github.com/jquery/jquery/releases/tag/3.0.0
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "github.com",
               schemes: ["https"],
-              pathContains: "releases/tag"
-            }
+              pathContains: "releases/tag",
+            },
           }),
           //Artifactory could be any URL but has the
           //webapp/#/artifacts pattern
@@ -666,15 +635,15 @@ browser.runtime.onInstalled.addListener(function() {
           //https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
-              pathContains: "webapp"
-            }
+              pathContains: "webapp",
+            },
           }),
           //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
-              pathContains: "list"
+              pathContains: "list",
             },
-            css: ["address"]
+            css: ["address"],
           }),
           //Nexus Repo
           //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
@@ -682,43 +651,54 @@ browser.runtime.onInstalled.addListener(function() {
           //Chrome does not support parsing after the # in these PageMatchers
 
           new browser.declarativeContent.PageStateMatcher({
-            css: ["label.x-component"]
+            css: ["label.x-component"],
           }),
           //https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "rpmfind.net",
               schemes: ["https"],
-              pathContains: "linux/RPM/epel"
-            }
-          })
+              pathContains: "linux/RPM/epel",
+            },
+          }),
         ],
 
-        actions: [new browser.declarativeContent.ShowPageAction()]
-      }
+        actions: [new browser.declarativeContent.ShowPageAction()],
+      },
     ]);
   });
 });
- 
 
 function displayEvaluationReults(displayMessageData, tabId) {
   console.log("displayEvaluationReults", displayMessageData, tabId);
+  let responseArtifact = displayMessageData.artifact;
   let responseData = displayMessageData.message.response;
-  let componentDetails = responseData.componentDetails[0];
-  let hasVulnerability =
-    componentDetails.securityData.securityIssues.length > 0;
+  let componentDetails, hasVulnerability, vulnerabilities;
+  if (responseArtifact.datasource === dataSources.NEXUSIQ){
+    componentDetails = responseData.componentDetails[0];
+    hasVulnerability =    componentDetails.securityData.securityIssues.length > 0;
+    vulnerabilities = componentDetails.securityData.securityIssues
+  }else if (responseArtifact.datasource === dataSources.OSSINDEX)
+  {
+    componentDetails = responseData.coordinates;
+    hasVulnerability =   responseData.vulnerabilities.length > 0;
+    vulnerabilities = responseData.vulnerabilities;
+  }
+  else{
+    //unhandled, so return
+  }
   console.log("hasVulnerability", hasVulnerability);
   if (hasVulnerability) {
     browser.pageAction.setIcon({
       path: "../images/SON_logo_favicon_Vulnerable.png",
-      tabId: tabId
+      tabId: tabId,
     });
     //chrome.browserAction.setBadgeText({text: "!"});
-    sendNotification(componentDetails);
+    sendNotification(vulnerabilities);
   } else {
     browser.pageAction.setIcon({
       path: "../images/SON_logo_favicon_not_vuln.png",
-      tabId: tabId
+      tabId: tabId,
     });
   }
 }

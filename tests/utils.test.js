@@ -232,6 +232,7 @@ test("Check NexusFormat positive test", () => {
     hash: null
   };
   let actual = NexusFormat(artifact);
+  let component;
   let expected = {
     components: [
       (component = {
@@ -263,6 +264,7 @@ test("Check NexusFormatMaven positive test", () => {
     hash: null
   };
   let actual = NexusFormatMaven(artifact);
+  let component;
   let expected = {
     components: [
       (component = {
@@ -291,6 +293,7 @@ test("Check NexusFormatNPM positive test", () => {
     hash: null
   };
   let actual = NexusFormatNPM(artifact);
+  let component;
   let expected = {
     components: [
       (component = {
@@ -316,6 +319,7 @@ test("Check NexusFormatNuget positive test", () => {
     hash: null
   };
   let actual = NexusFormatNuget(artifact);
+  let component;
   //return a dictionary in Nexus Format ofr Nuget
   //return dictionary of components
   let expected = {
@@ -343,6 +347,7 @@ test("Check NexusFormatPyPI positive test", () => {
     hash: null
   };
   let actual = NexusFormatPyPI(artifact);
+  let component;
   //return a dictionary in Nexus Format
   //return dictionary of components
   //TODO: how to determine the qualifier and the extension??
@@ -373,6 +378,7 @@ test("Check NexusFormatRuby positive test", () => {
     hash: null
   };
   let actual = NexusFormatRuby(artifact);
+  let component;
   //return a dictionary in Nexus Format
   //return dictionary of components
   //TODO: how to determine the qualifier and the extension??
@@ -1373,11 +1379,20 @@ test("Check GetDomainName positive test", () => {
   let actual = getDomainName(url);
   expect(actual).toEqual(expected);
 
-  //bug found by Stuart Bishop
+  //bug found by Stuart Bishop issue #70
   url = "https://nexusiq.prd.gaff.systems/";
   expected = ".nexusiq.prd.gaff.systems";
   actual = getDomainName(url);
   expect(actual).toEqual(expected);
+
+  //another case by Stuart Bishop issue #70
+  
+  url = "https://nexus.prd.systems/";
+  expected = ".nexus.prd.systems";
+  actual = getDomainName(url);
+  expect(actual).toEqual(expected);
+
+
 });
 
 test("Check GetActiveTab positive test", () => {

@@ -1,17 +1,23 @@
 /*jslint es6  -W024 */
 "use strict";
 console.log("popup.js");
-import * as utils from "./utils.js";
+// import * as utils from "./js";
 const timeout = 3000; //3000milliseconds
 let hasLoadedHistory;
 var browser;
+// var messageTypes = messageTypes;
+// var artifact = artifact;
+// var settings = settings;
+// var nexusArtifact = nexusArtifact;
+// var dataSources = dataSources;
+
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
 
 //var settings;
 //var componentInfoData;
-$(async function() {
+$(async function () {
   let displayMessageData;
   try {
     //whenever I open I begin an evaluation immediately
@@ -22,21 +28,21 @@ $(async function() {
     $("#error").hide();
 
     let tabOptions = {
-      beforeActivate: selectTabHandler
+      beforeActivate: selectTabHandler,
     };
     $("#tabs").tabs(tabOptions);
     hasLoadedHistory = false;
     $("div#dialogSecurityDetails").dialog({
-      autoOpen: false
+      autoOpen: false,
     });
 
     //begin evaluation sends a message to the background script
     //and to the content script
     //I may be able to cheat and just get the URL, which simplifies the logic
     //if the URL is not parseable then I will have to go the content script to read the DOM
-    let tab = await utils.GetActiveTab();
+    let tab = await GetActiveTab();
     let url = tab.url;
-    displayMessageData = await utils.beginEvaluation(tab);
+    displayMessageData = await beginEvaluation(tab);
     // Promise.race([waitCursorTimeOut, beginEvaluation]).then(function(value) {
     //   console.log(value);
     // });
@@ -59,7 +65,7 @@ $(async function() {
 });
 
 const waitCursorTimeOut = () => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, timeout, "correct100msResult");
   });
 };
@@ -69,18 +75,12 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
     //this is the callback handler for a message received
     console.log("popup got message", respMessage);
     let hasError = false;
-    await utils.BuildSettingsFromGlobal();
-    let messageTypes = utils.messageTypes;
-    let artifact = utils.artifact;
-    let settings = utils.settings;
+    await BuildSettingsFromGlobal();
     switch (respMessage.messagetype) {
       case messageTypes.evaluateComponent:
         console.log("messageTypes.evaluateComponent", artifact);
-        utils.setArtifact(respMessage.artifact);
-        let displayMessage = await utils.evaluateComponent(
-          utils.artifact,
-          settings
-        );
+        setArtifact(respMessage.artifact);
+        let displayMessage = await evaluateComponent(artifact, settings);
         await displayMessageDataHTML(displayMessage);
         break;
       case messageTypes.displayMessage:
@@ -120,7 +120,7 @@ const showLoader = () => {
   $(".loader").fadeIn("slow");
 };
 
-const hideLoader = hasError => {
+const hideLoader = (hasError) => {
   //$(".loader").fadeOut("slow");
   document.getElementById("loader").style.display = "none";
   document.getElementById("tabs").style.display = "block";
@@ -129,10 +129,6 @@ const hideLoader = hasError => {
 const selectTabHandler = async (e, tab) => {
   //lazy loading of history
   //only do it if the user clicks on the tab
-  let nexusArtifact = utils.nexusArtifact;
-  let artifact = utils.artifact;
-  let dataSources = utils.dataSources;
-  let settings = utils.settings;
   showLoader();
   const remediationTab = 2;
   console.log(
@@ -149,24 +145,24 @@ const selectTabHandler = async (e, tab) => {
   ) {
     $("<p></p>", {
       text: "Please wait while we load the Version History...",
-      class: "status-message ui-corner-all"
+      class: "status-message ui-corner-all",
     })
       .appendTo(".ui-tabs-nav", "#demo")
-      .fadeOut(2500, function() {
+      .fadeOut(2500, function () {
         $(this).remove();
       });
     let remediation;
-    console.log("utils.hasVulns", utils.hasVulns);
-    if (utils.hasVulns || true) {
+    console.log("hasVulns", hasVulns);
+    if (hasVulns || true) {
       remediation = await showRemediation(nexusArtifact, settings);
     }
-    let allVersions = await utils.GetAllVersions(
+    let allVersions = await GetAllVersions(
       nexusArtifact,
       settings,
       remediation
     );
     let currentVersion =
-      nexusArtifact.components[0].componentIdentifier.coordinates.version;
+      nexusArtifact.component.componentIdentifier.coordinates.version;
 
     await renderGraph(allVersions, remediation, currentVersion);
     hasLoadedHistory = true;
@@ -291,14 +287,14 @@ const createHTML = async (message, settings) => {
   // console.log('thisComponent')
   // console.log(thisComponent)
   switch (message.artifact.datasource) {
-    case utils.dataSources.NEXUSIQ:
+    case dataSources.NEXUSIQ:
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
       // let thisComponent = message.message.response.componentDetails["0"];
       renderComponentData(message);
       renderLicenseData(message);
       let hasVulns = renderSecurityData(message);
-      utils.setHasVulns(hasVulns);
+      setHasVulns(hasVulns);
       //store nexusArtifact in Global variable
       // let remediation
       // if (hasVulns) {
@@ -307,7 +303,7 @@ const createHTML = async (message, settings) => {
       // let allVersions = await GetAllVersions(nexusArtifact, settings, remediation)
       // renderGraph(data, remediation, currentVersion);
       break;
-    case utils.dataSources.OSSINDEX:
+    case dataSources.OSSINDEX:
       //from OSSINdex
       console.log("OSSINDEX");
       renderComponentDataOSSIndex(message);
@@ -323,10 +319,10 @@ const createHTML = async (message, settings) => {
   }
 };
 
-const renderComponentDataOSSIndex = message => {
+const renderComponentDataOSSIndex = (message) => {
   console.log("renderComponentDataOSSIndex", message);
   let packageName = unescape(message.artifact.name);
-  if (message.artifact.format === utils.formats.golang) {
+  if (message.artifact.format === formats.golang) {
     //pkg:github/etcd-io/etcd@3.3.1
     let goFormat = `github/${message.artifact.namespace}/${message.artifact.name}`;
     packageName = unescape(goFormat);
@@ -350,7 +346,7 @@ const renderComponentDataOSSIndex = message => {
   // $("#matchstate").html(message.message.response.reference)
 };
 
-const renderLicenseDataOSSIndex = message => {
+const renderLicenseDataOSSIndex = (message) => {
   //not supported
   //$("#tabs-2").addClass("invisible");
 
@@ -358,7 +354,7 @@ const renderLicenseDataOSSIndex = message => {
   $("#licensetable").addClass("invisible");
 };
 
-const renderSecurityDataOSSIndex = message => {
+const renderSecurityDataOSSIndex = (message) => {
   console.log("renderSecurityDataOSSIndex", message);
   let securityIssues = message.message.response.vulnerabilities;
   let strAccordion = "";
@@ -379,7 +375,7 @@ const renderSecurityDataOSSIndex = message => {
       } else {
         vulnerabilityCode = securityIssue.cve;
       }
-      let className = utils.styleCVSS(securityIssue.cvssScore);
+      let className = styleCVSS(securityIssue.cvssScore);
       // let vulnerabilityCode = (typeof securityIssue.cve === "undefined") ? 'No CVE' : securityIssue.cve;
       strAccordion +=
         '<h3><span class="headingreference">' +
@@ -436,7 +432,7 @@ const renderSecurityDataOSSIndex = message => {
   }
 };
 
-const renderComponentData = message => {
+const renderComponentData = (message) => {
   console.log("renderComponentData-thisComponent:", message);
   let thisComponent = message.message.response.componentDetails["0"];
   let component = thisComponent.component;
@@ -447,9 +443,9 @@ const renderComponentData = message => {
   console.log("coordinates:", coordinates);
   let display, thisCoords;
   switch (format) {
-    case utils.formats.maven:
+    case formats.maven:
       // console.log(coordinates.groupId);
-      thisCoords = new utils.MavenCoordinates(
+      thisCoords = new MavenCoordinates(
         coordinates.groupId,
         coordinates.artifactId,
         coordinates.version
@@ -458,22 +454,22 @@ const renderComponentData = message => {
       // $("#package").html(display);
       $("#package").html(`${coordinates.groupId}:${coordinates.artifactId}`);
       break;
-    case utils.formats.npm:
+    case formats.npm:
       $("#package").html(coordinates.packageId);
       break;
-    case utils.formats.nuget:
+    case formats.nuget:
       $("#package").html(coordinates.packageId);
       break;
-    case utils.formats.gem:
+    case formats.gem:
       $("#package").html(coordinates.name);
       break;
-    case utils.formats.pypi:
+    case formats.pypi:
       $("#package").html(coordinates.name);
       break;
-    case utils.formats.golang:
+    case formats.golang:
       $("#package").html(coordinates.name);
       break;
-    case utils.formats.rpm:
+    case formats.rpm:
       $("#package").html(coordinates.name);
       break;
 
@@ -483,8 +479,8 @@ const renderComponentData = message => {
   }
   console.log("coordinates.version:", coordinates.version);
   $("#version").html(coordinates.version);
-  utils.SetHash(component.hash);
-  // utils.artifact.hash = component.hash;
+  SetHash(component.hash);
+  // artifact.hash = component.hash;
   $("#hash").html(component.hash);
 
   //document.getElementById("matchstate").innerHTML = componentInfoData.componentDetails["0"].matchState;
@@ -495,31 +491,27 @@ const renderComponentData = message => {
   renderSecuritySummaryIQ(message);
 };
 
-const renderSecuritySummaryIQ = message => {
+const renderSecuritySummaryIQ = (message) => {
   let highest = Highest_CVSS_Score(message);
-  let className = utils.styleCVSS(highest);
-  $("#Highest_CVSS_Score")
-    .html(highest)
-    .addClass(className);
+  let className = styleCVSS(highest);
+  $("#Highest_CVSS_Score").html(highest).addClass(className);
 
   let numIssues = Count_CVSS_Issues(message);
   let theCount = ` within ${numIssues} security issues`;
   $("#Num_CVSS_Issues").html(theCount);
 };
 
-const renderSecuritySummaryOSSIndex = message => {
+const renderSecuritySummaryOSSIndex = (message) => {
   let highest = Highest_CVSS_ScoreOSSIndex(message);
-  let className = utils.styleCVSS(highest);
-  $("#Highest_CVSS_Score")
-    .html(highest)
-    .addClass(className);
+  let className = styleCVSS(highest);
+  $("#Highest_CVSS_Score").html(highest).addClass(className);
 
   let numIssues = Count_CVSS_IssuesOSSIndex(message);
   let theCount = ` within ${numIssues} security issues`;
   $("#Num_CVSS_Issues").html(theCount);
 };
 
-const renderLicenseData = message => {
+const renderLicenseData = (message) => {
   var thisComponent = message.message.response.componentDetails["0"];
   let licenseData = thisComponent.licenseData;
   if (licenseData.declaredLicenses.length > 0) {
@@ -553,7 +545,7 @@ const renderLicenseData = message => {
   }
 };
 
-const Highest_CVSS_Score = message => {
+const Highest_CVSS_Score = (message) => {
   console.log("Highest_CVSS_Score(beginning)", message);
   var thisComponent = message.message.response.componentDetails["0"];
 
@@ -561,7 +553,7 @@ const Highest_CVSS_Score = message => {
   let securityIssues = thisComponent.securityData.securityIssues;
   var highestSecurityIssue = Math.max.apply(
     Math,
-    securityIssues.map(function(securityIssue) {
+    securityIssues.map(function (securityIssue) {
       return securityIssue.severity;
     })
   );
@@ -578,7 +570,7 @@ const Highest_CVSS_Score = message => {
   return highestSecurityIssue;
 };
 
-const Highest_CVSS_ScoreOSSIndex = message => {
+const Highest_CVSS_ScoreOSSIndex = (message) => {
   console.log("Highest_CVSS_Score(beginning)", message);
   var thisComponent = message.message.response;
 
@@ -586,7 +578,7 @@ const Highest_CVSS_ScoreOSSIndex = message => {
   let securityIssues = thisComponent.vulnerabilities;
   var highestSecurityIssue = Math.max.apply(
     Math,
-    securityIssues.map(function(securityIssue) {
+    securityIssues.map(function (securityIssue) {
       return securityIssue.cvssScore;
     })
   );
@@ -603,7 +595,7 @@ const Highest_CVSS_ScoreOSSIndex = message => {
   return highestSecurityIssue;
 };
 
-const Count_CVSS_IssuesOSSIndex = message => {
+const Count_CVSS_IssuesOSSIndex = (message) => {
   console.log("Count_CVSS_Issues(beginning)", message);
   var thisComponent = message.message.response;
 
@@ -615,7 +607,7 @@ const Count_CVSS_IssuesOSSIndex = message => {
   return countCVSSIssues;
 };
 
-const Count_CVSS_Issues = message => {
+const Count_CVSS_Issues = (message) => {
   console.log("Count_CVSS_Issues(beginning)", message);
   var thisComponent = message.message.response.componentDetails["0"];
 
@@ -627,7 +619,7 @@ const Count_CVSS_Issues = message => {
   return countCVSSIssues;
 };
 
-const renderSecurityData = message => {
+const renderSecurityData = (message) => {
   let hasVulnerability = false;
   var thisComponent = message.message.response.componentDetails["0"];
   let securityIssues = thisComponent.securityData.securityIssues;
@@ -644,7 +636,7 @@ const renderSecurityData = message => {
       let securityIssue = securityIssues[index];
       console.log(securityIssue);
 
-      let className = utils.styleCVSS(securityIssue.severity);
+      let className = styleCVSS(securityIssue.severity);
       let strVulnerability = securityIssue.reference;
 
       strAccordion +=
@@ -694,8 +686,8 @@ const renderSecurityData = message => {
       let securityIssue = securityIssues[index];
       let strVulnerability = securityIssue.reference;
       var createButton = document.getElementById(`info_${strVulnerability}`);
-      createButton.addEventListener("click", function() {
-        showCVEDetail(strVulnerability, utils.artifact);
+      createButton.addEventListener("click", function () {
+        showCVEDetail(strVulnerability, artifact);
       });
       console.log(createButton);
     }
@@ -710,16 +702,12 @@ const renderSecurityData = message => {
 
 const showCVEDetail = async (cveReference, artifact) => {
   console.log("showCVEDetail", cveReference, artifact);
-  // let nexusArtifact = utils.NexusFormat(artifact);
-  let nexusArtifact = utils.nexusArtifact;
-  let settings = utils.settings;
+  // let nexusArtifact = NexusFormat(artifact);
+  // let nexusArtifact = nexusArtifact;
+  // let settings = settings;
   console.log("nexusArtifact", nexusArtifact);
   console.log("settings", settings);
-  let myResp3 = await utils.GetCVEDetails(
-    cveReference,
-    nexusArtifact,
-    settings
-  );
+  let myResp3 = await GetCVEDetails(cveReference, nexusArtifact, settings);
   console.log("myResp3", myResp3);
   let htmlDetails = myResp3.cvedetail.data.htmlDetails;
   //"CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H"
@@ -729,7 +717,7 @@ const showCVEDetail = async (cveReference, artifact) => {
     let cvss = htmlDetails.substring(whereCVSS, whereCVSS + 44);
     console.log("cvss", cvss);
     //https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:L/A:L
-    let cvssExplained = utils.CVSSDetails(cvss);
+    let cvssExplained = CVSSDetails(cvss);
 
     let cvssLink = `<div class="tooltip"><a target="_blank" rel="noreferrer" href="https://www.first.org/cvss/calculator/3.0#${cvss}">${cvss}</a><span class="tooltiptext">${cvssExplained}</span></div>;`;
     htmlDetails = htmlDetails.replace(cvss, cvssLink);
@@ -751,7 +739,7 @@ const showCVEDetail = async (cveReference, artifact) => {
 
 const showRemediation = async (nexusArtifact, settings) => {
   console.log("showRemediation", nexusArtifact, settings);
-  let newVersion = await utils.getRemediation(nexusArtifact, settings);
+  let newVersion = await getRemediation(nexusArtifact, settings);
   let advice;
   if (newVersion == "") {
     newVersion = "Remediation advice. Not available";
@@ -763,7 +751,7 @@ const showRemediation = async (nexusArtifact, settings) => {
   return newVersion;
 };
 
-const showError = error => {
+const showError = (error) => {
   console.log("showError", error);
   let displayError;
   // $("#error").text(error);
@@ -775,7 +763,7 @@ const showError = error => {
     errorText = error.statusText;
   }
   if (typeof error.response !== "undefined") {
-    errorText = response;
+    errorText = error.response;
   } else {
     errorText = error;
   }
@@ -809,15 +797,11 @@ const setupAccordion = () => {
   console.log("setupAccordion");
   $("#accordion")
     .find(".accordion-toggle")
-    .click(function() {
+    .click(function () {
       //Expand or collapse this panel
-      $(this)
-        .next()
-        .slideToggle("fast");
+      $(this).next().slideToggle("fast");
       //Hide the other panels
-      $(".accordion-content")
-        .not($(this).next())
-        .slideUp("fast");
+      $(".accordion-content").not($(this).next()).slideUp("fast");
     });
 };
 
@@ -830,7 +814,7 @@ const sortByProperty = (objArray, prop, direction) => {
   const clone = objArray.slice(0);
   const direct = arguments.length > 2 ? arguments[2] : 1; //Default to ascending
   const propPath = prop.constructor === Array ? prop : prop.split(".");
-  clone.sort(function(a, b) {
+  clone.sort(function (a, b) {
     for (let p in propPath) {
       if (a[propPath[p]] && b[propPath[p]]) {
         a = a[propPath[p]];
@@ -845,15 +829,13 @@ const sortByProperty = (objArray, prop, direction) => {
   return clone;
 };
 
-const displayMessageDataHTML = async respMessage => {
+const displayMessageDataHTML = async (respMessage) => {
   console.log("displayMessageDataHTML", respMessage);
   //this is a horrible kludge, I need to resolve the message properly.
   if (respMessage === "installScripts") {
     return;
   }
   let hasError = false;
-  let artifact = utils.artifact;
-  let nexusArtifact = utils.nexusArtifact;
   if (respMessage.message.error) {
     showError(respMessage.message.response);
   } else {
@@ -865,12 +847,12 @@ const displayMessageDataHTML = async respMessage => {
     var componentDetails = respMessage.message.response;
     console.log("componentDetails", componentDetails);
 
-    console.log("displayMessageDataHTML: utils.dataSources", utils.dataSources);
-    if (artifact.datasource === utils.dataSources.NEXUSIQ) {
+    console.log("displayMessageDataHTML: dataSources", dataSources);
+    if (artifact.datasource === dataSources.NEXUSIQ) {
       nexusArtifact = componentDetails.componentDetails[0];
       console.log("nexusArtifact", nexusArtifact);
     }
-    let htmlCreated = await createHTML(respMessage, utils.settings);
+    let htmlCreated = await createHTML(respMessage, settings);
   }
   hideLoader(hasError);
 };
@@ -882,7 +864,7 @@ const renderGraph = async (versionsData, remediation, currentVersion) => {
     data: {
       version: currentVersion,
       nextMajorRevisionIndex: undefined,
-      versions: versionsData
-    }
+      versions: versionsData,
+    },
   });
 };

@@ -1,3 +1,4 @@
 build/*.js
 config/*.js
 bower_components/foo/*.js
+src/Scripts/lib

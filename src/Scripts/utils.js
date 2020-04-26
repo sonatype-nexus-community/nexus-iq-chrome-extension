@@ -25,7 +25,7 @@ var formats = {
   cargo: "cargo", //cargo == crates == rust
   golang: "golang",
   github: "github",
-  rpm: "rpm"
+  rpm: "rpm",
 };
 
 //This is the format in nexus repo for proxy repos
@@ -34,7 +34,7 @@ var nexusRepoformats = {
   npm: "npm",
   nuget: "nuget",
   gem: "rubygems",
-  pypi: "pypi"
+  pypi: "pypi",
 };
 
 //This is the format in artifactory repo for proxy repos
@@ -43,12 +43,12 @@ var artifactoryRepoformats = {
   npm: "npm",
   nuget: "nuget",
   gem: "rubygems",
-  pypi: "pypi"
+  pypi: "pypi",
 };
 
 var dataSources = {
   NEXUSIQ: "NEXUSIQ",
-  OSSINDEX: "OSSINDEX"
+  OSSINDEX: "OSSINDEX",
 };
 
 var messageTypes = {
@@ -64,7 +64,7 @@ var messageTypes = {
 
   error: "error", //used to pass errors from background and content script to the popup
 
-  annotateComponent: "annotateComponent"
+  annotateComponent: "annotateComponent",
 };
 class Component {
   constructor(hash) {}
@@ -80,7 +80,9 @@ class Coordinates {
   }
 }
 class NPMCoordinates extends Coordinates {
-  constructor(packageId, version) {}
+  constructor(packageId, version) {
+    super();
+  }
   display() {
     return `${this.packageId}:${this.version}`;
   }
@@ -213,7 +215,7 @@ class PyPIArtifact extends Artifact {
   }
 }
 
-const checkPageIsHandled = url => {
+const checkPageIsHandled = (url) => {
   console.log("checkPageIsHandled", url);
   //check the url of the tab is in this collection
   // let url = tab.url
@@ -236,14 +238,16 @@ const checkPageIsHandled = url => {
     url.search("/webapp/#/artifacts/") >= 0 || //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
     url.search("/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
     url.search("/#browse/browse:") >= 0 || //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
-    url.search("https://rpmfind.net/linux/RPM/epel/7/") >= 0
+    url.search("https://rpmfind.net/linux/RPM/epel/7/") >= 0 ||
+    url.search("https://cocoapods.org/pods/") >= 0 ||
+    false
   ) {
     found = true;
   }
   return found;
 };
 
-const ParsePageURL = url => {
+const ParsePageURL = (url) => {
   //artifact varies depending on eco-system
   //returns an artifact if URL contains the version
   //if it is not a version specific URL then returns a falsy value
@@ -346,41 +350,46 @@ const BuildEmptySettings = () => {
     baseURL: "",
     url: "",
     loginEndPoint: "",
-    loginurl: ""
+    loginurl: "",
   };
   return settings;
 };
 
-const addCookies = url => {
+const addCookies = (url) => {
   return;
 
   console.log("addCookies", url);
   browser.cookies.set({
     url: url,
     name: "CLMSESSIONID", //"CLM-CSRF-TOKEN"
-    value: "foo"
+    value: "foo",
   });
   return;
 };
 
-const getDomainName = servername => {
+function extractHostname(url) {
+  var hostname;
+  //find & remove protocol (http, ftp, etc.) and get hostname
+
+  if (url.indexOf("//") > -1) {
+    hostname = url.split("/")[2];
+  } else {
+    hostname = url.split("/")[0];
+  }
+
+  //find & remove port number
+  hostname = hostname.split(":")[0];
+  //find & remove "?"
+  hostname = hostname.split("?")[0];
+
+  return hostname;
+}
+
+const getDomainName = (servername) => {
   console.log("getDomainName", servername);
-  let leftPart = servername.search("//") + 2;
-  let server = servername.substring(leftPart);
-  let rightPart = server.search(":") - 1;
-  if (rightPart < 0) {
-    rightPart = server.search(leftPart, "/") - 1;
-    if (rightPart < 0) {
-      rightPart = server.length;
-    }
-  }
-  server = server.substring(0, rightPart + 1);
-  //".iq-server"
-  //fix trailing backslash bug.
-  if (server.substring(server.length - 1) === "/") {
-    server = server.substring(0, server.length - 1);
-  }
-  let domain = "." + server;
+  //fix trailing backslash bug. issue #70
+
+  let domain = "." + extractHostname(servername);
   return domain;
 };
 
@@ -388,7 +397,7 @@ const getCookieValue = async (url, cookieName) => {
   console.log("getCookieValue", url, cookieName);
 
   let domain = getDomainName(url);
-  browser.cookies.getAll({ domain: domain, name: cookieName }, cookies => {
+  browser.cookies.getAll({ domain: domain, name: cookieName }, (cookies) => {
     console.log("cookies.getAll here", domain, cookieName);
     for (var i = 0; i < cookies.length; i++) {
       console.log(cookies[i]);
@@ -400,7 +409,7 @@ const getCookieValue = async (url, cookieName) => {
   return undefined;
 };
 
-const removeCookies = settings_url => {
+const removeCookies = (settings_url) => {
   console.log("removeCookies");
   console.log(settings_url);
   //as of IQ 63 it allows cookies to be present in public API
@@ -408,7 +417,7 @@ const removeCookies = settings_url => {
   return;
   browser.cookies.remove({
     url: settings_url,
-    name: "CLMSESSIONID" //"CLM-CSRF-TOKEN"
+    name: "CLMSESSIONID", //"CLM-CSRF-TOKEN"
   });
   return;
   //settings.url = http://iq-server:8070/
@@ -424,14 +433,14 @@ const removeCookies = settings_url => {
   server = server.substring(0, rightPart + 1);
   //".iq-server"
   let domain = "." + server;
-  browser.cookies.getAll({ domain: domain }, cookies => {
+  browser.cookies.getAll({ domain: domain }, (cookies) => {
     console.log("here");
     for (var i = 0; i < cookies.length; i++) {
       console.log(cookies[i]);
 
       browser.cookies.remove({
         url: settings_url,
-        name: cookies[i].name
+        name: cookies[i].name,
       });
     }
   });
@@ -439,7 +448,7 @@ const removeCookies = settings_url => {
   browser.cookies.remove({ url: settings_url, name: "CLMSESSIONID" });
 };
 
-const NexusFormat = artifact => {
+const NexusFormat = (artifact) => {
   console.log("NexusFormat", artifact);
   let format = artifact.format;
   let requestdata;
@@ -473,7 +482,7 @@ const NexusFormat = artifact => {
   return requestdata;
 };
 
-const NexusFormatMaven = artifact => {
+const NexusFormatMaven = (artifact) => {
   //return a dictionary in Nexus Format
   //return dictionary of components
   let componentDict, component;
@@ -488,16 +497,16 @@ const NexusFormatMaven = artifact => {
             artifactId: artifact.artifactId,
             version: artifact.version,
             extension: artifact.extension,
-            classifier: ""
-          }
-        }
-      })
-    ]
+            classifier: "",
+          },
+        },
+      }),
+    ],
   };
   return componentDict;
 };
 
-const NexusFormatNPM = artifact => {
+const NexusFormatNPM = (artifact) => {
   //return a dictionary in Nexus Format
   //return dictionary of components
   let componentDict, component;
@@ -509,16 +518,16 @@ const NexusFormatNPM = artifact => {
           format: artifact.format,
           coordinates: {
             packageId: artifact.packageName,
-            version: artifact.version
-          }
-        }
-      })
-    ]
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
   };
   return componentDict;
 };
 
-const NexusFormatNuget = artifact => {
+const NexusFormatNuget = (artifact) => {
   //return a dictionary in Nexus Format ofr Nuget
   //return dictionary of components
   let componentDict, component;
@@ -530,16 +539,16 @@ const NexusFormatNuget = artifact => {
           format: artifact.format,
           coordinates: {
             packageId: artifact.packageId,
-            version: artifact.version
-          }
-        }
-      })
-    ]
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
   };
   return componentDict;
 };
 
-const NexusFormatPyPI = artifact => {
+const NexusFormatPyPI = (artifact) => {
   //Python -> pypi
   //return a dictionary in Nexus Format
   //return dictionary of components
@@ -560,16 +569,16 @@ const NexusFormatPyPI = artifact => {
             name: artifact.name,
             qualifier: artifact.qualifier,
             version: artifact.version,
-            extension: artifact.extension
-          }
-        }
-      })
-    ]
+            extension: artifact.extension,
+          },
+        },
+      }),
+    ],
   };
   return componentDict;
 };
 
-const NexusFormatRuby = artifact => {
+const NexusFormatRuby = (artifact) => {
   //return a dictionary in Nexus Format
   //return dictionary of components
   //TODO: how to determine the qualifier and the extension??
@@ -582,16 +591,16 @@ const NexusFormatRuby = artifact => {
           format: artifact.format,
           coordinates: {
             name: artifact.name,
-            version: artifact.version
-          }
-        }
-      })
-    ]
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
   };
   return componentDict;
 };
 
-const NexusFormatGolang = artifact => {
+const NexusFormatGolang = (artifact) => {
   //return a dictionary in Nexus Format
   //return dictionary of components
   // "name": "github.com/gorilla/mux",
@@ -605,16 +614,16 @@ const NexusFormatGolang = artifact => {
           format: artifact.format,
           coordinates: {
             name: `${artifact.type}/${artifact.namespace}/${artifact.name}`,
-            version: artifact.version
-          }
-        }
-      })
-    ]
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
   };
   return componentDict;
 };
 
-const NexusFormatRPM = artifact => {
+const NexusFormatRPM = (artifact) => {
   //return a dictionary in Nexus Format
   //return dictionary of components
   // "name": "github.com/gorilla/mux",
@@ -629,29 +638,29 @@ const NexusFormatRPM = artifact => {
           coordinates: {
             name: `${artifact.name}`,
             version: artifact.version,
-            architecture: artifact.architecture
-          }
-        }
-      })
-    ]
+            architecture: artifact.architecture,
+          },
+        },
+      }),
+    ],
   };
   return componentDict;
 };
 
-const encodeComponentIdentifier = nexusArtifact => {
+const encodeComponentIdentifier = (nexusArtifact) => {
   let actual = encodeURIComponent(
-    JSON.stringify(nexusArtifact.components[0].componentIdentifier)
+    JSON.stringify(nexusArtifact.component.componentIdentifier)
   );
   console.log(actual);
   return actual;
 };
 
-const epochToJsDate = ts => {
+const epochToJsDate = (ts) => {
   // ts = epoch timestamp
   // returns date obj
   return new Date(ts * 1000);
 };
-const jsDateToEpoch = d => {
+const jsDateToEpoch = (d) => {
   // d = javascript date obj
   // returns epoch timestamp
   console.log(d);
@@ -661,7 +670,7 @@ const jsDateToEpoch = d => {
     return (d.getTime() - d.getMilliseconds()) / 1000;
   }
 };
-const parseCocoaPodsURL = url => {
+const parseCocoaPodsURL = (url) => {
   console.log("parseCocoaPodsURL");
   let format = formats.cocoapods;
   let datasource = dataSources.OSSINDEX;
@@ -672,7 +681,7 @@ const parseCocoaPodsURL = url => {
   return false;
 };
 
-const parseCRANURL = url => {
+const parseCRANURL = (url) => {
   //https://cran.r-project.org/
   // https://cran.r-project.org/web/packages/latte/index.html
   //https://cran.r-project.org/package=clustcurv
@@ -683,7 +692,7 @@ const parseCRANURL = url => {
   return false;
 };
 
-const parseGoLangURL = url => {
+const parseGoLangURL = (url) => {
   //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
   //https://search.gocenter.io/github.com~2Fbazelbuild~2Fbazel-integration-testing/versions
   let format = formats.golang;
@@ -691,7 +700,7 @@ const parseGoLangURL = url => {
   return false;
 };
 
-const parseGitHubURL = url => {
+const parseGitHubURL = (url) => {
   console.log("parseGitHubURL", url);
   //https://github.com/jquery/jquery/releases/tag/3.0.0
   let format = formats.github;
@@ -714,7 +723,7 @@ const parseGitHubURL = url => {
       format: format,
       name: packageName,
       version: version,
-      datasource: datasource
+      datasource: datasource,
     };
   } else {
     artifact = "";
@@ -724,7 +733,7 @@ const parseGitHubURL = url => {
   return artifact;
 };
 
-const parseMavenURL = url => {
+const parseMavenURL = (url) => {
   console.log("parseMavenURL:", url);
 
   //maven repo https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
@@ -792,7 +801,7 @@ const parseMavenURL = url => {
   return artifact;
 };
 
-const parseNPMURL = url => {
+const parseNPMURL = (url) => {
   //ADD SIMPLE CODE THAT Check THE URL
   //this is run outside of the content page
   //so can not see the dom
@@ -834,7 +843,7 @@ const parseNPMURL = url => {
   return artifact;
 };
 
-const parseNugetURL = url => {
+const parseNugetURL = (url) => {
   //https://www.nuget.org/packages/LibGit2Sharp/0.20.1
   let format = formats.nuget;
   let datasource = dataSources.NEXUSIQ;
@@ -850,7 +859,7 @@ const parseNugetURL = url => {
       format: format,
       packageId: packageId,
       version: version,
-      datasource: datasource
+      datasource: datasource,
     };
   } else {
     artifact = "";
@@ -858,7 +867,7 @@ const parseNugetURL = url => {
   return artifact;
 };
 
-const parsePackagistURL = url => {
+const parsePackagistURL = (url) => {
   //server is packagist, format is composer
   console.log("parsePackagist:" + url);
   const elements = url.split("/");
@@ -889,7 +898,7 @@ const parsePackagistURL = url => {
       format: format,
       datasource: datasource,
       name: name,
-      version: version
+      version: version,
     };
   } else {
     //return falsy
@@ -897,7 +906,7 @@ const parsePackagistURL = url => {
   }
   return artifact;
 };
-const parsePyPIURL = url => {
+const parsePyPIURL = (url) => {
   console.log("parsePyPI");
   //https://pypi.org/project/Django/1.6/
   //return falsy if no version in the URL
@@ -927,13 +936,13 @@ const parsePyPIURL = url => {
       version: version,
       datasource: datasource,
       extension: extension,
-      qualifier: qualifier
+      qualifier: qualifier,
     };
   }
   return artifact;
 };
 
-const parseRubyURL = url => {
+const parseRubyURL = (url) => {
   console.log("parseRubyURL");
   let format = formats.gem;
   let datasource = dataSources.NEXUSIQ;
@@ -955,13 +964,13 @@ const parseRubyURL = url => {
       format: format,
       name: name,
       version: version,
-      datasource: datasource
+      datasource: datasource,
     };
   }
   return artifact;
 };
 
-const parseNexusRepoURL = url => {
+const parseNexusRepoURL = (url) => {
   console.log("parseNexusRepoURL", url);
   return undefined;
   //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
@@ -995,7 +1004,7 @@ const parseNexusRepoURL = url => {
       format: format,
       name: name,
       version: version,
-      datasource: datasource
+      datasource: datasource,
     };
   }
   if (format === formats.npm) {
@@ -1012,7 +1021,7 @@ const parseNexusRepoURL = url => {
       format: format,
       packageName: packageName,
       version: version,
-      datasource: datasource
+      datasource: datasource,
     };
   }
 
@@ -1041,13 +1050,13 @@ const parseNexusRepoURL = url => {
       version: version,
       extension: extension,
       classifier: classifier,
-      datasource: datasource
+      datasource: datasource,
     };
   }
   return artifact;
 };
 
-const parseArtifactoryURL = url => {
+const parseArtifactoryURL = (url) => {
   console.log("parseArtifactoryURL", url);
   //java object
   //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
@@ -1064,7 +1073,7 @@ const parseArtifactoryURL = url => {
   let format = formats.maven;
   let datasource = dataSources.NEXUSIQ;
   let artifact;
-  var found = elements.find(element => {
+  var found = elements.find((element) => {
     return element === "-";
   });
   if (found) {
@@ -1123,7 +1132,7 @@ const parseArtifactoryURL = url => {
       format: format,
       packageName: packageName,
       version: version,
-      datasource: datasource
+      datasource: datasource,
     };
   } else if (format === formats.maven) {
     let lastElementIsFileName = false;
@@ -1207,7 +1216,7 @@ const parseArtifactoryURL = url => {
       version: version,
       extension: extension,
       classifier: classifier,
-      datasource: datasource
+      datasource: datasource,
     };
   }
   console.log("artifact", artifact);
@@ -1215,7 +1224,7 @@ const parseArtifactoryURL = url => {
 };
 /////////////////////////
 
-const parseRPMRepoURL = url => {
+const parseRPMRepoURL = (url) => {
   console.log("parseRPMRepoURL", url);
   //https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
   let format = formats.rpm;
@@ -1241,7 +1250,7 @@ const parseRPMRepoURL = url => {
       name: name,
       version: version,
       architecture: architecture,
-      datasource: datasource
+      datasource: datasource,
     };
   }
   return artifact;
@@ -1302,7 +1311,7 @@ function parseNPM(format, url) {
     format: format,
     packageName: packageName,
     version: version,
-    datasource: datasource
+    datasource: datasource,
   };
 }
 
@@ -1334,7 +1343,7 @@ const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
     loginEndPoint: loginEndPoint,
     loginurl: loginurl,
     appId: appId,
-    appInternalId: appInternalId
+    appInternalId: appInternalId,
   };
   return settings;
 };
@@ -1346,7 +1355,7 @@ const BuildSettingsFromGlobal = async () => {
     "username",
     "password",
     "appId",
-    "appInternalId"
+    "appInternalId",
   ]);
   settings = BuildSettings(
     promise.url,
@@ -1359,9 +1368,9 @@ const BuildSettingsFromGlobal = async () => {
   return settings;
 };
 
-const GetSettings = keys => {
+const GetSettings = (keys) => {
   let promise = new Promise((resolve, reject) => {
-    browser.storage.sync.get(keys, items => {
+    browser.storage.sync.get(keys, (items) => {
       let err = browser.runtime.lastError;
       if (err) {
         reject(err);
@@ -1379,9 +1388,9 @@ const GetCookie = (domain, xsrfCookieName) => {
     browser.cookies.getAll(
       {
         domain: domain,
-        name: xsrfCookieName
+        name: xsrfCookieName,
       },
-      cookies => {
+      (cookies) => {
         let err = browser.runtime.lastError;
         if (err) {
           reject(err);
@@ -1400,7 +1409,8 @@ const GetCVEDetails = async (cve, nexusArtifact, settings) => {
   let servername = settings.baseURL; // + (settings.baseURL[settings.baseURL.length-1]=='/' ? '' : '/') ;//'http://iq-server:8070'
   //let CVE = 'CVE-2018-3721'
   let timestamp = Date.now();
-  let hash = nexusArtifact.components[0].hash; //'4c854c86c91ab36c86fc'
+  //TODO: sometimes it is an array of components. May need to have a swiitch handler here
+  let hash = nexusArtifact.component.hash; //'4c854c86c91ab36c86fc'
   // let componentIdentifier = '%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D'
   let componentIdentifier = encodeComponentIdentifier(nexusArtifact);
   let vulnerability_source;
@@ -1417,11 +1427,11 @@ const GetCVEDetails = async (cve, nexusArtifact, settings) => {
   let data = await axios.get(url, {
     auth: {
       username: settings.username,
-      password: settings.password
+      password: settings.password,
     },
     headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
+      [xsrfHeaderName]: valueCSRF,
+    },
   });
   console.log("data", data);
   let retVal;
@@ -1452,19 +1462,19 @@ const callServer = async (valueCSRF, artifact, settings) => {
     xsrfHeaderName: xsrfHeaderName,
     auth: {
       username: settings.username,
-      password: settings.password
+      password: settings.password,
     },
     headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
+      [xsrfHeaderName]: valueCSRF,
+    },
   })
-    .then(data => {
+    .then((data) => {
       console.log("axios then", data);
       responseVal = data.data;
       retVal = { error: error, response: responseVal };
       addCookies(servername);
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("error", error);
       let code, response;
       if (!error.response) {
@@ -1486,7 +1496,7 @@ const callServer = async (valueCSRF, artifact, settings) => {
   displayMessage = {
     messagetype: messageTypes.displayMessage,
     message: retVal,
-    artifact: artifact
+    artifact: artifact,
   };
   console.log("evaluatePackage - displayMessage", displayMessage);
 
@@ -1497,13 +1507,13 @@ const callServer = async (valueCSRF, artifact, settings) => {
 
 ////////////////
 
-const beginEvaluation = async tab => {
+const beginEvaluation = async (tab) => {
   try {
     console.log("beginEvaluation", tab);
     let url = tab.url;
     console.log("url", url);
     let message = {
-      messagetype: messageTypes.beginEvaluate
+      messagetype: messageTypes.beginEvaluate,
     };
 
     //so first I have to make sure that it is a URL that we care about
@@ -1518,7 +1528,7 @@ const beginEvaluation = async tab => {
         //just parse the URL
         let evaluatemessage = {
           artifact: artifact,
-          messagetype: messageTypes.evaluateComponent
+          messagetype: messageTypes.evaluateComponent,
         };
         await BuildSettingsFromGlobal();
         let displayMessage = await evaluateComponent(artifact, settings);
@@ -1580,14 +1590,17 @@ const evaluatePackage = async (artifact, settings) => {
   console.log("cookie", cookie);
   if (typeof cookie === "undefined") {
     console.log("handled missing cookie");
+
+    valueCSRF = uuidv4();
     //server is not up most probably
     //do we throw an error here or exit gracefully
-    throw new Error(
-      `Cookie not available. Server ${servername} is probably down`
-    );
-    return;
+    // throw new Error(
+    //   `Cookie: ${xsrfCookieName} not available. Server ${servername} is probably down, or you will have to set the csrfProtection setting in Config.yml`
+    // );
+    // return;
+  } else {
+    valueCSRF = cookie.value;
   }
-  valueCSRF = cookie.value;
   let displayMessage = await callServer(valueCSRF, artifact, settings);
   return displayMessage;
   // } catch (error) {
@@ -1605,15 +1618,15 @@ const getRemediation = async (nexusArtifact, settings) => {
   console.log("getRemediation: url", url);
   let response = await axios(url, {
     method: "post",
-    data: nexusArtifact.components[0],
+    data: nexusArtifact.component,
     withCredentials: true,
     auth: {
       username: settings.username,
-      password: settings.password
+      password: settings.password,
     },
     headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
+      [xsrfHeaderName]: valueCSRF,
+    },
   });
   let respData = response.data;
   console.log("getRemediation: respData", respData);
@@ -1629,7 +1642,7 @@ const getRemediation = async (nexusArtifact, settings) => {
 const GetAllVersions = async (nexusArtifact, settings, remediation) => {
   console.log("GetAllVersions", nexusArtifact, settings, remediation);
   let retVal;
-  let component = nexusArtifact.components[0];
+  let component = nexusArtifact.component;
   let comp = encodeURI(JSON.stringify(component.componentIdentifier));
   // console.log('nexusArtifact', nexusArtifact);
   console.log("comp", comp);
@@ -1642,11 +1655,11 @@ const GetAllVersions = async (nexusArtifact, settings, remediation) => {
   let response = await axios.get(url, {
     auth: {
       username: settings.username,
-      password: settings.password
+      password: settings.password,
     },
     headers: {
-      [xsrfHeaderName]: valueCSRF
-    }
+      [xsrfHeaderName]: valueCSRF,
+    },
   });
   let data;
   if (typeof response.data.allVersions !== "undefined") {
@@ -1660,23 +1673,23 @@ const GetAllVersions = async (nexusArtifact, settings, remediation) => {
   return data;
 };
 
-const ChangeIconMessage = showVulnerable => {
+const ChangeIconMessage = (showVulnerable) => {
   if (showVulnerable) {
     // send message to background script
     browser.runtime.sendMessage({
       messagetype: "newIcon",
-      newIconPath: "images/IQ_Vulnerable.png"
+      newIconPath: "images/IQ_Vulnerable.png",
     });
   } else {
     // send message to background script
     browser.runtime.sendMessage({
       messagetype: "newIcon",
-      newIconPath: "images/IQ_Default.png"
+      newIconPath: "images/IQ_Default.png",
     });
   }
 };
 
-const addDataOSSIndex = async artifact => {
+const addDataOSSIndex = async (artifact) => {
   // pass your data in method
   //OSSINdex is anonymous
   console.log("entering addDataOSSIndex: artifact", artifact);
@@ -1687,7 +1700,7 @@ const addDataOSSIndex = async artifact => {
   let name = artifact.name;
   let version = artifact.version;
   let OSSIndexURL;
-  let responseVal;
+  let responseVal; //fix issue #78
   if (artifact.format == formats.golang) {
     //Example: pkg:github/etcd-io/etcd@3.3.1
     //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
@@ -1706,24 +1719,24 @@ const addDataOSSIndex = async artifact => {
   inputStr = JSON.stringify(artifact);
   let response = await axios(OSSIndexURL, {
     method: "get",
-    data: inputStr
+    data: inputStr,
   })
-    .then(data => {
+    .then((data) => {
       console.log("then", data);
       responseVal = data.data;
       let error = 0;
       retVal = {
         error: error,
-        response: responseVal
+        response: responseVal,
       };
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("error", error);
       let code, response;
       if (!error.response) {
         // network error
         code = 1;
-        responseVal = `Server unreachable ${url}. ${error.toString()}`;
+        responseVal = `Server unreachable ${OSSIndexURL}. ${error.toString()}`;
       } else {
         // http status code
         code = error.response.status;
@@ -1732,20 +1745,20 @@ const addDataOSSIndex = async artifact => {
       }
       retVal = {
         error: code,
-        response: responseVal
+        response: responseVal,
       }; // error = error.response;
     });
   let displayMessage = {
     messagetype: messageTypes.displayMessage,
     message: retVal,
-    artifact: artifact
+    artifact: artifact,
   };
   // await displayMessageDataHTML(displayMessage);
   console.log("addDataOSSIndex - displayMessage:", displayMessage);
   return displayMessage;
 };
 
-const styleCVSS = severity => {
+const styleCVSS = (severity) => {
   let className;
   switch (true) {
     case severity >= 10:
@@ -1767,7 +1780,7 @@ const styleCVSS = severity => {
   return className;
 };
 
-const parseCratesURL = url => {
+const parseCratesURL = (url) => {
   //server is crates, language is rust
   //https://crates.io/crates/rand
   //no version in the URL
@@ -1780,7 +1793,7 @@ const parseCratesURL = url => {
 const GetActiveTab = async () => {
   let params = {
     currentWindow: true,
-    active: true
+    active: true,
   };
 
   let promise = new Promise((resolve, reject) => {
@@ -1798,7 +1811,7 @@ const GetActiveTab = async () => {
   return promise;
 };
 
-const CVSSDetails = cvssText => {
+const CVSSDetails = (cvssText) => {
   cvssText = cvssText.toUpperCase();
   console.log("CVSSDetails:" + cvssText);
   var url = "https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator";
@@ -1839,7 +1852,7 @@ const CVSSDetails = cvssText => {
   integrityImpact += tab + "Integrity Impact (I)*: ";
   availabilityImpact += tab + "Availability Impact (A)*: ";
 
-  cvssTextArray.forEach(element => {
+  cvssTextArray.forEach((element) => {
     // Attack vector
     if (element == "AV:N") {
       attackVector += "Network (AV:N)" + CR.repeat(1);
@@ -2033,7 +2046,7 @@ const getUserAgentHeader = () => {
     environment,
     environmentVersion,
     system,
-    UserAgentHeader
+    UserAgentHeader,
   };
   return;
 };
@@ -2048,25 +2061,32 @@ const getExtensionVersion = () => {
   }
 };
 
-const SetHash = hash => {
+const SetHash = (hash) => {
   artifact.hash = hash;
 };
-const setHasVulns = flag => {
+const setHasVulns = (flag) => {
   console.log("hasVulns-before", hasVulns);
   hasVulns = flag;
   console.log("hasVulns-after", hasVulns);
 };
-const setArtifact = respMessageArtifact => {
+const setArtifact = (respMessageArtifact) => {
   artifact = respMessageArtifact;
 };
 
+const uuidv4 = () => {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
 ////////////////
 
 const executeScripts = (tabId, injectDetailsArray) => {
   console.log("executeScripts(tabId, injectDetailsArray)", tabId);
 
   function createCallback(tabId, injectDetails, innerCallback) {
-    return function() {
+    return function () {
       browser.tabs.executeScript(tabId, injectDetails, innerCallback);
     };
   }
@@ -2086,10 +2106,11 @@ const installScripts = (tab, message) => {
   // console.log("sending message:", message);
   executeScripts(null, [
     { file: "Scripts/lib/jquery.min.js" },
-    { file: "Scripts/utils_original.js" },
+    // { file: "Scripts/lib/require.js" },
+    { file: "Scripts/utils.js" },
     // { code: "var message = " + message  + ";"},
     { file: "Scripts/content.js" },
-    { code: "processPage();" }
+    { code: "processPage();" },
   ]);
   // browser.tabs.sendMessage(tab.tabId, message);
   console.log("end installScripts");
@@ -2098,6 +2119,7 @@ const installScripts = (tab, message) => {
 
 if (typeof module !== "undefined") {
   module.exports = {
+    artifact: artifact,
     addDataOSSIndex: addDataOSSIndex,
     Artifact: Artifact,
     beginEvaluation: beginEvaluation,
@@ -2155,33 +2177,33 @@ if (typeof module !== "undefined") {
     SetHash: SetHash,
     setHasVulns: setHasVulns,
     setArtifact: setArtifact,
-    styleCVSS: styleCVSS
+    styleCVSS: styleCVSS,
   };
 }
 
-export {
-  artifact,
-  beginEvaluation,
-  BuildSettingsFromGlobal,
-  checkPageIsHandled,
-  CVSSDetails,
-  dataSources,
-  evaluateComponent,
-  formats,
-  GetActiveTab,
-  GetAllVersions,
-  GetCVEDetails,
-  getDomainName,
-  getRemediation,
-  getUserAgentHeader,
-  hasVulns,
-  MavenCoordinates,
-  messageTypes,
-  nexusArtifact,
-  NexusFormat,
-  setArtifact,
-  settings,
-  SetHash,
-  setHasVulns,
-  styleCVSS
-};
+// export {
+//   artifact,
+//   beginEvaluation,
+//   BuildSettingsFromGlobal,
+//   checkPageIsHandled,
+//   CVSSDetails,
+//   dataSources,
+//   evaluateComponent,
+//   formats,
+//   GetActiveTab,
+//   GetAllVersions,
+//   GetCVEDetails,
+//   getDomainName,
+//   getRemediation,
+//   getUserAgentHeader,
+//   hasVulns,
+//   MavenCoordinates,
+//   messageTypes,
+//   nexusArtifact,
+//   NexusFormat,
+//   setArtifact,
+//   settings,
+//   SetHash,
+//   setHasVulns,
+//   styleCVSS
+// };

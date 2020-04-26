@@ -79,6 +79,6 @@
   },
   "options_ui": {
     "page": "html/options.html?ver=1.7.19",
-    "open_in_tab": false
+    "open_in_tab": true
   }
 }

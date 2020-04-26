@@ -1,5 +1,5 @@
 /*jslint es6  -W024 */
-import * as utils from "./utils.js";
+// import * as utils from "./utils.js";
 
 window.onload = function() {
   console.log("window.onload");

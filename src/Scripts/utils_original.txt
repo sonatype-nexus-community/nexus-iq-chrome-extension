@@ -357,24 +357,30 @@ const addCookies = url => {
   return;
 };
 
+function extractHostname(url) {
+  var hostname;
+  //find & remove protocol (http, ftp, etc.) and get hostname
+
+  if (url.indexOf("//") > -1) {
+      hostname = url.split('/')[2];
+  }
+  else {
+      hostname = url.split('/')[0];
+  }
+
+  //find & remove port number
+  hostname = hostname.split(':')[0];
+  //find & remove "?"
+  hostname = hostname.split('?')[0];
+
+  return hostname;
+}
+
 const getDomainName = servername => {
   console.log("getDomainName", servername);
-  let leftPart = servername.search("//") + 2;
-  let server = servername.substring(leftPart);
-  let rightPart = server.search(":") - 1;
-  if (rightPart < 0) {
-    rightPart = server.search(leftPart, "/") - 1;
-    if (rightPart < 0) {
-      rightPart = server.length;
-    }
-  }
-  server = server.substring(0, rightPart + 1);
-  //".iq-server"
-  //fix trailing backslash bug.
-  if (server.substring(server.length - 1) === "/") {
-    server = server.substring(0, server.length - 1);
-  }
-  let domain = "." + server;
+  //fix trailing backslash bug. issue #70
+  
+  let domain = "." + extractHostname(servername);
   return domain;
 };
 
