@@ -7,6 +7,7 @@
       "asset": "nexus-iq-chrome-extension.zip"
     }
   ],
+  "publish": [
     {
       "path": "semantic-release-chrome",
       "asset": "nexus-iq-chrome-extension.zip",
@@ -27,10 +28,23 @@
       {
         "preset": "angular",
         "releaseRules": [
-          { "type": "docs", "scope": "README.md", "release": "patch" },
-          { "type": "refactor", "release": "minor" },
-          { "type": "big-time", "release": "major" },
-          { "scope": "no-release", "release": false }
+          {
+            "type": "docs",
+            "scope": "README.md",
+            "release": "patch"
+          },
+          {
+            "type": "refactor",
+            "release": "minor"
+          },
+          {
+            "type": "big-time",
+            "release": "major"
+          },
+          {
+            "scope": "no-release",
+            "release": false
+          }
         ]
       }
     ],

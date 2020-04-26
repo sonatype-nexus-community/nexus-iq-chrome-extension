@@ -647,9 +647,9 @@ const NexusFormatRPM = (artifact) => {
   return componentDict;
 };
 
-const encodeComponentIdentifier = (nexusArtifact) => {
+const encodeComponentIdentifier = (component) => {
   let actual = encodeURIComponent(
-    JSON.stringify(nexusArtifact.component.componentIdentifier)
+    JSON.stringify(component.componentIdentifier)
   );
   console.log(actual);
   return actual;
@@ -1412,7 +1412,7 @@ const GetCVEDetails = async (cve, nexusArtifact, settings) => {
   //TODO: sometimes it is an array of components. May need to have a swiitch handler here
   let hash = nexusArtifact.component.hash; //'4c854c86c91ab36c86fc'
   // let componentIdentifier = '%7B%22format%22%3A%22maven%22%2C%22coordinates%22%3A%7B%22artifactId%22%3A%22springfox-swagger-ui%22%2C%22classifier%22%3A%22%22%2C%22extension%22%3A%22jar%22%2C%22groupId%22%3A%22io.springfox%22%2C%22version%22%3A%222.6.1%22%7D%7D'
-  let componentIdentifier = encodeComponentIdentifier(nexusArtifact);
+  let componentIdentifier = encodeComponentIdentifier(nexusArtifact.component);
   let vulnerability_source;
   if (cve.search("sonatype") >= 0) {
     vulnerability_source = "sonatype";
