@@ -17,8 +17,6 @@ console.log("background.js");
 // const evaluateComponent = require('./utils.js');
 // const GetActiveTab = require('./utils.js');
 
-
-
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -122,7 +120,6 @@ install_notice();
 // getActiveTab();
 
 const sendNotification = (securityData) => {
-
   console.log("sendNotification", securityData);
   var options = {
     type: "basic",
@@ -157,7 +154,6 @@ const sendNotification = (securityData) => {
   browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     browser.tabs.sendMessage(tabs[0].id, vulnMessage);
   });
-
 
   browser.notifications.create(
     "NexusIQNotification",
@@ -550,10 +546,10 @@ browser.runtime.onInstalled.addListener(function () {
             },
           }),
           new browser.declarativeContent.PageStateMatcher({
-            //http://repo2.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
+            //https://repo.maven.apache.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
             pageUrl: {
-              hostEquals: "repo2.maven.org",
-              schemes: ["http"],
+              hostEquals: "repo.maven.apache.org",
+              schemes: ["https"],
               pathContains: "maven2",
             },
           }),
@@ -674,17 +670,15 @@ function displayEvaluationReults(displayMessageData, tabId) {
   let responseArtifact = displayMessageData.artifact;
   let responseData = displayMessageData.message.response;
   let componentDetails, hasVulnerability, vulnerabilities;
-  if (responseArtifact.datasource === dataSources.NEXUSIQ){
+  if (responseArtifact.datasource === dataSources.NEXUSIQ) {
     componentDetails = responseData.componentDetails[0];
-    hasVulnerability =    componentDetails.securityData.securityIssues.length > 0;
-    vulnerabilities = componentDetails.securityData.securityIssues
-  }else if (responseArtifact.datasource === dataSources.OSSINDEX)
-  {
+    hasVulnerability = componentDetails.securityData.securityIssues.length > 0;
+    vulnerabilities = componentDetails.securityData.securityIssues;
+  } else if (responseArtifact.datasource === dataSources.OSSINDEX) {
     componentDetails = responseData.coordinates;
-    hasVulnerability =   responseData.vulnerabilities.length > 0;
+    hasVulnerability = responseData.vulnerabilities.length > 0;
     vulnerabilities = responseData.vulnerabilities;
-  }
-  else{
+  } else {
     //unhandled, so return
   }
   console.log("hasVulnerability", hasVulnerability);
