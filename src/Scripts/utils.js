@@ -1404,17 +1404,25 @@ const GetSettings = (keys) => {
 };
 
 const GetCookieFromConfig = async () => {
-  console.log("GetCookieFromConfig");
-  //get the value from storage
-  var p = new Promise(function (resolve, reject) {
-    chrome.storage.sync.get({ IQCookie: true }, function (settings) {
-      resolve(settings.IQCookie);
-    });
-  });
+                                          console.log("GetCookieFromConfig");
+                                          //get the value from storage
+                                          //https://stackoverflow.com/questions/5892176/getting-cookies-in-a-google-chrome-extension
+                                          //https://stackoverflow.com/questions/44186404/moving-permissions-to-optional-on-chrome-extension
+                                          var p = new Promise(function (
+                                            resolve,
+                                            reject
+                                          ) {
+                                            chrome.storage.sync.get(
+                                              { IQCookie: true },
+                                              function (settings) {
+                                                resolve(settings.IQCookie);
+                                              }
+                                            );
+                                          });
 
-  const configOut = await p;
-  return configOut;
-};
+                                          const configOut = await p;
+                                          return configOut;
+                                        };
 
 const GetCookie = async (domain, xsrfCookieName) => {
   console.log("GetCookie", domain, xsrfCookieName);
