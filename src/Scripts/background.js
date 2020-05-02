@@ -54,7 +54,7 @@ const gotMessage = async (message, sender, sendResponse) => {
       let tab = await GetActiveTab();
       if (tab) {
         let tabId = tab.id;
-        displayEvaluationReults(displayMessage, tabId);
+        displayEvaluationResults(displayMessage, tabId);
       }
       browser.runtime.sendMessage(message);
       return displayMessage;
@@ -119,7 +119,7 @@ install_notice();
 
 // getActiveTab();
 
-const sendNotification = (securityData) => {
+const sendNotification = (securityData, artifact) => {
   console.log("sendNotification", securityData);
   var options = {
     type: "basic",
@@ -133,7 +133,7 @@ const sendNotification = (securityData) => {
   if (securityData && securityData.length > 0) {
     severity = securityData[0].severity || securityData[0].cvssScore;
   }
-  console.debug("detected severity " + severity);
+  console.debug("detected severity ", severity);
   let vulnClass = "vuln-low";
   if (severity >= 9) {
     vulnClass = "vuln-severe";
@@ -148,6 +148,7 @@ const sendNotification = (securityData) => {
     message: {
       severity: severity,
       vulnClass: vulnClass,
+      artifact: artifact,
     },
   };
 
@@ -408,7 +409,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       //this may need to install scripts into the background page so the next stuff
       //will be handled by the send message from the content script
       if (displayMessageData !== "installScripts") {
-        displayEvaluationReults(displayMessageData, tabId);
+        displayEvaluationResults(displayMessageData, tabId);
       }
     } else {
       browser.pageAction.setIcon({
@@ -629,8 +630,8 @@ browser.runtime.onInstalled.addListener(function () {
   });
 });
 
-function displayEvaluationReults(displayMessageData, tabId) {
-  console.log("displayEvaluationReults", displayMessageData, tabId);
+function displayEvaluationResults(displayMessageData, tabId) {
+  console.log("displayEvaluationResults", displayMessageData, tabId);
   let responseArtifact = displayMessageData.artifact;
   let responseData = displayMessageData.message.response;
   let componentDetails, hasVulnerability, vulnerabilities;
@@ -652,7 +653,7 @@ function displayEvaluationReults(displayMessageData, tabId) {
       tabId: tabId,
     });
     //chrome.browserAction.setBadgeText({text: "!"});
-    sendNotification(vulnerabilities);
+    sendNotification(vulnerabilities, responseArtifact);
   } else {
     browser.pageAction.setIcon({
       path: "../images/SON_logo_favicon_not_vuln.png",

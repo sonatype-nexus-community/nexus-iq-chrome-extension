@@ -11,7 +11,6 @@ if (typeof chrome !== "undefined") {
   browser.runtime.onMessage.addListener(gotMessage);
 }
 
-// chrome.runtime.onMessage.addListener(gotMessage);
 function gotMessage(receivedMessage, sender, sendResponse) {
   try {
     console.log("gotMessage", receivedMessage);
@@ -46,8 +45,9 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   }
 }
 
-function processVulnerability(message, artifact) {
-  console.log("processVulnerability", message, artifact);
+function processVulnerability(message) {
+  console.log("processVulnerability", message);
+  let artifact = message.artifact;
   let vulnClass = message.message.vulnClass;
   console.debug("Setting vuln class: " + vulnClass);
   console.debug("browser: ", browser);

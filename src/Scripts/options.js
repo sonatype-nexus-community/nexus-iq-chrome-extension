@@ -1,13 +1,13 @@
 /*jslint es6  -W024 */
 // import * as utils from "./utils.js";
 
-window.onload = function() {
+window.onload = function () {
   console.log("window.onload");
   message("");
   load_data();
 
   // document.getElementById('url').focus();
-  document.getElementById("cancel").onclick = function() {
+  document.getElementById("cancel").onclick = function () {
     try {
       var ok = true;
       if (ok) {
@@ -20,10 +20,10 @@ window.onload = function() {
       );
     }
   };
-  document.getElementById("login").onclick = function() {
+  document.getElementById("login").onclick = function () {
     login();
   };
-  document.getElementById("save").onclick = function() {
+  document.getElementById("save").onclick = function () {
     saveForm();
   };
 };
@@ -51,20 +51,20 @@ function saveForm() {
   var appId = appValues[1];
   console.log("appValues", appValues, appInternalId);
   //alert(value);
-  chrome.storage.sync.set({ url: url }, function() {
+  chrome.storage.sync.set({ url: url }, function () {
     //alert('saved'+ value);
   });
-  chrome.storage.sync.set({ username: username }, function() {
+  chrome.storage.sync.set({ username: username }, function () {
     //alert('saved'+ value);
   });
-  chrome.storage.sync.set({ password: password }, function() {
+  chrome.storage.sync.set({ password: password }, function () {
     //alert('saved'+ value);
   });
-  chrome.storage.sync.set({ appId: appId }, function() {
+  chrome.storage.sync.set({ appId: appId }, function () {
     //alert('saved'+ value);
     console.log("Saved appId", appId);
   });
-  chrome.storage.sync.set({ appInternalId: appInternalId }, function() {
+  chrome.storage.sync.set({ appInternalId: appInternalId }, function () {
     //alert('saved'+ value);
     console.log("Saved appInternalId", appInternalId);
   });
@@ -79,6 +79,7 @@ function saveForm() {
 }
 
 function login() {
+  console.log("login");
   var url = document.getElementById("url").value;
   var username = document.getElementById("username").value;
   var password = document.getElementById("password").value;
@@ -101,9 +102,9 @@ function addPerms(url) {
   chrome.permissions.request(
     {
       permissions: ["tabs"],
-      origins: ["*://*/*"]
+      origins: ["*://*/*"],
     },
-    function(granted) {
+    function (granted) {
       if (granted) {
         // The permissions have been removed.
         console.log("granted");
@@ -125,14 +126,14 @@ function canLogin(url, username, password) {
     .get(urlEndPoint, {
       auth: {
         username: username,
-        password: password
-      }
+        password: password,
+      },
     })
-    .then(data => {
+    .then((data) => {
       console.log("Logged in");
       message("Login successful");
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       message(error);
     });
@@ -149,19 +150,19 @@ function addApps(url, username, password, appId, appInternalId) {
     .get(urlListApp, {
       auth: {
         username: username,
-        password: password
-      }
+        password: password,
+      },
     })
-    .then(data => {
+    .then((data) => {
       console.log(data.data.applicationSummaries);
       let apps = data.data.applicationSummaries;
       let i = 1;
       $("#appId").empty();
-      apps.forEach(element => {
+      apps.forEach((element) => {
         $("#appId").append(
           $("<option>", {
             value: element.id + " " + element.publicId,
-            text: element.name
+            text: element.name,
           })
         );
       });
@@ -172,7 +173,7 @@ function addApps(url, username, password, appId, appInternalId) {
       message("Login successful");
       return $("#appId").length;
     })
-    .catch(appError => {
+    .catch((appError) => {
       console.error(appError);
       message(appError);
     });
@@ -184,7 +185,7 @@ function load_data() {
   let url, username, password, appId, appInternalId;
   chrome.storage.sync.get(
     ["url", "username", "password", "appId", "appInternalId"],
-    function(data) {
+    function (data) {
       console.log("data", data);
       if (
         typeof data.url === "undefined" ||
