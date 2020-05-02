@@ -1403,8 +1403,23 @@ const GetSettings = (keys) => {
   return promise;
 };
 
-const GetCookie = (domain, xsrfCookieName) => {
+const GetCookieFromConfig = async () => {
+  console.log("GetCookieFromConfig");
+  //get the value from storage
+  var p = new Promise(function (resolve, reject) {
+    chrome.storage.sync.get({ IQCookie: true }, function (settings) {
+      resolve(settings.IQCookie);
+    });
+  });
+
+  const configOut = await p;
+  return configOut;
+};
+
+const GetCookie = async (domain, xsrfCookieName) => {
   console.log("GetCookie", domain, xsrfCookieName);
+  //get the value from storage
+
   let promise = new Promise((resolve, reject) => {
     browser.cookies.getAll(
       {
@@ -1607,7 +1622,8 @@ const evaluatePackage = async (artifact, settings) => {
   let servername = settings.baseURL;
   let domain = getDomainName(servername);
   console.log("domain", domain);
-  let cookie = await GetCookie(domain, xsrfCookieName);
+  // let cookie = await GetCookie(domain, xsrfCookieName);
+  let cookie = await GetCookieFromConfig();
   console.log("cookie", cookie);
   if (typeof cookie === "undefined") {
     console.log("handled missing cookie");

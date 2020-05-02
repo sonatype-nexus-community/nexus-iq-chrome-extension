@@ -97,20 +97,31 @@ function login() {
   }
 }
 function addPerms(url) {
-  return;
+  //chrome.permissions.request
+  // return;
   console.log("addPerms(url)", url);
+  if (url.slice(-1) !== "/") {
+    url = url.concat("/");
+  }
   chrome.permissions.request(
     {
-      permissions: ["tabs"],
-      origins: ["*://*/*"],
+      origins: [url],
     },
     function (granted) {
       if (granted) {
-        // The permissions have been removed.
+        // The permissions have been granted.
         console.log("granted");
+        chrome.cookies.get({ url: url, name: "CLM-CSRF-TOKEN" }, function (
+          cookie
+        ) {
+          console.log("cookie", cookie);
+          chrome.storage.sync.set({ IQCookie: cookie }, function () {
+            //alert('saved'+ value);
+            console.log("Saved cookie.value", cookie.value);
+          });
+        });
       } else {
-        // The permissions have not been removed (e.g., you tried to remove
-        // required permissions).
+        console.log("not granted");
       }
     }
   );
