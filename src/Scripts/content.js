@@ -487,7 +487,7 @@ function parseCocoaPods(format, url) {
   let name = elements[4];
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
   return {
     format: format,
     datasource: datasource,

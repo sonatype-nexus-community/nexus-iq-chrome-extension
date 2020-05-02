@@ -148,7 +148,7 @@ const selectTabHandler = async (e, tab) => {
       class: "status-message ui-corner-all",
     })
       .appendTo(".ui-tabs-nav", "#demo")
-      .fadeOut(2500, function () {
+      .fadeOut(5000, function () {
         $(this).remove();
       });
     let remediation;

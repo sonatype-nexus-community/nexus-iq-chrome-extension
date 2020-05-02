@@ -474,7 +474,9 @@ const NexusFormat = (artifact) => {
     case formats.rpm:
       requestdata = NexusFormatRPM(artifact);
       break;
-
+    case formats.cocoapods:
+      requestdata = NexusFormatCocoaPods(artifact);
+      break;
     default:
       console.log("Unexpected format", format);
       return;
@@ -647,6 +649,25 @@ const NexusFormatRPM = (artifact) => {
   return componentDict;
 };
 
+const NexusFormatCocoaPods = (artifact) => {
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.name}`,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  return componentDict;
+};
+
 const encodeComponentIdentifier = (component) => {
   let actual = encodeURIComponent(
     JSON.stringify(component.componentIdentifier)
@@ -673,7 +694,7 @@ const jsDateToEpoch = (d) => {
 const parseCocoaPodsURL = (url) => {
   console.log("parseCocoaPodsURL");
   let format = formats.cocoapods;
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
 
   // var elements = url.split('/')
   //https://cocoapods.org/pods/TestFairy
@@ -686,7 +707,7 @@ const parseCRANURL = (url) => {
   // https://cran.r-project.org/web/packages/latte/index.html
   //https://cran.r-project.org/package=clustcurv
   //no version ATM
-  let format = formats.cocoapods;
+  let format = formats.cran;
   let datasource = dataSources.OSSINDEX;
 
   return false;
