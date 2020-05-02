@@ -66,9 +66,9 @@ const gotMessage = async (message, sender, sendResponse) => {
       username = message.username;
       password = message.password;
       settings = BuildSettings(baseURL, username, password);
-      window.baseURL = baseURL; //"http://localhost:8070/"
-      window.username = username; //"admin"
-      window.password = password; //"admin123"
+      window.baseURL = baseURL;
+      window.username = username;
+      window.password = password;
       retval = login(settings);
       break;
     case messageTypes.evaluate:
@@ -312,7 +312,7 @@ const callIQ = (artifact, settings) => {
 
   let xhr = new XMLHttpRequest();
   let url = settings.url;
-  // url.replace('http//', 'http://admin@admin123')
+
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
   // xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
@@ -394,42 +394,6 @@ const ToggleIcon = (tab) => {
     browser.pageAction.hide(tab.id);
   }
   console.log(found);
-};
-
-const quickTest = async () => {
-  let artifact = {
-    format: "maven",
-    artifactId: "springfox-swagger-ui",
-    classifier: "",
-    extension: "jar",
-    groupId: "io.springfox",
-    version: "2.6.1",
-  };
-  let nexusArtifact = NexusFormatMaven(artifact);
-  nexusArtifact.hash = "4c854c86c91ab36c86fc";
-  let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123");
-  let cve = "CVE-2018-3721";
-  let myResp3 = await GetCVEDetails(cve, nexusArtifact, settings);
-  console.log("myResp3");
-  console.log(myResp3);
-};
-
-const quickTest2 = async () => {
-  let artifact = {
-    format: "maven",
-    groupId: "commons-collections",
-    artifactId: "commons-collections",
-    version: "3.2.1",
-    classifier: "",
-    extension: "jar",
-  };
-  let nexusArtifact = NexusFormatMaven(artifact);
-  nexusArtifact.hash = "761ea405b9b37ced573d";
-  let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123");
-  let cve = "sonatype-2015-0002";
-  let myResp3 = await GetCVEDetails(cve, nexusArtifact, settings);
-  console.log("myResp3");
-  console.log(myResp3);
 };
 
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {

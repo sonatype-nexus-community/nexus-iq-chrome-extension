@@ -29,7 +29,7 @@ function gotMessage(receivedMessage, sender, sendResponse) {
         processPage(message);
         break;
       case messageTypes.vulnerability:
-        console.log("vulnearability message");
+        console.log("vulnerability message", message);
         processVulnerability(message);
         break;
       default:
@@ -46,9 +46,8 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   }
 }
 
-
-function processVulnerability(message) {
-  console.log("processVulnerability", message);
+function processVulnerability(message, artifact) {
+  console.log("processVulnerability", message, artifact);
   let vulnClass = message.message.vulnClass;
   console.debug("Setting vuln class: " + vulnClass);
   console.debug("browser: ", browser);
@@ -56,7 +55,8 @@ function processVulnerability(message) {
   if (repoDetails) {
     var x = document.querySelectorAll(repoDetails.titleSelector);
     console.debug("found titles", x);
-    for (var i = 0; i < x.length; i++) {
+    let maxnum = 1; //x.length;
+    for (var i = 0; i < maxnum; i++) {
       console.debug("adding to class: " + vulnClass);
       x[i].classList.add(vulnClass);
       x[i].classList.add("vuln");
@@ -95,9 +95,6 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
     console.log("message.messagetype", message.messagetype);
   }
 }
-
-
-
 
 var repoTypes = [
   {
@@ -169,7 +166,7 @@ var repoTypes = [
   {
     url: "/#browse/browse:",
     parseFunction: parseNexusRepo,
-    titleSelector: "",
+    titleSelector: "div[id*='-coreui-component-componentinfo-'",
   },
 ];
 
@@ -660,7 +657,7 @@ function parseCrates(format, url) {
   };
 }
 
-function parseNexusRepo(url) {
+function parseNexusRepo(iformat, url) {
   //http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
   console.log("parseNexusRepo:", url);
   let elements = url.split("/");

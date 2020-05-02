@@ -2,56 +2,44 @@
   "name": "Sonatype Nexus IQ Evaluation",
   "description": "Sonatype Nexus IQ Evaluation-community developed",
   "author": "Cameron Townshend - ctownshend@sonatype.com",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "default-src 'none'; script-src 'self'; style-src 'self' data: 'unsafe-inline'; connect-src *;",
   "permissions": [
-    "notifications",
-    "storage",
     "activeTab",
     "declarativeContent",
-    "webRequest",
-    "webRequestBlocking",
     "cookies",
     "background",
+    "notifications",
+    "storage",
     "tabs",
-    "https://search.maven.org/",
-    "https://mvnrepository.com/",
-    "https://repo1.maven.org/",
-    "https://repo.maven.apache.org/",
-    "https://www.npmjs.com/",
-    "https://www.nuget.org/",
-    "https://rubygems.org/",
-    "https://pypi.org/",
-    "https://packagist.org/",
+    "webRequest",
+    "*://*/*",
     "https://cran.r-project.org/",
     "https://crates.io/",
-    "https://search.gocenter.io/",
-    "https://ossindex.sonatype.org/",
     "https://github.com/",
-    "*://*/*",
-    "https://kit.fontawesome.com/"
+    "https://mvnrepository.com/",
+    "https://packagist.org/",
+    "https://pypi.org/",
+    "https://ossindex.sonatype.org/",
+    "https://repo1.maven.org/",
+    "https://repo.maven.apache.org/",
+    "https://rubygems.org/",
+    "https://search.gocenter.io/",
+    "https://search.maven.org/",
+    "https://www.npmjs.com/",
+    "https://www.nuget.org/"
   ],
   "content_scripts": [
     {
-      "matches": [
-        "https://www.nuget.org/*",
-        "https://www.npmjs.com/*",
-        "https://search.maven.org/*",
-        "https://www.nuget.org/*"
-      ],
+      "matches": ["*://*/*"],
       "css": ["css/pagestyle.css"]
     }
   ],
   "web_accessible_resources": ["images/*"],
   "content_scripts": [
     {
-      "matches": [
-        "https://www.nuget.org/*",
-        "https://www.npmjs.com/*",
-        "https://search.maven.org/*",
-        "https://www.nuget.org/*"
-      ],
+      "matches": ["*://*/*"],
       "css": ["css/pagestyle.css"]
     }
   ],
@@ -75,7 +63,7 @@
     "128": "images/SON_logo_favicon.png"
   },
   "options_ui": {
-    "page": "html/options.html?ver=1.8.1",
+    "page": "html/options.html?ver=1.8.2",
     "open_in_tab": true
   }
 }

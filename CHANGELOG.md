@@ -1,3 +1,11 @@
+## [1.8.2](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.8.2...v1.8.1) (2020-04-30)
+
+### Bug Fixes
+
+-Fix #86
+
+- Fix Version numbering
+
 ## [1.8.1](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.8.1...v1.8.0) (2020-04-26)
 
 ### Bug Fixes
