@@ -33,7 +33,25 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://www.npmjs.com/packages/*"],
+      "matches": [
+        "https://www.npmjs.com/package/*",
+        "https://cocoapods.org/*",
+        "https://cran.r-project.org/*",
+        "https://crates.io/*",
+        "https://github.com/*",
+        "https://mvnrepository.com/*",
+        "https://www.npmjs.com/*",
+        "https://www.nuget.org/*",
+        "https://ossindex.sonatype.org/*",
+        "https://packagist.org/*",
+        "https://pypi.org/*",
+        "https://repo1.maven.org/*",
+        "https://repo.maven.apache.org/*",
+        "https://rpmfind.net/linux/RPM/epel/*",
+        "https://rubygems.org/*",
+        "https://search.gocenter.io/*",
+        "https://search.maven.org/*"
+      ],
       "css": ["css/pagestyle.css"]
     }
   ],
