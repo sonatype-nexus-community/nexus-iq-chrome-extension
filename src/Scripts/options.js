@@ -20,11 +20,11 @@ window.onload = function () {
       );
     }
   };
-  document.getElementById("login").onclick = function () {
-    login();
+  document.getElementById("login").onclick = async function () {
+    await loginUser();
   };
-  document.getElementById("save").onclick = function () {
-    saveForm();
+  document.getElementById("save").onclick = async function () {
+    await saveForm();
   };
 };
 
@@ -78,7 +78,7 @@ function saveForm() {
   // load_data();
 }
 
-function login() {
+async function loginUser() {
   console.log("login");
   var url = document.getElementById("url").value;
   var username = document.getElementById("username").value;
@@ -87,16 +87,14 @@ function login() {
   if (url === "" || username === "" || password === "") {
     message("Please provide URL, UserName and Password");
   } else {
-    var app = document.getElementById("appId").value;
-    var appValues = app.split(" ");
-    var appInternalId = appValues[0];
-    var appId = appValues[1];
-    addPerms(url);
-    canLogin(url, username, password);
-    addApps(url, username, password, appId, appInternalId);
+    let app = document.getElementById("appId").value;
+    let appValues = app.split(" ");
+    let appInternalId = appValues[0];
+    let appId = appValues[1];
+    await addPerms(url, username, password, appId, appInternalId);
   }
 }
-function addPerms(url) {
+async function addPerms(url, username, password, appId, appInternalId) {
   //chrome.permissions.request
   // return;
   console.log("addPerms(url)", url);
@@ -107,32 +105,36 @@ function addPerms(url) {
     {
       origins: [url],
     },
-    function (granted) {
+    async function (granted) {
       if (granted) {
         // The permissions have been granted.
         console.log("granted");
-        chrome.cookies.get({ url: url, name: "CLM-CSRF-TOKEN" }, function (
-          cookie
-        ) {
-          console.log("cookie", cookie);
-          chrome.storage.sync.set({ IQCookie: cookie }, function () {
-            //alert('saved'+ value);
-            console.log("Saved cookie.value", cookie.value);
-          });
-        });
+        await chrome.cookies.get(
+          { url: url, name: "CLM-CSRF-TOKEN" },
+          async function (cookie) {
+            console.log("cookie", cookie);
+            await chrome.storage.sync.set(
+              { IQCookie: cookie },
+              async function () {
+                //alert('saved'+ value);
+                console.log("Saved cookie.value", cookie);
+              }
+            );
+            await canLogin(url, username, password);
+            await addApps(url, username, password, appId, appInternalId);
+          }
+        );
       } else {
         console.log("not granted");
       }
     }
   );
 }
-function canLogin(url, username, password) {
+async function canLogin(url, username, password) {
   console.log("canLogin", url, username, password);
   message("");
   let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
   let urlEndPoint = baseURL + "rest/user/session";
-  //no need to remove cookies
-  // removeCookies(baseURL);
   axios
     .get(urlEndPoint, {
       auth: {
@@ -143,6 +145,10 @@ function canLogin(url, username, password) {
     .then((data) => {
       console.log("Logged in");
       message("Login successful");
+      //can I get the cookie here
+      // let name = "CLM-CSRF-TOKEN";
+      // let cookie = GetCookieFromURL(url, name);
+      // console.log("Cookie in login", cookie);
     })
     .catch((error) => {
       console.error(error);
@@ -150,7 +156,20 @@ function canLogin(url, username, password) {
     });
 }
 
-function addApps(url, username, password, appId, appInternalId) {
+async function GetCookieFromURL(url, name) {
+  await chrome.cookies.get({ url: url, name: name }, async function (cookie) {
+    console.log("cookie", cookie);
+    return cookie;
+  });
+}
+async function StoreCookieInStorage(cookie) {
+  await chrome.storage.sync.set({ IQCookie: cookie }, async function () {
+    //alert('saved'+ value);
+    console.log("Saved cookie.value", cookie);
+  });
+}
+
+async function addApps(url, username, password, appId, appInternalId) {
   console.log("addApps", appId, appInternalId);
   console.log(url, username, password);
   let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
@@ -190,7 +209,7 @@ function addApps(url, username, password, appId, appInternalId) {
     });
 }
 
-function load_data() {
+async function load_data() {
   console.log("load_data");
   let canLogin = true;
   let url, username, password, appId, appInternalId;
@@ -218,11 +237,11 @@ function load_data() {
         //Need to login to get the list of apps
         if (canLogin) {
           document.getElementById("appId").disabled = false;
-          addPerms(url);
-          addApps(url, username, password, appId, appInternalId);
+          // addPerms(url);
+          // addApps(url, username, password, appId, appInternalId);
           // document.getElementById("appId").selectedIndex = i;
           //document.getElementById("appId").selected = appId;
-          $("#appId").val(appInternalId + " " + appId);
+          // $("#appId").val(appInternalId + " " + appId);
         }
         console.log(appInternalId, appId);
       }

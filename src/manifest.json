@@ -13,8 +13,7 @@
     "background",
     "notifications",
     "storage",
-    "tabs",
-    "webRequest",
+
     "https://cocoapods.org/",
     "https://cran.r-project.org/",
     "https://crates.io/",
