@@ -399,8 +399,10 @@ const ToggleIcon = (tab) => {
 
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   console.log("browser.tabs.onUpdated.addListener", tabId, changeInfo, tab);
-  // let tab = await GetActiveTab();
+
   if (changeInfo.status == "complete") {
+    // let tab2 = await GetActiveTab();
+    // console.log("tab2", tab2);
     let url = tab.url;
 
     if (checkPageIsHandled(url)) {
