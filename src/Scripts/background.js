@@ -407,7 +407,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
     if (checkPageIsHandled(url)) {
       // loadSettingsAndEvaluate(parseMavenURL(url));
-      let displayMessageData = await beginEvaluation(url);
+      let displayMessageData = await beginEvaluation(tab);
       //this may need to install scripts into the background page so the next stuff
       //will be handled by the send message from the content script
       if (displayMessageData !== "installScripts") {

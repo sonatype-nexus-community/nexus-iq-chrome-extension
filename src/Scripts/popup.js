@@ -66,7 +66,7 @@ $(async function () {
     //I have an option in the options tab to enable continuous eval
     let sourceTab = await GetActiveTab();
     sourceUrl = sourceTab.url;
-    console.log("tab", sourceUrl);
+    console.log("tab", sourceTab, sourceUrl);
 
     displayMessageData = await beginEvaluation(sourceTab);
     // Promise.race([waitCursorTimeOut, beginEvaluation]).then(function(value) {
