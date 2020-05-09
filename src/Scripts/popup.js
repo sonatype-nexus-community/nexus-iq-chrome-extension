@@ -28,9 +28,12 @@ $(async function () {
     //setupAccordion();
     showLoader();
     $("#error").hide();
-
+    let sourceTab;
+    const _selectTabHandler = (e, tab) => {
+      selectTabHandler(e, tab, sourceTab);
+    };
     let tabOptions = {
-      beforeActivate: selectTabHandler,
+      beforeActivate: _selectTabHandler,
     };
     //all logic has to happen after the tabs are inited
     //this draws the GUII using jQueryUI
@@ -61,15 +64,16 @@ $(async function () {
     //this is because we want to turn off the 'tabs' permissions
     //this reduces the functionality of the plugin but improves the security
     //I have an option in the options tab to enable continuous eval
-    let tab = await GetActiveTab();
-    let url = tab.url;
-    console.log("tab", tab);
-    displayMessageData = await beginEvaluation(tab);
+    sourceTab = await GetActiveTab();
+    let url = sourceTab.url;
+    console.log("tab", sourceTab);
+
+    displayMessageData = await beginEvaluation(sourceTab);
     // Promise.race([waitCursorTimeOut, beginEvaluation]).then(function(value) {
     //   console.log(value);
     // });
     if (displayMessageData) {
-      await displayMessageDataHTML(displayMessageData);
+      await displayMessageDataHTML(displayMessageData, sourceTab);
     }
   } catch (error) {
     console.log("Popup Error", error, error.stack, error.stack || error);
@@ -150,18 +154,21 @@ const hideLoader = (hasError) => {
   document.getElementById("tabs").style.display = "block";
 };
 
-const selectTabHandler = async (e, tab) => {
+const selectTabHandler = async (e, tab, sourceTab) => {
   //lazy loading of history
   //only do it if the user clicks on the tab
-  showLoader();
-  const remediationTab = 2;
   console.log(
     "selectTabHandler-nexusArtifact, artifact, dataSources, settings",
     nexusArtifact,
     artifact,
     dataSources,
-    settings
+    settings,
+    e,
+    tab,
+    sourceTab
   );
+  showLoader();
+  const remediationTab = 2;
   if (
     tab.newTab.index() === remediationTab &&
     !hasLoadedHistory &&
@@ -188,14 +195,14 @@ const selectTabHandler = async (e, tab) => {
     let currentVersion =
       nexusArtifact.component.componentIdentifier.coordinates.version;
 
-    await renderGraph(allVersions, remediation, currentVersion);
+    await renderGraph(allVersions, remediation, currentVersion, sourceTab);
     hasLoadedHistory = true;
   }
   hideLoader();
 };
 
-const createHTML = async (message, settings) => {
-  console.log("createHTML(message)", message, settings);
+const createHTML = async (message, settings, tab) => {
+  console.log("createHTML(message)", message, settings, tab);
 
   // console.log(componentDetails.length)
   // const thisComponent = componentDetails["0"];
@@ -206,7 +213,7 @@ const createHTML = async (message, settings) => {
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
       // let thisComponent = message.message.response.componentDetails["0"];
-      renderComponentData(message);
+      renderComponentData(message, tab);
       renderLicenseData(message);
       let hasVulns = renderSecurityData(message, settings);
       setHasVulns(hasVulns);
@@ -251,6 +258,7 @@ const renderComponentDataOSSIndex = (message) => {
 
   $("#matchstate").html(message.message.response.reference);
   $("#datasource").html(message.artifact.datasource);
+  // $("#PackageSource").html(url);
   $("CatalogDate_row").addClass("invisible");
   $("RelativePopularity_Row").addClass("invisible");
   $("#catalogdate").html("-");
@@ -347,7 +355,7 @@ const renderSecurityDataOSSIndex = (message) => {
   }
 };
 
-const renderComponentData = (message) => {
+const renderComponentData = (message, tab) => {
   console.log("renderComponentData-thisComponent:", message);
   let thisComponent = message.message.response.componentDetails["0"];
   let component = thisComponent.component;
@@ -403,6 +411,7 @@ const renderComponentData = (message) => {
   $("#catalogdate").html(thisComponent.catalogDate);
   $("#relativepopularity").html(thisComponent.relativePopularity);
   $("#datasource").html(message.artifact.datasource);
+  $("#PackageSource").html(tab.url);
   renderSecuritySummaryIQ(message);
 };
 
@@ -749,8 +758,8 @@ const sortByProperty = (objArray, prop, direction) => {
   return clone;
 };
 
-const displayMessageDataHTML = async (respMessage) => {
-  console.log("displayMessageDataHTML", respMessage);
+const displayMessageDataHTML = async (respMessage, tab) => {
+  console.log("displayMessageDataHTML", respMessage, tab);
   //this is a horrible kludge, I need to resolve the message properly.
   if (respMessage === "installScripts") {
     return;
@@ -772,15 +781,36 @@ const displayMessageDataHTML = async (respMessage) => {
       nexusArtifact = componentDetails.componentDetails[0];
       console.log("nexusArtifact", nexusArtifact);
     }
-    let htmlCreated = await createHTML(respMessage, settings);
+    let htmlCreated = await createHTML(respMessage, settings, tab);
   }
   hideLoader(hasError);
 };
 
-const renderGraph = async (versionsData, remediation, currentVersion) => {
-  console.log("renderGraph", versionsData, remediation, currentVersion);
+const renderGraph = async (
+  versionsData,
+  remediation,
+  currentVersion,
+  sourceTab
+) => {
+  console.log(
+    "renderGraph",
+    versionsData,
+    remediation,
+    currentVersion,
+    sourceTab
+  );
+  const versionClickHandler = async (cbdata) => {
+    console.log("versionClickHandler", cbdata, currentVersion, sourceTab);
+    let newVersion = cbdata;
+    let newURL = sourceTab.url.replace(currentVersion, newVersion);
+    console.log("newURL", newURL);
+    chrome.tabs.update({
+      url: newURL,
+    });
+  };
   Insight.ComponentInformation({
-    selectable: false,
+    selectable: true,
+    versionClick: versionClickHandler,
     data: {
       version: currentVersion,
       nextMajorRevisionIndex: undefined,

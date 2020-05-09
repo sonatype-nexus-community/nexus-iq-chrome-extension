@@ -544,11 +544,10 @@ div.slick-cell.l0.r0 {
   opacity: 1;
 }
 
-/*TODO: Swap this out to none after demo*/
 /* This will put a hand cursor over the rectangles in the Version history*/
-/* rect {
-    cursor: pointer;
-} */
+rect {
+  cursor: pointer;
+}
 
 /* The switch - the box around the slider */
 .switch {
