@@ -49,7 +49,8 @@ const saveForm = async () => {
   var password = document.getElementById("password").value;
   var app = document.getElementById("appId").value;
   let hasApprovedContinuousEval = document.getElementById("ContinuousEval")
-    .isChecked;
+    .checked;
+  console.log("hasApprovedContinuousEval", hasApprovedContinuousEval);
   // console.log(url);
   // console.log(username);
   // console.log(password);
@@ -111,7 +112,7 @@ const ContinuousEval = async (isChecked) => {
     //add the Tabs permission
     chrome.permissions.request(
       {
-        permissions: ["tabs"],
+        permissions: ["tabs", "notifications"],
       },
       (granted) => {
         console.log("requesting");
@@ -122,7 +123,7 @@ const ContinuousEval = async (isChecked) => {
     //remove the Tabs permission
     chrome.permissions.remove(
       {
-        permissions: ["tabs"],
+        permissions: ["tabs", "notifications"],
       },
       () => {
         console.log("removing");

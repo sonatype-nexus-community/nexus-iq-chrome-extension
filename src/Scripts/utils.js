@@ -1337,10 +1337,20 @@ function parseNPM(format, url) {
   };
 }
 
-const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
+const BuildSettings = (
+  baseURL,
+  username,
+  password,
+  appId,
+  appInternalId,
+  IQCookie,
+  IQCookieSet,
+  hasApprovedServer,
+  hasApprovedContinuousEval
+) => {
   //let settings = {};
   console.log("BuildSettings", baseURL);
-  if (typeof baseURL === "undefined" || baseURL === null) return ;
+  if (typeof baseURL === "undefined" || baseURL === null) return;
   let tok = `${username}:${password}`;
   let hash = btoa(tok);
   let auth = "Basic " + hash;
@@ -1367,6 +1377,10 @@ const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
     loginurl: loginurl,
     appId: appId,
     appInternalId: appInternalId,
+    IQCookie: IQCookie,
+    IQCookieSet: IQCookieSet,
+    hasApprovedServer: hasApprovedServer,
+    hasApprovedContinuousEval: hasApprovedContinuousEval,
   };
   return settings;
 };
@@ -1379,21 +1393,29 @@ const BuildSettingsFromGlobal = async () => {
     "password",
     "appId",
     "appInternalId",
+    "IQCookie",
+    "IQCookieSet",
+    "hasApprovedServer",
+    "hasApprovedContinuousEval",
   ]);
-  
+
   settings = BuildSettings(
     promise.url,
     promise.username,
     promise.password,
     promise.appId,
-    promise.appInternalId
+    promise.appInternalId,
+    promise.IQCookie,
+    promise.IQCookieSet,
+    promise.hasApprovedServer,
+    promise.hasApprovedContinuousEval
   );
   console.log("settings", settings);
   return settings;
 };
 
 const GetSettings = (keys) => {
-  console.log("GetSettings")
+  console.log("GetSettings");
   let promise = new Promise((resolve, reject) => {
     browser.storage.sync.get(keys, (items) => {
       let err = browser.runtime.lastError;

@@ -41,10 +41,14 @@ $(async function () {
     });
     let settings = await BuildSettingsFromGlobal();
     console.log("settings", settings);
-    if (typeof settings === "undefined" || settings.url === null) {
+    if (
+      typeof settings === "undefined" ||
+      settings.url === null ||
+      !settings.hasApprovedServer
+    ) {
       //we have not logged in
       //show them the login page
-      browser.tabs.create({ url: "html/options.html" });
+      browser.tabs.create({ url: "html/options.html?connected=false" });
       let errorMsg =
         "You have not logged in. Please open the options page and login. You will have to approve permissions to access the url. Read the instructions if not clear.";
       throw errorMsg;

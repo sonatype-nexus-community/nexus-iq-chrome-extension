@@ -5,15 +5,13 @@
   "version": "1.8.2",
   "manifest_version": 2,
   "content_security_policy": "default-src 'none'; script-src 'self'; object-src 'none'; connect-src *; style-src 'self' data: 'unsafe-inline'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; sandbox allow-popups allow-same-origin allow-scripts;  ",
-  "optional_permissions": ["*://*/*", "tabs"],
+  "optional_permissions": ["*://*/*", "tabs", "notifications"],
   "permissions": [
     "activeTab",
     "declarativeContent",
     "cookies",
     "background",
-    "notifications",
     "storage",
-
     "https://cocoapods.org/",
     "https://cran.r-project.org/",
     "https://crates.io/",
