@@ -82,6 +82,7 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
     let evaluatemessage = {
       artifact: artifact,
       messagetype: messageTypes.evaluateComponent,
+      url: url,
     };
     console.log(
       "browser.runtime.sendMessage(evaluatemessage)",

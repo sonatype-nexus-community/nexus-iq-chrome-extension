@@ -2,10 +2,31 @@
 // import * as utils from "./utils.js";
 const cookieName = "CLM-CSRF-TOKEN";
 window.onload = async () => {
-  console.log("window.onload");
+  console.log("window.onload", window.location.search.substring(1));
   message("");
   load_data();
+  function getQueryVar(varName) {
+    console.log("getQueryVar", varName);
+    // Grab and unescape the query string - appending an '&' keeps the RegExp simple
+    // for the sake of this example.
+    var queryStr = unescape(window.location.search) + "&";
 
+    // Dynamic replacement RegExp
+    var regex = new RegExp(".*?[&\\?]" + varName + "=(.*?)&.*");
+
+    // Apply RegExp to the query string
+    var val = queryStr.replace(regex, "$1");
+
+    // If the string is the same, we didn't find a match - return false
+    return val == queryStr ? false : val;
+  }
+  //if connected=false is sent
+  if (
+    window.location.search.substring(1) &&
+    getQueryVar("connected") === "false"
+  ) {
+    message("Not connected. You have to log in before using the plugin.");
+  }
   // document.getElementById('url').focus();
   document.getElementById("cancel").onclick = async () => {
     try {

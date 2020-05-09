@@ -28,9 +28,9 @@ $(async function () {
     //setupAccordion();
     showLoader();
     $("#error").hide();
-    let sourceTab;
+    let sourceUrl;
     const _selectTabHandler = (e, tab) => {
-      selectTabHandler(e, tab, sourceTab);
+      selectTabHandler(e, tab, sourceUrl);
     };
     let tabOptions = {
       beforeActivate: _selectTabHandler,
@@ -64,16 +64,16 @@ $(async function () {
     //this is because we want to turn off the 'tabs' permissions
     //this reduces the functionality of the plugin but improves the security
     //I have an option in the options tab to enable continuous eval
-    sourceTab = await GetActiveTab();
-    let url = sourceTab.url;
-    console.log("tab", sourceTab);
+    let sourceTab = await GetActiveTab();
+    sourceUrl = sourceTab.url;
+    console.log("tab", sourceUrl);
 
     displayMessageData = await beginEvaluation(sourceTab);
     // Promise.race([waitCursorTimeOut, beginEvaluation]).then(function(value) {
     //   console.log(value);
     // });
     if (displayMessageData) {
-      await displayMessageDataHTML(displayMessageData, sourceTab);
+      await displayMessageDataHTML(displayMessageData, sourceUrl);
     }
   } catch (error) {
     console.log("Popup Error", error, error.stack, error.stack || error);
@@ -103,17 +103,22 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
     //this is the callback handler for a message received
     console.log("popup got message", respMessage);
     let hasError = false;
+    let sourceUrl = respMessage.url;
     await BuildSettingsFromGlobal();
     switch (respMessage.messagetype) {
       case messageTypes.evaluateComponent:
         console.log("messageTypes.evaluateComponent", artifact);
         setArtifact(respMessage.artifact);
-        let displayMessage = await evaluateComponent(artifact, settings);
-        await displayMessageDataHTML(displayMessage);
+        let displayMessage = await evaluateComponent(
+          artifact,
+          settings,
+          sourceUrl
+        );
+        await displayMessageDataHTML(displayMessage, sourceUrl);
         break;
       case messageTypes.displayMessage:
         // alert("displayMessage");
-        await displayMessageDataHTML(respMessage);
+        await displayMessageDataHTML(respMessage, sourceUrl);
         break;
       case messageTypes.loggedIn:
         //logged in so now we evaluate
@@ -201,8 +206,8 @@ const selectTabHandler = async (e, tab, sourceTab) => {
   hideLoader();
 };
 
-const createHTML = async (message, settings, tab) => {
-  console.log("createHTML(message)", message, settings, tab);
+const createHTML = async (message, settings, sourceUrl) => {
+  console.log("createHTML(message)", message, settings, sourceUrl);
 
   // console.log(componentDetails.length)
   // const thisComponent = componentDetails["0"];
@@ -213,9 +218,9 @@ const createHTML = async (message, settings, tab) => {
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
       // let thisComponent = message.message.response.componentDetails["0"];
-      renderComponentData(message, tab);
-      renderLicenseData(message);
       let hasVulns = renderSecurityData(message, settings);
+      renderComponentData(message, sourceUrl);
+      renderLicenseData(message);
       setHasVulns(hasVulns);
       //store nexusArtifact in Global variable
       // let remediation
@@ -355,8 +360,8 @@ const renderSecurityDataOSSIndex = (message) => {
   }
 };
 
-const renderComponentData = (message, tab) => {
-  console.log("renderComponentData-thisComponent:", message);
+const renderComponentData = (message, sourceUrl) => {
+  console.log("renderComponentData-thisComponent:", message, sourceUrl);
   let thisComponent = message.message.response.componentDetails["0"];
   let component = thisComponent.component;
   console.log("component:", component);
@@ -395,6 +400,9 @@ const renderComponentData = (message, tab) => {
     case formats.rpm:
       $("#package").html(coordinates.name);
       break;
+    case formats.cocoapods:
+      $("#package").html(coordinates.name);
+      break;
 
     default:
       $("#package").html("Unknown format");
@@ -411,7 +419,7 @@ const renderComponentData = (message, tab) => {
   $("#catalogdate").html(thisComponent.catalogDate);
   $("#relativepopularity").html(thisComponent.relativePopularity);
   $("#datasource").html(message.artifact.datasource);
-  $("#PackageSource").html(tab.url);
+  $("#PackageSource").html(sourceUrl);
   renderSecuritySummaryIQ(message);
 };
 
@@ -598,7 +606,11 @@ const renderSecurityData = (message) => {
         "</td>";
       strAccordion += "</tr><tr>";
       // let strURL = securityIssue.url;
-      let strURL = `<a target="_blank" rel="noreferrer" href="${settings.baseURL}assets/index.html#/vulnerabilities/${strVulnerability}">${strVulnerability}</a>`;
+      let strURL = `<a target="_blank" rel="noreferrer" href="${
+        settings.baseURL
+      }assets/index.html#/vulnerabilities/${strVulnerability}">${extractHostname(
+        settings.baseURL
+      )}.../${strVulnerability}</a>`;
       console.log("strURL", strURL);
       // if (strURL === "null") {
       //   strURL = http://iq-server:8070/assets/index.html#/vulnerabilities/CVE-2017-5638;
@@ -758,8 +770,8 @@ const sortByProperty = (objArray, prop, direction) => {
   return clone;
 };
 
-const displayMessageDataHTML = async (respMessage, tab) => {
-  console.log("displayMessageDataHTML", respMessage, tab);
+const displayMessageDataHTML = async (respMessage, sourceUrl) => {
+  console.log("displayMessageDataHTML", respMessage, sourceUrl);
   //this is a horrible kludge, I need to resolve the message properly.
   if (respMessage === "installScripts") {
     return;
@@ -781,7 +793,7 @@ const displayMessageDataHTML = async (respMessage, tab) => {
       nexusArtifact = componentDetails.componentDetails[0];
       console.log("nexusArtifact", nexusArtifact);
     }
-    let htmlCreated = await createHTML(respMessage, settings, tab);
+    let htmlCreated = await createHTML(respMessage, settings, sourceUrl);
   }
   hideLoader(hasError);
 };
@@ -790,19 +802,19 @@ const renderGraph = async (
   versionsData,
   remediation,
   currentVersion,
-  sourceTab
+  sourceUrl
 ) => {
   console.log(
     "renderGraph",
     versionsData,
     remediation,
     currentVersion,
-    sourceTab
+    sourceUrl
   );
   const versionClickHandler = async (cbdata) => {
-    console.log("versionClickHandler", cbdata, currentVersion, sourceTab);
+    console.log("versionClickHandler", cbdata, currentVersion, sourceUrl);
     let newVersion = cbdata;
-    let newURL = sourceTab.url.replace(currentVersion, newVersion);
+    let newURL = sourceUrl.replace(currentVersion, newVersion);
     console.log("newURL", newURL);
     chrome.tabs.update({
       url: newURL,
@@ -817,4 +829,19 @@ const renderGraph = async (
       versions: versionsData,
     },
   });
+};
+
+///////////
+
+const renderSecurityDataTest = (message) => {
+  console.log("renderSecurityDataTest", message);
+  let strAccordion = "";
+  strAccordion += "<h3>ABC123</h3>";
+  strAccordion += "<div>body</div>";
+  strAccordion += "<h3>ABC234</h3>";
+  strAccordion += "<div>body2</div>";
+
+  $("#accordion").html(strAccordion);
+  $("#accordion").accordion({ heightStyle: "panel" });
+  return;
 };

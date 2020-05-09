@@ -1595,7 +1595,7 @@ const beginEvaluation = async (tab) => {
           messagetype: messageTypes.evaluateComponent,
         };
         await BuildSettingsFromGlobal();
-        let displayMessage = await evaluateComponent(artifact, settings);
+        let displayMessage = await evaluateComponent(artifact, settings, url);
         return displayMessage;
       } else {
         //this sends a message to the content tab
