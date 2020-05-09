@@ -27,7 +27,9 @@
     "https://rpmfind.net/linux/RPM/epel/",
     "https://rubygems.org/",
     "https://search.gocenter.io/",
-    "https://search.maven.org/"
+    "https://search.maven.org/",
+    "http://localhost:8081/",
+    "http://nexus:8081/"
   ],
   "content_scripts": [
     {
