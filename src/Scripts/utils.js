@@ -1339,7 +1339,8 @@ function parseNPM(format, url) {
 
 const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
   //let settings = {};
-  console.log("BuildSettings");
+  console.log("BuildSettings", baseURL);
+  if (typeof baseURL === "undefined" || baseURL === null) return ;
   let tok = `${username}:${password}`;
   let hash = btoa(tok);
   let auth = "Basic " + hash;
@@ -1379,6 +1380,7 @@ const BuildSettingsFromGlobal = async () => {
     "appId",
     "appInternalId",
   ]);
+  
   settings = BuildSettings(
     promise.url,
     promise.username,
@@ -1391,6 +1393,7 @@ const BuildSettingsFromGlobal = async () => {
 };
 
 const GetSettings = (keys) => {
+  console.log("GetSettings")
   let promise = new Promise((resolve, reject) => {
     browser.storage.sync.get(keys, (items) => {
       let err = browser.runtime.lastError;
@@ -1537,7 +1540,7 @@ const callServer = async (valueCSRF, artifact, settings) => {
     message: retVal,
     artifact: artifact,
   };
-  console.log("evaluatePackage - displayMessage", displayMessage);
+  console.log("callServer - displayMessage", displayMessage);
 
   return displayMessage;
 };

@@ -26,8 +26,8 @@
               Browser Storage. This is <strong>not</strong> secure and you can
               see the password in clear text if you debug the Extension.
               Consider using a login with basic "Component Evaluator" role to
-              limit risk. As of release 76, NexusIQ does support user tokens for
-              passwords though.
+              limit risk. As of release 76, NexusIQ supports user tokens for
+              passwords.
               https://help.sonatype.com/iqserver/managing/user-management/user-tokens
             </td>
           </tr>
@@ -59,6 +59,40 @@
               <select name="appId" id="appId" disabled="true">
                 <option value="">--Please select an item--</option>
               </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+              <hr />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              This version of the Chrome Plugin supports continuous evaluation.
+              Continuous evaluation will show vulnerabilities on each page as
+              you browse to it.
+              <br />
+              You have to enable this feature as it requires the
+              <a href="https://developer.chrome.com/apps/permission_warnings"
+                >tabs</a
+              >
+              permission and this may be seen as intrusive.
+            </td>
+          </tr>
+          <tr>
+            <td>Continuous Eval:</td>
+            <td>
+              <!-- Rounded switch -->
+              <label class="switch">
+                <input type="checkbox" id="ContinuousEval" />
+                <span class="slider round"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <hr />
             </td>
           </tr>
           <tr>

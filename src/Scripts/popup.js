@@ -20,7 +20,9 @@ if (typeof chrome !== "undefined") {
 $(async function () {
   let displayMessageData;
   try {
-    //whenever I open I begin an evaluation immediately
+    //adding code to check if you need to login
+
+    //whenever I open,  I begin an evaluation immediately
     //the icon is disabled for pages that I dont parse
     console.log("ready!");
     //setupAccordion();
@@ -30,18 +32,34 @@ $(async function () {
     let tabOptions = {
       beforeActivate: selectTabHandler,
     };
+    //all logic has to happen after the tabs are inited
+    //this draws the GUII using jQueryUI
     $("#tabs").tabs(tabOptions);
     hasLoadedHistory = false;
     $("div#dialogSecurityDetails").dialog({
       autoOpen: false,
     });
-
+    let settings = await BuildSettingsFromGlobal();
+    console.log("settings", settings);
+    if (typeof settings === "undefined" || settings.url === null) {
+      //we have not logged in
+      //show them the login page
+      browser.tabs.create({ url: "html/options.html" });
+      let errorMsg =
+        "You have not logged in. Please open the options page and login. You will have to approve permissions to access the url. Read the instructions if not clear.";
+      throw errorMsg;
+    }
     //begin evaluation sends a message to the background script
     //and to the content script
     //I may be able to cheat and just get the URL, which simplifies the logic
     //if the URL is not parseable then I will have to go the content script to read the DOM
+    //Note the URL is now only available via a user action
+    //this is because we want to turn off the 'tabs' permissions
+    //this reduces the functionality of the plugin but improves the security
+    //I have an option in the options tab to enable continuous eval
     let tab = await GetActiveTab();
     let url = tab.url;
+    console.log("tab", tab);
     displayMessageData = await beginEvaluation(tab);
     // Promise.race([waitCursorTimeOut, beginEvaluation]).then(function(value) {
     //   console.log(value);
@@ -50,9 +68,11 @@ $(async function () {
       await displayMessageDataHTML(displayMessageData);
     }
   } catch (error) {
-    console.log("Popup Error", error);
+    console.log("Popup Error", error, error.stack, error.stack || error);
     showError(
-      "The display failed. Please contact support. " + "<BR>" + error.stack
+      "The display failed. Please contact support. " +
+        "<BR>" +
+        (error.stack || error)
     );
   } finally {
     console.log("popup-finally", displayMessageData);
@@ -104,7 +124,7 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
       //do nothing for now
     }
   } catch (error) {
-    console.log("error", error);
+    console.log("gotmessage error", error);
     showError(
       "The display failed. Please contact support. " + "<BR>" + error.stack
     );
@@ -170,115 +190,6 @@ const selectTabHandler = async (e, tab) => {
   hideLoader();
 };
 
-// const createAllversionsHTML = async (data, remediation, currentVersion) => {
-//   console.log("createAllversionsHTML", remediation, currentVersion);
-//   // console.log('data:', data);
-
-//   let strData = "";
-//   var grid;
-
-//   var options = {
-//     enableColumnReorder: false,
-//     autoHeight: false,
-//     enableCellNavigation: false,
-//     cellHighlightCssClass: "changed",
-//     cellFlashingCssClass: "remediation-version"
-//   };
-
-//   var slickData = [];
-
-//   var columns = [
-//     { id: "version", name: "version", field: "version" },
-//     { id: "security", name: "security", field: "security" },
-//     { id: "license", name: "license", field: "license" },
-//     { id: "popularity", name: "popularity", field: "popularity" },
-//     { id: "catalogDate", name: "catalogDate", field: "catalogDate" },
-//     {
-//       id: "majorRevisionStep",
-//       name: "majorRevisionStep",
-//       field: "majorRevisionStep"
-//     }
-//   ];
-//   var colId = 0;
-//   let rowId = 0;
-//   let remediationRow = -1;
-//   let currentVersionRow = -1;
-//   //let sortedData = sortByProperty(data, 'componentIdentifier.coordinates.version', 'descending')
-//   data.forEach(element => {
-//     // console.log('element.componentIdentifier.coordinates.version', element.componentIdentifier.coordinates.version)
-//     let version = element.componentIdentifier.coordinates.version;
-//     if (remediation === version) {
-//       remediationRow = rowId;
-//     }
-//     if (currentVersion === version) {
-//       currentVersionRow = rowId;
-//     }
-//     let popularity = element.relativePopularity;
-//     let license =
-//       typeof element.policyMaxThreatLevelsByCategory.LICENSE === "undefined"
-//         ? 0
-//         : element.policyMaxThreatLevelsByCategory.LICENSE;
-//     let myDate = new Date(element.catalogDate);
-//     let catalogDate = myDate.toLocaleDateString();
-//     let security = element.highestSecurityVulnerabilitySeverity;
-//     let majorRevisionStep = element.majorRevisionStep;
-//     strData += version + ", ";
-//     slickData[rowId] = {
-//       version: version,
-//       security: security,
-//       license: license,
-//       popularity: popularity,
-//       catalogDate: catalogDate,
-//       majorRevisionStep: majorRevisionStep
-//     };
-//     rowId++;
-//   });
-//   // console.log('strData', strData)
-//   // console.table(slickData)
-
-//   let currentVersionColor = "#85B6D5";
-//   let remediationVersionColor = "lawngreen";
-//   grid = new Slick.Grid("#myGrid", slickData, columns, options);
-//   if (remediationRow >= 0) {
-//     console.log("remediationRow", remediationRow);
-//     grid.scrollRowIntoView(remediationRow);
-//     grid.flashCell(remediationRow, grid.getColumnIndex("version"), 250);
-
-//     // $($('.grid-canvas').children()[remediationRow]).addClass('remediation-version');
-//     // $($('.grid-canvas').children()[remediationRow]).css("background-color", "lawngreen");
-
-//     paintRow(remediation, remediationVersionColor);
-//     paintRow(currentVersion, currentVersionColor);
-//   } else {
-//     //no remediation
-//     grid.scrollRowIntoView(currentVersionRow);
-//     paintRow(currentVersion, currentVersionColor);
-//   }
-
-//   grid.onViewportChanged.subscribe(function(e, args) {
-//     //event handling code.
-//     //find the fix
-//     console.log("grid.onViewportChanged");
-
-//     paintRow(remediation, remediationVersionColor);
-//     paintRow(currentVersion, currentVersionColor);
-//   });
-//   // paintRow (remediation, remediationVersionColor);
-//   // paintRow (currentVersion, currentVersionColor)
-//   // $("#remediation").html(strData);
-// };
-
-// const paintRow = (currentVersion, color) => {
-//   let currentVersionCell = $("div").filter(function() {
-//     // Matches exact string
-//     return $(this).text() === currentVersion;
-//   });
-//   let currentVersionCellParent = $(currentVersionCell).parents(
-//     "div .slick-row"
-//   );
-//   currentVersionCellParent.css("background-color", color);
-// };
-
 const createHTML = async (message, settings) => {
   console.log("createHTML(message)", message, settings);
 
@@ -293,7 +204,7 @@ const createHTML = async (message, settings) => {
       // let thisComponent = message.message.response.componentDetails["0"];
       renderComponentData(message);
       renderLicenseData(message);
-      let hasVulns = renderSecurityData(message);
+      let hasVulns = renderSecurityData(message, settings);
       setHasVulns(hasVulns);
       //store nexusArtifact in Global variable
       // let remediation
@@ -620,6 +531,7 @@ const Count_CVSS_Issues = (message) => {
 };
 
 const renderSecurityData = (message) => {
+  console.log("message", message);
   let hasVulnerability = false;
   var thisComponent = message.message.response.componentDetails["0"];
   let securityIssues = thisComponent.securityData.securityIssues;
@@ -651,7 +563,7 @@ const renderSecurityData = (message) => {
       strAccordion += "<table>";
       strAccordion += "<tr>";
 
-      let strDialog = `<div id="info_${strVulnerability}"><a href="#">${strVulnerability}<img  src="../images/icons8-info-filled-50.png" class="info" alt="Info"></a></div>`;
+      let strDialog = `<div id="info_${strVulnerability}"><a href="#">${strVulnerability}<img src="../images/icons8-info-filled-50.png" class="info" alt="Info"></a></div>`;
       strAccordion +=
         '<td class="label">Reference:</td><td class="data">' +
         strDialog +
@@ -672,10 +584,14 @@ const renderSecurityData = (message) => {
         securityIssue.threatCategory +
         "</td>";
       strAccordion += "</tr><tr>";
-      strAccordion +=
-        '<td class="label">url:</td><td class="data">' +
-        securityIssue.url +
-        "</td>";
+      // let strURL = securityIssue.url;
+      let strURL = `<a target="_blank" rel="noreferrer" href="${settings.baseURL}assets/index.html#/vulnerabilities/${strVulnerability}">${strVulnerability}</a>`;
+      console.log("strURL", strURL);
+      // if (strURL === "null") {
+      //   strURL = http://iq-server:8070/assets/index.html#/vulnerabilities/CVE-2017-5638;
+      // }
+      //iq-server:8070/assets/index.html#/vulnerabilities/CVE-2017-5638
+      strAccordion += `<td class="label">url:</td><td class="data">${strURL}</td>`;
       strAccordion += "</tr>";
       strAccordion += "</table>";
       strAccordion += "</div>";
