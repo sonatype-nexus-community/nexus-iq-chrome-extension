@@ -44,6 +44,7 @@ $(async function () {
     });
     let settings = await BuildSettingsFromGlobal();
     console.log("settings", settings);
+    //for new installs we will not have set the hasApprovedServer flag
     if (
       typeof settings === "undefined" ||
       settings.url === null ||

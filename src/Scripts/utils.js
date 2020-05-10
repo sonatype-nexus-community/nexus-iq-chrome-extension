@@ -1346,7 +1346,8 @@ const BuildSettings = (
   IQCookie,
   IQCookieSet,
   hasApprovedServer,
-  hasApprovedContinuousEval
+  hasApprovedContinuousEval,
+  hasApprovedAllUrls
 ) => {
   //let settings = {};
   console.log("BuildSettings", baseURL);
@@ -1381,13 +1382,14 @@ const BuildSettings = (
     IQCookieSet: IQCookieSet,
     hasApprovedServer: hasApprovedServer,
     hasApprovedContinuousEval: hasApprovedContinuousEval,
+    hasApprovedAllUrls: hasApprovedAllUrls,
   };
   return settings;
 };
 
 const BuildSettingsFromGlobal = async () => {
   console.log("BuildSettingsFromGlobal");
-  let promise = await GetSettings([
+  let retSettings = await GetSettings([
     "url",
     "username",
     "password",
@@ -1397,18 +1399,20 @@ const BuildSettingsFromGlobal = async () => {
     "IQCookieSet",
     "hasApprovedServer",
     "hasApprovedContinuousEval",
+    "hasApprovedAllUrls",
   ]);
 
   settings = BuildSettings(
-    promise.url,
-    promise.username,
-    promise.password,
-    promise.appId,
-    promise.appInternalId,
-    promise.IQCookie,
-    promise.IQCookieSet,
-    promise.hasApprovedServer,
-    promise.hasApprovedContinuousEval
+    retSettings.url,
+    retSettings.username,
+    retSettings.password,
+    retSettings.appId,
+    retSettings.appInternalId,
+    retSettings.IQCookie,
+    retSettings.IQCookieSet,
+    retSettings.hasApprovedServer,
+    retSettings.hasApprovedContinuousEval,
+    retSettings.hasApprovedAllUrls
   );
   console.log("settings", settings);
   return settings;
@@ -1429,6 +1433,22 @@ const GetSettings = (keys) => {
   return promise;
 };
 
+const setSettings = async (obj) => {
+  console.log(Object.values(obj)[0]);
+  await chrome.storage.sync.set(
+    { [Object.keys(obj)[0]]: Object.values(obj)[0] },
+    async () => {
+      //alert('saved'+ value);
+      console.log("Saved obj", obj);
+    }
+  );
+};
+const GetSettings2 = async (keys) => {
+  console.log("GetSettings2");
+  let val = await chrome.storage.sync.get(keys, (items) => {
+    return items;
+  });
+};
 const GetCookieFromConfig = async () => {
   console.log("GetCookieFromConfig");
   //get the value from storage
@@ -1601,6 +1621,7 @@ const beginEvaluation = async (tab) => {
         //this sends a message to the content tab
         //hopefully it will tell me what it sees
         //this fixes a bug where we did not get the right DOM because we did not know what page we were on
+        // TODO: CPT I Iwant to get rid of this logic
         installScripts(tab, message);
         //install scripts will run, and I hope that we receive a message back
         return "installScripts";
@@ -1652,10 +1673,10 @@ const evaluatePackage = async (artifact, settings) => {
   console.log("domain", domain);
   // let cookie = await GetCookie(domain, xsrfCookieName);
   let cookie = await GetCookieFromConfig();
+  // let cookie = await GetSettings2("IQCookie");
   console.log("cookie", cookie);
   if (typeof cookie === "undefined") {
-    console.log("handled missing cookie");
-
+    console.log("handle missing cookie");
     valueCSRF = uuidv4();
     //server is not up most probably
     //do we throw an error here or exit gracefully
@@ -2170,11 +2191,11 @@ const installScripts = (tab, message) => {
   // background.message = message;
   // console.log("sending message:", message);
   executeScripts(null, [
-    { file: "Scripts/lib/jquery.min.js" },
-    // { file: "Scripts/lib/require.js" },
-    { file: "Scripts/utils.js" },
-    // { code: "var message = " + message  + ";"},
-    { file: "Scripts/content.js" },
+    // { file: "Scripts/lib/jquery.min.js" },
+    // // { file: "Scripts/lib/require.js" },
+    // { file: "Scripts/utils.js" },
+    // // { code: "var message = " + message  + ";"},
+    // { file: "Scripts/content.js" },
     { code: "processPage();" },
   ]);
   // browser.tabs.sendMessage(tab.tabId, message);

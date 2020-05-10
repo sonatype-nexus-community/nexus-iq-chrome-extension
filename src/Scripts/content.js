@@ -1,7 +1,7 @@
 /*jslint es6  -W024 */
 "use strict";
 
-console.log("contentscript.js");
+console.log("content.js");
 // import { formats } as utils from "./utils.js";
 
 var browser;

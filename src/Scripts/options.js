@@ -1,22 +1,31 @@
 /*jslint es6  -W024 */
 // import * as utils from "./utils.js";
 const cookieName = "CLM-CSRF-TOKEN";
+$(function () {
+  $(document).tooltip();
+});
+// $("a#tabstooltip").tooltip({
+//   open: function (event, ui) {
+//     console.log("tooltip open");
+//     $(ui.tooltip).append(
+//       '<a target="_blank" rel="noreferrer" href="https://developer.chrome.com/extensions/tabs">tabs</a>'
+//     );
+//   },
+// });
 window.onload = async () => {
   console.log("window.onload", window.location.search.substring(1));
   message("");
   load_data();
+
   function getQueryVar(varName) {
     console.log("getQueryVar", varName);
     // Grab and unescape the query string - appending an '&' keeps the RegExp simple
     // for the sake of this example.
     var queryStr = unescape(window.location.search) + "&";
-
     // Dynamic replacement RegExp
     var regex = new RegExp(".*?[&\\?]" + varName + "=(.*?)&.*");
-
     // Apply RegExp to the query string
     var val = queryStr.replace(regex, "$1");
-
     // If the string is the same, we didn't find a match - return false
     return val == queryStr ? false : val;
   }
@@ -57,6 +66,15 @@ window.onload = async () => {
       await ContinuousEval(isChecked);
     }
   };
+  document.getElementById("AllUrls").onclick = async () => {
+    let isChecked = document.getElementById("AllUrls").checked;
+    console.log("AllUrls", isChecked);
+    if (isChecked) {
+      await SetAllUrls(isChecked);
+    } else {
+      await SetAllUrls(isChecked);
+    }
+  };
 };
 
 const message = async (strMessage) => {
@@ -71,6 +89,9 @@ const saveForm = async () => {
   var app = document.getElementById("appId").value;
   let hasApprovedContinuousEval = document.getElementById("ContinuousEval")
     .checked;
+  //
+  let hasApprovedAllUrls = document.getElementById("AllUrls").checked;
+
   console.log("hasApprovedContinuousEval", hasApprovedContinuousEval);
   // console.log(url);
   // console.log(username);
@@ -109,6 +130,13 @@ const saveForm = async () => {
       console.log("Saved hasApprovedContinuousEval", hasApprovedContinuousEval);
     }
   );
+  chrome.storage.sync.set(
+    { hasApprovedAllUrls: hasApprovedAllUrls },
+    async () => {
+      //alert('saved'+ value);
+      console.log("Saved hasApprovedAllUrls", hasApprovedAllUrls);
+    }
+  );
 
   var ok = true;
   if (ok) {
@@ -118,16 +146,35 @@ const saveForm = async () => {
   }
   // load_data();
 };
-const setSettings = async (obj) => {
-  console.log(Object.values(obj)[0]);
-  await chrome.storage.sync.set(
-    { [Object.keys(obj)[0]]: Object.values(obj)[0] },
-    async () => {
-      //alert('saved'+ value);
-      console.log("Saved obj", obj);
-    }
-  );
+
+const SetAllUrls = async (isChecked) => {
+  if (isChecked) {
+    //add the Tabs permission
+    chrome.permissions.request(
+      {
+        origins: ["*://*/*"],
+      },
+      (granted) => {
+        console.log("requesting");
+        setSettings({ hasApprovedAllUrls: isChecked });
+      }
+    );
+  } else {
+    //remove the Tabs permission
+    chrome.permissions.remove(
+      {
+        origins: ["*://*/*"],
+      },
+      () => {
+        console.log("removing");
+        setSettings({
+          hasApprovedAllUrls: isChecked,
+        });
+      }
+    );
+  }
 };
+
 const ContinuousEval = async (isChecked) => {
   if (isChecked) {
     //add the Tabs permission
@@ -333,6 +380,7 @@ const load_data = async () => {
       "appInternalId",
       "hasApprovedServer",
       "hasApprovedContinuousEval",
+      "hasApprovedAllUrls",
     ],
     async (data) => {
       console.log("data", data);
@@ -367,11 +415,17 @@ const load_data = async () => {
         }
 
         hasApprovedContinuousEval = data.hasApprovedContinuousEval;
-
         console.log("ContinuousEval", hasApprovedContinuousEval);
         document.getElementById(
           "ContinuousEval"
         ).checked = hasApprovedContinuousEval;
+
+        //hasApprovedAllUrls
+        hasApprovedAllUrls = data.hasApprovedAllUrls;
+        console.log("hasApprovedAllUrls", hasApprovedAllUrls);
+        document.getElementById(
+          "hasApprovedAllUrls"
+        ).checked = hasApprovedAllUrls;
       }
     }
   );

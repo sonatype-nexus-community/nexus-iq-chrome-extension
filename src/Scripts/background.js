@@ -398,14 +398,14 @@ const ToggleIcon = (tab) => {
 };
 
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  console.log("browser.tabs.onUpdated.addListener", tabId, changeInfo, tab);
+  // console.log("browser.tabs.onUpdated.addListener", tabId, changeInfo, tab);
 
   if (changeInfo.status == "complete") {
     // let tab2 = await GetActiveTab();
     // console.log("tab2", tab2);
     let url = tab.url;
 
-    if (checkPageIsHandled(url)) {
+    if (url && checkPageIsHandled(url)) {
       // loadSettingsAndEvaluate(parseMavenURL(url));
       let displayMessageData = await beginEvaluation(tab);
       //this may need to install scripts into the background page so the next stuff

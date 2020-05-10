@@ -8,7 +8,7 @@ body {
   /* background-position: center; */
   font-family: sans-serif;
   border-radius: 5px;
-  border-color: cornflowerblue;
+  border-color: #5c74eb;
   border-width: 2px;
 }
 
@@ -218,7 +218,7 @@ input[type="submit"],
 input[type="reset"],
 input[type="button"] {
   width: 100%;
-  background-color: rgb(25, 74, 209);
+  background-color: #5c74eb;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -228,11 +228,11 @@ input[type="button"] {
 }
 
 input[type="button"] {
-  background-color: rgb(25, 74, 209);
+  background-color: #5c74eb;
 }
 
 input[type="submit"]:hover {
-  background-color: rgb(25, 74, 209);
+  background-color: #5c74eb;
 }
 
 div .optionstable {
@@ -416,7 +416,7 @@ h3 {
 #tabs .ui-tabs-panel {
   background: white;
   border-width: 0px 1px 1px 1px;
-  border-color: rgb(39, 102, 173);
+  border-color: #5c74eb;
   border-radius: 5px;
   border-width: 2px;
   margin: 10px 0px 0px 0px;
@@ -486,7 +486,7 @@ div.slick-cell.l0.r0 {
 }
 
 .component-tab {
-  border: blue;
+  border: #5c74eb;
   border-radius: 4px;
   background-color: pink;
 }
@@ -590,11 +590,11 @@ rect {
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: #5c74eb;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  box-shadow: 0 0 1px #5c74eb;
 }
 
 input:checked + .slider:before {
@@ -610,4 +610,8 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.icon-a {
+  color: #5c74eb;
 }

@@ -27,33 +27,17 @@
     "https://rpmfind.net/linux/RPM/epel/",
     "https://rubygems.org/",
     "https://search.gocenter.io/",
-    "https://search.maven.org/",
-    "http://localhost:8081/",
-    "http://nexus:8081/"
+    "https://search.maven.org/"
   ],
   "content_scripts": [
     {
-      "matches": [
-        "https://www.npmjs.com/package/*",
-        "https://cocoapods.org/*",
-        "https://cran.r-project.org/*",
-        "https://crates.io/*",
-        "https://github.com/*",
-        "https://mvnrepository.com/*",
-        "https://www.npmjs.com/*",
-        "https://www.nuget.org/*",
-        "https://ossindex.sonatype.org/*",
-        "https://packagist.org/*",
-        "https://pypi.org/*",
-        "https://repo1.maven.org/*",
-        "https://repo.maven.apache.org/*",
-        "https://rpmfind.net/linux/RPM/epel/*",
-        "https://rubygems.org/*",
-        "https://search.gocenter.io/*",
-        "https://search.maven.org/*"
-      ],
+      "matches": ["*://*/*"],
       "css": ["css/pagestyle.css"],
-      "js": ["Scripts/content.js"]
+      "js": [
+        "Scripts/lib/jquery.min.js",
+        "Scripts/utils.js",
+        "Scripts/content.js"
+      ]
     }
   ],
   "web_accessible_resources": ["images/*"],
