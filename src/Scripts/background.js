@@ -54,7 +54,7 @@ const gotMessage = async (message, sender, sendResponse) => {
       let tab = await GetActiveTab();
       if (tab) {
         let tabId = tab.id;
-        displayEvaluationResults(displayMessage, tabId);
+        await displayEvaluationResults(displayMessage, tabId);
       }
       browser.runtime.sendMessage(message);
       return displayMessage;
@@ -119,7 +119,7 @@ install_notice();
 
 // getActiveTab();
 
-const sendNotification = (securityData, artifact) => {
+const sendNotification = async (securityData, artifact) => {
   console.log("sendNotification", securityData);
   var options = {
     type: "basic",
@@ -141,6 +141,8 @@ const sendNotification = (securityData, artifact) => {
     vulnClass = "vuln-high";
   } else if (severity >= 5) {
     vulnClass = "vuln-med";
+  } else if (severity >= 2) {
+    vulnClass = "vuln-low";
   }
 
   let vulnMessage = {
@@ -155,26 +157,29 @@ const sendNotification = (securityData, artifact) => {
   browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     browser.tabs.sendMessage(tabs[0].id, vulnMessage);
   });
-
-  browser.notifications.create(
-    "NexusIQNotification",
-    {
-      type: "basic",
-      iconUrl: "../images/SON_logo_favicon_Vulnerable.png",
-      title: "Sonatype Nexus IQ Scan",
-      message: "IQ found vulnerabilities in this version",
-      priority: 1,
-      buttons: [
-        {
-          title: "Close",
-        },
-      ],
-      isClickable: true,
-    },
-    function () {
-      console.log("chrome.runtime.lastError", browser.runtime.lastError);
-    }
-  );
+  let hasApproved = await GetSettings(["hasApprovedContinuousEval"]);
+  console.log("hasApproved", hasApproved.hasApprovedContinuousEval);
+  if (hasApproved.hasApprovedContinuousEval) {
+    browser.notifications.create(
+      "NexusIQNotification",
+      {
+        type: "basic",
+        iconUrl: "../images/SON_logo_favicon_Vulnerable.png",
+        title: "Sonatype Nexus IQ Scan",
+        message: "IQ found vulnerabilities in this version",
+        priority: 1,
+        buttons: [
+          {
+            title: "Close",
+          },
+        ],
+        isClickable: true,
+      },
+      function () {
+        console.log("chrome.runtime.lastError", browser.runtime.lastError);
+      }
+    );
+  }
 };
 
 const loadSettingsAndEvaluate = (artifact) => {
@@ -304,7 +309,7 @@ const evaluate = (artifact, settings) => {
 };
 
 const callIQ = (artifact, settings) => {
-  console.log("evaluate", settings.auth, artifact);
+  console.log("callIQ", settings.auth, artifact);
   var requestdata = NexusFormat(artifact);
   let inputStr = JSON.stringify(requestdata);
   var retVal;
@@ -624,6 +629,14 @@ browser.runtime.onInstalled.addListener(function () {
               pathContains: "linux/RPM/epel",
             },
           }),
+
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "conan.io",
+              schemes: ["https"],
+              pathContains: "center",
+            },
+          }),
         ],
 
         actions: [new browser.declarativeContent.ShowPageAction()],
@@ -632,7 +645,7 @@ browser.runtime.onInstalled.addListener(function () {
   });
 });
 
-function displayEvaluationResults(displayMessageData, tabId) {
+const displayEvaluationResults = async (displayMessageData, tabId) => {
   console.log("displayEvaluationResults", displayMessageData, tabId);
   let responseArtifact = displayMessageData.artifact;
   let responseData = displayMessageData.message.response;
@@ -655,14 +668,14 @@ function displayEvaluationResults(displayMessageData, tabId) {
       tabId: tabId,
     });
     //chrome.browserAction.setBadgeText({text: "!"});
-    sendNotification(vulnerabilities, responseArtifact);
+    await sendNotification(vulnerabilities, responseArtifact);
   } else {
     browser.pageAction.setIcon({
       path: "../images/SON_logo_favicon_not_vuln.png",
       tabId: tabId,
     });
   }
-}
+};
 
 function receiveText(resultsArray) {
   console.log(resultsArray[0]);

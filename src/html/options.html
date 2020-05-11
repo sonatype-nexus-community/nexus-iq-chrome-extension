@@ -20,21 +20,30 @@
     <title>Sonatype Chrome Extension Options</title>
   </head>
   <body>
-    <form>
+    <form id="form">
       <div id="buttonDiv" class="optionstable">
-        <div>
-          <p>Enter your Sonatype IQ Server Address and Login</p>
+        <div class="heading">
+          <h2>Enter your Sonatype IQ Server Address and Login</h2>
         </div>
         <table class="optionstable" id="optionstable">
           <tr>
             <td>
-              The address of your IQ Server:*<i
-                class="fas fa-question-circle icon-a"
-                title="The server address is required. This adress will be added to your chrome extension permissions list once you login. You will be prompted by Chrome to approve this additional permission."
-              ></i>
+              <label for="url"
+                >The address of your IQ Server:*<i
+                  class="fas fa-question-circle icon-a"
+                  title="The server address is required. This adress will be added to your chrome extension permissions list once you login. You will be prompted by Chrome to approve this additional permission."
+                ></i
+              ></label>
             </td>
             <td>
-              <input type="text" name="URL" id="url" required autofocus />
+              <input
+                type="text"
+                name="url"
+                id="url"
+                required
+                autofocus
+                placeholder="IQ Server address"
+              />
             </td>
           </tr>
           <tr>
@@ -52,23 +61,33 @@
           </tr>
           <tr>
             <td>
-              Username:*
-              <i
-                class="fas fa-question-circle icon-a"
-                title="The username is required. Please note: This version stores the username and password in Browser Storage."
-              ></i>
+              <label for="username">
+                Username:*
+                <i
+                  class="fas fa-question-circle icon-a"
+                  title="The username is required. Please note: This version stores the username and password in Browser Storage."
+                ></i
+              ></label>
             </td>
             <td>
-              <input type="text" name="username" id="username" required />
+              <input
+                type="text"
+                name="username"
+                id="username"
+                required
+                placeholder="User name"
+              />
             </td>
           </tr>
           <tr>
             <td>
-              Password:*
-              <i
-                class="fas fa-question-circle icon-a"
-                title="The password is required. Please note: This version stores the username and password in Browser Storage. This is not secure and you can see the password in clear text if you debug the Extension. Consider using a login with basic Component Evaluator role to limit risk. As of release 76, NexusIQ supports user tokens for passwords. https://help.sonatype.com/iqserver/managing/user-management/user-tokens"
-              ></i>
+              <label for="password">
+                Password:*
+                <i
+                  class="fas fa-question-circle icon-a"
+                  title="The password is required. Please note: This version stores the username and password in Browser Storage. This is not secure and you can see the password in clear text if you debug the Extension. Consider using a login with basic Component Evaluator role to limit risk. As of release 76, NexusIQ supports user tokens for passwords. https://help.sonatype.com/iqserver/managing/user-management/user-tokens"
+                ></i
+              ></label>
             </td>
             <td>
               <input
@@ -77,6 +96,7 @@
                 id="password"
                 autocomplete="off"
                 required
+                placeholder="*********"
               />
             </td>
           </tr>
@@ -86,10 +106,12 @@
           </tr>
           <tr>
             <td>
-              Application:*<i
-                class="fas fa-question-circle icon-a"
-                title="Application is required to link to the policy engine in NexusIQ. The drop down is disabled until you login. It will be populated with the list of applications that you have access to."
-              ></i>
+              <label for="appId"
+                >Application:*<i
+                  class="fas fa-question-circle icon-a"
+                  title="Application is required to link to the policy engine in NexusIQ. The drop down is disabled until you login. It will be populated with the list of applications that you have access to."
+                ></i
+              ></label>
             </td>
             <td>
               <select name="appId" id="appId" disabled="true">
@@ -121,19 +143,19 @@
               </label>
             </td>
           </tr>
-          <tr>
+          <tr style="visibility: collapse;">
             <td colspan="2">
               <hr />
             </td>
           </tr>
 
-          <tr>
+          <tr style="visibility: collapse;">
             <td>
               All Urls:<i
                 class="fas fa-question-circle icon-a"
                 title="This version of the Chrome Plugin is locked down for access to specific websites by default. You can enable access to all websites not specified in the list. This is required if you need to scan Nexus and Artifactory Repositories. You have to enable this feature as it requires the all urls permission.
                 Chrome will ask 'Read and change all your data on the websites that you visit'
-                
+                Refer to:
                 https://developer.chrome.com/apps/permission_warnings
               
               "

@@ -1,23 +1,33 @@
-add backround.js
-browser.runtime.onInstalled.addListener(function() {
-,
-          //https://github.com/jquery/jquery/releases/tag/3.0.0
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "github.com",
-              schemes: ["https"],
-              pathContains: "releases/tag"
-            }
-          })
+Steps to add a new format and repo
+1) Add to manifest 
+1.1) permissions urll
+1.2) content script
+
+-add background.js
+--add PageStateMatcher to  browser.runtime.onInstalled.addListener
 
 --utils.js
--checkPageIsHandled
--ParsePageURL
---add parseRPMRepoURL
---add formats.rpm
---add case to NexusFormat
---add method to NexusFormatRPM
---add case to renderComponentData
+---checkPageIsHandled
+---ParsePageURL -add case
+---add parseXXXXURL -> add parseURLXXXX 
+---add formats.rpm
+---add case to NexusFormat
+---add method NexusFormatXXX
+---add exports
+
+--utils.test.js
+---add unit tests
+
+--popup.js
+---add case to renderComponentData
+---add to formats object
+
+--content.js
+---add parseXXXX
+---add format to formats object
+---add format to repotypes array
+
+--add artifact class ConanArtifact
 
 https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
 

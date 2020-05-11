@@ -21,5 +21,6 @@
       "fileMatch": ["../src/manifest.json", "../src/manifest_chrome.json"],
       "url": "http://json.schemastore.org/chrome-manifest"
     }
-  ]
+  ],
+  "css.lint.emptyRules": "ignore"
 }

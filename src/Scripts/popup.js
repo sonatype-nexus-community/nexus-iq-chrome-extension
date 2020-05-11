@@ -404,6 +404,9 @@ const renderComponentData = (message, sourceUrl) => {
     case formats.cocoapods:
       $("#package").html(coordinates.name);
       break;
+    case formats.conan:
+      $("#package").html(coordinates.name);
+      break;
 
     default:
       $("#package").html("Unknown format");
@@ -815,7 +818,15 @@ const renderGraph = async (
   const versionClickHandler = async (cbdata) => {
     console.log("versionClickHandler", cbdata, currentVersion, sourceUrl);
     let newVersion = cbdata;
-    let newURL = sourceUrl.replace(currentVersion, newVersion);
+    let repoType = findRepoType(sourceUrl);
+    let newURL;
+    if (sourceUrl.indexOf(currentVersion) < 0 && repoType) {
+      newURL =
+        sourceUrl +
+        repoType.appendVersionPath.replace("{versionNumber}", newVersion);
+    } else {
+      newURL = sourceUrl.replace(currentVersion, newVersion);
+    }
     console.log("newURL", newURL);
     chrome.tabs.update({
       url: newURL,
@@ -834,15 +845,134 @@ const renderGraph = async (
 
 ///////////
 
-const renderSecurityDataTest = (message) => {
-  console.log("renderSecurityDataTest", message);
-  let strAccordion = "";
-  strAccordion += "<h3>ABC123</h3>";
-  strAccordion += "<div>body</div>";
-  strAccordion += "<h3>ABC234</h3>";
-  strAccordion += "<div>body2</div>";
-
-  $("#accordion").html(strAccordion);
-  $("#accordion").accordion({ heightStyle: "panel" });
-  return;
+var formats = {
+  maven: "maven",
+  npm: "npm",
+  nuget: "nuget",
+  gem: "gem",
+  pypi: "pypi",
+  composer: "composer", //packagist website but composer format
+  cocoapods: "cocoapods",
+  cran: "cran",
+  cargo: "cargo", //cargo == crates == rust
+  golang: "golang",
+  github: "github",
+  rpm: "rpm",
+  conan: "conan",
 };
+var repoTypes = [
+  {
+    url: "search.maven.org/artifact/",
+    repoFormat: formats.maven,
+    // parseFunction: parseMaven,
+    titleSelector: ".artifact-title",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}/{extension}",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://mvnrepository.com/artifact/",
+    repoFormat: formats.maven,
+    // parseFunction: parseMaven,
+    titleSelector: "h2.im-title",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    appendVersionPath: "",
+  },
+  {
+    url: "www.npmjs.com/package/",
+    repoFormat: formats.npm,
+    // parseFunction: parseNPM,
+    titleSelector: ".package-name-redundant",
+    fullVersionPath: "{url}/{packagename}/v/{versionNumber}",
+    appendVersionPath: "/v/{versionNumber}",
+  },
+  {
+    url: "nuget.org/packages/",
+    repoFormat: formats.nuget,
+    // parseFunction: parseNuget,
+    titleSelector: ".package-title > h1",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+    appendVersionPath: "/{versionNumber}",
+  },
+  {
+    url: "pypi.org/project/",
+    repoFormat: formats.pypi,
+    // parseFunction: parsePyPI,
+    titleSelector: "h1.package-header__name",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+    appendVersionPath: "/{versionNumber}",
+  },
+  {
+    url: "rubygems.org/gems/",
+    repoFormat: formats.gem,
+    // parseFunction: parseRuby,
+    titleSelector: "h1.t-display",
+    versionPath: "{url}/{packagename}/versions/{versionNumber}",
+    appendVersionPath: "/versions/{versionNumber}",
+  },
+  {
+    url: "packagist.org/packages/",
+    repoFormat: formats.composer,
+    // parseFunction: parsePackagist,
+    titleSelector: "",
+    versionPath: "{url}/{packagename}#{versionNumber}",
+    appendVersionPath: "#{versionNumber}",
+  },
+  {
+    url: "cocoapods.org/pods/",
+    repoFormat: formats.cocoapods,
+    // parseFunction: parseCocoaPods,
+    titleSelector: "h1",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "cran.r-project.org/",
+    repoFormat: formats.cran,
+    // parseFunction: parseCRAN,
+    titleSelector: "h2.title",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://crates.io/crates/",
+    repoFormat: formats.cargo,
+    // parseFunction: parseCrates,
+    titleSelector: "",
+    versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
+    appendVersionPath: "/{versionNumber}",
+  },
+  {
+    url: "https://search.gocenter.io/",
+    repoFormat: formats.golang,
+    // parseFunction: parseGoLang,
+    titleSelector: "#app div.v-application--wrap h1",
+    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    appendVersionPath: "/info?version={versionNumber}",
+  },
+  {
+    url: "/#browse/browse:",
+    // parseFunction: parseNexusRepo,
+    titleSelector: "div[id*='-coreui-component-componentinfo-'",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "conan.io/center/",
+    repoFormat: formats.conan,
+    // parseFunction: parseConan,
+    titleSelector: "",
+    versionPath: "",
+  },
+];
+
+function findRepoType(url) {
+  console.log("findRepoType(url)", url);
+  // let url = location.href;
+  // let repoTypes = [];
+  for (let i = 0; i < repoTypes.length; i++) {
+    if (url.search(repoTypes[i].url) >= 0) {
+      return repoTypes[i];
+    }
+  }
+  return undefined;
+}

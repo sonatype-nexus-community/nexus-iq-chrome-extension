@@ -19,23 +19,26 @@ const {
   NPMArtifact,
   NugetArtifact,
   NexusFormat,
+  NexusFormatCocoaPods,
+  NexusFormatConan,
   NexusFormatMaven,
   NexusFormatNPM,
   NexusFormatNuget,
   NexusFormatPyPI,
   NexusFormatRuby,
+  parseArtifactoryURL,
+  parseCocoaPodsURL,
+  parseURLConan,
+  parseCRANURL,
+  parseCratesURL,
+  parseGitHubURL,
+  parseGoLangURL,
   parseMavenURL,
   parseNPMURL,
   parseNugetURL,
+  parsePackagistURL,
   parsePyPIURL,
   parseRubyURL,
-  parsePackagistURL,
-  parseCocoaPodsURL,
-  parseCRANURL,
-  parseGoLangURL,
-  parseCratesURL,
-  parseArtifactoryURL,
-  parseGitHubURL,
   parseNexusRepoURL,
   ParsePageURL,
   PyPIArtifact,
@@ -221,6 +224,57 @@ test("CheckPageIsHandled negative test - Google", () => {
   expect(expected).toBe(actual);
 });
 
+test("Check NexusFormatCocoaPods positive test", () => {
+  let artifact = {
+    format: "cocoapods",
+    name: "libpng",
+    version: "3.2.1",
+    hash: null,
+  };
+  let actual = NexusFormatCocoaPods(artifact);
+  let component;
+  let expected = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  expect(expected).toEqual(actual);
+});
+
+test("Check NexusFormatConan positive test", () => {
+  let artifact = {
+    format: "conan",
+    name: "apache-apr",
+    version: "0.9.1",
+    hash: null,
+  };
+  let actual = NexusFormatConan(artifact);
+  let component;
+  let expected = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  expect(expected).toEqual(actual);
+});
 test("Check NexusFormat positive test", () => {
   let artifact = {
     format: "maven",
@@ -558,6 +612,29 @@ test("Check pypiArtifact class", () => {
 
   let actual = new PyPIArtifact(name, version);
   let expected = new PyPIArtifact(name, version);
+  expect(actual).toEqual(expected);
+});
+
+test("Check parseURLConan positive test", () => {
+  let format = "conan";
+  let name = "apache-apr";
+  let version = "3.2.1";
+  let classifier = "";
+  let extension = "jar";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new ConanArtifact(
+    // format: format,
+    name,
+    version,
+    datasource
+  );
+
+  //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
+
+  let url = "https://conan.io/center/apache-apr/1.6.3/";
+  let actual = parseURLConan(url);
+  let expected = artifact;
   expect(actual).toEqual(expected);
 });
 
@@ -905,13 +982,14 @@ test("Check parseCocoaPodsURL(cocoapods.org) negative test", () => {
     format: format,
     name: "TestFairy",
     version: undefined,
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
   };
   let url = "https://cocoapods.org/pods/TestFairy";
   let actual = parseCocoaPodsURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();
 });
+c;
 
 test("Check parseCRANURL(cran.r-project.org) negative test", () => {
   // parseCRANURL ->falsy only

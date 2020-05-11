@@ -26,6 +26,7 @@ var formats = {
   golang: "golang",
   github: "github",
   rpm: "rpm",
+  conan: "conan",
 };
 
 //This is the format in nexus repo for proxy repos
@@ -143,6 +144,30 @@ class Artifact {
     return this._format;
   }
 }
+class CocoaPodsArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.cocoapods;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    // this.format = formats.maven;
+    // this.hash = null;
+    // this.datasource = dataSources.NEXUSIQ;
+  }
+}
+class ConanArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.conan;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    // this.format = formats.maven;
+    // this.hash = null;
+    // this.datasource = dataSources.NEXUSIQ;
+  }
+}
 class MavenArtifact extends Artifact {
   constructor(groupId, artifactId, version, extension, classifier) {
     let _format = formats.maven;
@@ -237,10 +262,11 @@ const checkPageIsHandled = (url) => {
     (url.search("https://github.com/") >= 0 &&
       url.search("/releases/tag/") >= 0) || //https://github.com/jquery/jquery/releases/tag/3.0.0
     url.search("/webapp/#/artifacts/") >= 0 || //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
-    url.search("/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+    url.search("https://repo.spring.io/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
     url.search("/#browse/browse:") >= 0 || //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
     url.search("https://rpmfind.net/linux/RPM/epel/7/") >= 0 ||
     url.search("https://cocoapods.org/pods/") >= 0 ||
+    url.search("https://conan.io/center/") >= 0 ||
     false
   ) {
     found = true;
@@ -332,8 +358,9 @@ const ParsePageURL = (url) => {
     artifact = parseNexusRepoURL(url);
   } else if (url.search("https://rpmfind.net/linux/RPM/epel/") >= 0) {
     artifact = parseRPMRepoURL(url);
+  } else if (url.search("https://conan.io/center/") >= 0) {
+    artifact = parseURLConan(url);
   }
-
   console.log("ParsePageURL Complete. artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
@@ -478,6 +505,10 @@ const NexusFormat = (artifact) => {
     case formats.cocoapods:
       requestdata = NexusFormatCocoaPods(artifact);
       break;
+    case formats.conan:
+      requestdata = NexusFormatConan(artifact);
+      break;
+
     default:
       console.log("Unexpected format", format);
       return;
@@ -669,6 +700,24 @@ const NexusFormatCocoaPods = (artifact) => {
   return componentDict;
 };
 
+const NexusFormatConan = (artifact) => {
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.name}`,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  return componentDict;
+};
 const encodeComponentIdentifier = (component) => {
   let actual = encodeURIComponent(
     JSON.stringify(component.componentIdentifier)
@@ -1278,6 +1327,49 @@ const parseRPMRepoURL = (url) => {
   return artifact;
 };
 ////////////////////////
+
+const parseURLConan = (url) => {
+  //ADD SIMPLE CODE THAT Check THE URL
+  //this is run outside of the content page
+  //so can not see the dom
+  //need to handle when the component has a slash in the name
+  //https://www.npmjs.com/package/@angular/animation/v/4.0.0-beta.8
+  let format = formats.conan;
+  let datasource = dataSources.NEXUSIQ;
+  let hash;
+  let packageName;
+  let version;
+  let artifact = "";
+  if (url.search("/v/") > 0) {
+    //has version in URL
+    var urlElements = url.split("/");
+    if (urlElements.length >= 8) {
+      packageName = urlElements[4] + "/" + urlElements[5];
+      version = urlElements[7];
+    } else {
+      packageName = urlElements[4];
+      version = urlElements[6];
+    }
+    let rartifact = new NPMArtifact(
+      packageName,
+      version,
+      format,
+      hash,
+      datasource
+    );
+    artifact = rartifact;
+    // artifact = {
+    //   format: format,
+    //   packageName: packageName,
+    //   version: version,
+    //   datasource: datasource
+    // };
+  } else {
+    artifact = "";
+  }
+  return artifact;
+};
+
 ////////Parse DOM/////////
 
 function parseNPM(format, url) {
@@ -1419,7 +1511,7 @@ const BuildSettingsFromGlobal = async () => {
 };
 
 const GetSettings = (keys) => {
-  console.log("GetSettings");
+  console.log("GetSettings", keys);
   let promise = new Promise((resolve, reject) => {
     browser.storage.sync.get(keys, (items) => {
       let err = browser.runtime.lastError;
@@ -1445,9 +1537,14 @@ const setSettings = async (obj) => {
 };
 const GetSettings2 = async (keys) => {
   console.log("GetSettings2");
-  let val = await chrome.storage.sync.get(keys, (items) => {
-    return items;
+  var p = new Promise(function (resolve, reject) {
+    chrome.storage.sync.get({ keys: true }, function (settings) {
+      resolve(settings.keys);
+    });
   });
+
+  const configOut = await p;
+  return configOut;
 };
 const GetCookieFromConfig = async () => {
   console.log("GetCookieFromConfig");
@@ -2190,19 +2287,31 @@ const installScripts = (tab, message) => {
   // var background = browser.extension.getBackgroundPage();
   // background.message = message;
   // console.log("sending message:", message);
-  executeScripts(null, [
-    // { file: "Scripts/lib/jquery.min.js" },
+  let url = tab.url;
+  let scripts = [];
+  let isNexus = url.search("/#browse/browse:") >= 0;
+  let isArtifactory = url.search("webapp") >= 0;
+  if (isNexus || isArtifactory) {
+    //    // { file: "Scripts/lib/jquery.min.js" },
     // // { file: "Scripts/lib/require.js" },
     // { file: "Scripts/utils.js" },
     // // { code: "var message = " + message  + ";"},
     // { file: "Scripts/content.js" },
-    { code: "processPage();" },
-  ]);
+    scripts.push({ file: "Scripts/lib/jquery.min.js" });
+    scripts.push({ file: "Scripts/utils.js" });
+    scripts.push({ file: "Scripts/content.js" });
+  }
+
+  scripts.push({
+    code: "processPage();",
+  });
+  executeScripts(null, scripts);
   // browser.tabs.sendMessage(tab.tabId, message);
   console.log("end installScripts");
 };
 /////////////
 
+/////////////
 if (typeof module !== "undefined") {
   module.exports = {
     artifact: artifact,
@@ -2231,11 +2340,12 @@ if (typeof module !== "undefined") {
     getExtensionVersion: getExtensionVersion,
     getRemediation: getRemediation,
     getUserAgentHeader: getUserAgentHeader,
-
     jsDateToEpoch: jsDateToEpoch,
     MavenArtifact: MavenArtifact,
     MavenCoordinates: MavenCoordinates,
     NexusFormat: NexusFormat,
+    NexusFormatCocoaPods: NexusFormatCocoaPods,
+    NexusFormatConan: NexusFormatConan,
     NexusFormatMaven: NexusFormatMaven,
     NexusFormatNPM: NexusFormatNPM,
     NexusFormatNuget: NexusFormatNuget,
@@ -2258,6 +2368,7 @@ if (typeof module !== "undefined") {
     ParsePageURL: ParsePageURL,
     parsePyPIURL: parsePyPIURL,
     parseRubyURL: parseRubyURL,
+    parseURLConan: parseURLConan,
     PyPIArtifact: PyPIArtifact,
     removeCookies: removeCookies,
     SetHash: SetHash,

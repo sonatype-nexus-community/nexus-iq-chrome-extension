@@ -4,6 +4,11 @@ const cookieName = "CLM-CSRF-TOKEN";
 $(function () {
   $(document).tooltip();
 });
+
+// const form = document.getElementById("form");
+// form.addEventListener("submit", (e) => {
+//   e.preventDefault();
+// });
 // $("a#tabstooltip").tooltip({
 //   open: function (event, ui) {
 //     console.log("tooltip open");
@@ -370,7 +375,7 @@ const load_data = async () => {
   let isAbleToLogin = true;
   let url, username, password, appId, appInternalId;
   let hasApprovedServer;
-  let hasApprovedContinuousEval;
+  let hasApprovedContinuousEval, hasApprovedAllUrls;
   chrome.storage.sync.get(
     [
       "url",
@@ -400,6 +405,7 @@ const load_data = async () => {
         appId = data.appId;
         appInternalId = data.appInternalId;
         hasApprovedServer = data.hasApprovedServer;
+        hasApprovedAllUrls = data.hasApprovedAllUrls;
         console.log("load_data canLogin", isAbleToLogin);
         //Appid is a selection? maybe should just be a free text box
         //Need to login to get the list of apps
@@ -423,9 +429,7 @@ const load_data = async () => {
         //hasApprovedAllUrls
         hasApprovedAllUrls = data.hasApprovedAllUrls;
         console.log("hasApprovedAllUrls", hasApprovedAllUrls);
-        document.getElementById(
-          "hasApprovedAllUrls"
-        ).checked = hasApprovedAllUrls;
+        document.getElementById("AllUrls").checked = hasApprovedAllUrls;
       }
     }
   );
