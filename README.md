@@ -173,7 +173,7 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
    <br/>
    <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
    <br/>
-5. Navigate to the folder where you downloaded the plugin from GitHub onto your local machine. Select thr src subdirectory and then click select
+5. Navigate to the folder where you downloaded the plugin from GitHub onto your local machine. Select the src subdirectory and then click select
    <br/>
    <img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
    <br/>
@@ -288,8 +288,8 @@ I will think about a change which gives access to all URLS like so below
 
 Add `*://*/*` to permissions section like so
 
-`"permissions": [ "*://*/*",`  
-  
+`"permissions": [ "*://*/*",`
+
 This would then mean you would not need to alias Nexus IQ.
 
 Supports scanning components in the following repos
