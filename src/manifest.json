@@ -29,9 +29,7 @@
     "https://search.gocenter.io/",
     "https://search.maven.org/",
     "https://repo.spring.io/list/",
-    "https://conan.io/center/",
-    "http://nexus:8081/",
-    "http://localhost:8081/"
+    "https://conan.io/center/"
   ],
   "content_scripts": [
     {
@@ -53,7 +51,6 @@
         "https://search.gocenter.io/*",
         "https://search.maven.org/*",
         "https://repo.spring.io/list/",
-
         "https://conan.io/center/*"
       ],
       "css": ["css/pagestyle.css"],

@@ -28,6 +28,20 @@ var formats = {
   rpm: "rpm",
   conan: "conan",
 };
+var masterSettingsList = [
+  "url",
+  "username",
+  "password",
+  "appId",
+  "appInternalId",
+  "hasApprovedServer",
+  "hasApprovedContinuousEval",
+  "hasApprovedAllUrls",
+  "hasApprovedNexus",
+  "nexusUrl",
+  "IQCookie",
+  "IQCookieSet",
+];
 
 //This is the format in nexus repo for proxy repos
 var nexusRepoformats = {
@@ -1329,44 +1343,17 @@ const parseRPMRepoURL = (url) => {
 ////////////////////////
 
 const parseURLConan = (url) => {
-  //ADD SIMPLE CODE THAT Check THE URL
-  //this is run outside of the content page
-  //so can not see the dom
-  //need to handle when the component has a slash in the name
-  //https://www.npmjs.com/package/@angular/animation/v/4.0.0-beta.8
+  // https://conan.io/center/apache-apr/1.6.3/
   let format = formats.conan;
   let datasource = dataSources.NEXUSIQ;
   let hash;
   let packageName;
   let version;
-  let artifact = "";
-  if (url.search("/v/") > 0) {
-    //has version in URL
-    var urlElements = url.split("/");
-    if (urlElements.length >= 8) {
-      packageName = urlElements[4] + "/" + urlElements[5];
-      version = urlElements[7];
-    } else {
-      packageName = urlElements[4];
-      version = urlElements[6];
-    }
-    let rartifact = new NPMArtifact(
-      packageName,
-      version,
-      format,
-      hash,
-      datasource
-    );
-    artifact = rartifact;
-    // artifact = {
-    //   format: format,
-    //   packageName: packageName,
-    //   version: version,
-    //   datasource: datasource
-    // };
-  } else {
-    artifact = "";
-  }
+
+  var urlElements = url.split("/");
+  packageName = urlElements[4];
+  version = urlElements[5];
+  let artifact = new ConanArtifact(packageName, version);
   return artifact;
 };
 
@@ -1526,20 +1513,23 @@ const GetSettings = (keys) => {
 };
 
 const setSettings = async (obj) => {
-  console.log(Object.values(obj)[0]);
-  await chrome.storage.sync.set(
-    { [Object.keys(obj)[0]]: Object.values(obj)[0] },
-    async () => {
-      //alert('saved'+ value);
-      console.log("Saved obj", obj);
-    }
-  );
+  return new Promise((resolve, reject) => {
+    console.log(Object.values(obj)[0]);
+    chrome.storage.sync.set(
+      { [Object.keys(obj)[0]]: Object.values(obj)[0] },
+      () => {
+        //alert('saved'+ value);
+        console.log("Saved obj", obj);
+        resolve(true);
+      }
+    );
+  });
 };
 const GetSettings2 = async (keys) => {
-  console.log("GetSettings2");
+  // console.log("GetSettings2", key);
   var p = new Promise(function (resolve, reject) {
-    chrome.storage.sync.get({ keys: true }, function (settings) {
-      resolve(settings.keys);
+    chrome.storage.sync.get(keys, function (settings) {
+      resolve(settings);
     });
   });
 
@@ -2310,7 +2300,17 @@ const installScripts = (tab, message) => {
   console.log("end installScripts");
 };
 /////////////
-
+function validateUrl(url) {
+  let testUrl;
+  let retVal = false;
+  try {
+    testUrl = new URL(url);
+    retVal = true;
+  } catch {
+    retVal = false;
+  }
+  return retVal;
+}
 /////////////
 if (typeof module !== "undefined") {
   module.exports = {
@@ -2324,6 +2324,7 @@ if (typeof module !== "undefined") {
     callServer: callServer,
     ChangeIconMessage: ChangeIconMessage,
     checkPageIsHandled: checkPageIsHandled,
+    ConanArtifact: ConanArtifact,
     CVSSDetails: CVSSDetails,
     dataSources: dataSources,
     encodeComponentIdentifier: encodeComponentIdentifier,
@@ -2375,6 +2376,7 @@ if (typeof module !== "undefined") {
     setHasVulns: setHasVulns,
     setArtifact: setArtifact,
     styleCVSS: styleCVSS,
+    validateUrl: validateUrl,
   };
 }
 

@@ -15,6 +15,7 @@ const {
   getExtensionVersion,
   getUserAgentHeader,
   jsDateToEpoch,
+  ConanArtifact,
   MavenArtifact,
   NPMArtifact,
   NugetArtifact,
@@ -42,6 +43,7 @@ const {
   parseNexusRepoURL,
   ParsePageURL,
   PyPIArtifact,
+  validateUrl,
 } = require("../src/Scripts/utils");
 
 xtest("evaluatePackage does not throw error when server down", async () => {
@@ -619,8 +621,6 @@ test("Check parseURLConan positive test", () => {
   let format = "conan";
   let name = "apache-apr";
   let version = "3.2.1";
-  let classifier = "";
-  let extension = "jar";
   let datasource = "NEXUSIQ";
 
   let artifact = new ConanArtifact(
@@ -629,9 +629,6 @@ test("Check parseURLConan positive test", () => {
     version,
     datasource
   );
-
-  //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
-
   let url = "https://conan.io/center/apache-apr/1.6.3/";
   let actual = parseURLConan(url);
   let expected = artifact;
@@ -989,7 +986,6 @@ test("Check parseCocoaPodsURL(cocoapods.org) negative test", () => {
   let expected = artifact;
   expect(actual).toBeFalsy();
 });
-c;
 
 test("Check parseCRANURL(cran.r-project.org) negative test", () => {
   // parseCRANURL ->falsy only
@@ -1477,6 +1473,38 @@ test("Check GetActiveTab positive test", () => {
   let actual = true;
   let expected = true;
   expect(actual).toEqual(expected);
+});
+//
+test("Check validateUrl positive test", () => {
+  // validateUrl
+  //TODO write a real test
+
+  let actual = validateUrl("http://localhost:8070");
+  let expected = true;
+  expect(actual).toBe(expected);
+  actual = validateUrl("http://iq-server:8070/");
+  expect(actual).toBe(expected);
+  actual = validateUrl("http://nexus:8081/");
+  expect(actual).toBe(expected);
+  actual = validateUrl("http://localhost:8081");
+  expect(actual).toBe(expected);
+  actual = validateUrl("https://cd2f47zu1r-nxrm.sonatype-se.com");
+  expect(actual).toBe(expected);
+  actual = validateUrl("https://cd2f47zu1r-nxiq.sonatype-se.com");
+  expect(actual).toBe(expected);
+});
+
+test("Check validateUrl negative test", () => {
+  // validateUrl
+  //TODO write a real test
+
+  let actual = validateUrl("^^^!!''");
+  let expected = false;
+  expect(actual).toBe(expected);
+  actual = validateUrl("");
+  expect(actual).toBe(expected);
+  actual = validateUrl("<script>alert('hack me')</script>");
+  expect(actual).toBe(expected);
 });
 
 describe.skip("chrome.tabs.update test", () => {

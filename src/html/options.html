@@ -125,7 +125,6 @@
               <hr />
             </td>
           </tr>
-
           <tr>
             <td>
               Continuous Evaluation:
@@ -173,6 +172,41 @@
             <td colspan="2">
               <hr />
             </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="nexusurl"
+                >Enable Nexus Repo Scan:<i
+                  class="fas fa-question-circle icon-a"
+                  title="This adress is only required if you want to enable Nexus Repository Scanning. The address is not known up front but must be specified by you at runtime so we can ask for permissions from Chrome to be able to scan your Nexus Repo."
+                ></i
+              ></label>
+            </td>
+            <td>
+              <!-- Rounded switch -->
+
+              <input
+                type="text"
+                name="nexusurl"
+                id="nexusurl"
+                required
+                autofocus
+                placeholder="Nexus Repo address"
+              />
+              <label class="switch">
+                <input type="checkbox" id="EnableNexusScan" />
+                <span class="slider round"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <hr />
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><input type="button" value="TestSave" id="TestSave" /></td>
           </tr>
           <tr>
             <td></td>
