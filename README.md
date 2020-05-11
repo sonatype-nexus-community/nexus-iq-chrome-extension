@@ -162,35 +162,34 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
 ## Installation
 
 1. Download the plugin from GitHub
-`git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
+   `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
 2. Open Chrome Browser.
 3. Click on the three dots, then More Tools, then Extensions.
-<br/>
-<img src="images/Extensions.png" alt="drawing" width="300"/>
-<br/>
+   <br/>
+   <img src="images/Extensions.png" alt="drawing" width="300"/>
+   <br/>
 4. Click on load unpacked (requires "Developer Mode" to be enabled).
-<img src="images/Extension_Develop_Mode.png" alt="drawing" width="300"/>
-<br/>
-<img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
-<br/>
-5. Navigate to the folder where you downloaded the plugin from GitHub onto your local machine.
-<br/>
-<img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
-<br/>
+   <img src="images/Extension_Develop_Mode.png" alt="drawing" width="300"/>
+   <br/>
+   <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
+   <br/>
+5. Navigate to the folder where you downloaded the plugin from GitHub onto your local machine. Select thr src subdirectory and then click select
+   <br/>
+   <img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
+   <br/>
 6. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it.)
-<br/>
-<img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
-<br/>
+   <br/>
+   <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
+   <br/>
 7. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
-<br/>
-<img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
-<br/>
+   <br/>
+   <img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
+   <br/>
 8. Click Save to save your credentials.
-<br/>
+   <br/>
 
-
-1. Navigate to Chrome store
-2. Search for Sonatype
+1) Navigate to Chrome store
+2) Search for Sonatype
 
 - Link is <https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd>
 
@@ -233,76 +232,80 @@ to the open source community (read: you!)
 
 Remember:
 
-
 ### Version History
+
 #### Version 1.7.7
-* Bug fix whereby sometimes the Waiting page would sit there for ever. Due to content script not being injected. Seems the content script is always injected now as I inject it with code rather than in the manifest.json declaration
+
+- Bug fix whereby sometimes the Waiting page would sit there for ever. Due to content script not being injected. Seems the content script is always injected now as I inject it with code rather than in the manifest.json declaration
 
 #### Version 1.7.6
-* Release fixes
+
+- Release fixes
 
 #### Version 1.7.5
-* Added README.md
+
+- Added README.md
 
 #### Version 1.7.4-Styling
-* Styling of User interface
 
-
+- Styling of User interface
 
 #### Version 1.7.3-All URLS
-* Supports running IQ Server on any URL
-* Fixed various bugs
+
+- Supports running IQ Server on any URL
+- Fixed various bugs
 
 #### Version 1.7.2-added new formats
-* added new formats
-* Fixed various bugs
-* Added unit tests
+
+- added new formats
+- Fixed various bugs
+- Added unit tests
 
 ##### Formats/package manager pages supported as of 1.7.2
-* Java - maven - https://search.maven.org/
-* Java - maven - https://mvnrepository.com/
-* JS/Node - npm - https://www.npmjs.com/
-* .Net - nuget - https://www.nuget.org/
-* Ruby - rubygems - https://rubygems.org/
-* Python - pypi - https://pypi.org/
-* php - packagist/composer/ -  https://packagist.org/
-* R - CRAN -  https://cran.r-project.org/
-* Rust - Crates-  https://crates.io/
-* Golang - Go - https://gocenter.jfrog.com/
+
+- Java - maven - https://search.maven.org/
+- Java - maven - https://mvnrepository.com/
+- JS/Node - npm - https://www.npmjs.com/
+- .Net - nuget - https://www.nuget.org/
+- Ruby - rubygems - https://rubygems.org/
+- Python - pypi - https://pypi.org/
+- php - packagist/composer/ - https://packagist.org/
+- R - CRAN - https://cran.r-project.org/
+- Rust - Crates- https://crates.io/
+- Golang - Go - https://gocenter.jfrog.com/
 
 #### Version 1.7.1 - Fixed popup
-* Fixed popup logic bug. 
-* Began adding testing
 
+- Fixed popup logic bug.
+- Began adding testing
 
 #### Version 1.7 - initial release
+
 Complete rewrite to fix cookie problem with calling Nexus IQ Server.
-I have decided the best way to fix the security issues for now is to limit access to http://iq-server:8070. 
+I have decided the best way to fix the security issues for now is to limit access to http://iq-server:8070.
 So you will have to alias your localhost as iq-server in your /etc/hosts/ file to use this plugin for now.
 I will think about a change which gives access to all URLS like so below
 
 Add `*://*/*` to permissions section like so
 
-`"permissions": [
-    "*://*/*",
- `   
-    
+`"permissions": [ "*://*/*",`  
+  
 This would then mean you would not need to alias Nexus IQ.
 
 Supports scanning components in the following repos
-* https://search.maven.org/
-* https://mvnrepository.com/
-* https://www.npmjs.com/
-* https://www.nuget.org/
-* https://rubygems.org/
-* https://pypi.org/
-* https://packagist.org/
 
-- Use this contribution at the risk tolerance that you have
-- Do NOT file Sonatype support tickets related to `chrome-extension` support in regard to this project
-- DO file issues here on GitHub, so that the community can pitch in
+- https://search.maven.org/
+- https://mvnrepository.com/
+- https://www.npmjs.com/
+- https://www.nuget.org/
+- https://rubygems.org/
+- https://pypi.org/
+- https://packagist.org/
+
+* Use this contribution at the risk tolerance that you have
+* Do NOT file Sonatype support tickets related to `chrome-extension` support in regard to this project
+* DO file issues here on GitHub, so that the community can pitch in
 
 Phew, that was easier than I thought. Last but not least of all:
 
 Have fun creating and using `chrome-extension`, we are glad to have you here!
-
