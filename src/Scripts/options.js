@@ -114,7 +114,9 @@ window.onload = async () => {
     console.log("EnableNexusScan", isChecked);
     let nexusUrl = document.getElementById("nexusurl").value;
     let url, isValidUrl;
-    isValidUrl = validateUrl(nexusUrl);
+    isValidUrl = await validateUrl(nexusUrl);
+    console.log("EnableNexusScan-isValidUrl", isValidUrl);
+
     let nexusRepoUrlHref;
     if (isValidUrl) {
       url = new URL(nexusUrl);
@@ -149,48 +151,48 @@ window.onload = async () => {
 
 const SetNexusUrl = async (isChecked, url) => {
   console.log("SetNexusUrl", isChecked, url);
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let nexusUrl = new URL(url);
     let nexusUrlHref = nexusUrl.href;
-
-    if (isChecked && !isValidUrl(nexusUrlHref)) {
-      setSettings({ hasApprovedNexusUrl: false });
-      setSettings({ nexusRepoUrl: "" });
+    let isValid = await isValidUrl(nexusUrlHref);
+    if (isChecked && !isValid) {
+      await setSettings({ hasApprovedNexusUrl: false });
+      await setSettings({ nexusRepoUrl: "" });
 
       reject(false);
     }
     if (isChecked) {
       //add the url to the permissionss
       //check that it is not already in the list
-      let granted = grantOriginsPermissions(nexusUrlHref);
+      let granted = await grantOriginsPermissions(nexusUrlHref);
       if (granted) {
         //good we like this so ok then
         console.log("granted", granted);
-        setSettings({ hasApprovedNexusUrl: isChecked });
-        setSettings({ nexusRepoUrl: nexusUrlHref });
+        await setSettings({ hasApprovedNexusUrl: isChecked });
+        await setSettings({ nexusRepoUrl: nexusUrlHref });
         resolve(granted);
       } else {
         //he didn't hit grant so remove
-        setSettings({ hasApprovedNexusUrl: false });
-        setSettings({ nexusRepoUrl: "" });
+        await setSettings({ hasApprovedNexusUrl: false });
+        await setSettings({ nexusRepoUrl: "" });
         resolve(granted);
       }
     } else {
       //remove the origins permission
       //check that it is not a originall permission
-      let found = CheckIsOriginalOrigins(nexusUrlHref);
+      let found = await CheckIsOriginalOrigins(nexusUrlHref);
       //remove the permission
       if (found) {
         message("Can not remove an original origin permission");
         reject(false);
       } else {
-        let revoked = revokeOriginsPermissions(nexusUrlHref);
+        let revoked = await revokeOriginsPermissions(nexusUrlHref);
         console.log("revoke", revoked);
         console.log("disable");
-        setSettings({
+        await setSettings({
           hasApprovedNexusUrl: false,
         });
-        setSettings({
+        await setSettings({
           nexusRepoUrl: "",
         });
         resolve(revoked);
@@ -206,9 +208,9 @@ const SetAllUrls = async (isChecked) => {
       {
         origins: ["*://*/*"],
       },
-      (granted) => {
+      async (granted) => {
         console.log("requesting");
-        setSettings({ hasApprovedAllUrls: isChecked });
+        await setSettings({ hasApprovedAllUrls: isChecked });
       }
     );
   } else {
@@ -217,9 +219,9 @@ const SetAllUrls = async (isChecked) => {
       {
         origins: ["*://*/*"],
       },
-      () => {
+      async () => {
         console.log("removing");
-        setSettings({
+        await setSettings({
           hasApprovedAllUrls: isChecked,
         });
       }
@@ -459,13 +461,13 @@ const addApps = async (url, username, password, appId, appInternalId) => {
 };
 
 const load_data = async () => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     console.log("load_data");
     let isAbleToLogin = true;
     let url, username, password, appId, appInternalId;
     let hasApprovedServer;
     let hasApprovedContinuousEval, hasApprovedAllUrls;
-    let settings = GetSettings(masterSettingsList);
+    let settings = await GetSettings(masterSettingsList);
     console.log("settings", settings);
 
     if (
@@ -489,8 +491,8 @@ const load_data = async () => {
 
       if (hasApprovedServer) {
         document.getElementById("appId").disabled = false;
-        canLogin(url, username, password);
-        addApps(url, username, password, appId, appInternalId);
+        await canLogin(url, username, password);
+        await addApps(url, username, password, appId, appInternalId);
       }
       hasApprovedContinuousEval = settings.hasApprovedContinuousEval;
       console.log("ContinuousEval", hasApprovedContinuousEval);
@@ -506,66 +508,64 @@ const load_data = async () => {
 
 const saveForm = async () => {
   console.log("saveForm");
-  return new Promise((resolve, reject) => {
-    let isFormOK = true;
-    var url = document.getElementById("url").value;
 
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    var app = document.getElementById("appId").value;
-    let hasApprovedContinuousEval = document.getElementById("ContinuousEval")
-      .checked;
-    let hasApprovedAllUrls = document.getElementById("AllUrls").checked;
-    let hasApprovedNexusRepoUrl = document.getElementById("EnableNexusScan")
-      .checked;
-    let nexusRepoUrl = document.getElementById("nexusurl").value;
-    if (!isValidForm(url, username, password, app)) {
-      message("Entries not valid");
-      isFormOK = false;
-      reject(isFormOK);
-      return isFormOK;
-    }
-    let objUrl = new URL(url);
-    let nexusIQURL = objUrl.href;
-    var appValues = app.split(" ");
-    var appInternalId = appValues[0];
-    var appId = appValues[1];
-    console.log("appValues", appValues, appInternalId);
+  let isFormOK = true;
+  var url = document.getElementById("url").value;
 
-    setSettings({ url: nexusIQURL });
-    setSettings({ username: username });
-    setSettings({ password: password });
-    setSettings({ appId: appId });
-    setSettings({ appInternalId: appInternalId });
-    setSettings({
-      hasApprovedContinuousEval: hasApprovedContinuousEval,
-    });
-    setSettings({ hasApprovedAllUrls: hasApprovedAllUrls });
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
+  var app = document.getElementById("appId").value;
+  let hasApprovedContinuousEval = document.getElementById("ContinuousEval")
+    .checked;
+  let hasApprovedAllUrls = document.getElementById("AllUrls").checked;
+  let hasApprovedNexusRepoUrl = document.getElementById("EnableNexusScan")
+    .checked;
+  let nexusRepoUrl = document.getElementById("nexusurl").value;
+  if (!isValidForm(url, username, password, app)) {
+    message("Entries not valid");
+    isFormOK = false;
+    return isFormOK;
+  }
+  let objUrl = new URL(url);
+  let nexusIQURL = objUrl.href;
+  var appValues = app.split(" ");
+  var appInternalId = appValues[0];
+  var appId = appValues[1];
+  console.log("appValues", appValues, appInternalId);
 
-    if (nexusRepoUrl !== "" && validateUrl(nexusRepoUrl)) {
-      let nrUrl = new URL(nexusRepoUrl);
-      let nexusRepoUrlHref = nrUrl.href;
-      let isOriginal = CheckIsOriginalOrigins(nexusRepoUrlHref);
-      if (nexusRepoUrlHref === nexusIQURL || isOrignal) {
-        message(
-          "You can not set Nexus Repo address to one of the original servers, or to the same address as the IQ Server."
-        );
-        setSettings({ nexusRepoUrl: "" });
-        setSettings({ hasApprovedNexusRepoUrl: false });
-        isFormOK = false;
-      } else {
-        setSettings({ nexusRepoUrl: nexusRepoUrlHref });
-        setSettings({ hasApprovedNexusRepoUrl: hasApprovedNexusRepoUrl });
-      }
-    }
-    console.log("ok", isFormOK);
-    if (isFormOK) {
-      message("Saved Values");
-      resolve(isFormOK);
-    } else {
-      reject(isFormOK);
-    }
+  await setSettings({ url: nexusIQURL });
+  await setSettings({ username: username });
+  await setSettings({ password: password });
+  await setSettings({ appId: appId });
+  await setSettings({ appInternalId: appInternalId });
+  await setSettings({
+    hasApprovedContinuousEval: hasApprovedContinuousEval,
   });
+  await setSettings({ hasApprovedAllUrls: hasApprovedAllUrls });
+
+  if (nexusRepoUrl !== "" && validateUrl(nexusRepoUrl)) {
+    let nrUrl = new URL(nexusRepoUrl);
+    let nexusRepoUrlHref = nrUrl.href;
+    let isOriginal = await CheckIsOriginalOrigins(nexusRepoUrlHref);
+    if (nexusRepoUrlHref === nexusIQURL || isOriginal) {
+      message(
+        "You can not set Nexus Repo address to one of the original servers, or to the same address as the IQ Server."
+      );
+      await setSettings({ nexusRepoUrl: "" });
+      await setSettings({ hasApprovedNexusRepoUrl: false });
+      isFormOK = false;
+    } else {
+      await setSettings({ nexusRepoUrl: nexusRepoUrlHref });
+      await setSettings({ hasApprovedNexusRepoUrl: hasApprovedNexusRepoUrl });
+    }
+  }
+  console.log("ok", isFormOK);
+  if (isFormOK) {
+    message("Saved Values");
+    return isFormOK;
+  } else {
+    return isFormOK;
+  }
 };
 
 const message = async (strMessage) => {
@@ -595,7 +595,7 @@ const isValidUrl = async (url) => {
   if (typeof url === "undefined" || !url) return false;
   if (!validateUrl(url)) return false;
   let urlObject = new URL(url);
-  if (CheckIsOriginalOrigins(urlObject.href)) {
+  if (await CheckIsOriginalOrigins(urlObject.href)) {
     return false;
   }
   return true;
@@ -623,18 +623,20 @@ const validateEnteredUrl = (nexusRepoUrl, nexusIQURL) => {
 };
 
 const CheckIsOriginalOrigins = async (urlHref) => {
-  console.log("CheckIsOriginalOrigins", urlHref);
-  let initialPermissions = (await GetSettings(["installedPermissions"]))
-    .installedPermissions;
-  console.log("initialPermissions", initialPermissions);
-  let found = false;
-  for (let origin of initialPermissions.origins) {
-    //console.log("origin", origin);
-    if (origin.indexOf(urlHref) >= 0) {
-      console.log("origin", origin);
-      found = true;
-      return found;
+  return new Promise(async (resolve, reject) => {
+    console.log("CheckIsOriginalOrigins", urlHref);
+    let initialPermissions = await GetSettings(["installedPermissions"]);
+    console.log("initialPermissions", initialPermissions.installedPermissions);
+    let perms = initialPermissions.installedPermissions;
+    let found = false;
+    for (let origin of perms.origins) {
+      //console.log("origin", origin);
+      if (origin.indexOf(urlHref) >= 0) {
+        console.log("origin", origin);
+        found = true;
+        resolve(found);
+      }
     }
-  }
-  return found;
+    resolve(found);
+  });
 };
