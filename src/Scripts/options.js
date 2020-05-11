@@ -502,6 +502,12 @@ const load_data = async () => {
       hasApprovedAllUrls = settings.hasApprovedAllUrls;
       console.log("hasApprovedAllUrls", hasApprovedAllUrls);
       document.getElementById("AllUrls").checked = hasApprovedAllUrls;
+
+      document.getElementById("nexusurl").value = settings.nexusRepoUrl;
+
+      let isNexus = settings.hasApprovedNexusRepoUrl;
+      console.log("isNexus", isNexus);
+      document.getElementById("EnableNexusScan").checked = isNexus;
     }
   });
 };

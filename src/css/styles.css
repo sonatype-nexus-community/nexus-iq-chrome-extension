@@ -615,3 +615,9 @@ input:checked + .slider:before {
 .icon-a {
   color: #5c74eb;
 }
+
+form {
+  border-radius: 2px;
+  border: 1px solid #5c74eb;
+  padding: 5px;
+}
