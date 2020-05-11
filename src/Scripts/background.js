@@ -108,12 +108,14 @@ window.message = "";
  *
  * @returns
  */
-const install_notice = () => {
+const install_notice = async () => {
   if (localStorage.getItem("install_time")) return;
 
   var now = new Date().getTime();
   localStorage.setItem("install_time", now);
-  browser.tabs.create({ url: "html/options.html" });
+  let installedPermissions = await checkAllPermissions();
+  await setSettings({ installedPermissions: installedPermissions });
+  browser.tabs.create({ url: "html/options.html?initial=true" });
 };
 install_notice();
 

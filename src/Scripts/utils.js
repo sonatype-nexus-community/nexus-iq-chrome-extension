@@ -37,8 +37,8 @@ var masterSettingsList = [
   "hasApprovedServer",
   "hasApprovedContinuousEval",
   "hasApprovedAllUrls",
-  "hasApprovedNexus",
-  "nexusUrl",
+  "hasApprovedNexusRepoUrl",
+  "nexusRepoUrl",
   "IQCookie",
   "IQCookieSet",
 ];
@@ -80,6 +80,13 @@ var messageTypes = {
   error: "error", //used to pass errors from background and content script to the popup
 
   annotateComponent: "annotateComponent",
+};
+const checkAllPermissions = async () => {
+  return new Promise((resolve, reject) => {
+    chrome.permissions.getAll((results) => {
+      resolve(results);
+    });
+  });
 };
 class Component {
   constructor(hash) {}

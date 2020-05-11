@@ -48,16 +48,18 @@ window.onload = async () => {
   }
 
   document.getElementById("TestSave").onclick = async () => {
-    let url = "http://iq-server:8070";
-    let theURL = new URL(url);
-    console.log("theURL", theURL);
-    // let perms = await grantOriginsPermissions(theURL.href);
-    // // console.log("perms", perms);
-    // let ss = await setSettings({ foo: "bar" });
-    // console.log("ss", ss);
-    let domain = getDomainName(theURL.href);
-    let cookie = await getCookie2(theURL.href, xsrfCookieName);
-    console.log("cookie", cookie);
+    // let url = "http://iq-server:8070";
+    // let theURL = new URL(url);
+    // console.log("theURL", theURL);
+    // // let perms = await grantOriginsPermissions(theURL.href);
+    // // // console.log("perms", perms);
+    // // let ss = await setSettings({ foo: "bar" });
+    // // console.log("ss", ss);
+    // let domain = getDomainName(theURL.href);
+    // let cookie = await getCookie2(theURL.href, xsrfCookieName);
+    // console.log("cookie", cookie);
+    let thePerms = await checkPermissions("notifications");
+    console.log(thePerms);
   };
   // document.getElementById('url').focus();
   document.getElementById("cancel").onclick = async () => {
@@ -108,15 +110,19 @@ window.onload = async () => {
     message("");
     let isChecked = document.getElementById("EnableNexusScan").checked;
     console.log("EnableNexusScan", isChecked);
+    let nexusUrl = document.getElementById("nexusurl").value;
+    let url, isValidUrl;
+    isValidUrl = validateUrl(nexusUrl);
+    if (isValidUrl) {
+      url = new URL(nexusUrl);
+    }
     if (isChecked) {
-      let nexusUrl = document.getElementById("nexusurl").value;
-      if (!validateUrl(nexusUrl)) {
+      if (!isValidUrl) {
         //not valid
         document.getElementById("EnableNexusScan").checked = false;
         message("Not a valid Nexus Repo Url");
       } else {
         //save the url
-        let url = new URL(nexusUrl);
         let granted = await grantOriginsPermissions(url.href);
         if (granted) {
           //good we like this so ok then
@@ -128,6 +134,11 @@ window.onload = async () => {
       }
       console.log("nexusUrl", nexusUrl);
     } else {
+      //remove the permission
+      let inOriginal = CheckIsOriginalOrigins(url.href);
+      if (!inOriginal) {
+        revoke;
+      }
       console.log("disable");
     }
   };
@@ -147,8 +158,9 @@ const saveForm = async () => {
     let hasApprovedContinuousEval = document.getElementById("ContinuousEval")
       .checked;
     let hasApprovedAllUrls = document.getElementById("AllUrls").checked;
-    let hasApprovedNexus = document.getElementById("EnableNexusScan").checked;
-    let nexusUrl = document.getElementById("nexusurl").value;
+    let hasApprovedNexusRepoUrl = document.getElementById("EnableNexusScan")
+      .checked;
+    let nexusRepoUrl = document.getElementById("nexusurl").value;
     if (
       url === "" ||
       username === "" ||
@@ -173,13 +185,18 @@ const saveForm = async () => {
       hasApprovedContinuousEval: hasApprovedContinuousEval,
     });
     await setSettings({ hasApprovedAllUrls: hasApprovedAllUrls });
-    await setSettings({ hasApprovedNexus: hasApprovedNexus });
-    if (nexusUrl !== "" && validateUrl(nexusUrl)) {
-      await setSettings({ nexusUrl: nexusUrl });
+    await setSettings({ hasApprovedNexusRepoUrl: hasApprovedNexusRepoUrl });
+    if (nexusRepoUrl !== "" && validateUrl(nexusRepoUrl)) {
+      let nrUrl = new URL(nexusRepoUrl);
+      let nexusRepoUrlHref = nrUrl.href;
+      await setSettings({ nexusRepoUrl: nexusRepoUrlHref });
     }
     var ok = true;
     if (ok) {
       message("Saved Values");
+      resolve(true);
+    } else {
+      reject(false);
     }
   });
 };
@@ -264,34 +281,60 @@ const zzsaveForm = async () => {
   // load_data();
 };
 
-const SetNexusUrl = async (isChecked, url) => {
-  if (isChecked) {
-    //add the url to the permissionss
-    //check that it is not already in the list
-    chrome.permissions.request(
-      {
-        origins: [url],
-      },
-      (granted) => {
-        console.log("requesting");
-        setSettings({ hasApprovedNexusUrl: isChecked });
-      }
-    );
-  } else {
-    //remove the Tabs permission
-    //check that it is not a required permission
-    chrome.permissions.remove(
-      {
-        origins: [url],
-      },
-      () => {
-        console.log("removing");
-        setSettings({
-          hasApprovedNexusUrl: isChecked,
-        });
-      }
-    );
+const isValidUrl = async (url) => {
+  //has to be non null, non empty, not undefined
+  //can not be in the original origins list
+  //can not be the same as the other element
+  if (typeof url === "undefined" || !url) return false;
+  let urlObject = new URL(url);
+  if (CheckIsOriginalOrigins(urlObject.href)) {
+    return false;
   }
+  return true;
+};
+
+const SetNexusUrl = async (isChecked, url) => {
+  return new Promise(async (resolve, reject) => {
+    let nexusUrl = new URL(url);
+    let nexusUrlHref = nexusUrl.href;
+    if (isChecked && isValidUrl(nexusUrlHref)) {
+      //add the url to the permissionss
+      //check that it is not already in the list
+      chrome.permissions.request(
+        {
+          origins: [nexusUrlHref],
+        },
+        async (granted) => {
+          console.log("requesting");
+          await setSettings({ hasApprovedNexusUrl: isChecked });
+          await setSettings({ nexusRepoUrl: nexusUrlHref });
+        }
+      );
+    } else {
+      //remove the origins permission
+      //check that it is not a originall permission
+      let found = CheckIsOriginalOrigins(nexusUrlHref);
+      if (!found) {
+        chrome.permissions.remove(
+          {
+            origins: [nexusUrlHref],
+          },
+          async () => {
+            console.log("removing");
+            await setSettings({
+              hasApprovedNexusUrl: isChecked,
+            });
+            await setSettings({
+              nexusRepoUrl: "",
+            });
+          }
+        );
+      } else {
+        //can't remove this
+        message("Can not remove an original origin permission");
+      }
+    }
+  });
 };
 
 const SetAllUrls = async (isChecked) => {
@@ -323,16 +366,16 @@ const SetAllUrls = async (isChecked) => {
 };
 
 const ContinuousEval = async (isChecked) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     if (isChecked) {
       //add the Tabs permission
       chrome.permissions.request(
         {
           permissions: ["tabs", "notifications"],
         },
-        (granted) => {
+        async (granted) => {
           console.log("requesting");
-          setSettings({ hasApprovedContinuousEval: isChecked });
+          await setSettings({ hasApprovedContinuousEval: isChecked });
           resolve(true);
         }
       );
@@ -342,9 +385,9 @@ const ContinuousEval = async (isChecked) => {
         {
           permissions: ["tabs", "notifications"],
         },
-        () => {
+        async () => {
           console.log("removing");
-          setSettings({
+          await setSettings({
             hasApprovedContinuousEval: isChecked,
           });
         }
@@ -353,11 +396,18 @@ const ContinuousEval = async (isChecked) => {
     }
   });
 };
-const checkAllPermissions = async () => {
+
+const checkPermissions = async (permission) => {
   return new Promise((resolve, reject) => {
-    chrome.permissions.getAll((results) => {
-      resolve(results);
-    });
+    // console.log("perms", permission);
+    chrome.permissions.contains(
+      {
+        permissions: [permission],
+      },
+      (data) => {
+        resolve(data);
+      }
+    );
   });
 };
 
@@ -375,21 +425,37 @@ const checkOriginsPermissions = async (url) => {
 };
 
 const loginUser = async () => {
-  console.log("login");
-  var url = document.getElementById("url").value;
-  var username = document.getElementById("username").value;
-  var password = document.getElementById("password").value;
+  return new Promise(async (resolve, reject) => {
+    console.log("login");
+    var url = document.getElementById("url").value;
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
 
-  if (url === "" || username === "" || password === "" || !validateUrl(url)) {
-    console.log("not valid entries");
-    message("Please provide valid IQ Server, Username and Password");
-  } else {
-    let app = document.getElementById("appId").value;
-    let appValues = app.split(" ");
-    let appInternalId = appValues[0];
-    let appId = appValues[1];
-    await addPerms(url, username, password, appId, appInternalId);
-  }
+    if (url === "" || username === "" || password === "" || !validateUrl(url)) {
+      console.log("not valid entries");
+      message("Please provide valid IQ Server, Username and Password");
+    } else {
+      let app = document.getElementById("appId").value;
+      let appValues = app.split(" ");
+      let appInternalId = appValues[0];
+      let appId = appValues[1];
+      await addPerms(url, username, password, appId, appInternalId);
+    }
+  });
+};
+const revokeOriginsPermissions = async (url) => {
+  return new Promise((resolve, reject) => {
+    let objUrl = new URL(url);
+    let urlHref = objUrl.href;
+    chrome.permissions.remove(
+      {
+        origins: [urlHref],
+      },
+      async (removed) => {
+        resolve(removed);
+      }
+    );
+  });
 };
 
 const grantOriginsPermissions = async (url) => {
@@ -772,3 +838,17 @@ const zzload_data = async () => {
     }
   );
 };
+function CheckIsOriginalOrigins(urlHref) {
+  let installedPermissions = GetSettings("installedPermissions");
+  let found = false;
+  for (const origin in installedPermissions.origins) {
+    if (object.hasOwnProperty(origin)) {
+      const element = object[origin];
+      if (element === urlHref) {
+        //we are not deleting this
+        found = true;
+      }
+    }
+  }
+  return found;
+}
