@@ -41,6 +41,7 @@ var masterSettingsList = [
   "nexusRepoUrl",
   "IQCookie",
   "IQCookieSet",
+  "installedPermissions",
 ];
 
 //This is the format in nexus repo for proxy repos

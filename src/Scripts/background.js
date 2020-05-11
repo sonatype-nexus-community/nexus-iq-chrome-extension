@@ -113,8 +113,8 @@ const install_notice = async () => {
 
   var now = new Date().getTime();
   localStorage.setItem("install_time", now);
-  let installedPermissions = await checkAllPermissions();
-  await setSettings({ installedPermissions: installedPermissions });
+  let initialPermissions = await checkAllPermissions();
+  await setSettings({ installedPermissions: initialPermissions });
   browser.tabs.create({ url: "html/options.html?initial=true" });
 };
 install_notice();
