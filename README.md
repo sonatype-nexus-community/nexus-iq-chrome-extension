@@ -167,7 +167,7 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
 
 3. Browse to a supported public repo.
 
-##Contributing
+## Contributing
 
 1. Download the plugin from GitHub
    `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
