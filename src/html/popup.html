@@ -19,9 +19,10 @@
       href="../Scripts/lib/jquery-ui-themes-1.12.1/themes/base/jquery-ui.min.css"
        type="text/css"
     />
+    <link rel="stylesheet" href="../css/fontawesome-all.min.css" />
 
   </head>
-  <body>
+  <body >
     <div class="loader" id="loader">
       <img src="../images/SON_logo_favicon.png" />
     </div>
@@ -33,16 +34,7 @@
         <li><a href="#tabs-3">Remediation</a></li>
         <li><a href="#tabs-4">Licensing</a></li>
         <!-- <li><a href="#tabs-5">Graph</a></li> -->
-      </ul>
-      <!-- Graph -->
-      <!-- <div id="tabs-5">
-        <div>
-          <div id="aiVersionChartContainer">
-            <div id="aiVersionChartLabels"></div>
-            <div id="aiVersionChartViz" style="overflow:hidden"></div>
-          </div>
-        </div> 
-      </div>       -->
+      </ul>      
       <div id="tabs-1" class="component-tab">
         <div class="info-display">
           <table class="optionstable">
@@ -98,8 +90,8 @@
         </div>
       </div>
 
-      <!-- Security -->
-      <div id="tabs-2">
+      <!-- Security -->      
+      <div id="tabs-2">        
         <div id="accordion"></div>
         <div id="dialogSecurityDetails" title="Security Details" class="dialog"></div>
       </div>
@@ -112,14 +104,17 @@
             <div id="aiVersionChartLabels"></div>
             <div id="aiVersionChartViz" style="overflow:hidden"></div>
           </div>
-        </div>        
+        </div>
+        
+        <h4>Tip: Click on an individual version to view it in your browser.</h4>
       </div>      
       <!-- License -->
       <div id="tabs-4">
+        
         <table class="optionstable" id="licensetable">
           <tr>
             <td colspan="2"><strong>DeclaredLicenses</strong></td>
-            <td></td>
+            
           </tr>
 
           <div id="declaredlicenses">

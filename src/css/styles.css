@@ -1,8 +1,8 @@
 body {
   width: 600px;
-  height: 400px;
-  margin: 5px;
-  padding: 5px;
+  height: 355px;
+  margin: 2px;
+  padding: 0px;
   /* background:url(pic1.jpg); */
   /* background-size: cover; */
   /* background-position: center; */
@@ -119,24 +119,28 @@ button {
   border-collapse: collapse;
   width: 100%;
   font-size: medium;
-  border-radius: 4px;
-  border-color: blueviolet;
+  /* border-radius: 0px; */
+  border-color: #5c74eb;
   border-spacing: 0px;
   border: 2px;
 }
+div .optionstable {
+  /* border-radius: 5px; */
+  background-color: white;
+  padding: 0px 0px 0px 0px;
+}
 
-table {
+.optionstable table {
+  border-radius: 0px;
   border-spacing: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: block;
 }
-
-#remediation {
-  color: grey;
-  font-size: 1.3em;
-}
-
 .optionstable td,
 .optionstable th {
-  /* border: 1px solid #ddd; */
+  border: 1px solid #a8b6ff;
   padding: 4px;
 }
 
@@ -145,7 +149,6 @@ table {
 }
 
 .optionstable tr:nth-child(even) {
-  /* background-color: rgb(216, 228, 250); */
   background-color: white;
 }
 
@@ -153,9 +156,9 @@ table {
   background-color: white;
 }
 
-/* .optionstable tr:hover {
-    background-color: white;
-} */
+.optionstable tr:hover {
+  background-color: #e4e7fc;
+}
 
 .optionstable th {
   padding-top: 12px;
@@ -235,12 +238,6 @@ input[type="submit"]:hover {
   background-color: #5c74eb;
 }
 
-div .optionstable {
-  border-radius: 5px;
-  background-color: white;
-  padding: 20px;
-}
-
 .label {
   /* font-style: italic; */
   text-align: right;
@@ -305,6 +302,11 @@ h3 {
   margin: 2px;
   border-radius: 2px;
   color: white;
+}
+
+#remediation {
+  color: grey;
+  font-size: 1.3em;
 }
 
 #loader {
@@ -419,7 +421,7 @@ h3 {
   border-color: #5c74eb;
   border-radius: 5px;
   border-width: 2px;
-  margin: 10px 0px 0px 0px;
+  margin: 2px 0px 0px 0px;
 }
 
 a img {
@@ -491,9 +493,9 @@ div.slick-cell.l0.r0 {
   background-color: pink;
 }
 
-.info-display {
+/* .info-display {
   border: salmon;
-}
+} */
 
 /* This is for the CVSS lookup */
 /* Tooltip container */
@@ -619,5 +621,21 @@ input:checked + .slider:before {
 form {
   border-radius: 10px;
   border: 1px solid #5c74eb;
-  padding: 1px;
+  padding: 10px;
+  width: 100%;
+  /* height:100%; */
+}
+
+.logintable body {
+  width: 100%;
+  height: 100%;
+  margin: 5px;
+  padding: 5px;
+  /* background:url(pic1.jpg); */
+  /* background-size: cover; */
+  /* background-position: center; */
+  font-family: sans-serif;
+  border-radius: 5px;
+  border-color: #5c74eb;
+  border-width: 2px;
 }

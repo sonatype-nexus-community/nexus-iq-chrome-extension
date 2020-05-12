@@ -263,7 +263,7 @@ const renderComponentDataOSSIndex = (message) => {
   $("#hash_label").html("Description:");
 
   $("#matchstate").html(message.message.response.reference);
-  $("#datasource").html(message.artifact.datasource);
+  $("#datasource").html(message.artifact.datasource.toLowerCase());
   // $("#PackageSource").html(url);
   $("CatalogDate_row").addClass("invisible");
   $("RelativePopularity_Row").addClass("invisible");
@@ -422,7 +422,7 @@ const renderComponentData = (message, sourceUrl) => {
   $("#matchstate").html(thisComponent.matchState);
   $("#catalogdate").html(thisComponent.catalogDate);
   $("#relativepopularity").html(thisComponent.relativePopularity);
-  $("#datasource").html(message.artifact.datasource);
+  $("#datasource").html(message.artifact.datasource.toLowerCase());
   $("#PackageSource").html(sourceUrl);
   renderSecuritySummaryIQ(message);
 };
@@ -588,7 +588,7 @@ const renderSecurityData = (message) => {
       strAccordion += "<table>";
       strAccordion += "<tr>";
 
-      let strDialog = `<div id="info_${strVulnerability}"><a href="#">${strVulnerability}<img src="../images/icons8-info-filled-50.png" class="info" alt="Info"></a></div>`;
+      let strDialog = `<div id="info_${strVulnerability}"><a href="#">${strVulnerability}&nbsp<i class="fas fa-info-circle"></i></a></div>`;
       strAccordion +=
         '<td class="label">Reference:</td><td class="data">' +
         strDialog +
@@ -781,6 +781,12 @@ const displayMessageDataHTML = async (respMessage, sourceUrl) => {
     return;
   }
   let hasError = false;
+  if (respMessage === "notvalid") {
+    showError(
+      "This page is not handled by the extension. Browse to a supported artifact page. Check https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension for a list of supported pages."
+    );
+    return;
+  }
   if (respMessage.message.error) {
     showError(respMessage.message.response);
   } else {
@@ -899,7 +905,7 @@ var repoTypes = [
     // parseFunction: parsePyPI,
     titleSelector: "h1.package-header__name",
     versionPath: "{url}/{packagename}/{versionNumber}",
-    appendVersionPath: "/{versionNumber}",
+    appendVersionPath: "{versionNumber}",
   },
   {
     url: "rubygems.org/gems/",

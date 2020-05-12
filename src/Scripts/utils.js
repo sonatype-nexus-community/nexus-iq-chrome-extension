@@ -2314,6 +2314,8 @@ const installScripts = async (tab, message) => {
   if (isArtifactory) {
     let theURL = new URL(repoSettings.artifactoryRepoUrl);
     isArtifactory = isArtifactory && url.search(theURL.href) >= 0;
+    //artifactory/webapp/#/artifacts
+    isArtifactory = isArtifactory && url.search("webapp#artifacts") >= 0;
   }
   isArtifactory = isArtifactory || url.search("repo.spring.io/list/") >= 0;
 

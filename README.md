@@ -11,6 +11,7 @@
 - [Usage](#usage)
 - [Examples](#examples)
 - [Installation](#installation)
+- [Contributing](#contributing)
 - [Fine Print](#The-Fine-Print)
 
 ## Purpose
@@ -18,13 +19,11 @@
 To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
 The plugin can scan packages at the following repositories:
 
-|      |      |      |
-| ---- | ---- | ---- |
-|      |      |      |
-|      |      |      |
-|      |      |      |
-
-
+|     |     |     |
+| --- | --- | --- |
+|     |     |     |
+|     |     |     |
+|     |     |     |
 
 1. Java - maven - https://search.maven.org/
 2. Java - maven - https://mvnrepository.com/
@@ -53,7 +52,7 @@ The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses th
 
 ## Usage
 
-When you browse to a website that is covered by the tool, such as maven central and click on the plugin, it will open with the Sonatype Lifecycle data relevant to that library.
+When you browse to a website that is covered by the tool, such as maven central and click on the plugin, it will open with the Sonatype Lifecycle data relevant to that library.<br/>
 <img src="images/PluginRun.gif" alt="Open Plugin" width="300"/>
 <br/>
 
@@ -64,31 +63,31 @@ When you browse to a website that is covered by the tool, such as maven central 
    <br/>
 3. Navigate to one of the pages that the extension is compatible with (see the detailed list below).
    <br/>
-4. Click on the Blue Sonatype Logo...
+4. Click on the Blue Sonatype Logo...<br/>
    <img src="images/Extension_lodash_-_npm_4.17.9.png" alt="Extension Lodash 4.17.9" width="300"/>
    <br/>
-   4.1 ...The solution will think for a second and show the Sonatype hexagon log while it retrieves the data...Then show the Data.
+   4.1 ...The solution will think for a second and show the Sonatype hexagon log while it retrieves the data...Then show the Data.<br/>
    <img src="images/Extension_thinking_icon.png" alt="Extension Thinking Icon" width="300"/>
    <br/>
-5. Component Information
+5. Component Information<br/>
    <img src="images/Extension_Component_info.png" alt="Extension Componen Info" width="300"/>
    <br/>
 6. Security Information
-   The security data is presented in a list with clickable sections for each vulnerability.
+   The security data is presented in a list with clickable sections for each vulnerability.<br/>
    <img src="images/Extension_Security.png" alt="Extension Security List" width="300"/>
    <br/>
 7. Security Details
-   The security details for each vulnerability is available. Click on the reference to display the security details.
+   The security details for each vulnerability is available. Click on the reference to display the security details.<br/>
    <img src="images/Extension_Vulnerability_Detail.png" alt="Extension Vulnerability Detail" width="300"/>
    <br/>
 8. Remediation
-   The version history is available for each component.
+   The version history is available for each component.<br/>
    <img src="images/Extension_VersionHistoryGraph.png" alt="Extension Version History" width="300"/>
    <br/>
 9. Remediation Guidance
    The remediation guidance API has been added. The recommended fix version will be listed at the top of the screen.
    <br/>
-10. License Information
+10. License Information<br/>
     <img src="images/Extension_Licensing.png" alt="Extension Licensing" width="300"/>
     <br/>
 11. Unsupported page.
@@ -168,6 +167,13 @@ Pattern - `https://crates.io/`
 e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.0.gem>
 
 ## Installation
+
+1. Install from [Chrome Store]<https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/publish-accepted?authuser=0&hl=en>
+2. Provide Configuration in the Options Screen.
+
+3. Browse to a supported public repo.
+
+##Contributing
 
 1. Download the plugin from GitHub
    `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
