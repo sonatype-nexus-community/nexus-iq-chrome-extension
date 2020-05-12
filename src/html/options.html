@@ -24,15 +24,15 @@
       <form id="form">
         <div id="buttonDiv" class="logintable">
           <div class="heading">
-            <h2>Enter your Sonatype IQ Server Address and Login</h2>
+            <h2>Sonatype Nexus IQ Chrome Extension Configuration</h2>
           </div>
           <table id="optionstable" class="logintable">
             <tr>
               <td>
                 <label for="url"
-                  >The address of your IQ Server:*<i
+                  >IQ Server URL:*<i
                     class="fas fa-question-circle icon-a"
-                    title="The server address is required. This adress will be added to your chrome extension permissions list once you login. You will be prompted by Chrome to approve this additional permission."
+                    title="The address of your IQ Server. It is required. This address will be added to your chrome extension permissions list once you login. You will be prompted by Chrome to approve this additional permission. Just enter the base url of the server, include the port if need be."
                   ></i
                 ></label>
               </td>
@@ -49,13 +49,15 @@
             </tr>
             <tr>
               <td>
-                Authentication Mode
-                <i
-                  class="fas fa-question-circle icon-a"
-                  title="Please note: This version stores the username and password in Browser Storage. This is not secure and you can see the password in clear text if you debug the Extension. Consider using a login with basic Component Evaluator role to limit risk. As of release 76, NexusIQ also supports user tokens for passwords. https://help.sonatype.com/iqserver/managing/user-management/user-tokens"
-                ></i>
+                <label>
+                  Authentication Mode
+                  <i
+                    class="fas fa-question-circle icon-a"
+                    title="Please note: This version stores the username and password in Browser Storage. This is not secure and you can see the password in clear text if you debug the Extension. Consider using a login with basic Component Evaluator role to limit risk. As of release 76, NexusIQ also supports user tokens for passwords. https://help.sonatype.com/iqserver/managing/user-management/user-tokens"
+                  ></i>
+                </label>
               </td>
-              <td>Username and Password.</td>
+              <td><label> Username and Password.</label></td>
             </tr>
             <tr>
               <td colspan="2"></td>
@@ -121,18 +123,15 @@
             </tr>
 
             <tr>
-              <td colspan="2">
-                <hr />
-              </td>
-            </tr>
-            <tr>
               <td>
-                Continuous Evaluation:
-                <i
-                  id="tabstooltip"
-                  class="fas fa-question-circle icon-a"
-                  title="This version of the Chrome Plugin supports continuous evaluation. Continuous evaluation will show vulnerabilities on  each page as you browse to it. You have to enable this feature as it requires the tabs & notifications permissions and this may be seen as intrusive. Chrome will ask you to approve 'Read your browsing history' and 'Display notifications' in a popup"
-                ></i>
+                <label for="ContinuousEval">
+                  Continuous Evaluation:
+                  <i
+                    id="tabstooltip"
+                    class="fas fa-question-circle icon-a"
+                    title="This version of the Chrome Plugin supports continuous evaluation. Continuous evaluation will show vulnerabilities on  each page as you browse to it. You have to enable this feature as it requires the tabs & notifications permissions and this may be seen as intrusive. Chrome will ask you to approve 'Read your browsing history' and 'Display notifications' in a popup"
+                  ></i>
+                </label>
               </td>
               <td>
                 <!-- Rounded switch -->
@@ -168,11 +167,7 @@
                 </label>
               </td>
             </tr>
-            <tr>
-              <td colspan="2">
-                <hr />
-              </td>
-            </tr>
+
             <tr>
               <td>
                 <label for="nexusurl"
@@ -197,11 +192,6 @@
                   <input type="checkbox" id="EnableNexusScan" />
                   <span class="slider round"></span>
                 </label>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <hr />
               </td>
             </tr>
             <tr>

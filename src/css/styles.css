@@ -201,7 +201,8 @@ div .optionstable {
 }
 
 input[type="text"],
-input[type="password"] select {
+input[type="password"],
+select {
   width: 100%;
   padding: 5px 5px;
   margin: 5px 0;
@@ -214,7 +215,7 @@ input[type="password"] select {
   outline: none;
   /* height:40px; */
   color: #2f4f4f;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 input[type="submit"],
@@ -241,7 +242,7 @@ input[type="submit"]:hover {
 .label {
   /* font-style: italic; */
   text-align: right;
-  font-size: medium;
+  font-size: 14px;
 }
 
 .data {
@@ -638,4 +639,25 @@ form {
   border-radius: 5px;
   border-color: #5c74eb;
   border-width: 2px;
+}
+
+.logintable td,
+.logintable th {
+  border: 1px solid lightcyan;
+  padding: 4px;
+}
+
+.logintable table {
+  border-radius: 0px;
+  border-spacing: 0px;
+  width: 100%;
+  height: 100%;
+  /* overflow: auto; */
+  /* display: block; */
+}
+
+.logintable label {
+  /* font-style: italic; */
+  /* text-align: right; */
+  font-size: 14px;
 }
