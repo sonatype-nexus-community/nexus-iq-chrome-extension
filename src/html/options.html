@@ -203,9 +203,36 @@
               <hr />
             </td>
           </tr>
-          <tr style="visibility: collapse;">
-            <td></td>
-            <td><input type="button" value="TestSave" id="TestSave" /></td>
+          <tr>
+            <td>
+              <label for="artifactoryurl"
+                >Enable Artifactory Repo Scan:<i
+                  class="fas fa-question-circle icon-a"
+                  title="This address is only required if you want to enable Artifactory Repository Scanning. The address is not known up front but must be specified by you at runtime so we can ask for permissions from Chrome to be able to scan your Artifactory Repository."
+                ></i
+              ></label>
+            </td>
+            <td>
+              <!-- Rounded switch -->
+
+              <input
+                type="text"
+                name="artifactoryurl"
+                id="artifactoryurl"
+                required
+                autofocus
+                placeholder="Artifactory Repo address"
+              />
+              <label class="switch">
+                <input type="checkbox" id="EnableArtifactoryScan" />
+                <span class="slider round"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <hr />
+            </td>
           </tr>
           <tr>
             <td></td>

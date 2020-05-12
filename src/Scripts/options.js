@@ -47,22 +47,6 @@ window.onload = async () => {
     message("Not connected. You have to log in before using the plugin.");
   }
 
-  document.getElementById("TestSave").onclick = async () => {
-    // let url = "http://iq-server:8070";
-    // let theURL = new URL(url);
-    // console.log("theURL", theURL);
-    // // let perms = await grantOriginsPermissions(theURL.href);
-    // // // console.log("perms", perms);
-    // // let ss = await setSettings({ foo: "bar" });
-    // // console.log("ss", ss);
-    // let domain = getDomainName(theURL.href);
-    // let cookie = await getCookie2(theURL.href, xsrfCookieName);
-    // console.log("cookie", cookie);
-    // let thePerms = await checkPermissions("notifications");
-    // console.log(thePerms);
-    // let isOriginal = await CheckIsOriginalOrigins("https://cocoapods.org/");
-    // console.log("isOriginal", isOriginal);
-  };
   // document.getElementById('url').focus();
   document.getElementById("cancel").onclick = async () => {
     try {
@@ -107,45 +91,19 @@ window.onload = async () => {
     message("Remember to set the Enable Nexus Switch");
     document.getElementById("EnableNexusScan").checked = false;
   };
-
   document.getElementById("EnableNexusScan").onclick = async () => {
-    message("");
-    let isChecked = document.getElementById("EnableNexusScan").checked;
-    console.log("EnableNexusScan", isChecked);
-    let nexusUrl = document.getElementById("nexusurl").value;
-    let url, isValidUrl;
-    isValidUrl = await validateUrl(nexusUrl);
-    console.log("EnableNexusScan-isValidUrl", isValidUrl);
-
-    let nexusRepoUrlHref;
-    if (isValidUrl) {
-      url = new URL(nexusUrl);
-      nexusRepoUrlHref = url.href;
-    }
-    if (isChecked) {
-      if (isValidUrl) {
-        //save the url
-        let granted = await SetNexusUrl(isChecked, nexusRepoUrlHref);
-        if (granted) {
-          message("Permission  granted");
-        } else {
-          message("Permission not granted");
-          document.getElementById("EnableNexusScan").checked = false;
-        }
-      } else {
-        //not valid
-        document.getElementById("EnableNexusScan").checked = false;
-        document.getElementById("nexusurl").focus();
-        message("Enter a valid Nexus Repo Url first");
-        return;
-      }
-      console.log("nexusUrl", nexusUrl);
-    } else {
-      //revoking
-      let revoked = await SetNexusUrl(isChecked, nexusRepoUrlHref);
-      message("Revoked successfully");
-      console.log("revoked", revoked);
-    }
+    let repoManager = repositoryManagers.nexus;
+    let elRepoEnable = "EnableNexusScan";
+    let elRepoAddress = "nexusurl";
+    let approvalSetting = "hasApprovedNexusRepoUrl";
+    let repoAddressSetting = "nexusRepoUrl";
+    await handleRepoSwitch(
+      repoManager,
+      elRepoEnable,
+      elRepoAddress,
+      approvalSetting,
+      repoAddressSetting
+    );
   };
 };
 
@@ -200,7 +158,143 @@ const SetNexusUrl = async (isChecked, url) => {
     }
   });
 };
+//////////////
 
+document.getElementById("artifactoryurl").oninput = async () => {
+  message("Remember to set the Enable Artifactory Switch");
+  document.getElementById("EnableArtifactoryScan").checked = false;
+};
+document.getElementById("EnableArtifactoryScan").onclick = async () => {
+  let repoManager = repositoryManagers.artifactory;
+  let elRepoEnable = "EnableArtifactoryScan";
+  let elRepoAddress = "artifactoryurl";
+  let approvalSetting = "hasApprovedArtifactoryRepoUrl";
+  let repoAddressSetting = "artifactoryRepoUrl";
+  await handleRepoSwitch(
+    repoManager,
+    elRepoEnable,
+    elRepoAddress,
+    approvalSetting,
+    repoAddressSetting
+  );
+};
+
+const handleRepoSwitch = async (
+  repoManager,
+  elRepoEnable,
+  elRepoAddress,
+  approvalSetting,
+  repoAddressSetting
+) => {
+  /////
+
+  message("");
+  let isChecked = document.getElementById(elRepoEnable).checked;
+  console.log("handleRepoSwitch", isChecked);
+  let repoUrl = document.getElementById(elRepoAddress).value;
+  let url, isValidUrl;
+  isValidUrl = await validateUrl(repoUrl);
+  console.log("EnableRepoScan-isValidUrl", repoUrl);
+
+  let repoUrlHref;
+  if (isValidUrl) {
+    url = new URL(repoUrl);
+    repoUrlHref = url.href;
+  }
+  if (isChecked) {
+    //granting
+    if (isValidUrl) {
+      //save the url
+      let granted = await SetRepoUrl(
+        repoManager,
+        isChecked,
+        repoUrlHref,
+        approvalSetting,
+        repoAddressSetting
+      );
+      if (granted) {
+        message("Permission  granted");
+      } else {
+        message("Permission not granted");
+        document.getElementById(elRepoEnable).checked = false;
+      }
+    } else {
+      //not valid
+      document.getElementById(elRepoEnable).checked = false;
+      document.getElementById(elRepoAddress).focus();
+      let prompt = document.getElementById(elRepoAddress).placeholder;
+      message(`Enter a valid ${prompt} first`);
+      return;
+    }
+    console.log("repoUrl", repoUrl);
+  } else {
+    //revoking
+    let revoked = await SetRepoUrl(
+      repoManager,
+      isChecked,
+      repoUrlHref,
+      approvalSetting,
+      repoAddressSetting
+    );
+    message("Revoked successfully");
+    console.log("revoked", revoked);
+  }
+};
+
+const SetRepoUrl = async (
+  repoManager,
+  isChecked,
+  url,
+  approvalSetting,
+  repoAddressSetting
+) => {
+  console.log("SetRepoUrl", isChecked, url);
+  return new Promise(async (resolve, reject) => {
+    let repoUrl = new URL(url);
+    let repoUrlHref = repoUrl.href;
+    let isValid = await isValidUrl(repoUrlHref);
+    if (isChecked && !isValid) {
+      await setSettings({ [approvalSetting]: false });
+      await setSettings({ [repoAddressSetting]: "" });
+
+      reject(false);
+    }
+    if (isChecked) {
+      //add the url to the permissionss
+      //check that it is not already in the list
+      let granted = await grantOriginsPermissions(repoUrlHref);
+      if (granted) {
+        //good we like this so ok then
+        console.log("granted", granted);
+        await setSettings({ [approvalSetting]: granted });
+        await setSettings({ [repoAddressSetting]: repoUrlHref });
+        resolve(granted);
+      } else {
+        //he didn't hit grant so remove
+        await setSettings({ [approvalSetting]: granted });
+        await setSettings({ [repoAddressSetting]: "" });
+        resolve(granted);
+      }
+    } else {
+      //remove the origins permission
+      //check that it is not a originall permission
+      let found = await CheckIsOriginalOrigins(repoUrlHref);
+      //remove the permission
+      if (found) {
+        message("Can not remove an original origin permission");
+        reject(false);
+      } else {
+        let revoked = await revokeOriginsPermissions(repoUrlHref);
+        console.log("revoke", revoked);
+        console.log("disable");
+        await setSettings({ [approvalSetting]: false });
+        await setSettings({ [repoAddressSetting]: "" });
+        resolve(revoked);
+      }
+    }
+  });
+};
+//////////////
 const SetAllUrls = async (isChecked) => {
   if (isChecked) {
     //add the Tabs permission
@@ -502,12 +596,18 @@ const load_data = async () => {
       hasApprovedAllUrls = settings.hasApprovedAllUrls;
       console.log("hasApprovedAllUrls", hasApprovedAllUrls);
       document.getElementById("AllUrls").checked = hasApprovedAllUrls;
-
-      document.getElementById("nexusurl").value = settings.nexusRepoUrl;
-
+      document.getElementById("nexusurl").value = settings.nexusRepoUrl || "";
       let isNexus = settings.hasApprovedNexusRepoUrl;
       console.log("isNexus", isNexus);
-      document.getElementById("EnableNexusScan").checked = isNexus;
+      document.getElementById("EnableNexusScan").checked = isNexus || false;
+      ///
+      document.getElementById("artifactoryurl").value =
+        settings.artifactoryRepoUrl || "";
+
+      document.getElementById("EnableArtifactoryScan").checked =
+        settings.hasApprovedArtifactoryRepoUrl || false;
+
+      ///
     }
   });
 };
@@ -527,6 +627,11 @@ const saveForm = async () => {
   let hasApprovedNexusRepoUrl = document.getElementById("EnableNexusScan")
     .checked;
   let nexusRepoUrl = document.getElementById("nexusurl").value;
+  let hasApprovedArtifactoryRepoUrl = document.getElementById(
+    "EnableArtifactoryScan"
+  ).checked;
+  let artifactoryRepoUrl = document.getElementById("artifactoryurl").value;
+
   if (!isValidForm(url, username, password, app)) {
     message("Entries not valid");
     isFormOK = false;
@@ -549,22 +654,20 @@ const saveForm = async () => {
   });
   await setSettings({ hasApprovedAllUrls: hasApprovedAllUrls });
 
-  if (nexusRepoUrl !== "" && validateUrl(nexusRepoUrl)) {
-    let nrUrl = new URL(nexusRepoUrl);
-    let nexusRepoUrlHref = nrUrl.href;
-    let isOriginal = await CheckIsOriginalOrigins(nexusRepoUrlHref);
-    if (nexusRepoUrlHref === nexusIQURL || isOriginal) {
-      message(
-        "You can not set Nexus Repo address to one of the original servers, or to the same address as the IQ Server."
-      );
-      await setSettings({ nexusRepoUrl: "" });
-      await setSettings({ hasApprovedNexusRepoUrl: false });
-      isFormOK = false;
-    } else {
-      await setSettings({ nexusRepoUrl: nexusRepoUrlHref });
-      await setSettings({ hasApprovedNexusRepoUrl: hasApprovedNexusRepoUrl });
-    }
-  }
+  let repoOK;
+  repoOK = await setRepoSettings(
+    nexusRepoUrl,
+    hasApprovedNexusRepoUrl,
+    nexusIQURL
+  );
+  isFormOK = isFormOK && repoOK;
+  repoOK = await setRepoSettings(
+    artifactoryRepoUrl,
+    hasApprovedArtifactoryRepoUrl,
+    nexusIQURL
+  );
+  isFormOK = isFormOK && repoOK;
+
   console.log("ok", isFormOK);
   if (isFormOK) {
     message("Saved Values");
@@ -572,6 +675,28 @@ const saveForm = async () => {
   } else {
     return isFormOK;
   }
+};
+
+const setRepoSettings = async (repoUrl, hasApprovedRepoUrl, nexusIQURL) => {
+  let isFormOK = false;
+  if (repoUrl !== "" && validateUrl(repoUrl)) {
+    let nrUrl = new URL(repoUrl);
+    let repoUrlHref = nrUrl.href;
+    let isOriginal = await CheckIsOriginalOrigins(repoUrlHref);
+    if (repoUrlHref === nexusIQURL || isOriginal) {
+      message(
+        "You can not set Nexus Repo address to one of the original servers, or to the same address as the IQ Server."
+      );
+      await setSettings({ [repoUrl]: "" });
+      await setSettings({ [hasApprovedRepoUrl]: false });
+      isFormOK = false;
+    } else {
+      await setSettings({ [repoUrl]: repoUrlHref });
+      await setSettings({ [hasApprovedRepoUrl]: hasApprovedRepoUrl });
+      isFormOK = true;
+    }
+  }
+  return isFormOK;
 };
 
 const message = async (strMessage) => {

@@ -39,6 +39,8 @@ var masterSettingsList = [
   "hasApprovedAllUrls",
   "hasApprovedNexusRepoUrl",
   "nexusRepoUrl",
+  "hasApprovedArtifactoryRepoUrl",
+  "artifactoryRepoUrl",
   "IQCookie",
   "IQCookieSet",
   "installedPermissions",
@@ -67,6 +69,11 @@ var dataSources = {
   OSSINDEX: "OSSINDEX",
 };
 
+var repositoryManagers = {
+  nexus: "nexus",
+  artifactory: "artifactory",
+};
+
 var messageTypes = {
   login: "login", //message to send that we are in the process of logging in
   evaluate: "evaluate", //message to send that we are evaluating
@@ -77,9 +84,7 @@ var messageTypes = {
   artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
   evaluateComponent: "evaluateComponent", //used to evaluate on the popup only
   vulnerability: "vulnerability", // vuln scan results
-
   error: "error", //used to pass errors from background and content script to the popup
-
   annotateComponent: "annotateComponent",
 };
 const checkAllPermissions = async () => {
@@ -2280,24 +2285,53 @@ const executeScripts = (tabId, injectDetailsArray) => {
   if (callback !== null) callback(); // execute outermost function
 };
 
-const installScripts = (tab, message) => {
+const installScripts = async (tab, message) => {
   console.log("begin installScripts", tab, message);
   // var background = browser.extension.getBackgroundPage();
   // background.message = message;
   // console.log("sending message:", message);
   let url = tab.url;
   let scripts = [];
-  let isNexus = url.search("/#browse/browse:") >= 0;
-  let isArtifactory = url.search("webapp") >= 0;
+  //hasApprovedNexusRepoUrl
+  //nexusRepoUrl
+  let repoSettings = await GetSettings([
+    "hasApprovedNexusRepoUrl",
+    "nexusRepoUrl",
+    "hasApprovedArtifactoryRepoUrl",
+    "artifactoryRepoUrl",
+  ]);
+  let isNexus = repoSettings.hasApprovedNexusRepoUrl;
+  if (isNexus) {
+    let theURL = new URL(repoSettings.nexusRepoUrl);
+    isNexus = isNexus && url.search(theURL.href) >= 0;
+  }
+
+  //https://repo.spring.io/list/jcenter-cache/commons-collections/commons-collections/3.2.1/
+  // let isArtifactory =
+  //   url.search("webapp") >= 0 || url.search("repo.spring.io/list/") >= 0;
+
+  let isArtifactory = repoSettings.hasApprovedArtifactoryRepoUrl;
+  if (isArtifactory) {
+    let theURL = new URL(repoSettings.artifactoryRepoUrl);
+    isArtifactory = isArtifactory && url.search(theURL.href) >= 0;
+  }
+  isArtifactory = isArtifactory || url.search("repo.spring.io/list/") >= 0;
+
   if (isNexus || isArtifactory) {
     //    // { file: "Scripts/lib/jquery.min.js" },
     // // { file: "Scripts/lib/require.js" },
     // { file: "Scripts/utils.js" },
     // // { code: "var message = " + message  + ";"},
     // { file: "Scripts/content.js" },
-    scripts.push({ file: "Scripts/lib/jquery.min.js" });
-    scripts.push({ file: "Scripts/utils.js" });
-    scripts.push({ file: "Scripts/content.js" });
+    scripts.push({
+      file: "Scripts/lib/jquery.min.js",
+    });
+    scripts.push({
+      file: "Scripts/utils.js",
+    });
+    scripts.push({
+      file: "Scripts/content.js",
+    });
   }
 
   scripts.push({

@@ -35,6 +35,7 @@
     {
       "matches": [
         "https://cocoapods.org/*",
+        "https://conan.io/center/*",
         "https://cran.r-project.org/*",
         "https://crates.io/*",
         "https://github.com/*/releases/tag/*",
@@ -46,12 +47,11 @@
         "https://pypi.org/*",
         "https://repo1.maven.org/*",
         "https://repo.maven.apache.org/*",
+        "https://repo.spring.io/list/*",
         "https://rpmfind.net/linux/RPM/epel/*",
         "https://rubygems.org/*",
         "https://search.gocenter.io/*",
-        "https://search.maven.org/*",
-        "https://repo.spring.io/list/",
-        "https://conan.io/center/*"
+        "https://search.maven.org/*"
       ],
       "css": ["css/pagestyle.css"],
       "js": [
