@@ -19,12 +19,6 @@
 To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
 The plugin can scan packages at the following repositories:
 
-|     |     |     |
-| --- | --- | --- |
-|     |     |     |
-|     |     |     |
-|     |     |     |
-
 1. Java - maven - https://search.maven.org/
 2. Java - maven - https://mvnrepository.com/
 3. JS/Node - npm - https://www.npmjs.com/
