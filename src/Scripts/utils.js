@@ -1549,6 +1549,7 @@ const GetSettings2 = async (keys) => {
   const configOut = await p;
   return configOut;
 };
+
 const GetCookieFromConfig = async () => {
   console.log("GetCookieFromConfig");
   //get the value from storage
@@ -1579,7 +1580,9 @@ const GetCookie = async (domain, xsrfCookieName) => {
         if (err) {
           reject(err);
         } else {
-          resolve(cookies[0]);
+          let retVal = cookies[0];
+          console.log("cookies", retVal);
+          resolve(retVal);
         }
       }
     );

@@ -1,5 +1,5 @@
 body {
-  width: 600px;
+  width: 548px;
   height: 355px;
   margin: 2px;
   padding: 0px;
@@ -170,8 +170,8 @@ div .optionstable {
 
 #password {
   width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
+  padding: 5px 5px;
+  margin: 5px 0;
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;

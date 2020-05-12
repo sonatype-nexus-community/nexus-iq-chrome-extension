@@ -205,6 +205,8 @@ const selectTabHandler = async (e, tab, sourceTab) => {
     hasLoadedHistory = true;
   }
   hideLoader();
+
+  $("#tip").removeClass("invisible");
 };
 
 const createHTML = async (message, settings, sourceUrl) => {

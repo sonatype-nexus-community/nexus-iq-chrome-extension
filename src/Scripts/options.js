@@ -4,26 +4,9 @@
 $(function () {
   $(document).tooltip();
 });
-// const form = document.getElementById("form");
-// form.addEventListener("submit", (e) => {
-//   e.preventDefault();
-// });
-// $("a#tabstooltip").tooltip({
-//   open: function (event, ui) {
-//     console.log("tooltip open");
-//     $(ui.tooltip).append(
-//       '<a target="_blank" rel="noreferrer" href="https://developer.chrome.com/extensions/tabs">tabs</a>'
-//     );
-//   },
-// });
+
 window.onload = async () => {
   console.log("window.onload", window.location.search.substring(1));
-  // let retVal = await checkOriginsPermissions("https://cocoapods.org/");
-  // console.log("retVal", retVal);
-  // let allPerms = await checkAllPermissions();
-  // console.log("allPerms", allPerms);
-  // let cookie = await GetSettings(["IQCookie", "appId"]);
-  // console.log("cookie", cookie);
   message("");
   load_data();
 
@@ -460,6 +443,10 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
   let permsGranted = await grantOriginsPermissions(destUrl);
   if (permsGranted) {
     let cookie = await getCookie2(destUrl, xsrfCookieName);
+    if (!cookie || cookie === null) {
+      message("Error retrieving cookie. Click login again");
+      return;
+    }
     let saveSetting = await setSettings({ hasApprovedServer: true });
     saveSetting = await setSettings({ IQCookie: cookie });
     saveSetting = await setSettings({ IQCookieSet: Date.now() });
@@ -477,6 +464,7 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
       let saveSetting = await setSettings({ hasApprovedServer: false });
     }
   }
+  return true;
 };
 
 /////
@@ -673,12 +661,14 @@ const saveForm = async () => {
     message("Saved Values");
     return isFormOK;
   } else {
+    message("Form not saved");
     return isFormOK;
   }
 };
 
 const setRepoSettings = async (repoUrl, hasApprovedRepoUrl, nexusIQURL) => {
   let isFormOK = false;
+
   if (repoUrl !== "" && validateUrl(repoUrl)) {
     let nrUrl = new URL(repoUrl);
     let repoUrlHref = nrUrl.href;
@@ -695,6 +685,9 @@ const setRepoSettings = async (repoUrl, hasApprovedRepoUrl, nexusIQURL) => {
       await setSettings({ [hasApprovedRepoUrl]: hasApprovedRepoUrl });
       isFormOK = true;
     }
+  }
+  if (!hasApprovedRepoUrl) {
+    isFormOK = true;
   }
   return isFormOK;
 };
