@@ -1,7 +1,7 @@
 /*jslint es6  -W024 */
 "use strict";
 
-console.log("contentscript.js");
+console.log("content.js");
 // import { formats } as utils from "./utils.js";
 
 var browser;
@@ -11,7 +11,6 @@ if (typeof chrome !== "undefined") {
   browser.runtime.onMessage.addListener(gotMessage);
 }
 
-// chrome.runtime.onMessage.addListener(gotMessage);
 function gotMessage(receivedMessage, sender, sendResponse) {
   try {
     console.log("gotMessage", receivedMessage);
@@ -29,7 +28,7 @@ function gotMessage(receivedMessage, sender, sendResponse) {
         processPage(message);
         break;
       case messageTypes.vulnerability:
-        console.log("vulnearability message");
+        console.log("vulnerability message", message);
         processVulnerability(message);
         break;
       default:
@@ -46,17 +45,19 @@ function gotMessage(receivedMessage, sender, sendResponse) {
   }
 }
 
-
 function processVulnerability(message) {
   console.log("processVulnerability", message);
+  let artifact = message.artifact;
   let vulnClass = message.message.vulnClass;
   console.debug("Setting vuln class: " + vulnClass);
-  console.debug("browser: ", browser);
+  // console.debug("browser: ", browser);
   var repoDetails = findRepoType();
+  console.debug("repoDetails: ", repoDetails);
   if (repoDetails) {
     var x = document.querySelectorAll(repoDetails.titleSelector);
     console.debug("found titles", x);
-    for (var i = 0; i < x.length; i++) {
+    let maxnum = 1; //x.length;
+    for (var i = 0; i < maxnum; i++) {
       console.debug("adding to class: " + vulnClass);
       x[i].classList.add(vulnClass);
       x[i].classList.add("vuln");
@@ -82,6 +83,7 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
     let evaluatemessage = {
       artifact: artifact,
       messagetype: messageTypes.evaluateComponent,
+      url: url,
     };
     console.log(
       "browser.runtime.sendMessage(evaluatemessage)",
@@ -94,93 +96,6 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   } else {
     console.log("message.messagetype", message.messagetype);
   }
-}
-
-
-
-
-var repoTypes = [
-  {
-    url: "search.maven.org/artifact/",
-    repoFormat: formats.maven,
-    parseFunction: parseMaven,
-    titleSelector: ".artifact-title",
-  },
-  {
-    url: "https://mvnrepository.com/artifact/",
-    repoFormat: formats.maven,
-    parseFunction: parseMaven,
-    titleSelector: "h2.im-title",
-  },
-  {
-    url: "www.npmjs.com/package/",
-    repoFormat: formats.npm,
-    parseFunction: parseNPM,
-    titleSelector: ".package-name-redundant",
-  },
-  {
-    url: "nuget.org/packages/",
-    repoFormat: formats.nuget,
-    parseFunction: parseNuget,
-    titleSelector: ".package-title > h1",
-  },
-  {
-    url: "pypi.org/project/",
-    repoFormat: formats.pypi,
-    parseFunction: parsePyPI,
-    titleSelector: "h1.package-header__name",
-  },
-  {
-    url: "rubygems.org/gems/",
-    repoFormat: formats.gem,
-    parseFunction: parseRuby,
-    titleSelector: "h1.t-display",
-  },
-  {
-    url: "packagist.org/packages/",
-    repoFormat: formats.composer,
-    parseFunction: parsePackagist,
-    titleSelector: "",
-  },
-  {
-    url: "cocoapods.org/pods/",
-    repoFormat: formats.cocoapods,
-    parseFunction: parseCocoaPods,
-    titleSelector: "h1",
-  },
-  {
-    url: "cran.r-project.org/",
-    repoFormat: formats.cran,
-    parseFunction: parseCRAN,
-    titleSelector: "h2.title",
-  },
-  {
-    url: "https://crates.io/crates/",
-    repoFormat: formats.cargo,
-    parseFunction: parseCrates,
-    titleSelector: "",
-  },
-  {
-    url: "https://search.gocenter.io/",
-    repoFormat: formats.golang,
-    parseFunction: parseGoLang,
-    titleSelector: "#app div.v-application--wrap h1",
-  },
-  {
-    url: "/#browse/browse:",
-    parseFunction: parseNexusRepo,
-    titleSelector: "",
-  },
-];
-
-function findRepoType() {
-  let url = location.href;
-  for (let i = 0; i < repoTypes.length; i++) {
-    if (url.search(repoTypes[i].url) >= 0) {
-      return repoTypes[i];
-    }
-  }
-  return undefined;
 }
 
 function ParsePage() {
@@ -490,7 +405,7 @@ function parseCocoaPods(format, url) {
   let name = elements[4];
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
   return {
     format: format,
     datasource: datasource,
@@ -660,7 +575,7 @@ function parseCrates(format, url) {
   };
 }
 
-function parseNexusRepo(url) {
+function parseNexusRepo(iformat, url) {
   //http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
   console.log("parseNexusRepo:", url);
   let elements = url.split("/");
@@ -776,4 +691,123 @@ function parseNexusRepo(url) {
   }
   console.log("component", artifact);
   return artifact;
+}
+
+function parseConan(format, url) {
+  console.log("parseConan. format, url:", format, url);
+  //
+  let elements = url.split("/");
+
+  let name = elements[4];
+  let version = elements[5];
+  let artifact = {
+    format: format,
+    datasource: dataSources.NEXUSIQ,
+    name: name,
+    version: version,
+  };
+  return artifact;
+}
+
+var repoTypes = [
+  {
+    url: "search.maven.org/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: ".artifact-title",
+    versionPath: "{url}/{groupidd}/{artifactid}/{versionNumber}/{extension}",
+  },
+  {
+    url: "https://mvnrepository.com/artifact/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: "h2.im-title",
+    versionPath: "{url}/{groupidd}/{artifactid}/{versionNumber}",
+  },
+  {
+    url: "www.npmjs.com/package/",
+    repoFormat: formats.npm,
+    parseFunction: parseNPM,
+    titleSelector: ".package-name-redundant",
+    versionPath: "{url}/{packagename}/v/{versionNumber}",
+  },
+  {
+    url: "nuget.org/packages/",
+    repoFormat: formats.nuget,
+    parseFunction: parseNuget,
+    titleSelector: ".package-title > h1",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+  },
+  {
+    url: "pypi.org/project/",
+    repoFormat: formats.pypi,
+    parseFunction: parsePyPI,
+    titleSelector: "h1.package-header__name",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+  },
+  {
+    url: "rubygems.org/gems/",
+    repoFormat: formats.gem,
+    parseFunction: parseRuby,
+    titleSelector: "h1.t-display",
+    versionPath: "{url}/{packagename}/versions/{versionNumber}",
+  },
+  {
+    url: "packagist.org/packages/",
+    repoFormat: formats.composer,
+    parseFunction: parsePackagist,
+    titleSelector: "",
+    versionPath: "{url}/{packagename}#{versionNumber}",
+  },
+  {
+    url: "cocoapods.org/pods/",
+    repoFormat: formats.cocoapods,
+    parseFunction: parseCocoaPods,
+    titleSelector: "h1",
+    versionPath: "",
+  },
+  {
+    url: "cran.r-project.org/",
+    repoFormat: formats.cran,
+    parseFunction: parseCRAN,
+    titleSelector: "h2.title",
+    versionPath: "",
+  },
+  {
+    url: "https://crates.io/crates/",
+    repoFormat: formats.cargo,
+    parseFunction: parseCrates,
+    titleSelector: "",
+    versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
+  },
+  {
+    url: "https://search.gocenter.io/",
+    repoFormat: formats.golang,
+    parseFunction: parseGoLang,
+    titleSelector: "#app div.v-application--wrap h1",
+    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+  },
+  {
+    url: "/#browse/browse:",
+    parseFunction: parseNexusRepo,
+    titleSelector: "div[id*='-coreui-component-componentinfo-'",
+    versionPath: "",
+  },
+  {
+    url: "conan.io/center/",
+    repoFormat: formats.conan,
+    parseFunction: parseConan,
+    titleSelector: ".package-name",
+    versionPath: "",
+  },
+];
+
+function findRepoType() {
+  let url = location.href;
+  for (let i = 0; i < repoTypes.length; i++) {
+    if (url.search(repoTypes[i].url) >= 0) {
+      return repoTypes[i];
+    }
+  }
+  return undefined;
 }

@@ -568,7 +568,7 @@
       };
 
       $.each(json.versions, function (index, item) {
-        console.log("index, item", index,  item);
+        // console.log("index, item", index,  item);
         data.versions.push(item.componentIdentifier.coordinates.version);
         data.versionPopularity.push(
           item.popularity || item.relativePopularity || 0
@@ -804,14 +804,17 @@
           return pv.color("rgba(255, 255, 255,0.1)"); // Shennanigans to ensure Protovis creates invisible elements that have listeners attached
         })
         .lineWidth(1);
+      // console.log("config.selectable", config.selectable);
       if (config.selectable) {
         componentInfoSelectedIndex = config.data.currentVersionIndex;
         componentInfoBars.event("click", function() {
+          // console.log("click", this.data(), this);
           config.versionClick(this.data());
           componentInfoSelectedIndex = this.index;
           this.render();
         });
         componentInfoBars.event("dblclick", function() {
+          // console.log("dblclick", this.data(), this);
           config.versionDblClick(this.data());
         });
       }
@@ -1298,7 +1301,7 @@
       componentInfoVizContent = null;
       componentInfoXIndexInitial = null;
       componentInfoConfig = null;
-      console.log("config.data", config.data);
+      // console.log("config.data", config.data);
       config.data = parseJsonData(config.data);
       loadVersionChart(config);
     };

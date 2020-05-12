@@ -54,7 +54,7 @@ const gotMessage = async (message, sender, sendResponse) => {
       let tab = await GetActiveTab();
       if (tab) {
         let tabId = tab.id;
-        displayEvaluationReults(displayMessage, tabId);
+        await displayEvaluationResults(displayMessage, tabId);
       }
       browser.runtime.sendMessage(message);
       return displayMessage;
@@ -66,9 +66,9 @@ const gotMessage = async (message, sender, sendResponse) => {
       username = message.username;
       password = message.password;
       settings = BuildSettings(baseURL, username, password);
-      window.baseURL = baseURL; //"http://localhost:8070/"
-      window.username = username; //"admin"
-      window.password = password; //"admin123"
+      window.baseURL = baseURL;
+      window.username = username;
+      window.password = password;
       retval = login(settings);
       break;
     case messageTypes.evaluate:
@@ -108,18 +108,20 @@ window.message = "";
  *
  * @returns
  */
-const install_notice = () => {
+const install_notice = async () => {
   if (localStorage.getItem("install_time")) return;
 
   var now = new Date().getTime();
   localStorage.setItem("install_time", now);
-  browser.tabs.create({ url: "html/options.html" });
+  let initialPermissions = await checkAllPermissions();
+  await setSettings({ installedPermissions: initialPermissions });
+  browser.tabs.create({ url: "html/options.html?initial=true" });
 };
 install_notice();
 
 // getActiveTab();
 
-const sendNotification = (securityData) => {
+const sendNotification = async (securityData, artifact) => {
   console.log("sendNotification", securityData);
   var options = {
     type: "basic",
@@ -133,7 +135,7 @@ const sendNotification = (securityData) => {
   if (securityData && securityData.length > 0) {
     severity = securityData[0].severity || securityData[0].cvssScore;
   }
-  console.debug("detected severity " + severity);
+  console.debug("detected severity ", severity);
   let vulnClass = "vuln-low";
   if (severity >= 9) {
     vulnClass = "vuln-severe";
@@ -141,6 +143,8 @@ const sendNotification = (securityData) => {
     vulnClass = "vuln-high";
   } else if (severity >= 5) {
     vulnClass = "vuln-med";
+  } else if (severity >= 2) {
+    vulnClass = "vuln-low";
   }
 
   let vulnMessage = {
@@ -148,32 +152,36 @@ const sendNotification = (securityData) => {
     message: {
       severity: severity,
       vulnClass: vulnClass,
+      artifact: artifact,
     },
   };
 
   browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     browser.tabs.sendMessage(tabs[0].id, vulnMessage);
   });
-
-  browser.notifications.create(
-    "NexusIQNotification",
-    {
-      type: "basic",
-      iconUrl: "../images/SON_logo_favicon_Vulnerable.png",
-      title: "Sonatype Nexus IQ Scan",
-      message: "IQ found vulnerabilities in this version",
-      priority: 1,
-      buttons: [
-        {
-          title: "Close",
-        },
-      ],
-      isClickable: true,
-    },
-    function () {
-      console.log("chrome.runtime.lastError", browser.runtime.lastError);
-    }
-  );
+  let hasApproved = await GetSettings(["hasApprovedContinuousEval"]);
+  console.log("hasApproved", hasApproved.hasApprovedContinuousEval);
+  if (hasApproved.hasApprovedContinuousEval) {
+    browser.notifications.create(
+      "NexusIQNotification",
+      {
+        type: "basic",
+        iconUrl: "../images/SON_logo_favicon_Vulnerable.png",
+        title: "Sonatype Nexus IQ Scan",
+        message: "IQ found vulnerabilities in this version",
+        priority: 1,
+        buttons: [
+          {
+            title: "Close",
+          },
+        ],
+        isClickable: true,
+      },
+      function () {
+        console.log("chrome.runtime.lastError", browser.runtime.lastError);
+      }
+    );
+  }
 };
 
 const loadSettingsAndEvaluate = (artifact) => {
@@ -303,7 +311,7 @@ const evaluate = (artifact, settings) => {
 };
 
 const callIQ = (artifact, settings) => {
-  console.log("evaluate", settings.auth, artifact);
+  console.log("callIQ", settings.auth, artifact);
   var requestdata = NexusFormat(artifact);
   let inputStr = JSON.stringify(requestdata);
   var retVal;
@@ -312,7 +320,7 @@ const callIQ = (artifact, settings) => {
 
   let xhr = new XMLHttpRequest();
   let url = settings.url;
-  // url.replace('http//', 'http://admin@admin123')
+
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
   // xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
@@ -396,55 +404,21 @@ const ToggleIcon = (tab) => {
   console.log(found);
 };
 
-const quickTest = async () => {
-  let artifact = {
-    format: "maven",
-    artifactId: "springfox-swagger-ui",
-    classifier: "",
-    extension: "jar",
-    groupId: "io.springfox",
-    version: "2.6.1",
-  };
-  let nexusArtifact = NexusFormatMaven(artifact);
-  nexusArtifact.hash = "4c854c86c91ab36c86fc";
-  let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123");
-  let cve = "CVE-2018-3721";
-  let myResp3 = await GetCVEDetails(cve, nexusArtifact, settings);
-  console.log("myResp3");
-  console.log(myResp3);
-};
-
-const quickTest2 = async () => {
-  let artifact = {
-    format: "maven",
-    groupId: "commons-collections",
-    artifactId: "commons-collections",
-    version: "3.2.1",
-    classifier: "",
-    extension: "jar",
-  };
-  let nexusArtifact = NexusFormatMaven(artifact);
-  nexusArtifact.hash = "761ea405b9b37ced573d";
-  let settings = BuildSettings("http://iq-server:8070/", "admin", "admin123");
-  let cve = "sonatype-2015-0002";
-  let myResp3 = await GetCVEDetails(cve, nexusArtifact, settings);
-  console.log("myResp3");
-  console.log(myResp3);
-};
-
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  console.log("browser.tabs.onUpdated.addListener", tabId, changeInfo, tab);
-  // let tab = await GetActiveTab();
+  // console.log("browser.tabs.onUpdated.addListener", tabId, changeInfo, tab);
+
   if (changeInfo.status == "complete") {
+    // let tab2 = await GetActiveTab();
+    // console.log("tab2", tab2);
     let url = tab.url;
 
-    if (checkPageIsHandled(url)) {
+    if (url && checkPageIsHandled(url)) {
       // loadSettingsAndEvaluate(parseMavenURL(url));
       let displayMessageData = await beginEvaluation(tab);
       //this may need to install scripts into the background page so the next stuff
       //will be handled by the send message from the content script
       if (displayMessageData !== "installScripts") {
-        displayEvaluationReults(displayMessageData, tabId);
+        displayEvaluationResults(displayMessageData, tabId, url);
       }
     } else {
       browser.pageAction.setIcon({
@@ -657,6 +631,14 @@ browser.runtime.onInstalled.addListener(function () {
               pathContains: "linux/RPM/epel",
             },
           }),
+
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "conan.io",
+              schemes: ["https"],
+              pathContains: "center",
+            },
+          }),
         ],
 
         actions: [new browser.declarativeContent.ShowPageAction()],
@@ -665,8 +647,8 @@ browser.runtime.onInstalled.addListener(function () {
   });
 });
 
-function displayEvaluationReults(displayMessageData, tabId) {
-  console.log("displayEvaluationReults", displayMessageData, tabId);
+const displayEvaluationResults = async (displayMessageData, tabId) => {
+  console.log("displayEvaluationResults", displayMessageData, tabId);
   let responseArtifact = displayMessageData.artifact;
   let responseData = displayMessageData.message.response;
   let componentDetails, hasVulnerability, vulnerabilities;
@@ -688,14 +670,14 @@ function displayEvaluationReults(displayMessageData, tabId) {
       tabId: tabId,
     });
     //chrome.browserAction.setBadgeText({text: "!"});
-    sendNotification(vulnerabilities);
+    await sendNotification(vulnerabilities, responseArtifact);
   } else {
     browser.pageAction.setIcon({
       path: "../images/SON_logo_favicon_not_vuln.png",
       tabId: tabId,
     });
   }
-}
+};
 
 function receiveText(resultsArray) {
   console.log(resultsArray[0]);

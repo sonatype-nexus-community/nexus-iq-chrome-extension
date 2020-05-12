@@ -15,30 +15,35 @@ const {
   getExtensionVersion,
   getUserAgentHeader,
   jsDateToEpoch,
+  ConanArtifact,
   MavenArtifact,
   NPMArtifact,
   NugetArtifact,
   NexusFormat,
+  NexusFormatCocoaPods,
+  NexusFormatConan,
   NexusFormatMaven,
   NexusFormatNPM,
   NexusFormatNuget,
   NexusFormatPyPI,
   NexusFormatRuby,
+  parseArtifactoryURL,
+  parseCocoaPodsURL,
+  parseURLConan,
+  parseCRANURL,
+  parseCratesURL,
+  parseGitHubURL,
+  parseGoLangURL,
   parseMavenURL,
   parseNPMURL,
   parseNugetURL,
+  parsePackagistURL,
   parsePyPIURL,
   parseRubyURL,
-  parsePackagistURL,
-  parseCocoaPodsURL,
-  parseCRANURL,
-  parseGoLangURL,
-  parseCratesURL,
-  parseArtifactoryURL,
-  parseGitHubURL,
   parseNexusRepoURL,
   ParsePageURL,
   PyPIArtifact,
+  validateUrl,
 } = require("../src/Scripts/utils");
 
 xtest("evaluatePackage does not throw error when server down", async () => {
@@ -221,6 +226,57 @@ test("CheckPageIsHandled negative test - Google", () => {
   expect(expected).toBe(actual);
 });
 
+test("Check NexusFormatCocoaPods positive test", () => {
+  let artifact = {
+    format: "cocoapods",
+    name: "libpng",
+    version: "3.2.1",
+    hash: null,
+  };
+  let actual = NexusFormatCocoaPods(artifact);
+  let component;
+  let expected = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  expect(expected).toEqual(actual);
+});
+
+test("Check NexusFormatConan positive test", () => {
+  let artifact = {
+    format: "conan",
+    name: "apache-apr",
+    version: "0.9.1",
+    hash: null,
+  };
+  let actual = NexusFormatConan(artifact);
+  let component;
+  let expected = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  expect(expected).toEqual(actual);
+});
 test("Check NexusFormat positive test", () => {
   let artifact = {
     format: "maven",
@@ -558,6 +614,24 @@ test("Check pypiArtifact class", () => {
 
   let actual = new PyPIArtifact(name, version);
   let expected = new PyPIArtifact(name, version);
+  expect(actual).toEqual(expected);
+});
+
+test("Check parseURLConan positive test", () => {
+  let format = "conan";
+  let name = "apache-apr";
+  let version = "3.2.1";
+  let datasource = "NEXUSIQ";
+
+  let artifact = new ConanArtifact(
+    // format: format,
+    name,
+    version,
+    datasource
+  );
+  let url = "https://conan.io/center/apache-apr/1.6.3/";
+  let actual = parseURLConan(url);
+  let expected = artifact;
   expect(actual).toEqual(expected);
 });
 
@@ -905,7 +979,7 @@ test("Check parseCocoaPodsURL(cocoapods.org) negative test", () => {
     format: format,
     name: "TestFairy",
     version: undefined,
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
   };
   let url = "https://cocoapods.org/pods/TestFairy";
   let actual = parseCocoaPodsURL(url);
@@ -1399,6 +1473,38 @@ test("Check GetActiveTab positive test", () => {
   let actual = true;
   let expected = true;
   expect(actual).toEqual(expected);
+});
+//
+test("Check validateUrl positive test", () => {
+  // validateUrl
+  //TODO write a real test
+
+  let actual = validateUrl("http://localhost:8070");
+  let expected = true;
+  expect(actual).toBe(expected);
+  actual = validateUrl("http://iq-server:8070/");
+  expect(actual).toBe(expected);
+  actual = validateUrl("http://nexus:8081/");
+  expect(actual).toBe(expected);
+  actual = validateUrl("http://localhost:8081");
+  expect(actual).toBe(expected);
+  actual = validateUrl("https://cd2f47zu1r-nxrm.sonatype-se.com");
+  expect(actual).toBe(expected);
+  actual = validateUrl("https://cd2f47zu1r-nxiq.sonatype-se.com");
+  expect(actual).toBe(expected);
+});
+
+test("Check validateUrl negative test", () => {
+  // validateUrl
+  //TODO write a real test
+
+  let actual = validateUrl("^^^!!''");
+  let expected = false;
+  expect(actual).toBe(expected);
+  actual = validateUrl("");
+  expect(actual).toBe(expected);
+  actual = validateUrl("<script>alert('hack me')</script>");
+  expect(actual).toBe(expected);
 });
 
 describe.skip("chrome.tabs.update test", () => {

@@ -20,39 +20,68 @@ if (typeof chrome !== "undefined") {
 $(async function () {
   let displayMessageData;
   try {
-    //whenever I open I begin an evaluation immediately
+    //adding code to check if you need to login
+
+    //whenever I open,  I begin an evaluation immediately
     //the icon is disabled for pages that I dont parse
     console.log("ready!");
     //setupAccordion();
     showLoader();
     $("#error").hide();
-
-    let tabOptions = {
-      beforeActivate: selectTabHandler,
+    let sourceUrl;
+    const _selectTabHandler = (e, tab) => {
+      selectTabHandler(e, tab, sourceUrl);
     };
+    let tabOptions = {
+      beforeActivate: _selectTabHandler,
+    };
+    //all logic has to happen after the tabs are inited
+    //this draws the GUII using jQueryUI
     $("#tabs").tabs(tabOptions);
     hasLoadedHistory = false;
     $("div#dialogSecurityDetails").dialog({
       autoOpen: false,
     });
-
+    let settings = await BuildSettingsFromGlobal();
+    console.log("settings", settings);
+    //for new installs we will not have set the hasApprovedServer flag
+    if (
+      typeof settings === "undefined" ||
+      settings.url === null ||
+      !settings.hasApprovedServer
+    ) {
+      //we have not logged in
+      //show them the login page
+      browser.tabs.create({ url: "html/options.html?connected=false" });
+      let errorMsg =
+        "You have not logged in. Please open the options page and login. You will have to approve permissions to access the url. Read the instructions if not clear.";
+      throw errorMsg;
+    }
     //begin evaluation sends a message to the background script
     //and to the content script
     //I may be able to cheat and just get the URL, which simplifies the logic
     //if the URL is not parseable then I will have to go the content script to read the DOM
-    let tab = await GetActiveTab();
-    let url = tab.url;
-    displayMessageData = await beginEvaluation(tab);
+    //Note the URL is now only available via a user action
+    //this is because we want to turn off the 'tabs' permissions
+    //this reduces the functionality of the plugin but improves the security
+    //I have an option in the options tab to enable continuous eval
+    let sourceTab = await GetActiveTab();
+    sourceUrl = sourceTab.url;
+    console.log("tab", sourceTab, sourceUrl);
+
+    displayMessageData = await beginEvaluation(sourceTab);
     // Promise.race([waitCursorTimeOut, beginEvaluation]).then(function(value) {
     //   console.log(value);
     // });
     if (displayMessageData) {
-      await displayMessageDataHTML(displayMessageData);
+      await displayMessageDataHTML(displayMessageData, sourceUrl);
     }
   } catch (error) {
-    console.log("Popup Error", error);
+    console.log("Popup Error", error, error.stack, error.stack || error);
     showError(
-      "The display failed. Please contact support. " + "<BR>" + error.stack
+      "The display failed. Please contact support. " +
+        "<BR>" +
+        (error.stack || error)
     );
   } finally {
     console.log("popup-finally", displayMessageData);
@@ -75,17 +104,22 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
     //this is the callback handler for a message received
     console.log("popup got message", respMessage);
     let hasError = false;
+    let sourceUrl = respMessage.url;
     await BuildSettingsFromGlobal();
     switch (respMessage.messagetype) {
       case messageTypes.evaluateComponent:
         console.log("messageTypes.evaluateComponent", artifact);
         setArtifact(respMessage.artifact);
-        let displayMessage = await evaluateComponent(artifact, settings);
-        await displayMessageDataHTML(displayMessage);
+        let displayMessage = await evaluateComponent(
+          artifact,
+          settings,
+          sourceUrl
+        );
+        await displayMessageDataHTML(displayMessage, sourceUrl);
         break;
       case messageTypes.displayMessage:
         // alert("displayMessage");
-        await displayMessageDataHTML(respMessage);
+        await displayMessageDataHTML(respMessage, sourceUrl);
         break;
       case messageTypes.loggedIn:
         //logged in so now we evaluate
@@ -104,7 +138,7 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
       //do nothing for now
     }
   } catch (error) {
-    console.log("error", error);
+    console.log("gotmessage error", error);
     showError(
       "The display failed. Please contact support. " + "<BR>" + error.stack
     );
@@ -126,18 +160,21 @@ const hideLoader = (hasError) => {
   document.getElementById("tabs").style.display = "block";
 };
 
-const selectTabHandler = async (e, tab) => {
+const selectTabHandler = async (e, tab, sourceTab) => {
   //lazy loading of history
   //only do it if the user clicks on the tab
-  showLoader();
-  const remediationTab = 2;
   console.log(
     "selectTabHandler-nexusArtifact, artifact, dataSources, settings",
     nexusArtifact,
     artifact,
     dataSources,
-    settings
+    settings,
+    e,
+    tab,
+    sourceTab
   );
+  showLoader();
+  const remediationTab = 2;
   if (
     tab.newTab.index() === remediationTab &&
     !hasLoadedHistory &&
@@ -148,7 +185,7 @@ const selectTabHandler = async (e, tab) => {
       class: "status-message ui-corner-all",
     })
       .appendTo(".ui-tabs-nav", "#demo")
-      .fadeOut(2500, function () {
+      .fadeOut(5000, function () {
         $(this).remove();
       });
     let remediation;
@@ -164,123 +201,16 @@ const selectTabHandler = async (e, tab) => {
     let currentVersion =
       nexusArtifact.component.componentIdentifier.coordinates.version;
 
-    await renderGraph(allVersions, remediation, currentVersion);
+    await renderGraph(allVersions, remediation, currentVersion, sourceTab);
     hasLoadedHistory = true;
   }
   hideLoader();
+
+  $("#tip").removeClass("invisible");
 };
 
-// const createAllversionsHTML = async (data, remediation, currentVersion) => {
-//   console.log("createAllversionsHTML", remediation, currentVersion);
-//   // console.log('data:', data);
-
-//   let strData = "";
-//   var grid;
-
-//   var options = {
-//     enableColumnReorder: false,
-//     autoHeight: false,
-//     enableCellNavigation: false,
-//     cellHighlightCssClass: "changed",
-//     cellFlashingCssClass: "remediation-version"
-//   };
-
-//   var slickData = [];
-
-//   var columns = [
-//     { id: "version", name: "version", field: "version" },
-//     { id: "security", name: "security", field: "security" },
-//     { id: "license", name: "license", field: "license" },
-//     { id: "popularity", name: "popularity", field: "popularity" },
-//     { id: "catalogDate", name: "catalogDate", field: "catalogDate" },
-//     {
-//       id: "majorRevisionStep",
-//       name: "majorRevisionStep",
-//       field: "majorRevisionStep"
-//     }
-//   ];
-//   var colId = 0;
-//   let rowId = 0;
-//   let remediationRow = -1;
-//   let currentVersionRow = -1;
-//   //let sortedData = sortByProperty(data, 'componentIdentifier.coordinates.version', 'descending')
-//   data.forEach(element => {
-//     // console.log('element.componentIdentifier.coordinates.version', element.componentIdentifier.coordinates.version)
-//     let version = element.componentIdentifier.coordinates.version;
-//     if (remediation === version) {
-//       remediationRow = rowId;
-//     }
-//     if (currentVersion === version) {
-//       currentVersionRow = rowId;
-//     }
-//     let popularity = element.relativePopularity;
-//     let license =
-//       typeof element.policyMaxThreatLevelsByCategory.LICENSE === "undefined"
-//         ? 0
-//         : element.policyMaxThreatLevelsByCategory.LICENSE;
-//     let myDate = new Date(element.catalogDate);
-//     let catalogDate = myDate.toLocaleDateString();
-//     let security = element.highestSecurityVulnerabilitySeverity;
-//     let majorRevisionStep = element.majorRevisionStep;
-//     strData += version + ", ";
-//     slickData[rowId] = {
-//       version: version,
-//       security: security,
-//       license: license,
-//       popularity: popularity,
-//       catalogDate: catalogDate,
-//       majorRevisionStep: majorRevisionStep
-//     };
-//     rowId++;
-//   });
-//   // console.log('strData', strData)
-//   // console.table(slickData)
-
-//   let currentVersionColor = "#85B6D5";
-//   let remediationVersionColor = "lawngreen";
-//   grid = new Slick.Grid("#myGrid", slickData, columns, options);
-//   if (remediationRow >= 0) {
-//     console.log("remediationRow", remediationRow);
-//     grid.scrollRowIntoView(remediationRow);
-//     grid.flashCell(remediationRow, grid.getColumnIndex("version"), 250);
-
-//     // $($('.grid-canvas').children()[remediationRow]).addClass('remediation-version');
-//     // $($('.grid-canvas').children()[remediationRow]).css("background-color", "lawngreen");
-
-//     paintRow(remediation, remediationVersionColor);
-//     paintRow(currentVersion, currentVersionColor);
-//   } else {
-//     //no remediation
-//     grid.scrollRowIntoView(currentVersionRow);
-//     paintRow(currentVersion, currentVersionColor);
-//   }
-
-//   grid.onViewportChanged.subscribe(function(e, args) {
-//     //event handling code.
-//     //find the fix
-//     console.log("grid.onViewportChanged");
-
-//     paintRow(remediation, remediationVersionColor);
-//     paintRow(currentVersion, currentVersionColor);
-//   });
-//   // paintRow (remediation, remediationVersionColor);
-//   // paintRow (currentVersion, currentVersionColor)
-//   // $("#remediation").html(strData);
-// };
-
-// const paintRow = (currentVersion, color) => {
-//   let currentVersionCell = $("div").filter(function() {
-//     // Matches exact string
-//     return $(this).text() === currentVersion;
-//   });
-//   let currentVersionCellParent = $(currentVersionCell).parents(
-//     "div .slick-row"
-//   );
-//   currentVersionCellParent.css("background-color", color);
-// };
-
-const createHTML = async (message, settings) => {
-  console.log("createHTML(message)", message, settings);
+const createHTML = async (message, settings, sourceUrl) => {
+  console.log("createHTML(message)", message, settings, sourceUrl);
 
   // console.log(componentDetails.length)
   // const thisComponent = componentDetails["0"];
@@ -291,9 +221,9 @@ const createHTML = async (message, settings) => {
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
       // let thisComponent = message.message.response.componentDetails["0"];
-      renderComponentData(message);
+      let hasVulns = renderSecurityData(message, settings);
+      renderComponentData(message, sourceUrl);
       renderLicenseData(message);
-      let hasVulns = renderSecurityData(message);
       setHasVulns(hasVulns);
       //store nexusArtifact in Global variable
       // let remediation
@@ -335,7 +265,8 @@ const renderComponentDataOSSIndex = (message) => {
   $("#hash_label").html("Description:");
 
   $("#matchstate").html(message.message.response.reference);
-  $("#datasource").html(message.artifact.datasource);
+  $("#datasource").html(message.artifact.datasource.toLowerCase());
+  // $("#PackageSource").html(url);
   $("CatalogDate_row").addClass("invisible");
   $("RelativePopularity_Row").addClass("invisible");
   $("#catalogdate").html("-");
@@ -432,8 +363,8 @@ const renderSecurityDataOSSIndex = (message) => {
   }
 };
 
-const renderComponentData = (message) => {
-  console.log("renderComponentData-thisComponent:", message);
+const renderComponentData = (message, sourceUrl) => {
+  console.log("renderComponentData-thisComponent:", message, sourceUrl);
   let thisComponent = message.message.response.componentDetails["0"];
   let component = thisComponent.component;
   console.log("component:", component);
@@ -472,6 +403,12 @@ const renderComponentData = (message) => {
     case formats.rpm:
       $("#package").html(coordinates.name);
       break;
+    case formats.cocoapods:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.conan:
+      $("#package").html(coordinates.name);
+      break;
 
     default:
       $("#package").html("Unknown format");
@@ -487,7 +424,8 @@ const renderComponentData = (message) => {
   $("#matchstate").html(thisComponent.matchState);
   $("#catalogdate").html(thisComponent.catalogDate);
   $("#relativepopularity").html(thisComponent.relativePopularity);
-  $("#datasource").html(message.artifact.datasource);
+  $("#datasource").html(message.artifact.datasource.toLowerCase());
+  $("#PackageSource").html(sourceUrl);
   renderSecuritySummaryIQ(message);
 };
 
@@ -620,6 +558,7 @@ const Count_CVSS_Issues = (message) => {
 };
 
 const renderSecurityData = (message) => {
+  console.log("message", message);
   let hasVulnerability = false;
   var thisComponent = message.message.response.componentDetails["0"];
   let securityIssues = thisComponent.securityData.securityIssues;
@@ -651,7 +590,7 @@ const renderSecurityData = (message) => {
       strAccordion += "<table>";
       strAccordion += "<tr>";
 
-      let strDialog = `<div id="info_${strVulnerability}"><a href="#">${strVulnerability}<img  src="../images/icons8-info-filled-50.png" class="info" alt="Info"></a></div>`;
+      let strDialog = `<div id="info_${strVulnerability}"><a href="#">${strVulnerability}&nbsp<i class="fas fa-info-circle"></i></a></div>`;
       strAccordion +=
         '<td class="label">Reference:</td><td class="data">' +
         strDialog +
@@ -672,10 +611,18 @@ const renderSecurityData = (message) => {
         securityIssue.threatCategory +
         "</td>";
       strAccordion += "</tr><tr>";
-      strAccordion +=
-        '<td class="label">url:</td><td class="data">' +
-        securityIssue.url +
-        "</td>";
+      // let strURL = securityIssue.url;
+      let strURL = `<a target="_blank" rel="noreferrer" href="${
+        settings.baseURL
+      }assets/index.html#/vulnerabilities/${strVulnerability}">${extractHostname(
+        settings.baseURL
+      )}.../${strVulnerability}</a>`;
+      console.log("strURL", strURL);
+      // if (strURL === "null") {
+      //   strURL = http://iq-server:8070/assets/index.html#/vulnerabilities/CVE-2017-5638;
+      // }
+      //iq-server:8070/assets/index.html#/vulnerabilities/CVE-2017-5638
+      strAccordion += `<td class="label">url:</td><td class="data">${strURL}</td>`;
       strAccordion += "</tr>";
       strAccordion += "</table>";
       strAccordion += "</div>";
@@ -829,13 +776,19 @@ const sortByProperty = (objArray, prop, direction) => {
   return clone;
 };
 
-const displayMessageDataHTML = async (respMessage) => {
-  console.log("displayMessageDataHTML", respMessage);
+const displayMessageDataHTML = async (respMessage, sourceUrl) => {
+  console.log("displayMessageDataHTML", respMessage, sourceUrl);
   //this is a horrible kludge, I need to resolve the message properly.
   if (respMessage === "installScripts") {
     return;
   }
   let hasError = false;
+  if (respMessage === "notvalid") {
+    showError(
+      "This page is not handled by the extension. Browse to a supported artifact page. Check https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension for a list of supported pages."
+    );
+    return;
+  }
   if (respMessage.message.error) {
     showError(respMessage.message.response);
   } else {
@@ -852,15 +805,44 @@ const displayMessageDataHTML = async (respMessage) => {
       nexusArtifact = componentDetails.componentDetails[0];
       console.log("nexusArtifact", nexusArtifact);
     }
-    let htmlCreated = await createHTML(respMessage, settings);
+    let htmlCreated = await createHTML(respMessage, settings, sourceUrl);
   }
   hideLoader(hasError);
 };
 
-const renderGraph = async (versionsData, remediation, currentVersion) => {
-  console.log("renderGraph", versionsData, remediation, currentVersion);
+const renderGraph = async (
+  versionsData,
+  remediation,
+  currentVersion,
+  sourceUrl
+) => {
+  console.log(
+    "renderGraph",
+    versionsData,
+    remediation,
+    currentVersion,
+    sourceUrl
+  );
+  const versionClickHandler = async (cbdata) => {
+    console.log("versionClickHandler", cbdata, currentVersion, sourceUrl);
+    let newVersion = cbdata;
+    let repoType = findRepoType(sourceUrl);
+    let newURL;
+    if (sourceUrl.indexOf(currentVersion) < 0 && repoType) {
+      newURL =
+        sourceUrl +
+        repoType.appendVersionPath.replace("{versionNumber}", newVersion);
+    } else {
+      newURL = sourceUrl.replace(currentVersion, newVersion);
+    }
+    console.log("newURL", newURL);
+    chrome.tabs.update({
+      url: newURL,
+    });
+  };
   Insight.ComponentInformation({
-    selectable: false,
+    selectable: true,
+    versionClick: versionClickHandler,
     data: {
       version: currentVersion,
       nextMajorRevisionIndex: undefined,
@@ -868,3 +850,137 @@ const renderGraph = async (versionsData, remediation, currentVersion) => {
     },
   });
 };
+
+///////////
+
+var formats = {
+  maven: "maven",
+  npm: "npm",
+  nuget: "nuget",
+  gem: "gem",
+  pypi: "pypi",
+  composer: "composer", //packagist website but composer format
+  cocoapods: "cocoapods",
+  cran: "cran",
+  cargo: "cargo", //cargo == crates == rust
+  golang: "golang",
+  github: "github",
+  rpm: "rpm",
+  conan: "conan",
+};
+var repoTypes = [
+  {
+    url: "search.maven.org/artifact/",
+    repoFormat: formats.maven,
+    // parseFunction: parseMaven,
+    titleSelector: ".artifact-title",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}/{extension}",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://mvnrepository.com/artifact/",
+    repoFormat: formats.maven,
+    // parseFunction: parseMaven,
+    titleSelector: "h2.im-title",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    appendVersionPath: "",
+  },
+  {
+    url: "www.npmjs.com/package/",
+    repoFormat: formats.npm,
+    // parseFunction: parseNPM,
+    titleSelector: ".package-name-redundant",
+    fullVersionPath: "{url}/{packagename}/v/{versionNumber}",
+    appendVersionPath: "/v/{versionNumber}",
+  },
+  {
+    url: "nuget.org/packages/",
+    repoFormat: formats.nuget,
+    // parseFunction: parseNuget,
+    titleSelector: ".package-title > h1",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+    appendVersionPath: "/{versionNumber}",
+  },
+  {
+    url: "pypi.org/project/",
+    repoFormat: formats.pypi,
+    // parseFunction: parsePyPI,
+    titleSelector: "h1.package-header__name",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+    appendVersionPath: "{versionNumber}",
+  },
+  {
+    url: "rubygems.org/gems/",
+    repoFormat: formats.gem,
+    // parseFunction: parseRuby,
+    titleSelector: "h1.t-display",
+    versionPath: "{url}/{packagename}/versions/{versionNumber}",
+    appendVersionPath: "/versions/{versionNumber}",
+  },
+  {
+    url: "packagist.org/packages/",
+    repoFormat: formats.composer,
+    // parseFunction: parsePackagist,
+    titleSelector: "",
+    versionPath: "{url}/{packagename}#{versionNumber}",
+    appendVersionPath: "#{versionNumber}",
+  },
+  {
+    url: "cocoapods.org/pods/",
+    repoFormat: formats.cocoapods,
+    // parseFunction: parseCocoaPods,
+    titleSelector: "h1",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "cran.r-project.org/",
+    repoFormat: formats.cran,
+    // parseFunction: parseCRAN,
+    titleSelector: "h2.title",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://crates.io/crates/",
+    repoFormat: formats.cargo,
+    // parseFunction: parseCrates,
+    titleSelector: "",
+    versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
+    appendVersionPath: "/{versionNumber}",
+  },
+  {
+    url: "https://search.gocenter.io/",
+    repoFormat: formats.golang,
+    // parseFunction: parseGoLang,
+    titleSelector: "#app div.v-application--wrap h1",
+    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    appendVersionPath: "/info?version={versionNumber}",
+  },
+  {
+    url: "/#browse/browse:",
+    // parseFunction: parseNexusRepo,
+    titleSelector: "div[id*='-coreui-component-componentinfo-'",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "conan.io/center/",
+    repoFormat: formats.conan,
+    // parseFunction: parseConan,
+    titleSelector: "",
+    versionPath: "",
+  },
+];
+
+function findRepoType(url) {
+  console.log("findRepoType(url)", url);
+  // let url = location.href;
+  // let repoTypes = [];
+  for (let i = 0; i < repoTypes.length; i++) {
+    if (url.search(repoTypes[i].url) >= 0) {
+      return repoTypes[i];
+    }
+  }
+  return undefined;
+}

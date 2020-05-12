@@ -26,7 +26,25 @@ var formats = {
   golang: "golang",
   github: "github",
   rpm: "rpm",
+  conan: "conan",
 };
+var masterSettingsList = [
+  "url",
+  "username",
+  "password",
+  "appId",
+  "appInternalId",
+  "hasApprovedServer",
+  "hasApprovedContinuousEval",
+  "hasApprovedAllUrls",
+  "hasApprovedNexusRepoUrl",
+  "nexusRepoUrl",
+  "hasApprovedArtifactoryRepoUrl",
+  "artifactoryRepoUrl",
+  "IQCookie",
+  "IQCookieSet",
+  "installedPermissions",
+];
 
 //This is the format in nexus repo for proxy repos
 var nexusRepoformats = {
@@ -51,6 +69,11 @@ var dataSources = {
   OSSINDEX: "OSSINDEX",
 };
 
+var repositoryManagers = {
+  nexus: "nexus",
+  artifactory: "artifactory",
+};
+
 var messageTypes = {
   login: "login", //message to send that we are in the process of logging in
   evaluate: "evaluate", //message to send that we are evaluating
@@ -61,10 +84,15 @@ var messageTypes = {
   artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
   evaluateComponent: "evaluateComponent", //used to evaluate on the popup only
   vulnerability: "vulnerability", // vuln scan results
-
   error: "error", //used to pass errors from background and content script to the popup
-
   annotateComponent: "annotateComponent",
+};
+const checkAllPermissions = async () => {
+  return new Promise((resolve, reject) => {
+    chrome.permissions.getAll((results) => {
+      resolve(results);
+    });
+  });
 };
 class Component {
   constructor(hash) {}
@@ -143,6 +171,30 @@ class Artifact {
     return this._format;
   }
 }
+class CocoaPodsArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.cocoapods;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    // this.format = formats.maven;
+    // this.hash = null;
+    // this.datasource = dataSources.NEXUSIQ;
+  }
+}
+class ConanArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.conan;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    // this.format = formats.maven;
+    // this.hash = null;
+    // this.datasource = dataSources.NEXUSIQ;
+  }
+}
 class MavenArtifact extends Artifact {
   constructor(groupId, artifactId, version, extension, classifier) {
     let _format = formats.maven;
@@ -217,6 +269,7 @@ class PyPIArtifact extends Artifact {
 
 const checkPageIsHandled = (url) => {
   console.log("checkPageIsHandled", url);
+  if (url === null || typeof url === "undefined") return false;
   //check the url of the tab is in this collection
   // let url = tab.url
   let found = false;
@@ -236,10 +289,11 @@ const checkPageIsHandled = (url) => {
     (url.search("https://github.com/") >= 0 &&
       url.search("/releases/tag/") >= 0) || //https://github.com/jquery/jquery/releases/tag/3.0.0
     url.search("/webapp/#/artifacts/") >= 0 || //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
-    url.search("/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+    url.search("https://repo.spring.io/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
     url.search("/#browse/browse:") >= 0 || //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
     url.search("https://rpmfind.net/linux/RPM/epel/7/") >= 0 ||
     url.search("https://cocoapods.org/pods/") >= 0 ||
+    url.search("https://conan.io/center/") >= 0 ||
     false
   ) {
     found = true;
@@ -331,8 +385,9 @@ const ParsePageURL = (url) => {
     artifact = parseNexusRepoURL(url);
   } else if (url.search("https://rpmfind.net/linux/RPM/epel/") >= 0) {
     artifact = parseRPMRepoURL(url);
+  } else if (url.search("https://conan.io/center/") >= 0) {
+    artifact = parseURLConan(url);
   }
-
   console.log("ParsePageURL Complete. artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
@@ -473,6 +528,12 @@ const NexusFormat = (artifact) => {
       break;
     case formats.rpm:
       requestdata = NexusFormatRPM(artifact);
+      break;
+    case formats.cocoapods:
+      requestdata = NexusFormatCocoaPods(artifact);
+      break;
+    case formats.conan:
+      requestdata = NexusFormatConan(artifact);
       break;
 
     default:
@@ -647,6 +708,43 @@ const NexusFormatRPM = (artifact) => {
   return componentDict;
 };
 
+const NexusFormatCocoaPods = (artifact) => {
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.name}`,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  return componentDict;
+};
+
+const NexusFormatConan = (artifact) => {
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.name}`,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  return componentDict;
+};
 const encodeComponentIdentifier = (component) => {
   let actual = encodeURIComponent(
     JSON.stringify(component.componentIdentifier)
@@ -673,7 +771,7 @@ const jsDateToEpoch = (d) => {
 const parseCocoaPodsURL = (url) => {
   console.log("parseCocoaPodsURL");
   let format = formats.cocoapods;
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
 
   // var elements = url.split('/')
   //https://cocoapods.org/pods/TestFairy
@@ -686,7 +784,7 @@ const parseCRANURL = (url) => {
   // https://cran.r-project.org/web/packages/latte/index.html
   //https://cran.r-project.org/package=clustcurv
   //no version ATM
-  let format = formats.cocoapods;
+  let format = formats.cran;
   let datasource = dataSources.OSSINDEX;
 
   return false;
@@ -1256,6 +1354,22 @@ const parseRPMRepoURL = (url) => {
   return artifact;
 };
 ////////////////////////
+
+const parseURLConan = (url) => {
+  // https://conan.io/center/apache-apr/1.6.3/
+  let format = formats.conan;
+  let datasource = dataSources.NEXUSIQ;
+  let hash;
+  let packageName;
+  let version;
+
+  var urlElements = url.split("/");
+  packageName = urlElements[4];
+  version = urlElements[5];
+  let artifact = new ConanArtifact(packageName, version);
+  return artifact;
+};
+
 ////////Parse DOM/////////
 
 function parseNPM(format, url) {
@@ -1315,9 +1429,21 @@ function parseNPM(format, url) {
   };
 }
 
-const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
+const BuildSettings = (
+  baseURL,
+  username,
+  password,
+  appId,
+  appInternalId,
+  IQCookie,
+  IQCookieSet,
+  hasApprovedServer,
+  hasApprovedContinuousEval,
+  hasApprovedAllUrls
+) => {
   //let settings = {};
-  console.log("BuildSettings");
+  console.log("BuildSettings", baseURL);
+  if (typeof baseURL === "undefined" || baseURL === null) return;
   let tok = `${username}:${password}`;
   let hash = btoa(tok);
   let auth = "Basic " + hash;
@@ -1344,31 +1470,48 @@ const BuildSettings = (baseURL, username, password, appId, appInternalId) => {
     loginurl: loginurl,
     appId: appId,
     appInternalId: appInternalId,
+    IQCookie: IQCookie,
+    IQCookieSet: IQCookieSet,
+    hasApprovedServer: hasApprovedServer,
+    hasApprovedContinuousEval: hasApprovedContinuousEval,
+    hasApprovedAllUrls: hasApprovedAllUrls,
   };
   return settings;
 };
 
 const BuildSettingsFromGlobal = async () => {
   console.log("BuildSettingsFromGlobal");
-  let promise = await GetSettings([
+  let retSettings = await GetSettings([
     "url",
     "username",
     "password",
     "appId",
     "appInternalId",
+    "IQCookie",
+    "IQCookieSet",
+    "hasApprovedServer",
+    "hasApprovedContinuousEval",
+    "hasApprovedAllUrls",
   ]);
+
   settings = BuildSettings(
-    promise.url,
-    promise.username,
-    promise.password,
-    promise.appId,
-    promise.appInternalId
+    retSettings.url,
+    retSettings.username,
+    retSettings.password,
+    retSettings.appId,
+    retSettings.appInternalId,
+    retSettings.IQCookie,
+    retSettings.IQCookieSet,
+    retSettings.hasApprovedServer,
+    retSettings.hasApprovedContinuousEval,
+    retSettings.hasApprovedAllUrls
   );
   console.log("settings", settings);
   return settings;
 };
 
 const GetSettings = (keys) => {
+  console.log("GetSettings", keys);
   let promise = new Promise((resolve, reject) => {
     browser.storage.sync.get(keys, (items) => {
       let err = browser.runtime.lastError;
@@ -1382,8 +1525,50 @@ const GetSettings = (keys) => {
   return promise;
 };
 
-const GetCookie = (domain, xsrfCookieName) => {
+const setSettings = async (obj) => {
+  return new Promise((resolve, reject) => {
+    console.log(Object.values(obj)[0]);
+    chrome.storage.sync.set(
+      { [Object.keys(obj)[0]]: Object.values(obj)[0] },
+      () => {
+        //alert('saved'+ value);
+        console.log("Saved obj", obj);
+        resolve(true);
+      }
+    );
+  });
+};
+const GetSettings2 = async (keys) => {
+  // console.log("GetSettings2", key);
+  var p = new Promise(function (resolve, reject) {
+    chrome.storage.sync.get(keys, function (settings) {
+      resolve(settings);
+    });
+  });
+
+  const configOut = await p;
+  return configOut;
+};
+
+const GetCookieFromConfig = async () => {
+  console.log("GetCookieFromConfig");
+  //get the value from storage
+  //https://stackoverflow.com/questions/5892176/getting-cookies-in-a-google-chrome-extension
+  //https://stackoverflow.com/questions/44186404/moving-permissions-to-optional-on-chrome-extension
+  var p = new Promise(function (resolve, reject) {
+    chrome.storage.sync.get({ IQCookie: true }, function (settings) {
+      resolve(settings.IQCookie);
+    });
+  });
+
+  const configOut = await p;
+  return configOut;
+};
+
+const GetCookie = async (domain, xsrfCookieName) => {
   console.log("GetCookie", domain, xsrfCookieName);
+  //get the value from storage
+
   let promise = new Promise((resolve, reject) => {
     browser.cookies.getAll(
       {
@@ -1395,7 +1580,9 @@ const GetCookie = (domain, xsrfCookieName) => {
         if (err) {
           reject(err);
         } else {
-          resolve(cookies[0]);
+          let retVal = cookies[0];
+          console.log("cookies", retVal);
+          resolve(retVal);
         }
       }
     );
@@ -1498,7 +1685,7 @@ const callServer = async (valueCSRF, artifact, settings) => {
     message: retVal,
     artifact: artifact,
   };
-  console.log("evaluatePackage - displayMessage", displayMessage);
+  console.log("callServer - displayMessage", displayMessage);
 
   return displayMessage;
 };
@@ -1531,12 +1718,13 @@ const beginEvaluation = async (tab) => {
           messagetype: messageTypes.evaluateComponent,
         };
         await BuildSettingsFromGlobal();
-        let displayMessage = await evaluateComponent(artifact, settings);
+        let displayMessage = await evaluateComponent(artifact, settings, url);
         return displayMessage;
       } else {
         //this sends a message to the content tab
         //hopefully it will tell me what it sees
         //this fixes a bug where we did not get the right DOM because we did not know what page we were on
+        // TODO: CPT I Iwant to get rid of this logic
         installScripts(tab, message);
         //install scripts will run, and I hope that we receive a message back
         return "installScripts";
@@ -1586,11 +1774,12 @@ const evaluatePackage = async (artifact, settings) => {
   let servername = settings.baseURL;
   let domain = getDomainName(servername);
   console.log("domain", domain);
-  let cookie = await GetCookie(domain, xsrfCookieName);
+  // let cookie = await GetCookie(domain, xsrfCookieName);
+  let cookie = await GetCookieFromConfig();
+  // let cookie = await GetSettings2("IQCookie");
   console.log("cookie", cookie);
   if (typeof cookie === "undefined") {
-    console.log("handled missing cookie");
-
+    console.log("handle missing cookie");
     valueCSRF = uuidv4();
     //server is not up most probably
     //do we throw an error here or exit gracefully
@@ -2099,24 +2288,77 @@ const executeScripts = (tabId, injectDetailsArray) => {
   if (callback !== null) callback(); // execute outermost function
 };
 
-const installScripts = (tab, message) => {
+const installScripts = async (tab, message) => {
   console.log("begin installScripts", tab, message);
   // var background = browser.extension.getBackgroundPage();
   // background.message = message;
   // console.log("sending message:", message);
-  executeScripts(null, [
-    { file: "Scripts/lib/jquery.min.js" },
-    // { file: "Scripts/lib/require.js" },
-    { file: "Scripts/utils.js" },
-    // { code: "var message = " + message  + ";"},
-    { file: "Scripts/content.js" },
-    { code: "processPage();" },
+  let url = tab.url;
+  let scripts = [];
+  //hasApprovedNexusRepoUrl
+  //nexusRepoUrl
+  let repoSettings = await GetSettings([
+    "hasApprovedNexusRepoUrl",
+    "nexusRepoUrl",
+    "hasApprovedArtifactoryRepoUrl",
+    "artifactoryRepoUrl",
   ]);
+  let isNexus = repoSettings.hasApprovedNexusRepoUrl;
+  if (isNexus) {
+    let theURL = new URL(repoSettings.nexusRepoUrl);
+    isNexus = isNexus && url.search(theURL.href) >= 0;
+  }
+
+  //https://repo.spring.io/list/jcenter-cache/commons-collections/commons-collections/3.2.1/
+  // let isArtifactory =
+  //   url.search("webapp") >= 0 || url.search("repo.spring.io/list/") >= 0;
+
+  let isArtifactory = repoSettings.hasApprovedArtifactoryRepoUrl;
+  if (isArtifactory) {
+    let theURL = new URL(repoSettings.artifactoryRepoUrl);
+    isArtifactory = isArtifactory && url.search(theURL.href) >= 0;
+    //artifactory/webapp/#/artifacts
+    isArtifactory = isArtifactory && url.search("webapp#artifacts") >= 0;
+  }
+  isArtifactory = isArtifactory || url.search("repo.spring.io/list/") >= 0;
+
+  if (isNexus || isArtifactory) {
+    //    // { file: "Scripts/lib/jquery.min.js" },
+    // // { file: "Scripts/lib/require.js" },
+    // { file: "Scripts/utils.js" },
+    // // { code: "var message = " + message  + ";"},
+    // { file: "Scripts/content.js" },
+    scripts.push({
+      file: "Scripts/lib/jquery.min.js",
+    });
+    scripts.push({
+      file: "Scripts/utils.js",
+    });
+    scripts.push({
+      file: "Scripts/content.js",
+    });
+  }
+
+  scripts.push({
+    code: "processPage();",
+  });
+  executeScripts(null, scripts);
   // browser.tabs.sendMessage(tab.tabId, message);
   console.log("end installScripts");
 };
 /////////////
-
+function validateUrl(url) {
+  let testUrl;
+  let retVal = false;
+  try {
+    testUrl = new URL(url);
+    retVal = true;
+  } catch {
+    retVal = false;
+  }
+  return retVal;
+}
+/////////////
 if (typeof module !== "undefined") {
   module.exports = {
     artifact: artifact,
@@ -2129,6 +2371,7 @@ if (typeof module !== "undefined") {
     callServer: callServer,
     ChangeIconMessage: ChangeIconMessage,
     checkPageIsHandled: checkPageIsHandled,
+    ConanArtifact: ConanArtifact,
     CVSSDetails: CVSSDetails,
     dataSources: dataSources,
     encodeComponentIdentifier: encodeComponentIdentifier,
@@ -2145,11 +2388,12 @@ if (typeof module !== "undefined") {
     getExtensionVersion: getExtensionVersion,
     getRemediation: getRemediation,
     getUserAgentHeader: getUserAgentHeader,
-
     jsDateToEpoch: jsDateToEpoch,
     MavenArtifact: MavenArtifact,
     MavenCoordinates: MavenCoordinates,
     NexusFormat: NexusFormat,
+    NexusFormatCocoaPods: NexusFormatCocoaPods,
+    NexusFormatConan: NexusFormatConan,
     NexusFormatMaven: NexusFormatMaven,
     NexusFormatNPM: NexusFormatNPM,
     NexusFormatNuget: NexusFormatNuget,
@@ -2172,12 +2416,14 @@ if (typeof module !== "undefined") {
     ParsePageURL: ParsePageURL,
     parsePyPIURL: parsePyPIURL,
     parseRubyURL: parseRubyURL,
+    parseURLConan: parseURLConan,
     PyPIArtifact: PyPIArtifact,
     removeCookies: removeCookies,
     SetHash: SetHash,
     setHasVulns: setHasVulns,
     setArtifact: setArtifact,
     styleCVSS: styleCVSS,
+    validateUrl: validateUrl,
   };
 }
 

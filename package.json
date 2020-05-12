@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "0.0.1-semantic-release",
+  "version": "1.8.2",
   "description": "Chrome Extension for IQ Validation",
   "main": "background.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "semantic-release": "semantic-release",
     "doc": "jsdoc -c jsdoc.json",
     "scan-ossi": "auditjs ossi",
-    "scan-iq": "auditjs iq -s develop -a chrome-extension-nexus-iq -u admin -p admin123 -h http://iq-server:8070"
+    "scan-iq": "auditjs iq -s develop -a chrome-extension-nexus-iq -u admin -h http://iq-server:8070"
   },
   "jest": {
     "verbose": true,
