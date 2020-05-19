@@ -188,25 +188,22 @@ const selectTabHandler = async (e, tab, sourceTab) => {
       .fadeOut(5000, function () {
         $(this).remove();
       });
-    let remediation;
+    let remediationPromise;
     console.log("hasVulns", hasVulns);
+    let allVersionsPromise = GetAllVersions(nexusArtifact, settings);
     if (hasVulns || true) {
-      remediation = await showRemediation(nexusArtifact, settings);
+      remediationPromise = showRemediation(nexusArtifact, settings);
     }
-    let allVersions = await GetAllVersions(
-      nexusArtifact,
-      settings,
-      remediation
-    );
     let currentVersion =
       nexusArtifact.component.componentIdentifier.coordinates.version;
-
-    await renderGraph(allVersions, remediation, currentVersion, sourceTab);
+    let remediation = await remediationPromise;
+    //going to do them in parallel for performance
+    const [allVersions] = await Promise.all([allVersionsPromise]);
+    await renderGraph(allVersions, currentVersion, sourceTab);
+    $("#tip").removeClass("invisible");
     hasLoadedHistory = true;
   }
   hideLoader();
-
-  $("#tip").removeClass("invisible");
 };
 
 const createHTML = async (message, settings, sourceUrl) => {
@@ -407,6 +404,18 @@ const renderComponentData = (message, sourceUrl) => {
       $("#package").html(coordinates.name);
       break;
     case formats.conan:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.cargo:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.composer:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.cran:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.chocolatey:
       $("#package").html(coordinates.name);
       break;
 
@@ -812,14 +821,14 @@ const displayMessageDataHTML = async (respMessage, sourceUrl) => {
 
 const renderGraph = async (
   versionsData,
-  remediation,
+
   currentVersion,
   sourceUrl
 ) => {
   console.log(
     "renderGraph",
     versionsData,
-    remediation,
+
     currentVersion,
     sourceUrl
   );
@@ -859,6 +868,7 @@ var formats = {
   nuget: "nuget",
   gem: "gem",
   pypi: "pypi",
+  chocolatey: "chocolatey",
   composer: "composer", //packagist website but composer format
   cocoapods: "cocoapods",
   cran: "cran",
@@ -921,7 +931,7 @@ var repoTypes = [
     url: "packagist.org/packages/",
     repoFormat: formats.composer,
     // parseFunction: parsePackagist,
-    titleSelector: "",
+    titleSelector: "h2.title",
     versionPath: "{url}/{packagename}#{versionNumber}",
     appendVersionPath: "#{versionNumber}",
   },

@@ -492,6 +492,14 @@ browser.runtime.onInstalled.addListener(function () {
     browser.declarativeContent.onPageChanged.addRules([
       {
         conditions: [
+          //https://chocolatey.org/packages/python3
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "chocolatey.org",
+              schemes: ["https"],
+              pathContains: "packages",
+            },
+          }),
           //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {

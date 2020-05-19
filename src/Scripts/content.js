@@ -1,8 +1,9 @@
 /*jslint es6  -W024 */
 "use strict";
 
-console.log("content.js");
+console.log("content.js?v1.8.3");
 // import { formats } as utils from "./utils.js";
+// const { formats } = require("../src/Scripts/utils");
 
 var browser;
 var message;
@@ -359,7 +360,7 @@ function parseRuby(format, url) {
   };
 }
 
-///OSSIndex////
+///NEXUSIQ////
 function parsePackagist(format, url) {
   //server is packagist, format is composer
   console.log("parsePackagist:", url);
@@ -369,28 +370,33 @@ function parsePackagist(format, url) {
   //https://packagist.org/packages/drupal/drupal
   //Specific version is with a hash
   //https://packagist.org/packages/drupal/drupal#8.6.2
+  // https://packagist.org/packages/phpbb/phpbb#3.1.2
   var namePt1 = elements[4];
   var namePt2 = elements[5];
   name = namePt1 + "/" + namePt2;
   var whereIs = namePt2.search("#");
-
+  var namespace = namePt1;
+  var nameOnly;
   //is the version number in the URL? if so get that, else get it from the HTML
   if (whereIs > -1) {
     version = namePt2.substr(whereIs + 1);
+    nameOnly = namePt2.substr(0, whereIs);
   } else {
     //get the version from the HTML as we are on the generic page
     //#headline > div > h1 > span
     let versionHTML = $("span.version-number").first().text();
     console.log("versionHTML:", versionHTML);
     version = versionHTML.trim();
+    nameOnly = namePt2;
   }
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
   return {
     format: format,
     datasource: datasource,
-    name: name,
+    name: nameOnly,
+    namespace: namespace,
     version: version,
   };
 }
@@ -449,7 +455,7 @@ function parseCRAN(format, url) {
   version = versionHTML.trim();
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
   return {
     format: format,
     datasource: datasource,
@@ -566,7 +572,7 @@ function parseCrates(format, url) {
 
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
-  let datasource = dataSources.OSSINDEX;
+  let datasource = dataSources.NEXUSIQ;
   return {
     format: format,
     datasource: datasource,
@@ -693,6 +699,29 @@ function parseNexusRepo(iformat, url) {
   return artifact;
 }
 
+function parseChocolatey(format, url) {
+  console.log("parseChocolatey -  format, url:", format, url);
+  //#package-sidebar > div.col-md-9.col-xl-10 > div.mb-3.d-none.d-md-block > h1 > span.ml-2
+  let elements = url.split("/");
+  console.log(elements.length);
+  let version;
+  let name = elements[4];
+
+  if (elements.length > 5) {
+    version = elements[5];
+  } else {
+    version = $("h1 > span").text().trim();
+  }
+  console.log("version", version);
+  let artifact = {
+    format: format,
+    datasource: dataSources.OSSINDEX,
+    name: name,
+    version: version,
+  };
+  return artifact;
+}
+
 function parseConan(format, url) {
   console.log("parseConan. format, url:", format, url);
   //
@@ -756,7 +785,7 @@ var repoTypes = [
     url: "packagist.org/packages/",
     repoFormat: formats.composer,
     parseFunction: parsePackagist,
-    titleSelector: "",
+    titleSelector: "h2.title",
     versionPath: "{url}/{packagename}#{versionNumber}",
   },
   {
@@ -770,14 +799,14 @@ var repoTypes = [
     url: "cran.r-project.org/",
     repoFormat: formats.cran,
     parseFunction: parseCRAN,
-    titleSelector: "h2.title",
+    titleSelector: "h2",
     versionPath: "",
   },
   {
     url: "https://crates.io/crates/",
     repoFormat: formats.cargo,
     parseFunction: parseCrates,
-    titleSelector: "",
+    titleSelector: "h2.title",
     versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
   },
   {
@@ -799,6 +828,13 @@ var repoTypes = [
     parseFunction: parseConan,
     titleSelector: ".package-name",
     versionPath: "",
+  },
+  {
+    url: "https://chocolatey.org/packages/",
+    repoFormat: formats.chocolatey,
+    parseFunction: parseChocolatey,
+    titleSelector: "h1",
+    versionPath: "{url}/{packagename}/{versionNumber}",
   },
 ];
 

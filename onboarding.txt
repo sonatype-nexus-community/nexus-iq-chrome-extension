@@ -1,6 +1,6 @@
 Steps to add a new format and repo
 1) Add to manifest 
-1.1) permissions urll
+1.1) permissions url
 1.2) content script
 
 -add background.js
@@ -8,26 +8,34 @@ Steps to add a new format and repo
 
 --utils.js
 ---checkPageIsHandled
----ParsePageURL -add case
+---ParsePageURL -add/update case
 ---add parseXXXXURL -> add parseURLXXXX 
 ---add formats.rpm
----add case to NexusFormat
----add method NexusFormatXXX
----add exports
+---if nexusIQ based then
+----add case to NexusFormat
+----add method NexusFormatXXX
+---else if isOSSINDEX
+----do nothing here for now
+---add artifact class ConanArtifact
+---export artifact class
+---add methods to exports
+
 
 --utils.test.js
----add unit tests
+---add to const require at front
+---add unit tests NexusFormatXXXXX
+
 
 --popup.js
 ---add case to renderComponentData
----add to formats object
+---add to formats object (need to remove this duplicate)
 
 --content.js
 ---add parseXXXX
----add format to formats object
+---xxxadd format to formats object
 ---add format to repotypes array
+---set isNexus or isOSSINDEX
 
---add artifact class ConanArtifact
 
 https://rpmfind.net/linux/RPM/epel/7/aarch64/Packages/m/mysql-proxy-0.8.5-2.el7.aarch64.html
 

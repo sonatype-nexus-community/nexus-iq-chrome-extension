@@ -19,17 +19,17 @@
 To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
 The plugin can scan packages at the following repositories:
 
-1. Java - maven - https://search.maven.org/
-2. Java - maven - https://mvnrepository.com/
-3. JS/Node - npm - https://www.npmjs.com/
-4. .Net - nuget - https://www.nuget.org/
-5. Ruby - rubygems - https://rubygems.org/
-6. Python - pypi - https://pypi.org/
-7. php - packagist/composer/ - https://packagist.org/
-8. R - CRAN - https://cran.r-project.org/
-9. Rust - Crates- https://crates.io/
-10. Golang - Go - https://search.gocenter.io/
-11. Github - any language - https://github.com/jquery/jquery/releases/tag/1.11.1
+1. Java - maven - <https://search.maven.org/>
+2. Java - maven - <https://mvnrepository.com/>
+3. JS/Node - npm - <https://www.npmjs.com/>
+4. .Net - nuget - <https://www.nuget.org/>
+5. Ruby - rubygems - <https://rubygems.org/>
+6. Python - pypi - <https://pypi.org/>
+7. php - packagist/composer/ - <https://packagist.org/>
+8. R - CRAN - <https://cran.r-project.org/>
+9. Rust - Crates- <https://crates.io/>
+10. Golang - Go - <https://search.gocenter.io/>
+11. Github - any language - <https://github.com/jquery/jquery/releases/tag/1.11.1>
 12. Nexus Proxy Repos - supported repository formats are maven2, npm, rubygems and nuget e.g. http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
 13. Artifactory Proxy Repos - supported repository formats are maven2 and npm e.g. https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
 14. Artifactory Repo lists - e.g. https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
@@ -162,12 +162,14 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
 
 ## Installation
 
+### Production
+
 1. Install from [Chrome Store]<https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/publish-accepted?authuser=0&hl=en>
 2. Provide Configuration in the Options Screen.
 
 3. Browse to a supported public repo.
 
-## Contributing
+### Developer mode
 
 1. Download the plugin from GitHub
    `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
@@ -231,7 +233,11 @@ If you do not want to use the extension then you can right click on the icon and
 
 ### Version History
 
-No longer documented here. Go to the changelog
+No longer documented here. Go to the [changelog]<CHANGELOG.md>
+
+## Contributing
+
+Please read the [Contributing guide]<contributing.md>
 
 ## The Fine Print
 
@@ -239,9 +245,10 @@ It is worth noting that this is **NOT SUPPORTED** by Sonatype, and is a contribu
 to the open source community (read: you!)
 
 Remember:
-* Use this contribution at the risk tolerance that you have
-* Do NOT file Sonatype support tickets related to `chrome-extension` support in regard to this project
-* DO file issues here on GitHub, so that the community can pitch in
+
+- Use this contribution at the risk tolerance that you have
+- Do NOT file Sonatype support tickets related to `chrome-extension` support in regard to this project
+- DO file issues here on GitHub, so that the community can pitch in
 
 Phew, that was easier than I thought. Last but not least of all:
 

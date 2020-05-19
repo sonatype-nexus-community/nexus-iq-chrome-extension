@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Chrome Extension for IQ Validation",
   "main": "background.js",
   "scripts": {

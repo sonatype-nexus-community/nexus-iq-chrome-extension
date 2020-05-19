@@ -156,7 +156,18 @@
     },
     {
       "name": "Apache-apr Package version - 1.6.3 - ConanCenter - JFrog",
-      "url": "https://conan.io/center/apache-apr/1.6.3/"
+      "url": "https://conan.io/center/apache-apr/1.6.3/",
+      "result": "unknown"
+    },
+    {
+      "name": "Apache-apr Package version - 1.6.3 - ConanCenter - JFrog",
+      "url": "https://conan.io/center/apache-apr/1.6.3/",
+      "result": "unknown"
+    },
+    {
+      "name": "OpenSSL Package version - 1.1.1 - ConanCenter - JFrog",
+      "url": "https://bintray.com/conan-community/conan/OpenSSL%3Aconan",
+      "result": "CVE-2018-16395, CVE-2019-0190"
     }
   ]
 }
