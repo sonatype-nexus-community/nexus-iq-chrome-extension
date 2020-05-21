@@ -35,6 +35,7 @@ const {
   NexusFormatRuby,
   parseArtifactoryURL,
   parseCocoaPodsURL,
+  parseURLChocolatey,
   parseURLConan,
   parseCRANURL,
   parseCratesURL,
@@ -1040,9 +1041,10 @@ test("Check parseRubyURL(rubygems.org) negative test", () => {
 
 test("Check parsePackagistURL(packagist.org/drupal) positive test", () => {
   let expected = {
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
     format: "composer",
-    name: "drupal%2Fdrupal",
+    namespace: "drupal",
+    name: "drupal",
     version: "8.6.2",
   };
   let url = "https://packagist.org/packages/drupal/drupal#8.6.2";
@@ -1052,9 +1054,10 @@ test("Check parsePackagistURL(packagist.org/drupal) positive test", () => {
 
 test("Check parsePackagistURL(packagist.org/phpbb) positive test", () => {
   let expected = {
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
     format: "composer",
-    name: "phpbb%2Fphpbb",
+    namespace: "phpbb",
+    name: "phpbb",
     version: "3.1.2",
   };
   let url = "https://packagist.org/packages/phpbb/phpbb#3.1.2";
@@ -1067,7 +1070,7 @@ test("Check parsePackagistURL(packagist.org) negative test", () => {
     format: "composer",
     name: "drupal",
     version: undefined,
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://packagist.org/packages/drupal/drupal";
@@ -1459,9 +1462,10 @@ test("Check ParsePageURL(rubygems.org) negative test", () => {
 
 test("Check ParsePageURL(packagist.org) positive test", () => {
   let expected = {
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
     format: "composer",
-    name: "drupal%2Fdrupal",
+    namespace: "drupal",
+    name: "drupal",
     version: "8.6.2",
   };
   let url = "https://packagist.org/packages/drupal/drupal#8.6.2";

@@ -3640,6 +3640,7 @@ if (typeof module !== "undefined") {
     NexusFormatRuby: NexusFormatRuby,
     //URL Parsers
     parseArtifactoryURL: parseArtifactoryURL,
+    parseURLChocolatey: parseURLChocolatey,
     parseURLClojars: parseURLClojars,
     parseCRANURL: parseCRANURL,
     parseCratesURL: parseCratesURL,

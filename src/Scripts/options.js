@@ -422,10 +422,11 @@ const grantOriginsPermissions = async (url) => {
 };
 
 const getCookie2 = async (url, cookieName) => {
+  console.log("getCookie2", url, cookieName);
   return new Promise((resolve, reject) => {
     ////
     chrome.cookies.get({ url: url, name: cookieName }, (cookie) => {
-      //console.log("cookie", cookie);
+      console.log("cookie", cookie, url, cookieName);
       resolve(cookie);
     });
     ////
@@ -433,7 +434,7 @@ const getCookie2 = async (url, cookieName) => {
 };
 
 const addPerms = async (url, username, password, appId, appInternalId) => {
-  console.log("addPerms(url)", url);
+  console.log("addPerms(url)", url, username, password, appId, appInternalId);
   if (url.slice(-1) !== "/") {
     url = url.concat("/");
   }
@@ -442,6 +443,7 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
   let destUrl = theURL.href;
   let permsGranted = await grantOriginsPermissions(destUrl);
   if (permsGranted) {
+    //now we attempt to loginw wich creates the cookie
     let cookie = await getCookie2(destUrl, xsrfCookieName);
     if (!cookie || cookie === null) {
       message("Error retrieving cookie. Click login again");
@@ -586,7 +588,7 @@ const load_data = async () => {
       document.getElementById("AllUrls").checked = hasApprovedAllUrls;
       document.getElementById("nexusurl").value = settings.nexusRepoUrl || "";
       let isNexus = settings.hasApprovedNexusRepoUrl;
-      console.log("isNexus", isNexus);
+      console.log("isNexusApproved", isNexus);
       document.getElementById("EnableNexusScan").checked = isNexus || false;
       ///
       document.getElementById("artifactoryurl").value =
