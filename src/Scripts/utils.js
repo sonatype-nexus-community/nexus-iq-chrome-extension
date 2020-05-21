@@ -2608,7 +2608,8 @@ var repoTypes = [
     appendVersionPath: "/v/{versionNumber}",
   },
   {
-    url: "https://nuget.org/packages/",
+    //https://www.nuget.org/packages/LibGit2Sharp/0.20.1
+    url: "https://www.nuget.org/packages/",
     repoFormat: formats.nuget,
     parseFunction: parseNuget,
     titleSelector: ".package-title > h1",
@@ -2657,6 +2658,7 @@ var repoTypes = [
 function findRepoType() {
   let url = location.href;
   for (let i = 0; i < repoTypes.length; i++) {
+    console.log("url", repoTypes[i].url, url);
     if (url.search(repoTypes[i].url) >= 0) {
       return repoTypes[i];
     }
