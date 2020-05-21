@@ -63,3 +63,159 @@
 
     artifact = parseNexusRepo(url);
   }
+
+  /////
+  //deleted from popup
+
+var repoTypes = [
+  //TODO: duplicated from utils because I Couldn't get it too work. Needed for the verion selector in the version popups
+
+  {
+    url: "https://pkgs.alpinelinux.org/package/",
+    repoFormat: formats.alpine,
+    // parseFunction: parseConan,
+    // titleSelector: "th.header",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://anaconda.org/anaconda/",
+    repoFormat: formats.conda,
+    // parseFunction: parseConan,
+    // titleSelector: "",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://clojars.org/",
+    repoFormat: formats.clojars,
+    // parseFunction: parseConan,
+    // titleSelector: "",
+    versionPath: "",
+    appendVersionPath: "/versions/{version}",
+  },
+  {
+    url: "https://cocoapods.org/pods/",
+    repoFormat: formats.cocoapods,
+    // parseFunction: parseCocoaPods,
+    // titleSelector: "h1",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://conan.io/center/",
+    repoFormat: formats.conan,
+    // parseFunction: parseConan,
+    // titleSelector: "",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://cran.r-project.org/",
+    repoFormat: formats.cran,
+    // parseFunction: parseCRAN,
+    titleSelector: "h2.title",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://crates.io/crates/",
+    repoFormat: formats.cargo,
+    // parseFunction: parseCrates,
+    // titleSelector: "",
+    versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
+    appendVersionPath: "/{versionNumber}",
+  },
+  {
+    url: "https://packages.debian.org/",
+    repoFormat: formats.debian,
+    // parseFunction: parseDebian,
+    // titleSelector: "",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://search.gocenter.io/",
+    repoFormat: formats.golang,
+    // parseFunction: parseGoLang,
+    titleSelector: "#app div.v-application--wrap h1",
+    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    appendVersionPath: "/info?version={versionNumber}",
+  },
+  {
+    url: "https://search.maven.org/artifact/",
+    repoFormat: formats.maven,
+    // parseFunction: parseMaven,
+    titleSelector: ".artifact-title",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}/{extension}",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://mvnrepository.com/artifact/",
+    repoFormat: formats.maven,
+    // parseFunction: parseMaven,
+    // titleSelector: "h2.im-title",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://www.npmjs.com/package/",
+    repoFormat: formats.npm,
+    // parseFunction: parseNPM,
+    // titleSelector: ".package-name-redundant",
+    fullVersionPath: "{url}/{packagename}/v/{versionNumber}",
+    appendVersionPath: "/v/{versionNumber}",
+  },
+  {
+    url: "https://nuget.org/packages/",
+    repoFormat: formats.nuget,
+    // parseFunction: parseNuget,
+    // titleSelector: ".package-title > h1",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+    appendVersionPath: "/{versionNumber}",
+  },
+  {
+    url: "https://packagist.org/packages/",
+    repoFormat: formats.composer,
+    // parseFunction: parsePackagist,
+    // titleSelector: "h2.title",
+    versionPath: "{url}/{packagename}#{versionNumber}",
+    appendVersionPath: "#{versionNumber}",
+  },
+  {
+    url: "https://pypi.org/project/",
+    repoFormat: formats.pypi,
+    // parseFunction: parsePyPI,
+    // titleSelector: "h1.package-header__name",
+    versionPath: "{url}/{packagename}/{versionNumber}",
+    appendVersionPath: "{versionNumber}",
+  },
+  {
+    url: "https://rubygems.org/gems/",
+    repoFormat: formats.gem,
+    // parseFunction: parseRuby,
+    // titleSelector: "h1.t-display",
+    versionPath: "{url}/{packagename}/versions/{versionNumber}",
+    appendVersionPath: "/versions/{versionNumber}",
+  },
+
+  {
+    url: "/#browse/browse:",
+    // parseFunction: parseNexusRepo,
+    // titleSelector: "div[id*='-coreui-component-componentinfo-'",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+];
+
+function findRepoType(url) {
+  console.log("findRepoType(url)", url);
+  // let url = location.href;
+  // let repoTypes = [];
+  for (let i = 0; i < repoTypes.length; i++) {
+    if (url.search(repoTypes[i].url) >= 0) {
+      return repoTypes[i];
+    }
+  }
+  return undefined;
+}
