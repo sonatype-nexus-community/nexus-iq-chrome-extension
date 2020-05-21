@@ -12,10 +12,14 @@
     "cookies",
     "background",
     "storage",
+    "https://pkgs.alpinelinux.org/",
+    "https://anaconda.org/anaconda/",
     "https://chocolatey.org/",
+    "https://clojars.org/",
     "https://cocoapods.org/",
     "https://cran.r-project.org/",
     "https://crates.io/",
+    "https://packages.debian.org/",
     "https://github.com/",
     "https://mvnrepository.com/",
     "https://www.npmjs.com/",
@@ -30,16 +34,22 @@
     "https://search.gocenter.io/",
     "https://search.maven.org/",
     "https://repo.spring.io/list/",
-    "https://conan.io/center/"
+    "https://conan.io/center/",
+    "https://tracker.debian.org/pkg/"
   ],
   "content_scripts": [
     {
       "matches": [
+        "https://pkgs.alpinelinux.org/package/*",
+        "https://anaconda.org/anaconda/*",
         "https://chocolatey.org/packages/*",
+        "https://clojars.org/*",
         "https://cocoapods.org/*",
         "https://conan.io/center/*",
         "https://cran.r-project.org/*",
         "https://crates.io/*",
+        "https://packages.debian.org/*",
+        "https://tracker.debian.org/pkg/*",
         "https://github.com/*/releases/tag/*",
         "https://mvnrepository.com/*",
         "https://www.npmjs.com/*",
@@ -60,7 +70,8 @@
         "Scripts/lib/jquery.min.js",
         "Scripts/utils.js",
         "Scripts/content.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": ["images/*"],

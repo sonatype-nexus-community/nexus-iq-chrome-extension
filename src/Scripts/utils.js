@@ -14,20 +14,24 @@ if (typeof chrome !== "undefined") {
 }
 
 var formats = {
+  alpine: "alpine",
+  cargo: "cargo", //cargo == crates == rust
+  chocolatey: "chocolatey",
+  clojars: "clojars",
+  cocoapods: "cocoapods",
+  composer: "composer", //packagist website but composer format, php language
+  conan: "conan",
+  conda: "conda",
+  cran: "cran",
+  debian: "deb",
+  gem: "gem",
+  github: "github",
+  golang: "golang",
   maven: "maven",
   npm: "npm",
   nuget: "nuget",
-  gem: "gem",
   pypi: "pypi",
-  chocolatey: "chocolatey",
-  composer: "composer", //packagist website but composer format, php language
-  cocoapods: "cocoapods",
-  cran: "cran",
-  cargo: "cargo", //cargo == crates == rust
-  golang: "golang",
-  github: "github",
   rpm: "rpm",
-  conan: "conan",
 };
 var masterSettingsList = [
   "url",
@@ -172,6 +176,18 @@ class Artifact {
     return this._format;
   }
 }
+
+class AlpineArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.alpine;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    this.version = version;
+  }
+}
+
 class CocoaPodsArtifact extends Artifact {
   constructor(name, version) {
     let _format = formats.cocoapods;
@@ -191,8 +207,45 @@ class ChocolateyArtifact extends Artifact {
     let _datasource = dataSources.OSSINDEX;
     super(_format, _hash, _datasource);
     this.name = name;
+    this.version = version;
   }
 }
+
+class ClojarsArtifact extends Artifact {
+  constructor(namespace, name, version) {
+    let _format = formats.clojars;
+    let _hash = null;
+    let _datasource = dataSources.OSSINDEX;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    this.namespace = namespace;
+    this.version = version;
+  }
+}
+class ComposerArtifact extends Artifact {
+  constructor(namespace, name, version) {
+    let _format = formats.composer;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    this.namespace = namespace;
+    // this.format = formats.maven;
+    // this.hash = null;
+    // this.datasource = dataSources.NEXUSIQ;
+  }
+}
+class CargoArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.cargo;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    this.version = version;
+  }
+}
+
 class ConanArtifact extends Artifact {
   constructor(name, version) {
     let _format = formats.conan;
@@ -206,17 +259,25 @@ class ConanArtifact extends Artifact {
   }
 }
 
-class ComposerArtifact extends Artifact {
-  constructor(namespace, name, version) {
-    let _format = formats.composer;
+class CondaArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.conan;
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
     this.name = name;
-    this.namespace = namespace;
-    // this.format = formats.maven;
-    // this.hash = null;
-    // this.datasource = dataSources.NEXUSIQ;
+    this.version = version;
+  }
+}
+
+class DebianArtifact extends Artifact {
+  constructor(name, version) {
+    let _format = formats.conan;
+    let _hash = null;
+    let _datasource = dataSources.NEXUSIQ;
+    super(_format, _hash, _datasource);
+    this.name = name;
+    this.version = version;
   }
 }
 class MavenArtifact extends Artifact {
@@ -298,27 +359,32 @@ const checkPageIsHandled = (url) => {
   // let url = tab.url
   let found = false;
   if (
+    url.search("https://pkgs.alpinelinux.org/package/") >= 0 ||
+    url.search("https://anaconda.org/anaconda/") >= 0 ||
     url.search("https://chocolatey.org/packages/") >= 0 ||
-    url.search("https://search.maven.org/artifact/") >= 0 ||
-    url.search("https://mvnrepository.com/artifact/") >= 0 ||
-    url.search("https://repo1.maven.org/maven2/") >= 0 ||
-    url.search("https://repo.maven.apache.org/maven2/") >= 0 ||
-    url.search("https://www.npmjs.com/package/") >= 0 ||
-    url.search("https://www.nuget.org/packages/") >= 0 ||
-    url.search("https://pypi.org/project/") >= 0 ||
-    url.search("https://packagist.org/packages/") >= 0 ||
-    url.search("https://rubygems.org/gems/") >= 0 ||
-    url.search("https://cran.r-project.org/") >= 0 ||
-    url.search("https://crates.io/") >= 0 ||
-    url.search("https://search.gocenter.io/") >= 0 ||
-    (url.search("https://github.com/") >= 0 &&
-      url.search("/releases/tag/") >= 0) || //https://github.com/jquery/jquery/releases/tag/3.0.0
-    url.search("/webapp/#/artifacts/") >= 0 || //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
-    url.search("https://repo.spring.io/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
-    url.search("/#browse/browse:") >= 0 || //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
-    url.search("https://rpmfind.net/linux/RPM/epel/7/") >= 0 ||
+    url.search("https://clojars.org/") >= 0 ||
     url.search("https://cocoapods.org/pods/") >= 0 ||
     url.search("https://conan.io/center/") >= 0 ||
+    url.search("https://cran.r-project.org/") >= 0 ||
+    url.search("https://crates.io/") >= 0 ||
+    url.search("https://packages.debian.org/") >= 0 ||
+    url.search("https://tracker.debian.org/pkg/") >= 0 ||
+    (url.search("https://github.com/") >= 0 &&
+      url.search("/releases/tag/") >= 0) || //https://github.com/jquery/jquery/releases/tag/3.0.0
+    url.search("https://search.gocenter.io/") >= 0 ||
+    url.search("https://repo1.maven.org/maven2/") >= 0 ||
+    url.search("https://repo.maven.apache.org/maven2/") >= 0 ||
+    url.search("https://search.maven.org/artifact/") >= 0 ||
+    url.search("https://mvnrepository.com/artifact/") >= 0 ||
+    url.search("https://www.npmjs.com/package/") >= 0 ||
+    url.search("https://www.nuget.org/packages/") >= 0 ||
+    url.search("https://packagist.org/packages/") >= 0 ||
+    url.search("https://pypi.org/project/") >= 0 ||
+    url.search("https://rpmfind.net/linux/RPM/epel/7/") >= 0 ||
+    url.search("https://rubygems.org/gems/") >= 0 ||
+    url.search("https://repo.spring.io/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
+    url.search("/webapp/#/artifacts/") >= 0 || //Artifactory //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+    url.search("/#browse/browse:") >= 0 || //Nexus http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
     false
   ) {
     found = true;
@@ -339,10 +405,30 @@ const ParsePageURL = (url) => {
     //https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
     format = formats.maven;
     artifact = parseMavenURL(url);
+  } else if (url.search("https://pkgs.alpinelinux.org/package/") >= 0) {
+    //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+    format = formats.alpine;
+    artifact = parseURLAlpine(url);
+  } else if (url.search("https://anaconda.org/anaconda/") >= 0) {
+    //https://anaconda.org/anaconda/
+    format = formats.conda;
+    artifact = parseURLConda(url);
   } else if (url.search("https://chocolatey.org/packages/") >= 0) {
     //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
     format = formats.chocolatey;
     artifact = parseURLChocolatey(url);
+  } else if (url.search("https://packages.debian.org/") >= 0) {
+    //https://packages.debian.org/jessie/libpng++-dev
+    format = formats.debian;
+    artifact = parseURLDebian(url);
+  } else if (url.search("https://clojars.org/") >= 0) {
+    //https://packages.debian.org/jessie/libpng++-dev
+    format = formats.clojars;
+    artifact = parseURLClojars(url);
+  } else if (url.search("https://tracker.debian.org/pkg/") >= 0) {
+    //https://tracker.debian.org/pkg/libpng
+    format = formats.debian;
+    artifact = parseURLDebian(url);
   } else if (url.search("https://mvnrepository.com/artifact/") >= 0) {
     //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
     format = formats.maven;
@@ -537,26 +623,8 @@ const NexusFormat = (artifact) => {
   let format = artifact.format;
   let requestdata;
   switch (format) {
-    case formats.maven:
-      requestdata = NexusFormatMaven(artifact);
-      break;
-    case formats.npm:
-      requestdata = NexusFormatNPM(artifact);
-      break;
-    case formats.nuget:
-      requestdata = NexusFormatNuget(artifact);
-      break;
-    case formats.pypi:
-      requestdata = NexusFormatPyPI(artifact);
-      break;
-    case formats.gem:
-      requestdata = NexusFormatRuby(artifact);
-      break;
-    case formats.golang:
-      requestdata = NexusFormatGolang(artifact);
-      break;
-    case formats.rpm:
-      requestdata = NexusFormatRPM(artifact);
+    case formats.alpine:
+      requestdata = NexusFormatAlpine(artifact);
       break;
     case formats.cocoapods:
       requestdata = NexusFormatCocoaPods(artifact);
@@ -570,15 +638,61 @@ const NexusFormat = (artifact) => {
     case formats.composer:
       requestdata = NexusFormatComposer(artifact);
       break;
+    case formats.conda:
+      requestdata = NexusFormatConda(artifact);
+      break;
     case formats.cran:
       requestdata = NexusFormatCran(artifact);
       break;
+    case formats.debian:
+      requestdata = NexusFormatDebian(artifact);
+      break;
 
+    case formats.gem:
+      requestdata = NexusFormatRuby(artifact);
+      break;
+    case formats.golang:
+      requestdata = NexusFormatGolang(artifact);
+      break;
+    case formats.maven:
+      requestdata = NexusFormatMaven(artifact);
+      break;
+    case formats.npm:
+      requestdata = NexusFormatNPM(artifact);
+      break;
+    case formats.nuget:
+      requestdata = NexusFormatNuget(artifact);
+      break;
+    case formats.pypi:
+      requestdata = NexusFormatPyPI(artifact);
+      break;
+    case formats.rpm:
+      requestdata = NexusFormatRPM(artifact);
+      break;
     default:
       console.log("Unexpected format", format);
       return;
   }
   return requestdata;
+};
+
+const NexusFormatAlpine = (artifact) => {
+  let component;
+  let componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  return componentDict;
 };
 
 const NexusFormatMaven = (artifact) => {
@@ -823,6 +937,25 @@ const NexusFormatComposer = (artifact) => {
   return componentDict;
 };
 
+const NexusFormatConda = (artifact) => {
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.name}`,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  return componentDict;
+};
+
 const NexusFormatCran = (artifact) => {
   let componentDict, component;
   componentDict = {
@@ -842,6 +975,26 @@ const NexusFormatCran = (artifact) => {
   };
   return componentDict;
 };
+
+const NexusFormatDebian = (artifact) => {
+  let componentDict, component;
+  componentDict = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: `${artifact.name}`,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  return componentDict;
+};
+
 const encodeComponentIdentifier = (component) => {
   let actual = encodeURIComponent(
     JSON.stringify(component.componentIdentifier)
@@ -927,6 +1080,60 @@ const parseGitHubURL = (url) => {
   console.log("artifact", artifact);
   return artifact;
 };
+
+const parseCratesURL = (url) => {
+  //server is crates, language is rust
+  //https://crates.io/crates/rand
+
+  // https://crates.io/crates/core-nightly/0.0.0-20141227
+  let format = formats.cargo;
+  let datasource = dataSources.NEXUSIQ;
+  let version, name;
+  let theUrl = new URL(url);
+  let urlElements = theUrl.href.split("/");
+  if (urlElements.length > 5 && urlElements[5] !== "") {
+    version = urlElements[5];
+    name = urlElements[4];
+    let artifact = new CargoArtifact(name, version);
+    return artifact;
+  } else {
+    return;
+  }
+};
+
+const parseURLConda = () => {
+  return false;
+};
+
+const parseURLAlpine = (url) => {
+  return false;
+};
+
+const parseURLDebian = (url) => {
+  return false;
+};
+
+const parseURLClojars = (url) => {
+  //https://clojars.org/k2n/saml20-clj/versions/0.1.7
+  let format = formats.clojars;
+  let urlObject = new URL(url);
+  let pathElements = urlObject.pathname.split("/");
+  if (pathElements.length >= 5) {
+    let nameSpace = pathElements[1];
+    let packageName = pathElements[2];
+    let version = pathElements[4];
+    let datasource = dataSources.OSSINDEX;
+    let artifact = new ClojarsArtifact(
+      nameSpace,
+      packageName,
+      version,
+      datasource
+    );
+    return artifact;
+  }
+  return;
+};
+
 const parseURLChocolatey = (url) => {
   //https://chocolatey.org/packages/python3/3.9.0-a5
   let format = formats.chocolatey;
@@ -937,7 +1144,6 @@ const parseURLChocolatey = (url) => {
   let datasource = dataSources.OSSINDEX;
   let artifact = new ChocolateyArtifact(packageName, version, datasource);
   return artifact;
-  return false;
 };
 const parseMavenURL = (url) => {
   console.log("parseMavenURL:", url);
@@ -2000,12 +2206,11 @@ const addDataOSSIndex = async (artifact) => {
   let version = artifact.version;
   let OSSIndexURL;
   let responseVal; //fix issue #78
-  if (artifact.format == formats.golang) {
+  if (artifact.format == formats.golang || artifact.format == formats.clojars) {
     //Example: pkg:github/etcd-io/etcd@3.3.1
     //https://ossindex.sonatype.org/api/v3/component-report/pkg:github/etcd-io/etcd@3.3.1
     //OSSIndexURL = "https://ossindex.sonatype.org/api/v3/component-report/" + artifact.type + '%3A' + artifact.namespace + '%3A'+ artifact.name + '%40' + artifact.version
     let goFormat = `github/${artifact.namespace}/${artifact.name}@${artifact.version}`;
-
     OSSIndexURL = `https://ossindex.sonatype.org/api/v3/component-report/pkg:${goFormat}`;
   } else {
     // OSSIndexURL= "https://ossindex.sonatype.org/api/v3/component-report/" + format + '%3A'+ name + '%40' + version
@@ -2077,16 +2282,6 @@ const styleCVSS = (severity) => {
       break;
   }
   return className;
-};
-
-const parseCratesURL = (url) => {
-  //server is crates, language is rust
-  //https://crates.io/crates/rand
-  //no version in the URL
-  let format = formats.cargo;
-  let datasource = dataSources.OSSINDEX;
-
-  return false;
 };
 
 const GetActiveTab = async () => {
@@ -2474,12 +2669,16 @@ if (typeof module !== "undefined") {
     artifact: artifact,
     addDataOSSIndex: addDataOSSIndex,
     Artifact: Artifact,
+    AlpineArtifact: AlpineArtifact,
+    ChocolateyArtifact: ChocolateyArtifact,
+    ChocolateyArtifact: ChocolateyArtifact,
+    ConanArtifact: ConanArtifact,
+    CondaArtifact: CondaArtifact,
+    DebianArtifact: DebianArtifact,
     MavenArtifact: MavenArtifact,
     NPMArtifact: NPMArtifact,
     NugetArtifact: NugetArtifact,
     PyPIArtifact: PyPIArtifact,
-    ConanArtifact: ConanArtifact,
-    ChocolateyArtifact: ChocolateyArtifact,
     beginEvaluation: beginEvaluation,
     BuildEmptySettings: BuildEmptySettings,
     BuildSettings: BuildSettings,
@@ -2506,11 +2705,14 @@ if (typeof module !== "undefined") {
     jsDateToEpoch: jsDateToEpoch,
     MavenCoordinates: MavenCoordinates,
     NexusFormat: NexusFormat,
+    NexusFormatAlpine: NexusFormatAlpine,
     NexusFormatCargo: NexusFormatCargo,
     NexusFormatCocoaPods: NexusFormatCocoaPods,
     NexusFormatComposer: NexusFormatComposer,
     NexusFormatConan: NexusFormatConan,
+    NexusFormatConda: NexusFormatConda,
     NexusFormatCran: NexusFormatCran,
+    NexusFormatDebian: NexusFormatDebian,
     NexusFormatMaven: NexusFormatMaven,
     NexusFormatNPM: NexusFormatNPM,
     NexusFormatNuget: NexusFormatNuget,
@@ -2531,6 +2733,7 @@ if (typeof module !== "undefined") {
     ParsePageURL: ParsePageURL,
     parsePyPIURL: parsePyPIURL,
     parseRubyURL: parseRubyURL,
+    parseURLClojars: parseURLClojars,
     parseURLConan: parseURLConan,
     removeCookies: removeCookies,
     SetHash: SetHash,

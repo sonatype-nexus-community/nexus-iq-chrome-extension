@@ -1,6 +1,6 @@
 body {
   width: 548px;
-  height: 355px;
+  height: 375px;
   margin: 2px;
   padding: 0px;
   /* background:url(pic1.jpg); */
@@ -11,7 +11,9 @@ body {
   border-color: #5c74eb;
   border-width: 2px;
 }
-
+div#container {
+  vertical-align: middle;
+}
 #dialog {
   background-color: white;
   font-size: 1.33em;

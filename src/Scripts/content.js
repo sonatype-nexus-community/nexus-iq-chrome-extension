@@ -68,7 +68,10 @@ function processVulnerability(message) {
 
 function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
   console.log("processPage - message:", message);
-
+  $(window).bind("load", function () {
+    // code goes here
+    console.log("Page loaded", $("div > h2"));
+  });
   // var faScript = $(document.createElement('script')).attr('src', 'https://kit.fontawesome.com/a076d05399.js');
   // $(body).append(faScript);
 
@@ -558,27 +561,69 @@ function parseCrates(format, url) {
   //could also be just in the body
   let name = elements[4];
   let version;
-  if (elements.length == 5) {
+  if (elements.length == 5 || elements[6] == "") {
     //has packagename in 5
     //need to parse the HTML
     //
-    let versionHTML = $("div.info h2").text();
-    console.log("versionHTML", versionHTML);
-    version = versionHTML.trim();
+    let found = false;
+    let versionHTMLSelector = "div.info h2";
+    console.log("Trying: " + versionHTMLSelector);
+    let versionHTML = $(versionHTMLSelector);
+    let versionNode;
+    if (versionHTML.length === 0) {
+      console.log("Missed " + versionHTMLSelector);
+    } else {
+      console.log("found " + versionHTMLSelector);
+      console.log("versionHTML", versionHTML);
+      versionNode = versionHTML[0];
+      found = true;
+    }
+    if (!found) {
+      versionHTMLSelector = "div h2";
+      console.log("Trying: " + versionHTMLSelector);
+      versionHTML = $(versionHTMLSelector);
+      if (versionHTML.length === 0) {
+        console.log("Missed div h2");
+      } else {
+        console.log("versionHTML", versionHTML);
+        versionNode = versionHTML[0];
+        found = true;
+      }
+    }
+
+    if (!found) {
+      versionHTMLSelector = "h2";
+      console.log("Trying: " + versionHTMLSelector);
+      versionHTML = $(versionHTMLSelector);
+      if (versionHTML.length === 0) {
+        console.log("Missed h2");
+      } else {
+        console.log("versionHTML", versionHTML);
+        versionNode = versionHTML[0];
+        found = true;
+      }
+    }
+
+    if (found) {
+      version = versionNode.textContent.trim();
+    } else {
+      return;
+    }
   } else if (elements.length == 6) {
     //version is in the Path
     version = elements[5];
   }
-
+  console.log("version", version);
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);
   let datasource = dataSources.NEXUSIQ;
-  return {
+  let artifact = {
     format: format,
     datasource: datasource,
     name: name,
     version: version,
   };
+  return artifact;
 }
 
 function parseNexusRepo(iformat, url) {
@@ -699,6 +744,113 @@ function parseNexusRepo(iformat, url) {
   return artifact;
 }
 
+function parseConda(format, url) {
+  console.log("parseConda -  format, url:", format, url);
+
+  let elements = url.split("/");
+  console.log(elements.length);
+  let version;
+  let name = elements[4];
+
+  version = $("small.subheader").text().trim();
+  version = "v" + version;
+  console.log("version", version);
+  let artifact = {
+    format: format,
+    datasource: dataSources.NEXUSIQ,
+    name: name,
+    version: version,
+  };
+  return artifact;
+}
+
+function parseDebian(format, url) {
+  console.log("parseDebian -  format, url:", format, url);
+
+  let elements = url.split("/");
+  console.log(elements.length);
+  let version;
+  let name = elements[4];
+
+  let versionHtml = $("h1");
+
+  let nameVersion = versionHtml.textContent.trim();
+  version = nameVersion.split("(")[1].replace(")", "");
+  console.log("version", version);
+  let artifact = {
+    format: format,
+    datasource: dataSources.NEXUSIQ,
+    name: name,
+    version: version,
+  };
+  return artifact;
+}
+
+const parseClojars = (format, url) => {
+  console.log("parseClojars -  format, url:", format, url);
+
+  let elements = url.split("/");
+  console.log(elements.length);
+  let version;
+  let namespace = elements[4];
+  let name = elements[5];
+  //[k2n/saml20-clj "0.1.9"] - Clojars
+  let title = document.title;
+  version = title.split(" ")[1].replace(/"/g, "").replace("]", "").trim();
+  console.log("version", version);
+  let artifact = {
+    format: format,
+    datasource: dataSources.OSSINDEX,
+    namespace: namespace,
+    name: name,
+    version: version,
+  };
+  return artifact;
+};
+function parseDebianTracker(format, url) {
+  console.log("parseDebianTracker -  format, url:", format, url);
+
+  let elements = url.split("/");
+  console.log(elements.length);
+  let version;
+  let name = elements[4];
+
+  let versionHtml = $("li.list-group-item")[1];
+
+  let nameVersion = versionHtml.textContent.trim();
+  version = nameVersion.split("version:")[1].trim();
+  console.log("version", version);
+  let artifact = {
+    format: format,
+    datasource: dataSources.NEXUSIQ,
+    name: name,
+    version: version,
+  };
+  return artifact;
+}
+function parseAlpine(format, url) {
+  console.log("parseAlpine -  format, url:", format, url);
+
+  let elements = url.split("/");
+  console.log(elements.length);
+  let version;
+  let name = elements[7];
+  name = name.replace("#", "");
+
+  version = $("#package > tbody > tr:nth-child(2) > td > strong > a")
+    .text()
+    .trim();
+
+  console.log("version", version);
+  let artifact = {
+    format: format,
+    datasource: dataSources.NEXUSIQ,
+    name: name,
+    version: version,
+  };
+  return artifact;
+}
+
 function parseChocolatey(format, url) {
   console.log("parseChocolatey -  format, url:", format, url);
   //#package-sidebar > div.col-md-9.col-xl-10 > div.mb-3.d-none.d-md-block > h1 > span.ml-2
@@ -745,13 +897,15 @@ var repoTypes = [
     parseFunction: parseMaven,
     titleSelector: ".artifact-title",
     versionPath: "{url}/{groupidd}/{artifactid}/{versionNumber}/{extension}",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "https://mvnrepository.com/artifact/",
     repoFormat: formats.maven,
     parseFunction: parseMaven,
     titleSelector: "h2.im-title",
-    versionPath: "{url}/{groupidd}/{artifactid}/{versionNumber}",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "www.npmjs.com/package/",
@@ -759,6 +913,7 @@ var repoTypes = [
     parseFunction: parseNPM,
     titleSelector: ".package-name-redundant",
     versionPath: "{url}/{packagename}/v/{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "nuget.org/packages/",
@@ -766,6 +921,7 @@ var repoTypes = [
     parseFunction: parseNuget,
     titleSelector: ".package-title > h1",
     versionPath: "{url}/{packagename}/{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "pypi.org/project/",
@@ -773,6 +929,7 @@ var repoTypes = [
     parseFunction: parsePyPI,
     titleSelector: "h1.package-header__name",
     versionPath: "{url}/{packagename}/{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "rubygems.org/gems/",
@@ -780,6 +937,7 @@ var repoTypes = [
     parseFunction: parseRuby,
     titleSelector: "h1.t-display",
     versionPath: "{url}/{packagename}/versions/{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "packagist.org/packages/",
@@ -787,6 +945,7 @@ var repoTypes = [
     parseFunction: parsePackagist,
     titleSelector: "h2.title",
     versionPath: "{url}/{packagename}#{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "cocoapods.org/pods/",
@@ -794,6 +953,7 @@ var repoTypes = [
     parseFunction: parseCocoaPods,
     titleSelector: "h1",
     versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "cran.r-project.org/",
@@ -801,13 +961,15 @@ var repoTypes = [
     parseFunction: parseCRAN,
     titleSelector: "h2",
     versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "https://crates.io/crates/",
     repoFormat: formats.cargo,
     parseFunction: parseCrates,
-    titleSelector: "h2.title",
+    titleSelector: "div[class*='heading'] h1",
     versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "https://search.gocenter.io/",
@@ -815,12 +977,14 @@ var repoTypes = [
     parseFunction: parseGoLang,
     titleSelector: "#app div.v-application--wrap h1",
     versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "/#browse/browse:",
     parseFunction: parseNexusRepo,
     titleSelector: "div[id*='-coreui-component-componentinfo-'",
     versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "conan.io/center/",
@@ -828,6 +992,7 @@ var repoTypes = [
     parseFunction: parseConan,
     titleSelector: ".package-name",
     versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
   },
   {
     url: "https://chocolatey.org/packages/",
@@ -835,6 +1000,48 @@ var repoTypes = [
     parseFunction: parseChocolatey,
     titleSelector: "h1",
     versionPath: "{url}/{packagename}/{versionNumber}",
+    dataSource: dataSources.OSSINDEX,
+  },
+  {
+    url: "https://pkgs.alpinelinux.org/package/",
+    repoFormat: formats.alpine,
+    parseFunction: parseAlpine,
+    titleSelector: "th.header ~ td",
+    versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
+  },
+  {
+    url: "https://anaconda.org/anaconda/",
+    repoFormat: formats.conda,
+    parseFunction: parseConda,
+    titleSelector: "span.long-breadcrumb",
+    versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
+  },
+
+  {
+    url: "https://packages.debian.org",
+    repoFormat: formats.debian,
+    parseFunction: parseDebian,
+    titleSelector: "",
+    versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
+  },
+  {
+    url: "https://tracker.debian.org/pkg",
+    repoFormat: formats.debian,
+    parseFunction: parseDebianTracker,
+    titleSelector: "li.list-group-item",
+    versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
+  },
+  {
+    url: "https://clojars.org/",
+    repoFormat: formats.clojars,
+    parseFunction: parseClojars,
+    titleSelector: "#jar-title > h1 > a",
+    versionPath: "",
+    dataSource: dataSources.OSSINDEX,
   },
 ];
 

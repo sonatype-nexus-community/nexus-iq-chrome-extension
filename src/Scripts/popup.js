@@ -180,30 +180,38 @@ const selectTabHandler = async (e, tab, sourceTab) => {
     !hasLoadedHistory &&
     artifact.datasource === dataSources.NEXUSIQ
   ) {
-    $("<p></p>", {
-      text: "Please wait while we load the Version History...",
-      class: "status-message ui-corner-all",
-    })
-      .appendTo(".ui-tabs-nav", "#demo")
-      .fadeOut(5000, function () {
-        $(this).remove();
-      });
-    let remediationPromise;
-    console.log("hasVulns", hasVulns);
-    let allVersionsPromise = GetAllVersions(nexusArtifact, settings);
-    if (hasVulns || true) {
-      remediationPromise = showRemediation(nexusArtifact, settings);
+    if (nexusArtifact.matchState != "unknown") {
+      await loadHistory(sourceTab);
+    } else {
+      $("#tip").html("Component unknown, no-remediation available.");
+      $("#tip").removeClass("invisible");
     }
-    let currentVersion =
-      nexusArtifact.component.componentIdentifier.coordinates.version;
-    let remediation = await remediationPromise;
-    //going to do them in parallel for performance
-    const [allVersions] = await Promise.all([allVersionsPromise]);
-    await renderGraph(allVersions, currentVersion, sourceTab);
-    $("#tip").removeClass("invisible");
-    hasLoadedHistory = true;
   }
   hideLoader();
+};
+const loadHistory = async (sourceTab) => {
+  $("<p></p>", {
+    text: "Please wait while we load the Version History...",
+    class: "status-message ui-corner-all",
+  })
+    .appendTo(".ui-tabs-nav", "#demo")
+    .fadeOut(5000, function () {
+      $(this).remove();
+    });
+  let remediationPromise;
+  console.log("hasVulns", hasVulns);
+  let allVersionsPromise = GetAllVersions(nexusArtifact, settings);
+  if (hasVulns || true) {
+    remediationPromise = showRemediation(nexusArtifact, settings);
+  }
+  let currentVersion =
+    nexusArtifact.component.componentIdentifier.coordinates.version;
+  let remediation = await remediationPromise;
+  //going to do them in parallel for performance
+  const [allVersions] = await Promise.all([allVersionsPromise]);
+  await renderGraph(allVersions, currentVersion, sourceTab);
+  $("#tip").removeClass("invisible");
+  hasLoadedHistory = true;
 };
 
 const createHTML = async (message, settings, sourceUrl) => {
@@ -416,6 +424,15 @@ const renderComponentData = (message, sourceUrl) => {
       $("#package").html(coordinates.name);
       break;
     case formats.chocolatey:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.alpine:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.conda:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.debian:
       $("#package").html(coordinates.name);
       break;
 
@@ -863,22 +880,26 @@ const renderGraph = async (
 ///////////
 
 var formats = {
+  //TODO: duplicated from utils because I Couldn't get it too work.
+  cargo: "cargo",
+  chocolatey: "chocolatey",
+  clojars: "clojars",
+  cocoapods: "cocoapods",
+  composer: "composer", //packagist website but composer format
+  conan: "conan", //cargo == crates == rust
+  conda: "conda",
+  cran: "cran",
+  gem: "gem",
+  github: "github",
+  golang: "golang",
   maven: "maven",
   npm: "npm",
   nuget: "nuget",
-  gem: "gem",
   pypi: "pypi",
-  chocolatey: "chocolatey",
-  composer: "composer", //packagist website but composer format
-  cocoapods: "cocoapods",
-  cran: "cran",
-  cargo: "cargo", //cargo == crates == rust
-  golang: "golang",
-  github: "github",
   rpm: "rpm",
-  conan: "conan",
 };
 var repoTypes = [
+  //TODO: duplicated from utils because I Couldn't get it too work. Needed for the verion selector in the version popups
   {
     url: "search.maven.org/artifact/",
     repoFormat: formats.maven,
@@ -980,6 +1001,39 @@ var repoTypes = [
     // parseFunction: parseConan,
     titleSelector: "",
     versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "pkgs.alpinelinux.org/package/",
+    repoFormat: formats.alpine,
+    // parseFunction: parseConan,
+    titleSelector: "th.header",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://anaconda.org/anaconda/",
+    repoFormat: formats.conda,
+    // parseFunction: parseConan,
+    titleSelector: "",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://packages.debian.org/",
+    repoFormat: formats.debian,
+    // parseFunction: parseConan,
+    titleSelector: "",
+    versionPath: "",
+    appendVersionPath: "",
+  },
+  {
+    url: "https://clojars.org/",
+    repoFormat: formats.clojars,
+    // parseFunction: parseConan,
+    titleSelector: "",
+    versionPath: "",
+    appendVersionPath: "/versions/{version}",
   },
 ];
 
