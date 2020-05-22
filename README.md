@@ -19,22 +19,32 @@
 To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
 The plugin can scan packages at the following repositories:
 
-1. Java - maven - <https://search.maven.org/>
-2. Java - maven - <https://mvnrepository.com/>
-3. JS/Node - npm - <https://www.npmjs.com/>
-4. .Net - nuget - <https://www.nuget.org/>
-5. Ruby - rubygems - <https://rubygems.org/>
-6. Python - pypi - <https://pypi.org/>
-7. php - packagist/composer/ - <https://packagist.org/>
-8. R - CRAN - <https://cran.r-project.org/>
-9. Rust - Crates- <https://crates.io/>
-10. Golang - Go - <https://search.gocenter.io/>
-11. Github - any language - <https://github.com/jquery/jquery/releases/tag/1.11.1>
-12. Nexus Proxy Repos - supported repository formats are maven2, npm, rubygems and nuget e.g. http://nexus:8081/#browse/browse:maven-central:commons-collections%2Fcommons-collections%2F3.2.1
-13. Artifactory Proxy Repos - supported repository formats are maven2 and npm e.g. https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs-cache/parseurl/-/parseurl-1.0.1.tgz
-14. Artifactory Repo lists - e.g. https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
-15. Maven Repo1 - https://repo1.maven.org/maven2/
-16. Maven Repo - https://repo.maven.apache.org/maven2/
+1. .Net – NuGet – `https://www.nuget.org/`
+2. Alpine – Linux – `https://pkgs.alpinelinux.org/`
+3. Chocolatey – Windows – `https://chocolatey.org/`
+4. Clojars – Clojure – `https://clojars.org/`
+5. Cocoa pods – iOS – `https://cocoapods.org/`
+6. Conan – C/C++ – `https://conan.io/center/`
+7. Conda – Python – `https://anaconda.org/anaconda/`
+8. Debian – Linux – `https://packages.debian.org/`
+9. Debian – Linux – `https://tracker.debian.org/pkg/`
+10. GitHub – releases – `https://github.com/*/releases/tag/*`
+11. Golang – Go – `https://search.gocenter.io/`
+12. Java – Maven – `https://mvnrepository.com/`
+13. Java – Maven – `https://repo.maven.apache.org/`
+14. Java – Maven – `https://repo.spring.io/list/`
+15. Java – Maven – `https://repo1.maven.org/`
+16. Java – Maven – `https://search.maven.org/`
+17. JavaScript/Node – npm – `https://www.npmjs.com/`
+18. PHP – Packagist/composer – `https://packagist.org/`
+19. Python – PyPI – `https://pypi.org/`
+20. R – CRAN – `https://cran.r–project.org/`
+21. Ruby – RubyGems – `https://rubygems.org/`
+22. Rust – Crates – `https://crates.io/`
+
+23. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+24. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+25. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Documentation
 
@@ -42,13 +52,20 @@ The plugin can scan packages at the following repositories:
 
 ## Data
 
-The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems, currently 1-6 & 12-13. Systems 7-11 get their data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
+The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems. For some repositories e.g. Chocolatey the extension gets its data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
 
 ## Usage
 
 When you browse to a website that is covered by the tool, such as maven central and click on the plugin, it will open with the Sonatype Lifecycle data relevant to that library.<br/>
+
+### Main icon
+
 <img src="images/PluginRun.gif" alt="Open Plugin" width="300"/>
 <br/>
+
+### Remediation Guidance
+
+![](images/Remediation.gif)
 
 1. The install will create a new icon in your Chrome Browser next to the location box.
    <img src="images/Extensions_Icon_created.png" alt="Extensions Icon Created" width="300"/>
@@ -241,13 +258,12 @@ Please read the [Contributing guide]<contributing.md>
 
 ## The Fine Print
 
-It is worth noting that this is **NOT SUPPORTED** by Sonatype, and is a contribution of ours
+It is worth noting that this is a contribution of ours
 to the open source community (read: you!)
 
 Remember:
 
 - Use this contribution at the risk tolerance that you have
-- Do NOT file Sonatype support tickets related to `chrome-extension` support in regard to this project
 - DO file issues here on GitHub, so that the community can pitch in
 
 Phew, that was easier than I thought. Last but not least of all:
