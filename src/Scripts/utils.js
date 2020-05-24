@@ -3012,8 +3012,8 @@ const evaluatePackage = async (artifact, settings) => {
   let domain = getDomainName(servername);
   console.log("domain", domain);
   // let cookie = await GetCookie(domain, xsrfCookieName);
-  let cookie = await GetCookieFromConfig();
-  // let cookie = await GetSettings2("IQCookie");
+  //let cookie = await GetCookieFromConfig();
+  let cookie = await GetSettings2("IQCookie");
   console.log("cookie", cookie);
   if (typeof cookie === "undefined") {
     console.log("handle missing cookie");

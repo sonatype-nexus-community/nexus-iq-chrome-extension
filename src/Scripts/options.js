@@ -45,8 +45,20 @@ window.onload = async () => {
     }
   };
   document.getElementById("login").onclick = async () => {
-    await loginUser();
+    try {
+      await loginUser();
+    } catch (error) {
+      message(error);
+    }
   };
+
+  document.getElementById("loginTest").onclick = async () => {
+    let url = "http://localhost:8070/rest/user/session";
+    let username = "admin";
+    let password = "admin123";
+    await canLogin(url, username, password);
+  };
+
   document.getElementById("save").onclick = async () => {
     await saveForm();
   };
@@ -443,7 +455,11 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
   let destUrl = theURL.href;
   let permsGranted = await grantOriginsPermissions(destUrl);
   if (permsGranted) {
-    //now we attempt to loginw wich creates the cookie
+    // return permsGranted;
+    //now we attempt to login wich creates the cookie
+
+    let loggedIn = await canLogin(destUrl, username, password);
+    if (!loggedIn) return;
     let cookie = await getCookie2(destUrl, xsrfCookieName);
     if (!cookie || cookie === null) {
       message("Error retrieving cookie. Click login again");
@@ -452,7 +468,7 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
     let saveSetting = await setSettings({ hasApprovedServer: true });
     saveSetting = await setSettings({ IQCookie: cookie });
     saveSetting = await setSettings({ IQCookieSet: Date.now() });
-    let loggedIn = await canLogin(destUrl, username, password);
+
     let addedApp = await addApps(
       destUrl,
       username,
@@ -470,6 +486,64 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
 };
 
 /////
+const zzzzcanLogin = async (url, username, password) => {
+  return new Promise((resolve, reject) => {
+    let tok = `${username}:${password}`;
+    let hash = btoa(tok);
+    let auth = "Basic " + hash;
+    let urlEndPoint = url + "rest/user/session";
+    let options = {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: auth,
+      },
+      redirect: "follow", // manual, *follow, error
+      // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    };
+    fetch(urlEndPoint, options)
+      .then((response) => {
+        console.log(response, response.json);
+        response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        resolve(data);
+      })
+      .catch((error) => {
+        console.log("can login error", error);
+        reject(error);
+      });
+  });
+};
+const zzloginTest = async (url, username, password) => {
+  console.log("url", url);
+  var request = new XMLHttpRequest();
+  request.open("GET", url, true);
+  let tok = `${username}:${password}`;
+  let hash = btoa(tok);
+  let auth = "Basic " + hash;
+  request.setRequestHeader("Authorization", auth);
+
+  request.onload = function () {
+    // Begin accessing JSON data here
+
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response);
+
+    if (request.status >= 200 && request.status < 400) {
+      return data;
+    } else {
+      console.log("error");
+    }
+  };
+
+  // Send request
+  request.send();
+};
 
 const canLogin = async (url, username, password) => {
   return new Promise((resolve, reject) => {
@@ -477,6 +551,7 @@ const canLogin = async (url, username, password) => {
     message("");
     let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
     let urlEndPoint = baseURL + "rest/user/session";
+    console.log("urlEndPoint", urlEndPoint);
     let retval;
     axios
       .get(urlEndPoint, {
@@ -490,12 +565,14 @@ const canLogin = async (url, username, password) => {
         message("Login successful");
         retval = true;
         resolve(retval);
+        return retval;
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
         message(error);
         retval = false;
         resolve(retval);
+        return retval;
       });
   });
 };

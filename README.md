@@ -7,6 +7,7 @@
 ## Table of Contents
 
 - [Purpose](#purpose)
+- [Documentation](#Documentation)
 - [Data](#data)
 - [Usage](#usage)
 - [Examples](#examples)
@@ -23,7 +24,7 @@ The plugin can scan packages at the following repositories:
 2. Alpine – Linux – `https://pkgs.alpinelinux.org/`
 3. Chocolatey – Windows – `https://chocolatey.org/`
 4. Clojars – Clojure – `https://clojars.org/`
-5. Cocoa pods – iOS – `https://cocoapods.org/`
+5. CocoaPods – iOS – `https://cocoapods.org/`
 6. Conan – C/C++ – `https://conan.io/center/`
 7. Conda – Python – `https://anaconda.org/anaconda/`
 8. Debian – Linux – `https://packages.debian.org/`
@@ -41,7 +42,6 @@ The plugin can scan packages at the following repositories:
 20. R – CRAN – `https://cran.r–project.org/`
 21. Ruby – RubyGems – `https://rubygems.org/`
 22. Rust – Crates – `https://crates.io/`
-
 23. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
 24. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
 25. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
@@ -110,6 +110,29 @@ When you browse to a website that is covered by the tool, such as maven central 
 
 The list of pages that are supported are here.
 
+1. Alpine – Linux – https://pkgs.alpinelinux.org/
+2. Chocolatey – Windows – https://chocolatey.org/
+3. Clojars – Clojure – https://clojars.org/
+4. Cocoa pods – iOS – https://cocoapods.org/
+5. Conan – C/C++ – https://conan.io/center/
+6. Conda – Python – https://anaconda.org/anaconda/
+7. Debian – Linux – https://packages.debian.org/
+8. Debian – Linux – https://tracker.debian.org/pkg/
+
+### dotNet - nuget
+
+Pattern - `https://www.nuget.org/packages/<package>/<version>`
+<br/>e.g. <https://www.nuget.org/packages/LibGit2Sharp/0.20.1>
+
+### Github - any language supported by OSSIndex but only supports the releases tag at this stage
+
+<https://github.com/jquery/jquery/releases/tag/1.11.1>
+
+### Golang - Gocenter
+
+`https://search.gocenter.io/`
+<br/>e.g. <https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions>
+
 ### Java - maven
 
 Pattern - `https://search.maven.org/artifact/<group>/<artifact>/<version>/<extension>`
@@ -132,10 +155,10 @@ Pattern - `https://www.npmjs.com/package/<package>`
 <br/>Pattern - `https://www.npmjs.com/package/<package>/v/<version>`
 <br/>e.g. <https://www.npmjs.com/package/lodash/v/4.17.9>
 
-### DotNet - nuget
+### php - packagist/composer/
 
-Pattern - `https://www.nuget.org/packages/<package>/<version>`
-<br/>e.g. <https://www.nuget.org/packages/LibGit2Sharp/0.20.1>
+Pattern - `https://packagist.org/`
+<br/>e.g. <https://packagist.org/packages/drupal/drupal>
 
 ### Ruby - rubygems
 
@@ -149,29 +172,17 @@ Pattern - `https://pypi.org/<package>/`
 <br/>or Pattern - `https://pypi.org/<package>/<version>/`
 <br/>e.g. <https://pypi.org/project/Django/1.6/>
 
-### php - packagist/composer/
-
-Pattern - `https://packagist.org/`
-<br/>e.g. <https://packagist.org/packages/drupal/drupal>
-
 ### R - CRAN
 
 Pattern - `https://cran.r-project.org/`
 <br/>e.g. <https://cran.r-project.org/web/packages/A3/index.html>
 
+21. Ruby – RubyGems – https://rubygems.org/
+
 ### Rust - Crates
 
 Pattern - `https://crates.io/`
 <br/>e.g. <https://crates.io/crates/random>
-
-### Golang - Gocenter
-
-`https://search.gocenter.io/`
-<br/>e.g. <https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions>
-
-### Github - any language supported by OSSIndex but only supports the releases tag at this stage
-
-<https://github.com/jquery/jquery/releases/tag/1.11.1>
 
 ### NexusRepo - npm, maven2 and rubygems
 
