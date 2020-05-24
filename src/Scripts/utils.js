@@ -49,6 +49,7 @@ var masterSettingsList = [
   "artifactoryRepoUrl",
   "IQCookie",
   "IQCookieSet",
+  "IQCookieToken",
   "installedPermissions",
 ];
 
@@ -2674,6 +2675,7 @@ const BuildSettings = (
   appInternalId,
   IQCookie,
   IQCookieSet,
+  IQCookieToken,
   hasApprovedServer,
   hasApprovedContinuousEval,
   hasApprovedAllUrls
@@ -2709,6 +2711,7 @@ const BuildSettings = (
     appInternalId: appInternalId,
     IQCookie: IQCookie,
     IQCookieSet: IQCookieSet,
+    IQCookieToken: IQCookieToken,
     hasApprovedServer: hasApprovedServer,
     hasApprovedContinuousEval: hasApprovedContinuousEval,
     hasApprovedAllUrls: hasApprovedAllUrls,
@@ -2726,6 +2729,7 @@ const BuildSettingsFromGlobal = async () => {
     "appInternalId",
     "IQCookie",
     "IQCookieSet",
+    "IQCookieToken",
     "hasApprovedServer",
     "hasApprovedContinuousEval",
     "hasApprovedAllUrls",
@@ -2739,6 +2743,7 @@ const BuildSettingsFromGlobal = async () => {
     retSettings.appInternalId,
     retSettings.IQCookie,
     retSettings.IQCookieSet,
+    retSettings.IQCookieToken,
     retSettings.hasApprovedServer,
     retSettings.hasApprovedContinuousEval,
     retSettings.hasApprovedAllUrls
@@ -3012,21 +3017,23 @@ const evaluatePackage = async (artifact, settings) => {
   let domain = getDomainName(servername);
   console.log("domain", domain);
   // let cookie = await GetCookie(domain, xsrfCookieName);
-  //let cookie = await GetCookieFromConfig();
-  let cookie = await GetSettings2("IQCookie");
-  console.log("cookie", cookie);
-  if (typeof cookie === "undefined") {
-    console.log("handle missing cookie");
-    valueCSRF = uuidv4();
-    //server is not up most probably
-    //do we throw an error here or exit gracefully
-    // throw new Error(
-    //   `Cookie: ${xsrfCookieName} not available. Server ${servername} is probably down, or you will have to set the csrfProtection setting in Config.yml`
-    // );
-    // return;
-  } else {
-    valueCSRF = cookie.value;
-  }
+  let getSettings = await GetSettings(["IQCookieToken"]);
+  let valueCSRF = getSettings.IQCookieToken;
+  console.log("valueCSRF", valueCSRF);
+  // let cookie = await GetSettings2("IQCookie");
+  // console.log("cookie", cookie);
+  // if (typeof cookie === "undefined") {
+  //   console.log("handle missing cookie");
+  //   valueCSRF = uuidv4();
+  //   //server is not up most probably
+  //   //do we throw an error here or exit gracefully
+  //   // throw new Error(
+  //   //   `Cookie: ${xsrfCookieName} not available. Server ${servername} is probably down, or you will have to set the csrfProtection setting in Config.yml`
+  //   // );
+  //   // return;
+  // } else {
+  //   valueCSRF = cookie.value;
+  // }
   let displayMessage = await callServer(valueCSRF, artifact, settings);
   return displayMessage;
   // } catch (error) {

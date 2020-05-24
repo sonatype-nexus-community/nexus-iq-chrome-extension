@@ -461,13 +461,24 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
     let loggedIn = await canLogin(destUrl, username, password);
     if (!loggedIn) return;
     let cookie = await getCookie2(destUrl, xsrfCookieName);
+    let token, expires;
     if (!cookie || cookie === null) {
-      message("Error retrieving cookie. Click login again");
-      return;
+      //lets create that cookieiD and see how we go
+      token = uuidv4();
+      var oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+      expires = jsDateToEpoch(oneYearFromNow);
+      // message("Error retrieving cookie. Click login again");
+      // return;
+    } else {
+      token = cookie.value;
+      expires = cookie.expires;
     }
-    let saveSetting = await setSettings({ hasApprovedServer: true });
-    saveSetting = await setSettings({ IQCookie: cookie });
+    let saveSetting;
+    saveSetting = await setSettings({ hasApprovedServer: true });
+    saveSetting = await setSettings({ IQCookieToken: token });
     saveSetting = await setSettings({ IQCookieSet: Date.now() });
+    saveSetting = await setSettings({ IQCookieExpires: expires });
 
     let addedApp = await addApps(
       destUrl,
@@ -559,9 +570,12 @@ const canLogin = async (url, username, password) => {
           username: username,
           password: password,
         },
+
+        xsrfCookieName: xsrfCookieName,
+        xsrfHeaderName: xsrfHeaderName,
       })
       .then((data) => {
-        console.log("Logged in");
+        console.log("Logged in", data);
         message("Login successful");
         retval = true;
         resolve(retval);

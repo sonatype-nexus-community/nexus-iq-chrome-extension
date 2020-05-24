@@ -48,7 +48,8 @@ $(async function () {
     if (
       typeof settings === "undefined" ||
       settings.url === null ||
-      !settings.hasApprovedServer
+      !settings.hasApprovedServer ||
+      !settings.IQCookieToken
     ) {
       //we have not logged in
       //show them the login page
