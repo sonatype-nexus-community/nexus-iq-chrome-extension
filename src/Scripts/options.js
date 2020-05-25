@@ -674,7 +674,9 @@ const saveForm = async () => {
   let artifactoryRepoUrl = document.getElementById("artifactoryurl").value;
 
   if (!isValidForm(url, username, password, app)) {
-    message("Entries not valid");
+    message(
+      "Entries not valid. You need to fill in the URL, username, password, application and approve the permissions for the URL."
+    );
     isFormOK = false;
     return isFormOK;
   }
