@@ -45,8 +45,13 @@ window.onload = async () => {
     }
   };
   document.getElementById("login").onclick = async () => {
-    await loginUser();
+    try {
+      await loginUser();
+    } catch (error) {
+      message(error);
+    }
   };
+
   document.getElementById("save").onclick = async () => {
     await saveForm();
   };
@@ -422,10 +427,11 @@ const grantOriginsPermissions = async (url) => {
 };
 
 const getCookie2 = async (url, cookieName) => {
+  console.log("getCookie2", url, cookieName);
   return new Promise((resolve, reject) => {
     ////
     chrome.cookies.get({ url: url, name: cookieName }, (cookie) => {
-      //console.log("cookie", cookie);
+      console.log("cookie", cookie, url, cookieName);
       resolve(cookie);
     });
     ////
@@ -433,7 +439,7 @@ const getCookie2 = async (url, cookieName) => {
 };
 
 const addPerms = async (url, username, password, appId, appInternalId) => {
-  console.log("addPerms(url)", url);
+  console.log("addPerms(url)", url, username, password, appId, appInternalId);
   if (url.slice(-1) !== "/") {
     url = url.concat("/");
   }
@@ -442,15 +448,33 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
   let destUrl = theURL.href;
   let permsGranted = await grantOriginsPermissions(destUrl);
   if (permsGranted) {
-    let cookie = await getCookie2(destUrl, xsrfCookieName);
-    if (!cookie || cookie === null) {
-      message("Error retrieving cookie. Click login again");
-      return;
-    }
-    let saveSetting = await setSettings({ hasApprovedServer: true });
-    saveSetting = await setSettings({ IQCookie: cookie });
-    saveSetting = await setSettings({ IQCookieSet: Date.now() });
+    // return permsGranted;
+    //now we attempt to login wich creates the cookie
+
     let loggedIn = await canLogin(destUrl, username, password);
+    if (!loggedIn) return;
+    let cookie = await getCookie2(destUrl, xsrfCookieName);
+    let token, expires;
+    let saveSetting;
+
+    if (!cookie || cookie === null) {
+      //lets create that cookieiD and see how we go
+      token = uuidv4();
+      var oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+      expires = jsDateToEpoch(oneYearFromNow);
+      // message("Error retrieving cookie. Click login again");
+      // return;
+    } else {
+      token = cookie.value;
+      expires = cookie.expires;
+      saveSetting = await setSettings({ IQCookie: cookie });
+    }
+    saveSetting = await setSettings({ hasApprovedServer: true });
+    saveSetting = await setSettings({ IQCookieToken: token });
+    saveSetting = await setSettings({ IQCookieSet: Date.now() });
+    saveSetting = await setSettings({ IQCookieExpires: expires });
+
     let addedApp = await addApps(
       destUrl,
       username,
@@ -468,34 +492,63 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
 };
 
 /////
-
-const canLogin = async (url, username, password) => {
+const zzzzcanLogin = async (url, username, password) => {
   return new Promise((resolve, reject) => {
-    console.log("canLogin", url, username, password);
-    message("");
-    let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
-    let urlEndPoint = baseURL + "rest/user/session";
-    let retval;
-    axios
-      .get(urlEndPoint, {
-        auth: {
-          username: username,
-          password: password,
-        },
+    let tok = `${username}:${password}`;
+    let hash = btoa(tok);
+    let auth = "Basic " + hash;
+    let urlEndPoint = url + "rest/user/session";
+    let options = {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: auth,
+      },
+      redirect: "follow", // manual, *follow, error
+      // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    };
+    fetch(urlEndPoint, options)
+      .then((response) => {
+        console.log(response, response.json);
+        response.json();
       })
       .then((data) => {
-        console.log("Logged in");
-        message("Login successful");
-        retval = true;
-        resolve(retval);
+        console.log(data);
+        resolve(data);
       })
       .catch((error) => {
-        console.error(error);
-        message(error);
-        retval = false;
-        resolve(retval);
+        console.log("can login error", error);
+        reject(error);
       });
   });
+};
+const zzloginTest = async (url, username, password) => {
+  console.log("url", url);
+  var request = new XMLHttpRequest();
+  request.open("GET", url, true);
+  let tok = `${username}:${password}`;
+  let hash = btoa(tok);
+  let auth = "Basic " + hash;
+  request.setRequestHeader("Authorization", auth);
+
+  request.onload = function () {
+    // Begin accessing JSON data here
+
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response);
+
+    if (request.status >= 200 && request.status < 400) {
+      return data;
+    } else {
+      console.log("error");
+    }
+  };
+
+  // Send request
+  request.send();
 };
 
 const addApps = async (url, username, password, appId, appInternalId) => {
@@ -586,7 +639,7 @@ const load_data = async () => {
       document.getElementById("AllUrls").checked = hasApprovedAllUrls;
       document.getElementById("nexusurl").value = settings.nexusRepoUrl || "";
       let isNexus = settings.hasApprovedNexusRepoUrl;
-      console.log("isNexus", isNexus);
+      console.log("isNexusApproved", isNexus);
       document.getElementById("EnableNexusScan").checked = isNexus || false;
       ///
       document.getElementById("artifactoryurl").value =
@@ -621,7 +674,9 @@ const saveForm = async () => {
   let artifactoryRepoUrl = document.getElementById("artifactoryurl").value;
 
   if (!isValidForm(url, username, password, app)) {
-    message("Entries not valid");
+    message(
+      "Entries not valid. You need to fill in the URL, username, password, application and approve the permissions for the URL."
+    );
     isFormOK = false;
     return isFormOK;
   }

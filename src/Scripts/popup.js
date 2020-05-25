@@ -45,11 +45,20 @@ $(async function () {
     let settings = await BuildSettingsFromGlobal();
     console.log("settings", settings);
     //for new installs we will not have set the hasApprovedServer flag
-    if (
+    let redirect = false;
+    let saveSetting;
+    if (settings && settings.IQCookie && !settings.IQCookieToken) {
+      //need to set IQCookieToken for people who had the cookie
+      //but not the token. This is for ppeople who have the XSRF token setting
+      let token = settings.IQCookie.value;
+      saveSetting = await setSettings({ IQCookieToken: token });
+    }
+    redirect =
       typeof settings === "undefined" ||
       settings.url === null ||
-      !settings.hasApprovedServer
-    ) {
+      !settings.hasApprovedServer;
+
+    if (redirect) {
       //we have not logged in
       //show them the login page
       browser.tabs.create({ url: "html/options.html?connected=false" });
@@ -180,33 +189,38 @@ const selectTabHandler = async (e, tab, sourceTab) => {
     !hasLoadedHistory &&
     artifact.datasource === dataSources.NEXUSIQ
   ) {
-    $("<p></p>", {
-      text: "Please wait while we load the Version History...",
-      class: "status-message ui-corner-all",
-    })
-      .appendTo(".ui-tabs-nav", "#demo")
-      .fadeOut(5000, function () {
-        $(this).remove();
-      });
-    let remediation;
-    console.log("hasVulns", hasVulns);
-    if (hasVulns || true) {
-      remediation = await showRemediation(nexusArtifact, settings);
+    if (nexusArtifact.matchState != "unknown") {
+      await loadHistory(sourceTab);
+    } else {
+      $("#tip").html("Component unknown, no-remediation available.");
+      $("#tip").removeClass("invisible");
     }
-    let allVersions = await GetAllVersions(
-      nexusArtifact,
-      settings,
-      remediation
-    );
-    let currentVersion =
-      nexusArtifact.component.componentIdentifier.coordinates.version;
-
-    await renderGraph(allVersions, remediation, currentVersion, sourceTab);
-    hasLoadedHistory = true;
   }
   hideLoader();
-
+};
+const loadHistory = async (sourceTab) => {
+  $("<p></p>", {
+    text: "Please wait while we load the Version History...",
+    class: "status-message ui-corner-all",
+  })
+    .appendTo(".ui-tabs-nav", "#demo")
+    .fadeOut(5000, function () {
+      $(this).remove();
+    });
+  let remediationPromise;
+  console.log("hasVulns", hasVulns);
+  let allVersionsPromise = GetAllVersions(nexusArtifact, settings);
+  if (hasVulns || true) {
+    remediationPromise = showRemediation(nexusArtifact, settings);
+  }
+  let currentVersion =
+    nexusArtifact.component.componentIdentifier.coordinates.version;
+  let remediation = await remediationPromise;
+  //going to do them in parallel for performance
+  const [allVersions] = await Promise.all([allVersionsPromise]);
+  await renderGraph(allVersions, currentVersion, sourceTab);
   $("#tip").removeClass("invisible");
+  hasLoadedHistory = true;
 };
 
 const createHTML = async (message, settings, sourceUrl) => {
@@ -407,6 +421,27 @@ const renderComponentData = (message, sourceUrl) => {
       $("#package").html(coordinates.name);
       break;
     case formats.conan:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.cargo:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.composer:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.cran:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.chocolatey:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.alpine:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.conda:
+      $("#package").html(coordinates.name);
+      break;
+    case formats.debian:
       $("#package").html(coordinates.name);
       break;
 
@@ -690,9 +725,15 @@ const showRemediation = async (nexusArtifact, settings) => {
   let advice;
   if (newVersion == "") {
     newVersion = "Remediation advice. Not available";
-    advice = `<span id="remediation"><strong> ${newVersion}</strong></span>`;
+    advice = `<span id="remediation"><strong>${newVersion}</strong></span>`;
   } else {
-    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<strong> ${newVersion}</strong></span>`;
+    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<span id="newVersionElement">${newVersion}</span></span>`;
+    // document
+    //   .getElementById("remediation")
+    //   .addEventListener("click", function () {
+    //     console.log(document.getElementById("remediation"));
+    //     console.log("ComponentInformation", Insight.ComponentInformation);
+    //   });
   }
   $("#remediation").html(advice);
   return newVersion;
@@ -810,19 +851,8 @@ const displayMessageDataHTML = async (respMessage, sourceUrl) => {
   hideLoader(hasError);
 };
 
-const renderGraph = async (
-  versionsData,
-  remediation,
-  currentVersion,
-  sourceUrl
-) => {
-  console.log(
-    "renderGraph",
-    versionsData,
-    remediation,
-    currentVersion,
-    sourceUrl
-  );
+const renderGraph = async (versionsData, currentVersion, sourceUrl) => {
+  console.log("renderGraph", versionsData, currentVersion, sourceUrl);
   const versionClickHandler = async (cbdata) => {
     console.log("versionClickHandler", cbdata, currentVersion, sourceUrl);
     let newVersion = cbdata;
@@ -851,136 +881,9 @@ const renderGraph = async (
   });
 };
 
-///////////
-
-var formats = {
-  maven: "maven",
-  npm: "npm",
-  nuget: "nuget",
-  gem: "gem",
-  pypi: "pypi",
-  composer: "composer", //packagist website but composer format
-  cocoapods: "cocoapods",
-  cran: "cran",
-  cargo: "cargo", //cargo == crates == rust
-  golang: "golang",
-  github: "github",
-  rpm: "rpm",
-  conan: "conan",
-};
-var repoTypes = [
-  {
-    url: "search.maven.org/artifact/",
-    repoFormat: formats.maven,
-    // parseFunction: parseMaven,
-    titleSelector: ".artifact-title",
-    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}/{extension}",
-    appendVersionPath: "",
-  },
-  {
-    url: "https://mvnrepository.com/artifact/",
-    repoFormat: formats.maven,
-    // parseFunction: parseMaven,
-    titleSelector: "h2.im-title",
-    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
-    appendVersionPath: "",
-  },
-  {
-    url: "www.npmjs.com/package/",
-    repoFormat: formats.npm,
-    // parseFunction: parseNPM,
-    titleSelector: ".package-name-redundant",
-    fullVersionPath: "{url}/{packagename}/v/{versionNumber}",
-    appendVersionPath: "/v/{versionNumber}",
-  },
-  {
-    url: "nuget.org/packages/",
-    repoFormat: formats.nuget,
-    // parseFunction: parseNuget,
-    titleSelector: ".package-title > h1",
-    versionPath: "{url}/{packagename}/{versionNumber}",
-    appendVersionPath: "/{versionNumber}",
-  },
-  {
-    url: "pypi.org/project/",
-    repoFormat: formats.pypi,
-    // parseFunction: parsePyPI,
-    titleSelector: "h1.package-header__name",
-    versionPath: "{url}/{packagename}/{versionNumber}",
-    appendVersionPath: "{versionNumber}",
-  },
-  {
-    url: "rubygems.org/gems/",
-    repoFormat: formats.gem,
-    // parseFunction: parseRuby,
-    titleSelector: "h1.t-display",
-    versionPath: "{url}/{packagename}/versions/{versionNumber}",
-    appendVersionPath: "/versions/{versionNumber}",
-  },
-  {
-    url: "packagist.org/packages/",
-    repoFormat: formats.composer,
-    // parseFunction: parsePackagist,
-    titleSelector: "",
-    versionPath: "{url}/{packagename}#{versionNumber}",
-    appendVersionPath: "#{versionNumber}",
-  },
-  {
-    url: "cocoapods.org/pods/",
-    repoFormat: formats.cocoapods,
-    // parseFunction: parseCocoaPods,
-    titleSelector: "h1",
-    versionPath: "",
-    appendVersionPath: "",
-  },
-  {
-    url: "cran.r-project.org/",
-    repoFormat: formats.cran,
-    // parseFunction: parseCRAN,
-    titleSelector: "h2.title",
-    versionPath: "",
-    appendVersionPath: "",
-  },
-  {
-    url: "https://crates.io/crates/",
-    repoFormat: formats.cargo,
-    // parseFunction: parseCrates,
-    titleSelector: "",
-    versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
-    appendVersionPath: "/{versionNumber}",
-  },
-  {
-    url: "https://search.gocenter.io/",
-    repoFormat: formats.golang,
-    // parseFunction: parseGoLang,
-    titleSelector: "#app div.v-application--wrap h1",
-    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
-    appendVersionPath: "/info?version={versionNumber}",
-  },
-  {
-    url: "/#browse/browse:",
-    // parseFunction: parseNexusRepo,
-    titleSelector: "div[id*='-coreui-component-componentinfo-'",
-    versionPath: "",
-    appendVersionPath: "",
-  },
-  {
-    url: "conan.io/center/",
-    repoFormat: formats.conan,
-    // parseFunction: parseConan,
-    titleSelector: "",
-    versionPath: "",
-  },
-];
-
-function findRepoType(url) {
-  console.log("findRepoType(url)", url);
-  // let url = location.href;
-  // let repoTypes = [];
-  for (let i = 0; i < repoTypes.length; i++) {
-    if (url.search(repoTypes[i].url) >= 0) {
-      return repoTypes[i];
-    }
-  }
-  return undefined;
-}
+// document.getElementById("newVersionElement").onclick = async () => {
+//   console.log(
+//     "newVersionElement",
+//     document.getElementById("newVersionElement")
+//   );
+// };

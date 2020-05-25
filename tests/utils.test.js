@@ -19,9 +19,15 @@ const {
   MavenArtifact,
   NPMArtifact,
   NugetArtifact,
+  CranArtifact,
+  PyPIArtifact,
+  ChocolateyArtifact,
   NexusFormat,
+  NexusFormatCargo,
   NexusFormatCocoaPods,
   NexusFormatConan,
+  NexusFormatComposer,
+  NexusFormatCran,
   NexusFormatMaven,
   NexusFormatNPM,
   NexusFormatNuget,
@@ -29,6 +35,7 @@ const {
   NexusFormatRuby,
   parseArtifactoryURL,
   parseCocoaPodsURL,
+  parseURLChocolatey,
   parseURLConan,
   parseCRANURL,
   parseCratesURL,
@@ -42,7 +49,6 @@ const {
   parseRubyURL,
   parseNexusRepoURL,
   ParsePageURL,
-  PyPIArtifact,
   validateUrl,
 } = require("../src/Scripts/utils");
 
@@ -252,6 +258,60 @@ test("Check NexusFormatCocoaPods positive test", () => {
   expect(expected).toEqual(actual);
 });
 
+test("Check NexusFormatCargo positive test", () => {
+  let artifact = {
+    format: "cargo",
+    name: "once_cell",
+    version: "1.1.0",
+    hash: null,
+  };
+  let actual = NexusFormatCargo(artifact);
+  let component;
+  let expected = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  expect(expected).toEqual(actual);
+});
+
+test("Check NexusFormatComposer positive test", () => {
+  let artifact = {
+    format: "composer",
+    name: "phpbb",
+    namespace: "phpbb",
+    version: "3.1.2",
+    hash: null,
+  };
+  let actual = NexusFormatComposer(artifact);
+  let component;
+  let expected = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            namespace: artifact.namespace,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  expect(expected).toEqual(actual);
+});
+
 test("Check NexusFormatConan positive test", () => {
   let artifact = {
     format: "conan",
@@ -277,6 +337,32 @@ test("Check NexusFormatConan positive test", () => {
   };
   expect(expected).toEqual(actual);
 });
+test("Check NexusFormatCran positive test", () => {
+  let artifact = {
+    format: "cran",
+    name: "xgboost",
+    version: "1.0.0.2",
+    hash: null,
+  };
+  let actual = NexusFormatCran(artifact);
+  let component;
+  let expected = {
+    components: [
+      (component = {
+        hash: artifact.hash,
+        componentIdentifier: {
+          format: artifact.format,
+          coordinates: {
+            name: artifact.name,
+            version: artifact.version,
+          },
+        },
+      }),
+    ],
+  };
+  expect(expected).toEqual(actual);
+});
+
 test("Check NexusFormat positive test", () => {
   let artifact = {
     format: "maven",
@@ -616,6 +702,24 @@ test("Check pypiArtifact class", () => {
   let expected = new PyPIArtifact(name, version);
   expect(actual).toEqual(expected);
 });
+test("Check parseURLChocolatey positive test", () => {
+  //https://chocolatey.org/packages/python3/3.9.0-a5
+  let format = "chocolatey";
+  let name = "python3";
+  let version = "3.9.0-a5";
+  let datasource = "OSSINDEX";
+
+  let artifact = new ChocolateyArtifact(
+    // format: format,
+    name,
+    version,
+    datasource
+  );
+  let url = "https://chocolatey.org/packages/python3/3.9.0-a5";
+  let actual = parseURLChocolatey(url);
+  let expected = artifact;
+  expect(actual).toEqual(expected);
+});
 
 test("Check parseURLConan positive test", () => {
   let format = "conan";
@@ -937,9 +1041,10 @@ test("Check parseRubyURL(rubygems.org) negative test", () => {
 
 test("Check parsePackagistURL(packagist.org/drupal) positive test", () => {
   let expected = {
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
     format: "composer",
-    name: "drupal%2Fdrupal",
+    namespace: "drupal",
+    name: "drupal",
     version: "8.6.2",
   };
   let url = "https://packagist.org/packages/drupal/drupal#8.6.2";
@@ -949,9 +1054,10 @@ test("Check parsePackagistURL(packagist.org/drupal) positive test", () => {
 
 test("Check parsePackagistURL(packagist.org/phpbb) positive test", () => {
   let expected = {
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
     format: "composer",
-    name: "phpbb%2Fphpbb",
+    namespace: "phpbb",
+    name: "phpbb",
     version: "3.1.2",
   };
   let url = "https://packagist.org/packages/phpbb/phpbb#3.1.2";
@@ -964,7 +1070,7 @@ test("Check parsePackagistURL(packagist.org) negative test", () => {
     format: "composer",
     name: "drupal",
     version: undefined,
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
   };
 
   let url = "https://packagist.org/packages/drupal/drupal";
@@ -1356,9 +1462,10 @@ test("Check ParsePageURL(rubygems.org) negative test", () => {
 
 test("Check ParsePageURL(packagist.org) positive test", () => {
   let expected = {
-    datasource: "OSSINDEX",
+    datasource: "NEXUSIQ",
     format: "composer",
-    name: "drupal%2Fdrupal",
+    namespace: "drupal",
+    name: "drupal",
     version: "8.6.2",
   };
   let url = "https://packagist.org/packages/drupal/drupal#8.6.2";

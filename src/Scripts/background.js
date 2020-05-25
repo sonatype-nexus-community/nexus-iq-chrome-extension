@@ -492,18 +492,100 @@ browser.runtime.onInstalled.addListener(function () {
     browser.declarativeContent.onPageChanged.addRules([
       {
         conditions: [
-          //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+          //https://pkgs.alpinelinux.org/package/edge/main/x86/openssl
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
-              hostEquals: "mvnrepository.com",
+              hostEquals: "pkgs.alpinelinux.org",
               schemes: ["https"],
-              pathContains: "artifact",
+              pathContains: "package",
+            },
+          }),
+          // https://anaconda.org/anaconda/pyjwt
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "anaconda.org",
+              schemes: ["https"],
+              pathContains: "anaconda",
+            },
+          }),
+          //https://chocolatey.org/packages/python3
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "chocolatey.org",
+              schemes: ["https"],
+              pathContains: "packages",
+            },
+          }),
+          //https://clojars.org/
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "clojars.org",
+              schemes: ["https"],
+            },
+          }),
+
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "cocoapods.org",
+              schemes: ["https"],
+              pathContains: "pods",
+            },
+          }),
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "conan.io",
+              schemes: ["https"],
+              pathContains: "center",
+            },
+          }),
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "cran.r-project.org",
+              schemes: ["https"],
+            },
+          }),
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "crates.io",
+              schemes: ["https"],
+              pathContains: "crates",
+            },
+          }),
+
+          //https://packages.debian.org/jessie/libpng++-dev
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "packages.debian.org",
+              schemes: ["https"],
+            },
+          }),
+          // "https://tracker.debian.org/pkg/"
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "tracker.debian.org",
+              schemes: ["https"],
+              pathContains: "pkg",
+            },
+          }),
+          //https://github.com/jquery/jquery/releases/tag/3.0.0
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "github.com",
+              schemes: ["https"],
+              pathContains: "releases/tag",
+            },
+          }),
+          //perhaps add support for https://go-search.org/view?id=github.com%2fetcd-io%2fetcd
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "search.gocenter.io",
+              schemes: ["https"],
+              pathContains: "github.com",
             },
           }),
           new browser.declarativeContent.PageStateMatcher({
             //https://search.maven.org/#artifactdetails%7Corg.apache.struts%7Cstruts2-core%7C2.3.31%7Cjar
             //bug in Chrome extensions dont handle hashes https://bugs.chromium.org/p/chromium/issues/detail?id=84024
-
             pageUrl: {
               hostEquals: "search.maven.org",
               schemes: ["https"],
@@ -512,7 +594,6 @@ browser.runtime.onInstalled.addListener(function () {
           }),
           new browser.declarativeContent.PageStateMatcher({
             //https://repo1.maven.org/maven2/com/github/jedis-lock/jedis-lock/1.0.0/
-
             pageUrl: {
               hostEquals: "repo1.maven.org",
               schemes: ["https"],
@@ -525,6 +606,14 @@ browser.runtime.onInstalled.addListener(function () {
               hostEquals: "repo.maven.apache.org",
               schemes: ["https"],
               pathContains: "maven2",
+            },
+          }),
+          //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "mvnrepository.com",
+              schemes: ["https"],
+              pathContains: "artifact",
             },
           }),
           new browser.declarativeContent.PageStateMatcher({
@@ -541,6 +630,15 @@ browser.runtime.onInstalled.addListener(function () {
               pathContains: "packages",
             },
           }),
+
+          //OSSINDEX
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "packagist.org",
+              schemes: ["https"],
+              pathContains: "packages",
+            },
+          }),
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
               hostEquals: "pypi.org",
@@ -553,50 +651,6 @@ browser.runtime.onInstalled.addListener(function () {
               hostEquals: "rubygems.org",
               schemes: ["https"],
               pathContains: "gems",
-            },
-          }),
-          //OSSINDEX
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "packagist.org",
-              schemes: ["https"],
-              pathContains: "packages",
-            },
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "cocoapods.org",
-              schemes: ["https"],
-              pathContains: "pods",
-            },
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "cran.r-project.org",
-              schemes: ["https"],
-            },
-          }),
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "crates.io",
-              schemes: ["https"],
-              pathContains: "crates",
-            },
-          }),
-          //perhaps add support for https://go-search.org/view?id=github.com%2fetcd-io%2fetcd
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "search.gocenter.io",
-              schemes: ["https"],
-              pathContains: "github.com",
-            },
-          }),
-          //https://github.com/jquery/jquery/releases/tag/3.0.0
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "github.com",
-              schemes: ["https"],
-              pathContains: "releases/tag",
             },
           }),
           //Artifactory could be any URL but has the
@@ -631,14 +685,6 @@ browser.runtime.onInstalled.addListener(function () {
               pathContains: "linux/RPM/epel",
             },
           }),
-
-          new browser.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: "conan.io",
-              schemes: ["https"],
-              pathContains: "center",
-            },
-          }),
         ],
 
         actions: [new browser.declarativeContent.ShowPageAction()],
@@ -650,18 +696,23 @@ browser.runtime.onInstalled.addListener(function () {
 const displayEvaluationResults = async (displayMessageData, tabId) => {
   console.log("displayEvaluationResults", displayMessageData, tabId);
   let responseArtifact = displayMessageData.artifact;
-  let responseData = displayMessageData.message.response;
   let componentDetails, hasVulnerability, vulnerabilities;
-  if (responseArtifact.datasource === dataSources.NEXUSIQ) {
-    componentDetails = responseData.componentDetails[0];
-    hasVulnerability = componentDetails.securityData.securityIssues.length > 0;
-    vulnerabilities = componentDetails.securityData.securityIssues;
-  } else if (responseArtifact.datasource === dataSources.OSSINDEX) {
-    componentDetails = responseData.coordinates;
-    hasVulnerability = responseData.vulnerabilities.length > 0;
-    vulnerabilities = responseData.vulnerabilities;
+  if (displayMessageData.message.error) {
+    hasVulnerability = false;
   } else {
-    //unhandled, so return
+    let responseData = displayMessageData.message.response;
+    if (responseArtifact.datasource === dataSources.NEXUSIQ) {
+      componentDetails = responseData.componentDetails[0];
+      hasVulnerability =
+        componentDetails.securityData.securityIssues.length > 0;
+      vulnerabilities = componentDetails.securityData.securityIssues;
+    } else if (responseArtifact.datasource === dataSources.OSSINDEX) {
+      componentDetails = responseData.coordinates;
+      hasVulnerability = responseData.vulnerabilities.length > 0;
+      vulnerabilities = responseData.vulnerabilities;
+    } else {
+      //unhandled, so return
+    }
   }
   console.log("hasVulnerability", hasVulnerability);
   if (hasVulnerability) {
