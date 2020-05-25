@@ -354,6 +354,41 @@ class PyPIArtifact extends Artifact {
   }
 }
 
+const canLogin = async (url, username, password) => {
+  return new Promise((resolve, reject) => {
+    console.log("canLogin", url, username, password);
+    message("");
+    let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
+    let urlEndPoint = baseURL + "rest/user/session";
+    console.log("urlEndPoint", urlEndPoint);
+    let retval;
+    axios
+      .get(urlEndPoint, {
+        auth: {
+          username: username,
+          password: password,
+        },
+
+        xsrfCookieName: xsrfCookieName,
+        xsrfHeaderName: xsrfHeaderName,
+      })
+      .then((data) => {
+        console.log("Logged in", data);
+        message("Login successful");
+        retval = true;
+        resolve(retval);
+        return retval;
+      })
+      .catch((error) => {
+        console.log(error);
+        message(error);
+        retval = false;
+        resolve(retval);
+        return retval;
+      });
+  });
+};
+
 const checkPageIsHandled = (url) => {
   console.log("checkPageIsHandled", url);
   if (url === null || typeof url === "undefined") return false;
@@ -2582,6 +2617,24 @@ var repoTypes = [
     appendVersionPath: "/info?version={versionNumber}",
   },
   {
+    url: "https://repo1.maven.org/maven2/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: "h1",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
+    appendVersionPath: "",
+  },
+  {
+    url: "https://repo.maven.apache.org/maven2/",
+    repoFormat: formats.maven,
+    parseFunction: parseMaven,
+    titleSelector: "h1",
+    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    dataSource: dataSources.NEXUSIQ,
+    appendVersionPath: "",
+  },
+  {
     url: "https://search.maven.org/artifact/",
     repoFormat: formats.maven,
     parseFunction: parseMaven,
@@ -2603,7 +2656,8 @@ var repoTypes = [
     url: "https://www.npmjs.com/package/",
     repoFormat: formats.npm,
     parseFunction: parseNPM,
-    titleSelector: "#top > div > h2 > span", //".package-name-redundant",
+    // titleSelector: "#top > div > h2 > span", //".package-name-redundant",
+    titleSelector: ".package-name-redundant",
     versionPath: "{url}/{packagename}/v/{versionNumber}",
     dataSource: dataSources.NEXUSIQ,
     appendVersionPath: "/v/{versionNumber}",

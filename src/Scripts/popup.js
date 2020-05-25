@@ -45,12 +45,20 @@ $(async function () {
     let settings = await BuildSettingsFromGlobal();
     console.log("settings", settings);
     //for new installs we will not have set the hasApprovedServer flag
-    if (
+    let redirect = false;
+    let saveSetting;
+    if (settings && settings.IQCookie && !settings.IQCookieToken) {
+      //need to set IQCookieToken for people who had the cookie
+      //but not the token. This is for ppeople who have the XSRF token setting
+      let token = settings.IQCookie.value;
+      saveSetting = await setSettings({ IQCookieToken: token });
+    }
+    redirect =
       typeof settings === "undefined" ||
       settings.url === null ||
-      !settings.hasApprovedServer ||
-      !settings.IQCookieToken
-    ) {
+      !settings.hasApprovedServer;
+
+    if (redirect) {
       //we have not logged in
       //show them the login page
       browser.tabs.create({ url: "html/options.html?connected=false" });
@@ -717,9 +725,15 @@ const showRemediation = async (nexusArtifact, settings) => {
   let advice;
   if (newVersion == "") {
     newVersion = "Remediation advice. Not available";
-    advice = `<span id="remediation"><strong> ${newVersion}</strong></span>`;
+    advice = `<span id="remediation"><strong>${newVersion}</strong></span>`;
   } else {
-    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<strong> ${newVersion}</strong></span>`;
+    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<span id="newVersionElement">${newVersion}</span></span>`;
+    // document
+    //   .getElementById("remediation")
+    //   .addEventListener("click", function () {
+    //     console.log(document.getElementById("remediation"));
+    //     console.log("ComponentInformation", Insight.ComponentInformation);
+    //   });
   }
   $("#remediation").html(advice);
   return newVersion;
@@ -837,19 +851,8 @@ const displayMessageDataHTML = async (respMessage, sourceUrl) => {
   hideLoader(hasError);
 };
 
-const renderGraph = async (
-  versionsData,
-
-  currentVersion,
-  sourceUrl
-) => {
-  console.log(
-    "renderGraph",
-    versionsData,
-
-    currentVersion,
-    sourceUrl
-  );
+const renderGraph = async (versionsData, currentVersion, sourceUrl) => {
+  console.log("renderGraph", versionsData, currentVersion, sourceUrl);
   const versionClickHandler = async (cbdata) => {
     console.log("versionClickHandler", cbdata, currentVersion, sourceUrl);
     let newVersion = cbdata;
@@ -878,4 +881,9 @@ const renderGraph = async (
   });
 };
 
-///////////
+// document.getElementById("newVersionElement").onclick = async () => {
+//   console.log(
+//     "newVersionElement",
+//     document.getElementById("newVersionElement")
+//   );
+// };

@@ -663,3 +663,6 @@ form {
   /* text-align: right; */
   font-size: 14px;
 }
+#newVersionElement {
+  font-weight: bold;
+}

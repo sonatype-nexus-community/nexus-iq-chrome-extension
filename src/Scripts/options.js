@@ -52,13 +52,6 @@ window.onload = async () => {
     }
   };
 
-  document.getElementById("loginTest").onclick = async () => {
-    let url = "http://localhost:8070/rest/user/session";
-    let username = "admin";
-    let password = "admin123";
-    await canLogin(url, username, password);
-  };
-
   document.getElementById("save").onclick = async () => {
     await saveForm();
   };
@@ -462,6 +455,8 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
     if (!loggedIn) return;
     let cookie = await getCookie2(destUrl, xsrfCookieName);
     let token, expires;
+    let saveSetting;
+
     if (!cookie || cookie === null) {
       //lets create that cookieiD and see how we go
       token = uuidv4();
@@ -473,8 +468,8 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
     } else {
       token = cookie.value;
       expires = cookie.expires;
+      saveSetting = await setSettings({ IQCookie: cookie });
     }
-    let saveSetting;
     saveSetting = await setSettings({ hasApprovedServer: true });
     saveSetting = await setSettings({ IQCookieToken: token });
     saveSetting = await setSettings({ IQCookieSet: Date.now() });
@@ -554,41 +549,6 @@ const zzloginTest = async (url, username, password) => {
 
   // Send request
   request.send();
-};
-
-const canLogin = async (url, username, password) => {
-  return new Promise((resolve, reject) => {
-    console.log("canLogin", url, username, password);
-    message("");
-    let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
-    let urlEndPoint = baseURL + "rest/user/session";
-    console.log("urlEndPoint", urlEndPoint);
-    let retval;
-    axios
-      .get(urlEndPoint, {
-        auth: {
-          username: username,
-          password: password,
-        },
-
-        xsrfCookieName: xsrfCookieName,
-        xsrfHeaderName: xsrfHeaderName,
-      })
-      .then((data) => {
-        console.log("Logged in", data);
-        message("Login successful");
-        retval = true;
-        resolve(retval);
-        return retval;
-      })
-      .catch((error) => {
-        console.log(error);
-        message(error);
-        retval = false;
-        resolve(retval);
-        return retval;
-      });
-  });
 };
 
 const addApps = async (url, username, password, appId, appInternalId) => {
