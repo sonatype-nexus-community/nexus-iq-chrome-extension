@@ -49,12 +49,6 @@
       }
     ],
     [
-      "@semantic-release/npm",
-      {
-        "npmPublish": false
-      }
-    ],
-    [
       "@semantic-release/release-notes-generator",
       {
         "preset": "angular",
@@ -73,15 +67,21 @@
       }
     ],
     [
-      "@semantic-release/github",
-      {
-        "assets": "src"
-      }
-    ],
-    [
       "@semantic-release/changelog",
       {
         "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": "src"
       }
     ],
     [
