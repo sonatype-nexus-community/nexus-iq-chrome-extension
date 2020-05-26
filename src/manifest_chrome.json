@@ -1,6 +1,6 @@
 {
   "name": "Sonatype Nexus IQ Evaluation",
-  "description": "Sonatype Nexus IQ Evaluation-community developed",
+  "description": "Sonatype Nexus IQ Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
   "author": "Cameron Townshend - ctownshend@sonatype.com",
   "version": "0.0.1",
   "manifest_version": 2,
@@ -50,7 +50,7 @@
     "128": "images/SON_logo_favicon.png"
   },
   "options_ui": {
-    "page": "html/options.html?ver=1.8.3",
+    "page": "html/options.html?ver=1.9.1",
     "open_in_tab": false
   }
 }
