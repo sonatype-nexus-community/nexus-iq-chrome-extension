@@ -1,3 +1,13 @@
+## [1.9.0](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.9.0...v1.8.2) (2020-05-25)
+
+### Features
+
+- Add Clojurs (#90) (74101f4)
+
+### Bug Fixes
+
+- [#91] Token not working if xsrf Off in config.yml
+
 ## [1.8.2](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.8.2...v1.8.1) (2020-04-30)
 
 ### Bug Fixes
