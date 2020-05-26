@@ -1,7 +1,7 @@
 /*jslint es6  -W024 */
 "use strict";
 
-console.log("content.js?v1.8.3");
+console.log("content.js?v1.9.1");
 // import { formats } as utils from "./utils.js";
 // const { formats } = require("../src/Scripts/utils");
 
