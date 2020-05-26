@@ -43,7 +43,7 @@ The plugin can scan packages at the following repositories:
 21. Ruby – RubyGems – `https://rubygems.org/`
 22. Rust – Crates – `https://crates.io/`
 23. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-24. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://repo.spring.io/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+24. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
 25. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Documentation
@@ -261,21 +261,12 @@ If you do not want to use the extension then you can right click on the icon and
 
 ### Version History
 
-No longer documented here. Go to the [changelog]<CHANGELOG.md>
+Go to the [changelog](CHANGELOG.md)
 
 ## Contributing
 
-Please read the [Contributing guide]<contributing.md>
+Please read the [Contributing guide](contributing.md)
 
 ## The Fine Print
 
-It is worth noting that this is a contribution of ours
-to the open source community (read: you!)
-
-Remember:
-* Use this contribution at the risk tolerance that you have
-* DO file issues here on GitHub, so that the community can pitch in
-
-Phew, that was easier than I thought. Last but not least of all:
-
-Have fun creating and using `chrome-extension`, we are glad to have you here!
+Supported by Sonatype
