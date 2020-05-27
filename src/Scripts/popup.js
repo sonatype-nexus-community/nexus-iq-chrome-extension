@@ -5,6 +5,8 @@ console.log("popup.js");
 const timeout = 3000; //3000milliseconds
 let hasLoadedHistory;
 var browser;
+var allVersions;
+var sourceTab;
 // var messageTypes = messageTypes;
 // var artifact = artifact;
 // var settings = settings;
@@ -74,7 +76,7 @@ $(async function () {
     //this is because we want to turn off the 'tabs' permissions
     //this reduces the functionality of the plugin but improves the security
     //I have an option in the options tab to enable continuous eval
-    let sourceTab = await GetActiveTab();
+    sourceTab = await GetActiveTab();
     sourceUrl = sourceTab.url;
     console.log("tab", sourceTab, sourceUrl);
 
@@ -199,25 +201,37 @@ const selectTabHandler = async (e, tab, sourceTab) => {
   hideLoader();
 };
 const loadHistory = async (sourceTab) => {
-  $("<p></p>", {
-    text: "Please wait while we load the Version History...",
+  $("<div></div>", {
+    text: "Please wait loading version history...",
     class: "status-message ui-corner-all",
   })
     .appendTo(".ui-tabs-nav", "#demo")
     .fadeOut(5000, function () {
       $(this).remove();
     });
+  let getSettings = await GetSettings(["IQCookieToken"]);
+  //valueCSRF is a global varriable//TODO shold be fixed
+  valueCSRF = getSettings.IQCookieToken;
+  console.log("valueCSRF", valueCSRF);
+
   let remediationPromise;
   console.log("hasVulns", hasVulns);
-  let allVersionsPromise = GetAllVersions(nexusArtifact, settings);
-  if (hasVulns || true) {
-    remediationPromise = showRemediation(nexusArtifact, settings);
-  }
   let currentVersion =
     nexusArtifact.component.componentIdentifier.coordinates.version;
+
+  let allVersionsPromise = GetAllVersions(valueCSRF, nexusArtifact, settings);
+  if (hasVulns || true) {
+    remediationPromise = showRemediation(
+      valueCSRF,
+      nexusArtifact,
+      settings,
+      sourceTab,
+      currentVersion
+    );
+  }
   let remediation = await remediationPromise;
   //going to do them in parallel for performance
-  const [allVersions] = await Promise.all([allVersionsPromise]);
+  allVersions = await allVersionsPromise;
   await renderGraph(allVersions, currentVersion, sourceTab);
   $("#tip").removeClass("invisible");
   hasLoadedHistory = true;
@@ -230,15 +244,23 @@ const createHTML = async (message, settings, sourceUrl) => {
   // const thisComponent = componentDetails["0"];
   // console.log('thisComponent')
   // console.log(thisComponent)
-  switch (message.artifact.datasource) {
+  let artifact = message.artifact;
+  switch (artifact.datasource) {
     case dataSources.NEXUSIQ:
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
       // let thisComponent = message.message.response.componentDetails["0"];
       let hasVulns = renderSecurityData(message, settings);
-      renderComponentData(message, sourceUrl);
+      let applications = await GetAllApplications(
+        valueCSRF,
+        nexusArtifact,
+        settings
+      );
+
+      renderComponentData(message, sourceUrl, applications);
       renderLicenseData(message);
       setHasVulns(hasVulns);
+
       //store nexusArtifact in Global variable
       // let remediation
       // if (hasVulns) {
@@ -377,8 +399,13 @@ const renderSecurityDataOSSIndex = (message) => {
   }
 };
 
-const renderComponentData = (message, sourceUrl) => {
-  console.log("renderComponentData-thisComponent:", message, sourceUrl);
+const renderComponentData = (message, sourceUrl, applications) => {
+  console.log(
+    "renderComponentData-thisComponent:",
+    message,
+    sourceUrl,
+    applications
+  );
   let thisComponent = message.message.response.componentDetails["0"];
   let component = thisComponent.component;
   console.log("component:", component);
@@ -461,6 +488,16 @@ const renderComponentData = (message, sourceUrl) => {
   $("#relativepopularity").html(thisComponent.relativePopularity);
   $("#datasource").html(message.artifact.datasource.toLowerCase());
   $("#PackageSource").html(sourceUrl);
+  $("#applications").html(
+    applications.length > 0
+      ? applications
+          .map((item) => {
+            console.log(item.application);
+            return item.application.publicId;
+          })
+          .join(", ")
+      : "-"
+  );
   renderSecuritySummaryIQ(message);
 };
 
@@ -651,7 +688,7 @@ const renderSecurityData = (message) => {
         settings.baseURL
       }assets/index.html#/vulnerabilities/${strVulnerability}">${extractHostname(
         settings.baseURL
-      )}.../${strVulnerability}</a>`;
+      )}.../${strVulnerability} <i class="fas fa-external-link-alt"></i></a>`;
       console.log("strURL", strURL);
       // if (strURL === "null") {
       //   strURL = http://iq-server:8070/assets/index.html#/vulnerabilities/CVE-2017-5638;
@@ -693,16 +730,30 @@ const showCVEDetail = async (cveReference, artifact) => {
   console.log("myResp3", myResp3);
   let htmlDetails = myResp3.cvedetail.data.htmlDetails;
   //"CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H"
-  let CVSS3 = "CVSS:3.0/";
-  let whereCVSS = htmlDetails.search(CVSS3);
+  // CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N
+  let CVSS30 = "CVSS:3.0/";
+  let CVSS31 = "CVSS:3.1/";
+  let whereCVSS_30 = htmlDetails.search(CVSS30);
+  let whereCVSS_31 = htmlDetails.search(CVSS31);
+  let version;
+  if (whereCVSS_30 >= 0) {
+    version = "3.0";
+  } else {
+    version = "3.1";
+  }
+  let whereCVSS = whereCVSS_30 >= 0 ? whereCVSS_30 : whereCVSS_31;
+  console.log("whereCVSS", whereCVSS);
   if (whereCVSS >= 0) {
-    let cvss = htmlDetails.substring(whereCVSS, whereCVSS + 44);
-    console.log("cvss", cvss);
+    let lenCVSS = 44;
+    let originalCVSS = htmlDetails.substring(whereCVSS, whereCVSS + lenCVSS);
+    // let originalCVSS = cvss;
+    // cvss = cvss.replace(CVSS31, CVSS30);
+    console.log("cvss", originalCVSS);
     //https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:L/A:L
-    let cvssExplained = CVSSDetails(cvss);
+    let cvssExplained = CVSSDetails(originalCVSS, version);
 
-    let cvssLink = `<div class="tooltip"><a target="_blank" rel="noreferrer" href="https://www.first.org/cvss/calculator/3.0#${cvss}">${cvss}</a><span class="tooltiptext">${cvssExplained}</span></div>;`;
-    htmlDetails = htmlDetails.replace(cvss, cvssLink);
+    let cvssLink = `<div class="tooltip"><a target="_blank" rel="noreferrer" href="https://www.first.org/cvss/calculator/3.0#${originalCVSS}">${originalCVSS}</a><span class="tooltiptext">${cvssExplained}</span></div>`;
+    htmlDetails = htmlDetails.replace(originalCVSS, cvssLink);
   }
   $("#dialogSecurityDetails").html(htmlDetails);
   $("#dialogSecurityDetails").dialog("option", "show", "slide");
@@ -719,23 +770,43 @@ const showCVEDetail = async (cveReference, artifact) => {
   $("#dialogSecurityDetails").dialog("open");
 };
 
-const showRemediation = async (nexusArtifact, settings) => {
-  console.log("showRemediation", nexusArtifact, settings);
-  let newVersion = await getRemediation(nexusArtifact, settings);
+const showRemediation = async (
+  valueCSRF,
+  nexusArtifact,
+  settings,
+  sourceTab,
+  currentVersion
+) => {
+  console.log(
+    "showRemediation",
+    valueCSRF,
+    nexusArtifact,
+    settings,
+    sourceTab,
+    currentVersion
+  );
+  let newVersion = await getRemediation(valueCSRF, nexusArtifact, settings);
   let advice;
   if (newVersion == "") {
     newVersion = "Remediation advice. Not available";
     advice = `<span id="remediation"><strong>${newVersion}</strong></span>`;
   } else {
-    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<span id="newVersionElement">${newVersion}</span></span>`;
-    // document
-    //   .getElementById("remediation")
-    //   .addEventListener("click", function () {
-    //     console.log(document.getElementById("remediation"));
-    //     console.log("ComponentInformation", Insight.ComponentInformation);
-    //   });
+    advice = `<span id="remediation">Remediation advice Upgrade to the new version:<div id="newVersionElement"><a href="#">Select ${newVersion}</a></div></span>`;
   }
   $("#remediation").html(advice);
+  if (document.getElementById("newVersionElement")) {
+    console.log(
+      "newVersionElement",
+      document.getElementById("newVersionElement")
+    );
+    document
+      .getElementById("newVersionElement")
+      .addEventListener("click", async function (event) {
+        // do something
+        await renderGraph(allVersions, newVersion, sourceTab);
+        UpdateBrowser(newVersion, currentVersion, sourceTab);
+      });
+  }
   return newVersion;
 };
 
@@ -854,21 +925,7 @@ const displayMessageDataHTML = async (respMessage, sourceUrl) => {
 const renderGraph = async (versionsData, currentVersion, sourceUrl) => {
   console.log("renderGraph", versionsData, currentVersion, sourceUrl);
   const versionClickHandler = async (cbdata) => {
-    console.log("versionClickHandler", cbdata, currentVersion, sourceUrl);
-    let newVersion = cbdata;
-    let repoType = findRepoType(sourceUrl);
-    let newURL;
-    if (sourceUrl.indexOf(currentVersion) < 0 && repoType) {
-      newURL =
-        sourceUrl +
-        repoType.appendVersionPath.replace("{versionNumber}", newVersion);
-    } else {
-      newURL = sourceUrl.replace(currentVersion, newVersion);
-    }
-    console.log("newURL", newURL);
-    chrome.tabs.update({
-      url: newURL,
-    });
+    UpdateBrowser(cbdata, currentVersion, sourceUrl);
   };
   Insight.ComponentInformation({
     selectable: true,
@@ -881,9 +938,31 @@ const renderGraph = async (versionsData, currentVersion, sourceUrl) => {
   });
 };
 
+function UpdateBrowser(newVersion, currentVersion, sourceUrl) {
+  console.log("UpdateBrowser", newVersion, currentVersion, sourceUrl);
+
+  let repoType = findRepoType(sourceUrl);
+  let newURL;
+  if (sourceUrl.indexOf(currentVersion) < 0 && repoType) {
+    newURL =
+      sourceUrl +
+      repoType.appendVersionPath.replace("{versionNumber}", newVersion);
+  } else {
+    newURL = sourceUrl.replace(currentVersion, newVersion);
+  }
+  console.log("newURL", newURL);
+  chrome.tabs.update({
+    url: newURL,
+  });
+}
 // document.getElementById("newVersionElement").onclick = async () => {
 //   console.log(
 //     "newVersionElement",
 //     document.getElementById("newVersionElement")
 //   );
+//   let sourceTab;
+//   let newVersionElement = document.getElementById("newVersionElement");
+//   let newVersion = newVersionElement.innertext;
+//   console.log("ComponentInformation", Insight.ComponentInformation, newVersion);
+//   await renderGraph(allVersions, newVersion, sourceTab);
 // };
