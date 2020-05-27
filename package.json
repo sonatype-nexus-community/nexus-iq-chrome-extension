@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Sonatype Nexus IQ Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
   "main": "background.js",
   "scripts": {
