@@ -666,3 +666,7 @@ form {
 #newVersionElement {
   font-weight: bold;
 }
+
+div.status-message {
+  vertical-align: middle;
+}

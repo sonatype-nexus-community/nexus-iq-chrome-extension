@@ -3020,7 +3020,7 @@ const beginEvaluation = async (tab) => {
         //this sends a message to the content tab
         //hopefully it will tell me what it sees
         //this fixes a bug where we did not get the right DOM because we did not know what page we were on
-        // TODO: CPT I Iwant to get rid of this logic
+        // TODO: CPT I Iwant to get rid of this logic, we should be passnig a message not callingthe function directly
         installScripts(tab, message);
         //install scripts will run, and I hope that we receive a message back
         return "installScripts";
@@ -3072,7 +3072,8 @@ const evaluatePackage = async (artifact, settings) => {
   console.log("domain", domain);
   // let cookie = await GetCookie(domain, xsrfCookieName);
   let getSettings = await GetSettings(["IQCookieToken"]);
-  let valueCSRF = getSettings.IQCookieToken;
+  //valueCSRF is a global varriable//TODO shold be fixed
+  valueCSRF = getSettings.IQCookieToken;
   console.log("valueCSRF", valueCSRF);
   // let cookie = await GetSettings2("IQCookie");
   // console.log("cookie", cookie);
@@ -3098,8 +3099,8 @@ const evaluatePackage = async (artifact, settings) => {
   // }
 };
 
-const getRemediation = async (nexusArtifact, settings) => {
-  console.log("getRemediation", nexusArtifact, settings);
+const getRemediation = async (valueCSRF, nexusArtifact, settings) => {
+  console.log("getRemediation", nexusArtifact, settings, valueCSRF);
   let servername = settings.baseURL;
   let url = `${servername}api/v2/components/remediation/application/${settings.appInternalId}`;
   console.log("getRemediation: url", url);
@@ -3126,7 +3127,7 @@ const getRemediation = async (nexusArtifact, settings) => {
   return newVersion;
 };
 
-const GetAllVersions = async (nexusArtifact, settings) => {
+const GetAllVersions = async (valueCSRF, nexusArtifact, settings) => {
   console.log("GetAllVersions", nexusArtifact, settings);
   let retVal;
   let component = nexusArtifact.component;
@@ -3152,6 +3153,42 @@ const GetAllVersions = async (nexusArtifact, settings) => {
   if (typeof response.data.allVersions !== "undefined") {
     // console.log("allversions");
     data = response.data.allVersions;
+  } else {
+    // console.log("data");
+    data = response.data;
+  }
+  console.log("data", data);
+  return data;
+};
+
+const GetAllApplications = async (valueCSRF, nexusArtifact, settings) => {
+  //{{IQServer}}/rest/componentDetails/applications?hash=2d3be19a8c96ef8d5fed&timestamp=1589327086329
+  console.log("GetAllApplications", valueCSRF, nexusArtifact, settings);
+  let retVal;
+  let component = nexusArtifact.component;
+  let comp = encodeURI(JSON.stringify(component.componentIdentifier));
+  // console.log('nexusArtifact', nexusArtifact);
+  console.log("comp", comp);
+  var d = new Date();
+  var timestamp = d.getDate();
+  let hash = component.hash;
+  let matchstate = "exact";
+  let servername = settings.baseURL;
+  let url = `${servername}rest/componentDetails/applications?hash=${hash}&timestamp=${timestamp}`;
+  let response = await axios.get(url, {
+    auth: {
+      username: settings.username,
+      password: settings.password,
+    },
+    headers: {
+      [xsrfHeaderName]: valueCSRF,
+    },
+  });
+  console.log("response", response);
+  let data;
+  if (typeof response.data.application !== "undefined") {
+    // console.log("allversions");
+    data = response.data.application;
   } else {
     // console.log("data");
     data = response.data;
