@@ -219,3 +219,80 @@ function findRepoType(url) {
   }
   return undefined;
 }
+
+//////
+"<style>dt { color: #070707; font-weight: bold; margin-top: 18px; margin-bottom: 4px;}dt:first-of-type { margin-top: 0;}p:first-of-type { margin-top: 0;}.vulnerability-malicious-code-warning { color: #c70000; }</style>
+<div id="hds-sd" class="iq-grid-row">
+  <div class="iq-grid-col iq-grid-col--25">
+    <div class="iq-grid-header">
+      <h2 class="iq-grid-header__title">Vulnerability</h2>
+      <hr class="iq-grid-header__hrule">
+    </div>
+    <dl class="vulnerability">
+<dt>
+Issue
+</dt>
+<dd>
+<a target="_blank" rel="noreferrer" href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2020-11023">CVE-2020-11023</a>
+</dd>
+<dt>
+Severity
+</dt>
+<dd>
+CVE CVSS 3: 6.1 <br> CVE CVSS 2.0: 4.3 <br> Sonatype CVSS 3: 6.1
+</dd>
+<dt>
+Weakness
+</dt>
+<dd>
+CVE CWE: <a target="_blank" rel="noreferrer" href="https://cwe.mitre.org/data/definitions/79.html">79</a>
+</dd>
+<dt>
+Source
+</dt>
+<dd>
+National Vulnerability Database
+</dd>
+<dt>
+Categories
+</dt>
+<dd>
+Data
+</dd>
+    </dl>
+  </div>
+  <div class="iq-grid-col">
+    <div class="iq-grid-header">
+      <h2 class="iq-grid-header__title">Description</h2>
+      <hr class="iq-grid-header__hrule">
+    </div>
+    <dl class="vulnerability-description">
+<dt>
+Description from CVE
+</dt>
+<dd>
+In jQuery versions greater than or equal to 1.0.3 and before 3.5.0, passing HTML containing &lt;option&gt; elements from untrusted sources - even after sanitizing it - to one of jQuery&#x27;s DOM manipulation methods &#x28;i.e. .html&#x28;&#x29;, .append&#x28;&#x29;, and others&#x29; may execute untrusted code. This problem is patched in jQuery 3.5.0.
+</dd>
+<dt>
+Explanation
+</dt>
+<dd>
+<p>This issue has undergone the Sonatype Fast-Track process. For more information, please see the <a href="https://guides.sonatype.com/iqserver/technical-guides/sonatype-vuln-data/#when-is-vulnerability-data-available" target="_blank" rel="noreferrer">Sonatype Knowledge Base Guide</a>.</p>
+
+</dd>
+<dt>
+Advisories
+</dt>
+<dd>
+Project: <a target="_blank" rel="noreferrer" href="https://jquery.com/upgrade-guide/3.5/">https://jquery.com/upgrade-guide/3.5/</a> <br> Third Party: <a target="_blank" rel="noreferrer" href="https://github.com/advisories/GHSA-jpcq-cgw6-v4j6">https://github.com/advisories/GHSA-jpcq-cgw6-v4j6</a>
+</dd>
+<dt>
+CVSS Details
+</dt>
+<dd>
+CVE CVSS 3: 6.1 <br> CVSS Vector: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N
+</dd>
+    </dl>
+  </div>
+</div>
+"

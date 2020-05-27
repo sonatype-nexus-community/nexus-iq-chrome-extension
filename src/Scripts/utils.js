@@ -2656,8 +2656,8 @@ var repoTypes = [
     url: "https://www.npmjs.com/package/",
     repoFormat: formats.npm,
     parseFunction: parseNPM,
-    // titleSelector: "#top > div > h2 > span", //".package-name-redundant",
-    titleSelector: ".package-name-redundant",
+    titleSelector: "#top > div > h2 > span", //".package-name-redundant",
+    // titleSelector: ".package-name-redundant",
     versionPath: "{url}/{packagename}/v/{versionNumber}",
     dataSource: dataSources.NEXUSIQ,
     appendVersionPath: "/v/{versionNumber}",
@@ -3324,15 +3324,16 @@ const GetActiveTab = async () => {
   return promise;
 };
 
-const CVSSDetails = (cvssText) => {
+const CVSSDetails = (cvssText, version = "3.0") => {
   cvssText = cvssText.toUpperCase();
   console.log("CVSSDetails:" + cvssText);
   var url = "https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator";
   //showNotice:CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
   var cvssTextArray;
   var response = "";
-  console.log("here");
+  // console.log("here");
   cvssTextArray = cvssText.split("/");
+  console.log("cvssTextArray", cvssTextArray);
   var CR = "<br>";
   var exploitabilityMetrics = "";
   var attackVector = "";
@@ -3443,14 +3444,20 @@ const CVSSDetails = (cvssText) => {
       availabilityImpact += "High (A:H)" + CR.repeat(1);
     }
   });
-  var score = CVSS.calculateCVSSFromVector(cvssText);
+  let score;
+  if (version === "3.0") {
+    score = CVSS.calculateCVSSFromVector(cvssText);
+  } else {
+    score = CVSS31.calculateCVSSFromVector(cvssText);
+  }
+  console.log("score", score);
   //alert(score.baseMetricScore);
   var baseScore = "";
   if (score.success) {
     baseScore += "<center><b>" + "CVSS Score" + "</b></center>";
     baseScore += "Base Score: " + score.baseMetricScore;
-    baseScore += "= Impact: " + score.impactMetricScore;
-    baseScore += "+ Exploitability: " + score.exploitabilityMetricScore;
+    baseScore += ", Impact: " + score.impactMetricScore;
+    baseScore += ", Exploitability: " + score.exploitabilityMetricScore;
   }
   response =
     cvssText +

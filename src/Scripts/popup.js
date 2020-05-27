@@ -688,7 +688,7 @@ const renderSecurityData = (message) => {
         settings.baseURL
       }assets/index.html#/vulnerabilities/${strVulnerability}">${extractHostname(
         settings.baseURL
-      )}.../${strVulnerability}</a>`;
+      )}.../${strVulnerability} <i class="fas fa-external-link-alt"></i></a>`;
       console.log("strURL", strURL);
       // if (strURL === "null") {
       //   strURL = http://iq-server:8070/assets/index.html#/vulnerabilities/CVE-2017-5638;
@@ -730,16 +730,30 @@ const showCVEDetail = async (cveReference, artifact) => {
   console.log("myResp3", myResp3);
   let htmlDetails = myResp3.cvedetail.data.htmlDetails;
   //"CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H"
-  let CVSS3 = "CVSS:3.0/";
-  let whereCVSS = htmlDetails.search(CVSS3);
+  // CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N
+  let CVSS30 = "CVSS:3.0/";
+  let CVSS31 = "CVSS:3.1/";
+  let whereCVSS_30 = htmlDetails.search(CVSS30);
+  let whereCVSS_31 = htmlDetails.search(CVSS31);
+  let version;
+  if (whereCVSS_30 >= 0) {
+    version = "3.0";
+  } else {
+    version = "3.1";
+  }
+  let whereCVSS = whereCVSS_30 >= 0 ? whereCVSS_30 : whereCVSS_31;
+  console.log("whereCVSS", whereCVSS);
   if (whereCVSS >= 0) {
-    let cvss = htmlDetails.substring(whereCVSS, whereCVSS + 44);
-    console.log("cvss", cvss);
+    let lenCVSS = 44;
+    let originalCVSS = htmlDetails.substring(whereCVSS, whereCVSS + lenCVSS);
+    // let originalCVSS = cvss;
+    // cvss = cvss.replace(CVSS31, CVSS30);
+    console.log("cvss", originalCVSS);
     //https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:H/PR:L/UI:R/S:U/C:L/I:L/A:L
-    let cvssExplained = CVSSDetails(cvss);
+    let cvssExplained = CVSSDetails(originalCVSS, version);
 
-    let cvssLink = `<div class="tooltip"><a target="_blank" rel="noreferrer" href="https://www.first.org/cvss/calculator/3.0#${cvss}">${cvss}</a><span class="tooltiptext">${cvssExplained}</span></div>;`;
-    htmlDetails = htmlDetails.replace(cvss, cvssLink);
+    let cvssLink = `<div class="tooltip"><a target="_blank" rel="noreferrer" href="https://www.first.org/cvss/calculator/3.0#${originalCVSS}">${originalCVSS}</a><span class="tooltiptext">${cvssExplained}</span></div>`;
+    htmlDetails = htmlDetails.replace(originalCVSS, cvssLink);
   }
   $("#dialogSecurityDetails").html(htmlDetails);
   $("#dialogSecurityDetails").dialog("option", "show", "slide");
