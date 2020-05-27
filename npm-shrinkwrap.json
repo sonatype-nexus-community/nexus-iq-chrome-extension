@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -13024,8 +13024,8 @@
       "dev": true
     },
     "yaml": {
-      "version": "1.9.2",
-      "resolved": "http://nexus:8081/repository/npm-group/yaml/-/yaml-1.9.2.tgz",
+      "version": "1.9.3",
+      "resolved": "http://nexus:8081/repository/npm-group/yaml/-/yaml-1.9.3.tgz",
       "integrity": "sha512-HPT7cGGI0DuRcsO51qC1j9O16Dh1mZ2bnXwsi0jrSpsLz0WxOLSLXfkABVl6bZO629py3CU+OMJtpNHDLB97kg==",
       "dev": true,
       "requires": {

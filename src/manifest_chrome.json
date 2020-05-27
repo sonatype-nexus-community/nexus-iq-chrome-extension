@@ -50,7 +50,7 @@
     "128": "images/SON_logo_favicon.png"
   },
   "options_ui": {
-    "page": "html/options.html?ver=1.9.2",
+    "page": "html/options.html?ver=1.9.3",
     "open_in_tab": false
   }
 }
