@@ -192,7 +192,7 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
 
 ### Production
 
-1. Install from [Chrome Store]<https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/publish-accepted?authuser=0&hl=en>
+1. Install from [Chrome Store]<https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/>
 2. Provide Configuration in the Options Screen.
 
 3. Browse to a supported public repo.
