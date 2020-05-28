@@ -662,6 +662,14 @@ browser.runtime.onInstalled.addListener(function () {
               pathContains: "webapp",
             },
           }),
+          //Artifactory could be any URL but has the
+          //ui/repos pattern too
+          //http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcommons-collections%2Fcommons-collections%2F3.2.1%2Fcommons-collections-3.2.1.jar
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              pathContains: "ui/repos",
+            },
+          }),
           //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {

@@ -1142,7 +1142,7 @@ test("Check parseCratesURL(crates.io) negative test", () => {
   expect(actual).toBeFalsy();
 });
 
-test("Check parseArtifactoryURL positive test", () => {
+test("Check parseArtifactoryURL - webapp - positive test", () => {
   let expected = {
     datasource: dataSources.NEXUSIQ,
     format: formats.maven,
@@ -1158,6 +1158,36 @@ test("Check parseArtifactoryURL positive test", () => {
   expect(actual).toEqual(expected);
 });
 
+test("Check parseArtifactoryURL - ui - positive test", () => {
+  let expected = {
+    datasource: dataSources.NEXUSIQ,
+    format: formats.maven,
+    groupId: "commons-collections",
+    artifactId: "commons-collections",
+    version: "3.2.1",
+    classifier: "",
+    extension: "jar",
+  };
+  let url =
+    "http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcommons-collections%2Fcommons-collections%2F3.2.1%2Fcommons-collections-3.2.1.jar";
+  let actual = parseArtifactoryURL(url);
+  expect(actual).toEqual(expected);
+
+  //
+  url =
+    "http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcom%2Ffasterxml%2Fjackson%2Fcore%2Fjackson-databind%2F2.8.9%2Fjackson-databind-2.8.9.jar";
+  expected = {
+    datasource: dataSources.NEXUSIQ,
+    format: formats.maven,
+    groupId: "com.fasterxml.jackson.core",
+    artifactId: "jackson-databind",
+    version: "2.8.9",
+    classifier: "",
+    extension: "jar",
+  };
+  actual = parseArtifactoryURL(url);
+  expect(actual).toEqual(expected);
+});
 test("Check parseGitHubURL positive test", () => {
   let expected = {
     format: formats.github,

@@ -56,7 +56,7 @@
     "128": "images/SON_logo_favicon.png"
   },
   "options_ui": {
-    "page": "html/options.html?ver=1.9.3",
+    "page": "html/options.html?ver=1.9.4",
     "open_in_tab": false
   },
   "browser_specific_settings": {

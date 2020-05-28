@@ -421,6 +421,8 @@ const checkPageIsHandled = (url) => {
     url.search("https://rubygems.org/gems/") >= 0 ||
     url.search("https://repo.spring.io/list/") >= 0 || //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
     url.search("/webapp/#/artifacts/") >= 0 || //Artifactory //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+    url.search("/ui/repos/") >= 0 || //Artifactory //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
+    //ui/repos
     url.search("/#browse/browse:") >= 0 || //Nexus http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
     false //dummy entry so I dont have to miss the last ||
   ) {
@@ -528,8 +530,13 @@ const ParsePageURL = (url) => {
   }
   //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
   //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
-  else if (url.search("webapp/#/artifacts") >= 0 || url.search("/list/") >= 0) {
-    artifact = parseArtifactoryURL(url);
+  //http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcommons-collections%2Fcommons-collections%2F3.2.1%2Fcommons-collections-3.2.1.jar
+  else if (
+    url.search("webapp/#/artifacts") >= 0 ||
+    url.search("/list/") >= 0 ||
+    url.search("/ui/repos") >= 0
+  ) {
+    artifact = parseURLArtifactory(url);
   }
   //nexus Repo
   // http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
@@ -1507,8 +1514,8 @@ const parseNexusRepoURL = (url) => {
   return artifact;
 };
 
-const parseArtifactoryURL = (url) => {
-  console.log("parseArtifactoryURL", url);
+const parseURLArtifactory = (url) => {
+  console.log("parseURLArtifactory", url);
   //java object
   //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/us-remote/antlr/antlr/2.7.1/antlr-2.7.1.jar
   //npm object
@@ -1519,8 +1526,10 @@ const parseArtifactoryURL = (url) => {
   //https://search.maven.org/artifact/org.springframework/spring-core/4.1.7.RELEASE/jar
   //http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/cloudfoundry/cf-maven-plugin/1.1.4.RELEASE/cf-maven-plugin-1.1.4.RELEASE.jar
   //https://repo.spring.io/list/jcenter-cache/org/cloudfoundry/cf-maven-plugin/1.1.3/
-
+  //http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcommons-collections%2Fcommons-collections%2F3.2.1%2Fcommons-collections-3.2.1.jar
   let elements = url.split("/");
+  let lastElement = elements[elements.length - 1];
+  console.log("elements", elements);
   let format = formats.maven;
   let datasource = dataSources.NEXUSIQ;
   let artifact;
@@ -1552,7 +1561,6 @@ const parseArtifactoryURL = (url) => {
       //we are at the base offset
       //now this can be tricky
       //repository will be the 5th element after #
-
       baseIndex = index;
       repoIndex = baseIndex + 5;
       break;
@@ -1562,6 +1570,12 @@ const parseArtifactoryURL = (url) => {
       //we are at the base offset
       baseIndex = index;
       repoIndex = baseIndex + 1;
+      break;
+    }
+    if (element === "ui") {
+      //  http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcommons-collections%2Fcommons-collections%2F3.2.1%2Fcommons-collections-3.2.1.jar
+      baseIndex = index + 1;
+      repoIndex = baseIndex + 2;
       break;
     }
   }
@@ -1587,7 +1601,7 @@ const parseArtifactoryURL = (url) => {
     };
   } else if (format === formats.maven) {
     let lastElementIsFileName = false;
-    if (elements[elements.length - 1].search(/[.][a-z]ar/) > -1) {
+    if (lastElement.search(/[.][a-z]ar/) > -1) {
       //last element is the filename
       //"cf-maven-plugin-1.1.4.RELEASE.jar"
       lastElementIsFileName = true;
@@ -1653,6 +1667,31 @@ const parseArtifactoryURL = (url) => {
       versionIndex = artifactIdIndex + 1;
       version = elements[versionIndex];
       extension = "jar";
+    } else if (lastElement.search("%2F") >= 0) {
+      console.log("search(%2F");
+      //http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcommons-collections%2Fcommons-collections%2F3.2.1%2Fcommons-collections-3.2.1.jar
+      //http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcom%2Ffasterxml%2Fjackson%2Fcore%2Fjackson-databind%2F2.8.9%2Fjackson-databind-2.8.9.jar
+      let componentElements = lastElement.split("%2F");
+      //need to go in reverse order, skipping the last elements
+      let counter = 0;
+      let fileName = componentElements.pop();
+      let extensionElements = fileName.split(".");
+      extension = extensionElements[extensionElements.length - 1];
+      version = componentElements.pop();
+      artifactId = componentElements.pop();
+      groupId = "";
+      //skip first element which is the repo name
+      let groupElsCount = componentElements.length - 1;
+      for (let index = 0; index < groupElsCount; index++) {
+        groupId = componentElements.pop() + "." + groupId;
+      }
+      //remove final .
+      groupId = groupId.substring(0, groupId.length - 1);
+      // groupIdIndex = 1;
+      // groupId = componentElements[groupIdIndex];
+      // artifactIdIndex = groupIdIndex + 1;
+      // artifactId = componentElements[artifactIdIndex];
+      // versionIndex = artifactIdIndex + 1;
     }
 
     groupId = encodeURIComponent(groupId);
@@ -3648,11 +3687,14 @@ const installScripts = async (tab, message) => {
   if (isArtifactory) {
     let theURL = new URL(repoSettings.artifactoryRepoUrl);
     isArtifactory = isArtifactory && url.search(theURL.href) >= 0;
+    isArtifactory =
+      isArtifactory &&
+      (url.search("webapp#artifacts") >= 0 || url.search("/ui/repos/") >= 0);
     //artifactory/webapp/#/artifacts
-    isArtifactory = isArtifactory && url.search("webapp#artifacts") >= 0;
+    console.log("url", url, theURL, url.search(theURL.href), isArtifactory);
   }
   isArtifactory = isArtifactory || url.search("repo.spring.io/list/") >= 0;
-
+  console.log("isArtifactory", isArtifactory);
   if (isNexus || isArtifactory) {
     //    // { file: "Scripts/lib/jquery.min.js" },
     // // { file: "Scripts/lib/require.js" },
@@ -3746,7 +3788,7 @@ if (typeof module !== "undefined") {
     NexusFormatPyPI: NexusFormatPyPI,
     NexusFormatRuby: NexusFormatRuby,
     //URL Parsers
-    parseArtifactoryURL: parseArtifactoryURL,
+    parseArtifactoryURL: parseURLArtifactory,
     parseURLChocolatey: parseURLChocolatey,
     parseURLClojars: parseURLClojars,
     parseCRANURL: parseCRANURL,

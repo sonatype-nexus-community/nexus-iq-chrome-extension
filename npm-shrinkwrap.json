@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-nexus-iq",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -228,8 +228,8 @@
           }
         },
         "color-convert": {
-          "version": "1.9.3",
-          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.3.tgz",
+          "version": "1.9.4",
+          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.4.tgz",
           "integrity": "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==",
           "dev": true,
           "requires": {
@@ -2826,8 +2826,8 @@
           }
         },
         "color-convert": {
-          "version": "1.9.3",
-          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.3.tgz",
+          "version": "1.9.4",
+          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.4.tgz",
           "integrity": "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==",
           "dev": true,
           "requires": {
@@ -5324,8 +5324,8 @@
           }
         },
         "color-convert": {
-          "version": "1.9.3",
-          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.3.tgz",
+          "version": "1.9.4",
+          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.4.tgz",
           "integrity": "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==",
           "dev": true,
           "requires": {
@@ -11519,8 +11519,8 @@
           }
         },
         "color-convert": {
-          "version": "1.9.3",
-          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.3.tgz",
+          "version": "1.9.4",
+          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.4.tgz",
           "integrity": "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==",
           "dev": true,
           "requires": {
@@ -11592,8 +11592,8 @@
           }
         },
         "color-convert": {
-          "version": "1.9.3",
-          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.3.tgz",
+          "version": "1.9.4",
+          "resolved": "http://nexus:8081/repository/npm-group/color-convert/-/color-convert-1.9.4.tgz",
           "integrity": "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==",
           "dev": true,
           "requires": {
@@ -13024,8 +13024,8 @@
       "dev": true
     },
     "yaml": {
-      "version": "1.9.3",
-      "resolved": "http://nexus:8081/repository/npm-group/yaml/-/yaml-1.9.3.tgz",
+      "version": "1.9.4",
+      "resolved": "http://nexus:8081/repository/npm-group/yaml/-/yaml-1.9.4.tgz",
       "integrity": "sha512-HPT7cGGI0DuRcsO51qC1j9O16Dh1mZ2bnXwsi0jrSpsLz0WxOLSLXfkABVl6bZO629py3CU+OMJtpNHDLB97kg==",
       "dev": true,
       "requires": {
