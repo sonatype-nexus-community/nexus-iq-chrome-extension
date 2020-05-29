@@ -819,3 +819,81 @@ const CheckIsOriginalOrigins = async (urlHref) => {
     resolve(found);
   });
 };
+
+document.getElementById("token").onclick = async () => {
+  try {
+    let token = await generateToken();
+    console.log("token", token);
+    //add dom elements
+
+    let tokenDisplay = `<tr><td>userCode</td><td>${token.response.data.userCode}</td></tr><tr><td>passCode</td><td>${token.response.data.passCode}</td></tr>`;
+    // let $newdiv1 = $("#tokendisplay"),
+    //   newdiv2 = document.createElement("div"),
+    //   existingdiv1 = document.getElementById("tokendisplay");
+    // $("body").append($newdiv1, [newdiv2, existingdiv1]);
+   s $("#tokendisplay").append(document.createTextNode(tokenDisplay));
+    document.getElementById("userCode").value = token.response.data.userCode;
+    document.getElementById("passCode").value = token.response.data.passCode;
+  } catch (error) {
+    message(error);
+  }
+};
+
+const generateToken = async () => {
+  //check I am logged in
+  //if so call the API
+  //get the response and popup it up. allow them to copy and paste
+
+  return new Promise(async (resolve, reject) => {
+    let retVal;
+    var url = document.getElementById("url").value;
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    let tok = `${username}:${password}`;
+    let hash = btoa(tok);
+    let auth = "Basic " + hash;
+    let theURL = new URL(url);
+    console.log("auth", auth);
+    let urlEndPoint = `${theURL.href}api/v2/userTokens/currentUser`;
+    console.log("urlEndPoint", urlEndPoint);
+    let responseVal,
+      error = "",
+      valueCSRF = "3d0366c4-e7c5-476b-a777-d9be6c132cac";
+    let response = await axios(urlEndPoint, {
+      method: "post",
+      withCredentials: true,
+      xsrfCookieName: xsrfCookieName,
+      xsrfHeaderName: xsrfHeaderName,
+      auth: {
+        username: username,
+        password: password,
+      },
+      headers: {
+        [xsrfHeaderName]: valueCSRF,
+      },
+    })
+      .then((data) => {
+        console.log("axios then", data);
+        responseVal = data;
+        retVal = { error: error, response: responseVal };
+        resolve(retVal);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        let code, response;
+        if (!error.response) {
+          // network error
+          code = 1;
+          responseVal = `Server unreachable ${url}. ${error.toString()}`;
+        } else {
+          // http status code
+          code = error.response.status;
+          // response data
+          responseVal = error.response.data;
+        }
+        retVal = { error: code, response: responseVal }; // error = error.response;
+        resolve(retVal);
+      });
+  });
+};

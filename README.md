@@ -15,6 +15,15 @@
 - [Contributing](#contributing)
 - [Fine Print](#The-Fine-Print)
 
+## Installation
+
+1. Install from [Chrome Store](https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/publish-accepted?authuser=0&hl=en)
+2. Provide Configuration in the Options Screen.
+   <br/>
+   <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
+
+3. Browse to a supported public repo.
+
 ## Purpose
 
 To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
@@ -188,14 +197,9 @@ Pattern - `https://crates.io/`
 
 e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.0.gem>
 
-## Installation
+## Contributing
 
-### Production
-
-1. Install from [Chrome Store]<https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/publish-accepted?authuser=0&hl=en>
-2. Provide Configuration in the Options Screen.
-
-3. Browse to a supported public repo.
+Please read the [Contributing guide](contributing.md)
 
 ### Developer mode
 
@@ -263,10 +267,6 @@ If you do not want to use the extension then you can right click on the icon and
 
 Go to the [changelog](CHANGELOG.md)
 
-## Contributing
-
-Please read the [Contributing guide](contributing.md)
-
-## The Fine Print
+### The Fine Print
 
 Supported by Sonatype
