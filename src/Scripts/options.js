@@ -831,7 +831,7 @@ document.getElementById("token").onclick = async () => {
     //   newdiv2 = document.createElement("div"),
     //   existingdiv1 = document.getElementById("tokendisplay");
     // $("body").append($newdiv1, [newdiv2, existingdiv1]);
-   s $("#tokendisplay").append(document.createTextNode(tokenDisplay));
+    $("#tokendisplay").append(document.createTextNode(tokenDisplay));
     document.getElementById("userCode").value = token.response.data.userCode;
     document.getElementById("passCode").value = token.response.data.passCode;
   } catch (error) {
