@@ -2,7 +2,25 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+                - fixVersionHistory
+    jobs:
+      - build
+
+
 jobs:
   build:
     docker:
