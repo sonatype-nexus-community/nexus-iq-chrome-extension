@@ -50,7 +50,7 @@ const {
   parseNexusRepoURL,
   ParsePageURL,
   validateUrl,
-} = require("../app/Scripts/Shared/utils");
+} = require("../app/scripts/Shared/utils");
 
 xtest("evaluatePackage does not throw error when server down", async () => {
   let message = false;
