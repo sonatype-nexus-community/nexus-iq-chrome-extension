@@ -59,8 +59,16 @@ jobs:
       # run tests!
       - run:
           name: tests!
-          command: yarn test
+          command: yarn test --ci  --reporters=default --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
+      - store_test_results:
+          path:  path: ./reports/junit/
+      - store_artifacts:
+          path: ./reports/junit
 
       - run:
           name: "semantic-release"
           command: yarn run semantic-release -b master
+
+
