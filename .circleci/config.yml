@@ -30,7 +30,7 @@ jobs:
           name: yarn_install
           command: yarn install --no-lockfile
 
-      - run: yarn build
+      - run: yarn build chrome
 
       - save_cache:
           name: Save Yarn Package Cache
