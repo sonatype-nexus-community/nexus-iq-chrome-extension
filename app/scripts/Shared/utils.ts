@@ -132,10 +132,12 @@ class MavenCoordinates extends Coordinates {
 
 class Artifact {
   private _format: string;
+  private _hash: string;
+  private _datasource: string;
   constructor(format, hash, datasource) {
-    this.format = format;
-    this.hash = hash;
-    this.datasource = datasource;
+    this._format = format;
+    this._hash = hash;
+    this._datasource = datasource;
   }
   //I have a few properties
   //the hash is not always known
@@ -143,22 +145,22 @@ class Artifact {
     return this.format;
   }
   set hash(value) {
-    this.hash = value;
+    this._hash = value;
   }
   get hash() {
-    return this.hash;
+    return this._hash;
   }
   set datasource(value) {
-    this.datasource = value;
+    this._datasource = value;
   }
   get datasource() {
-    return this.datasource;
+    return this._datasource;
   }
   set format(value) {
-    this.format = value;
+    this._format = value;
   }
   get format() {
-    return this.format;
+    return this._format;
   }
 }
 

@@ -1,9 +1,8 @@
 
+// jest.config.js
 module.exports = {
-  roots: ["<rootDir>/app/scripts"],
-  transform: {
-    "^.+\\.tsx?$": "ts-jest"
-  },
-  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"]
+  // [...]
+  // Replace `ts-jest` with the preset you want to use
+  // from the above list
+  preset: 'ts-jest'
 };

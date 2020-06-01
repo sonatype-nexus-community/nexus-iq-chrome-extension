@@ -33,7 +33,7 @@ const {
   NexusFormatNuget,
   NexusFormatPyPI,
   NexusFormatRuby,
-  parseArtifactoryURL,
+  parseURLArtifactory,
   parseCocoaPodsURL,
   parseURLChocolatey,
   parseURLConan,
@@ -50,7 +50,7 @@ const {
   parseNexusRepoURL,
   ParsePageURL,
   validateUrl,
-} = require("../src/Scripts/utils");
+} = require("../app/Scripts/Shared/utils");
 
 xtest("evaluatePackage does not throw error when server down", async () => {
   let message = false;
@@ -484,9 +484,11 @@ test("Check NexusFormatNuget positive test", () => {
 test("Check NexusFormatPyPI positive test", () => {
   let artifact = {
     format: "pypi",
-    packageId: "Django",
+    name: "Django",
     version: "1.6",
     hash: null,
+    qualifier: null,
+    extension: null
   };
   let actual = NexusFormatPyPI(artifact);
   let component;
@@ -515,7 +517,7 @@ test("Check NexusFormatPyPI positive test", () => {
 test("Check NexusFormatRuby positive test", () => {
   let artifact = {
     format: "gem",
-    packageId: "bundler ",
+    name: "bundler ",
     version: "2.0.1",
     hash: null,
   };
@@ -666,7 +668,7 @@ test("Check MavenArtifact display method", () => {
                         <tr>
                             <td class="label">Artifact:</td>
                             <td class="data"><span id="artifact">${artifactId}</span></td>
-                        </tr>                        
+                        </tr>
                         <tr>
                             <td class="label">Version:</td>
                             <td class="data"><span id="version">${version}</span></td>
@@ -1142,7 +1144,7 @@ test("Check parseCratesURL(crates.io) negative test", () => {
   expect(actual).toBeFalsy();
 });
 
-test("Check parseArtifactoryURL - webapp - positive test", () => {
+test("Check parseURLArtifactory - webapp - positive test", () => {
   let expected = {
     datasource: dataSources.NEXUSIQ,
     format: formats.maven,
@@ -1154,11 +1156,11 @@ test("Check parseArtifactoryURL - webapp - positive test", () => {
   };
   let url =
     "http://10.77.1.26:8081/artifactory/webapp/#/artifacts/browse/tree/General/spring-release-cache/org/springframework/spring-core/4.1.7.RELEASE";
-  let actual = parseArtifactoryURL(url);
+  let actual = parseURLArtifactory(url);
   expect(actual).toEqual(expected);
 });
 
-test("Check parseArtifactoryURL - ui - positive test", () => {
+test("Check parseURLArtifactory - ui - positive test", () => {
   let expected = {
     datasource: dataSources.NEXUSIQ,
     format: formats.maven,
@@ -1170,7 +1172,7 @@ test("Check parseArtifactoryURL - ui - positive test", () => {
   };
   let url =
     "http://3.16.36.254:8082/ui/repos/tree/General/maven-central-jfrog-cache%2Fcommons-collections%2Fcommons-collections%2F3.2.1%2Fcommons-collections-3.2.1.jar";
-  let actual = parseArtifactoryURL(url);
+  let actual = parseURLArtifactory(url);
   expect(actual).toEqual(expected);
 
   //
@@ -1185,7 +1187,7 @@ test("Check parseArtifactoryURL - ui - positive test", () => {
     classifier: "",
     extension: "jar",
   };
-  actual = parseArtifactoryURL(url);
+  actual = parseURLArtifactory(url);
   expect(actual).toEqual(expected);
 });
 test("Check parseGitHubURL positive test", () => {
