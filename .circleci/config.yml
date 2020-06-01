@@ -28,7 +28,7 @@ jobs:
 
       - run:
           name: yarn_install
-          command: yarn install --frozen-lockfiles
+          command: yarn lock && yarn freeze && yarn install --frozen-lockfiles
 
       - run: yarn build
 
