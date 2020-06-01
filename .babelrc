@@ -3,5 +3,25 @@
     "test": {
       "plugins": ["@babel/plugin-transform-modules-commonjs"]
     }
-  }
+  },
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": [
+            "last 40 Firefox versions",
+            "last 40 Chrome versions"
+          ]
+        },
+        "useBuiltIns": "usage",
+        "corejs": 3
+      }
+    ],
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread"
+  ]
 }

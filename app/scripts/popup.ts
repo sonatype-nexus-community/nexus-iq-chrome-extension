@@ -1,4 +1,5 @@
 /*jslint es6  -W024 */
+
 "use strict";
 console.log("popup.js");
 // import * as utils from "./js";
@@ -12,7 +13,34 @@ var sourceTab;
 // var settings = settings;
 // var nexusArtifact = nexusArtifact;
 // var dataSources = dataSources;
-
+import {
+  GetSettings,
+  setSettings,
+  findRepoType,
+  settings,
+  nexusArtifact,
+  artifact,
+  getRemediation,
+  CVSSDetails,
+  GetCVEDetails,
+  extractHostname,
+  styleCVSS,
+  SetHash,
+  formats,
+  MavenCoordinates,
+  dataSources,
+  setHasVulns,
+  valueCSRF,
+  GetAllApplications,
+  hasVulns,
+  GetAllVersions,
+  evaluateComponent,
+  setArtifact,
+  BuildSettingsFromGlobal,
+  beginEvaluation,
+  GetActiveTab,
+} from "./Shared/utils";
+import { messageTypes } from "./Shared/MessageTypes";
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
@@ -63,7 +91,7 @@ $(async function () {
     if (redirect) {
       //we have not logged in
       //show them the login page
-      browser.tabs.create({ url: "html/options.html?connected=false" });
+      browser.tabs.create({ url: "pages/options.html?connected=false" });
       let errorMsg =
         "You have not logged in. Please open the options page and login. You will have to approve permissions to access the url. Read the instructions if not clear.";
       throw errorMsg;
@@ -123,8 +151,8 @@ const gotMessage = async (respMessage, sender, sendResponse) => {
         setArtifact(respMessage.artifact);
         let displayMessage = await evaluateComponent(
           artifact,
-          settings,
-          sourceUrl
+          settings
+
         );
         await displayMessageDataHTML(displayMessage, sourceUrl);
         break;
@@ -198,6 +226,7 @@ const selectTabHandler = async (e, tab, sourceTab) => {
       $("#tip").removeClass("invisible");
     }
   }
+  //@ts-ignore
   hideLoader();
 };
 const loadHistory = async (sourceTab) => {
@@ -205,12 +234,14 @@ const loadHistory = async (sourceTab) => {
     text: "Please wait loading version history...",
     class: "status-message ui-corner-all",
   })
+    //@ts-ignore
     .appendTo(".ui-tabs-nav", "#demo")
     .fadeOut(5000, function () {
       $(this).remove();
     });
   let getSettings = await GetSettings(["IQCookieToken"]);
   //valueCSRF is a global varriable//TODO shold be fixed
+  //@ts-ignore
   valueCSRF = getSettings.IQCookieToken;
   console.log("valueCSRF", valueCSRF);
 
@@ -250,7 +281,7 @@ const createHTML = async (message, settings, sourceUrl) => {
       var componentDetails = message.message.response;
       console.log("componentDetails", componentDetails);
       // let thisComponent = message.message.response.componentDetails["0"];
-      let hasVulns = renderSecurityData(message, settings);
+      let hasVulns = renderSecurityData(message);
       let applications = await GetAllApplications(
         valueCSRF,
         nexusArtifact,
@@ -865,12 +896,14 @@ const setupAccordion = () => {
 };
 
 const sortByProperty = (objArray, prop, direction) => {
+  //@ts-ignore
   if (arguments.length < 2)
     throw new Error(
       "ARRAY, AND OBJECT PROPERTY MINIMUM ARGUMENTS, OPTIONAL DIRECTION"
     );
   if (!Array.isArray(objArray)) throw new Error("FIRST ARGUMENT NOT AN ARRAY");
   const clone = objArray.slice(0);
+  //@ts-ignore
   const direct = arguments.length > 2 ? arguments[2] : 1; //Default to ascending
   const propPath = prop.constructor === Array ? prop : prop.split(".");
   clone.sort(function (a, b) {
@@ -906,14 +939,17 @@ const displayMessageDataHTML = async (respMessage, sourceUrl) => {
   } else {
     console.log("coming in here really late.-respMessage", respMessage);
     //need to set the artifact
+    //@ts-ignore
     artifact = respMessage.artifact;
     console.log("after content parsed artifact", artifact);
 
     var componentDetails = respMessage.message.response;
     console.log("componentDetails", componentDetails);
-
+    //@ts-ignore
     console.log("displayMessageDataHTML: dataSources", dataSources);
+    //@ts-ignore
     if (artifact.datasource === dataSources.NEXUSIQ) {
+      //@ts-ignore
       nexusArtifact = componentDetails.componentDetails[0];
       console.log("nexusArtifact", nexusArtifact);
     }
@@ -927,6 +963,7 @@ const renderGraph = async (versionsData, currentVersion, sourceUrl) => {
   const versionClickHandler = async (cbdata) => {
     UpdateBrowser(cbdata, currentVersion, sourceUrl);
   };
+  //@ts-ignore
   Insight.ComponentInformation({
     selectable: true,
     versionClick: versionClickHandler,

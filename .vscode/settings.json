@@ -18,9 +18,10 @@
   "jest.showCoverageOnLoad": false,
   "json.schemas": [
     {
-      "fileMatch": ["../src/manifest.json", "../src/manifest_chrome.json"],
+      "fileMatch": ["**/manifest.json"],
       "url": "http://json.schemastore.org/chrome-manifest"
     }
   ],
-  "css.lint.emptyRules": "ignore"
+  "css.lint.emptyRules": "ignore",
+    "jslint.enabled": false
 }

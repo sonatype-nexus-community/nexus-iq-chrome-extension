@@ -1,5 +1,21 @@
 /*jslint es6  -W024 */
-// import * as utils from "./utils.js";
+import {
+  xsrfCookieName,
+  xsrfHeaderName,
+  GetSettings,
+  validateUrl,
+  setSettings,
+  jsDateToEpoch,
+  uuidv4,
+  canLogin,
+  masterSettingsList,
+} from "./Shared/utils";
+
+import axios from "axios";
+import * as $ from "jquery";
+import "jquery-ui/ui/widgets/tooltip";
+import * as url from "url";
+
 
 $(function () {
   $(document).tooltip();
@@ -57,6 +73,7 @@ window.onload = async () => {
   };
 
   document.getElementById("ContinuousEval").onclick = async () => {
+    //@ts-ignore
     let isChecked = document.getElementById("ContinuousEval").checked;
     console.log("isChecked", isChecked);
     if (isChecked) {
@@ -66,6 +83,7 @@ window.onload = async () => {
     }
   };
   document.getElementById("AllUrls").onclick = async () => {
+    //@ts-ignore
     let isChecked = document.getElementById("AllUrls").checked;
     console.log("AllUrls", isChecked);
     if (isChecked) {
@@ -77,9 +95,12 @@ window.onload = async () => {
   //
   document.getElementById("nexusurl").oninput = async () => {
     message("Remember to set the Enable Nexus Switch");
+    //@ts-ignore
     document.getElementById("EnableNexusScan").checked = false;
   };
+  //@ts-ignore
   document.getElementById("EnableNexusScan").onclick = async () => {
+    //@ts-ignore
     let repoManager = repositoryManagers.nexus;
     let elRepoEnable = "EnableNexusScan";
     let elRepoAddress = "nexusurl";
@@ -150,9 +171,11 @@ const SetNexusUrl = async (isChecked, url) => {
 
 document.getElementById("artifactoryurl").oninput = async () => {
   message("Remember to set the Enable Artifactory Switch");
+  //@ts-ignore
   document.getElementById("EnableArtifactoryScan").checked = false;
 };
 document.getElementById("EnableArtifactoryScan").onclick = async () => {
+  //@ts-ignore
   let repoManager = repositoryManagers.artifactory;
   let elRepoEnable = "EnableArtifactoryScan";
   let elRepoAddress = "artifactoryurl";
@@ -177,8 +200,10 @@ const handleRepoSwitch = async (
   /////
 
   message("");
+  //@ts-ignore
   let isChecked = document.getElementById(elRepoEnable).checked;
   console.log("handleRepoSwitch", isChecked);
+  //@ts-ignore
   let repoUrl = document.getElementById(elRepoAddress).value;
   let url, isValidUrl;
   isValidUrl = await validateUrl(repoUrl);
@@ -204,12 +229,15 @@ const handleRepoSwitch = async (
         message("Permission  granted");
       } else {
         message("Permission not granted");
+        //@ts-ignore
         document.getElementById(elRepoEnable).checked = false;
       }
     } else {
       //not valid
+      //@ts-ignore
       document.getElementById(elRepoEnable).checked = false;
       document.getElementById(elRepoAddress).focus();
+      //@ts-ignore
       let prompt = document.getElementById(elRepoAddress).placeholder;
       message(`Enter a valid ${prompt} first`);
       return;
@@ -373,14 +401,18 @@ const checkOriginsPermissions = async (url) => {
 const loginUser = async () => {
   return new Promise((resolve, reject) => {
     console.log("login");
+    //@ts-ignore
     var url = document.getElementById("url").value;
+    //@ts-ignore
     var username = document.getElementById("username").value;
+    //@ts-ignore
     var password = document.getElementById("password").value;
 
     if (url === "" || username === "" || password === "" || !validateUrl(url)) {
       console.log("not valid entries");
       message("Please provide valid IQ Server, Username and Password");
     } else {
+      //@ts-ignore
       let app = document.getElementById("appId").value;
       let appValues = app.split(" ");
       let appInternalId = appValues[0];
@@ -466,7 +498,9 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
       // message("Error retrieving cookie. Click login again");
       // return;
     } else {
+      //@ts-ignore
       token = cookie.value;
+      //@ts-ignore
       expires = cookie.expires;
       saveSetting = await setSettings({ IQCookie: cookie });
     }
@@ -510,6 +544,7 @@ const zzzzcanLogin = async (url, username, password) => {
       redirect: "follow", // manual, *follow, error
       // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     };
+    //@ts-ignore
     fetch(urlEndPoint, options)
       .then((response) => {
         console.log(response, response.json);
@@ -582,6 +617,7 @@ const addApps = async (url, username, password, appId, appInternalId) => {
         });
         $("#appId").val(appInternalId + " " + appId);
         // $("#appId").disabled=false;
+        //@ts-ignore
         document.getElementById("appId").disabled = false;
         // console.log($("#appId").value)
         console.log("addApps successful");
@@ -602,50 +638,79 @@ const load_data = async () => {
     let url, username, password, appId, appInternalId;
     let hasApprovedServer;
     let hasApprovedContinuousEval, hasApprovedAllUrls;
+    //@ts-ignore
     let settings = await GetSettings(masterSettingsList);
     console.log("settings", settings);
 
     if (
+      //@ts-ignore
       typeof settings.url === "undefined" ||
+      //@ts-ignore
       typeof settings.username === "undefined" ||
+      //@ts-ignore
       typeof settings.password === "undefined"
     ) {
       hasApprovedServer = false;
     } else {
+      //@ts-ignore
       url = settings.url;
+      //@ts-ignore
       document.getElementById("url").value = url;
+      //@ts-ignore
       username = settings.username;
+      //@ts-ignore
       document.getElementById("username").value = username;
+      //@ts-ignore
       password = settings.password;
+      //@ts-ignore
       document.getElementById("password").value = password;
+      //@ts-ignore
       appId = settings.appId;
+      //@ts-ignore
       appInternalId = settings.appInternalId;
+      //@ts-ignore
       hasApprovedServer = settings.hasApprovedServer;
+      //@ts-ignore
       hasApprovedAllUrls = settings.hasApprovedAllUrls;
       console.log("load_data canLogin", isAbleToLogin);
 
       if (hasApprovedServer) {
+        //@ts-ignore
         document.getElementById("appId").disabled = false;
+        //@ts-ignore
         await canLogin(url, username, password);
+        //@ts-ignore
         await addApps(url, username, password, appId, appInternalId);
       }
+      //@ts-ignore
       hasApprovedContinuousEval = settings.hasApprovedContinuousEval;
       console.log("ContinuousEval", hasApprovedContinuousEval);
       document.getElementById(
         "ContinuousEval"
+        //@ts-ignore
       ).checked = hasApprovedContinuousEval;
+      //@ts-ignore
       hasApprovedAllUrls = settings.hasApprovedAllUrls;
       console.log("hasApprovedAllUrls", hasApprovedAllUrls);
+      //@ts-ignore
       document.getElementById("AllUrls").checked = hasApprovedAllUrls;
-      document.getElementById("nexusurl").value = settings.nexusRepoUrl || "";
+      //@ts-ignore
+      document.getElementById("nexusurl").value =
+        //@ts-ignore
+        settings.nexusRepoUrl || "";
+      //@ts-ignore
       let isNexus = settings.hasApprovedNexusRepoUrl;
       console.log("isNexusApproved", isNexus);
+      //@ts-ignore
       document.getElementById("EnableNexusScan").checked = isNexus || false;
       ///
+      //@ts-ignore
       document.getElementById("artifactoryurl").value =
+        //@ts-ignore
         settings.artifactoryRepoUrl || "";
-
+      //@ts-ignore
       document.getElementById("EnableArtifactoryScan").checked =
+        //@ts-ignore
         settings.hasApprovedArtifactoryRepoUrl || false;
 
       ///
@@ -657,20 +722,30 @@ const saveForm = async () => {
   console.log("saveForm");
 
   let isFormOK = true;
+  //@ts-ignore
   var url = document.getElementById("url").value;
-
+  //@ts-ignore
   var username = document.getElementById("username").value;
+  //@ts-ignore
   var password = document.getElementById("password").value;
+  //@ts-ignore
   var app = document.getElementById("appId").value;
-  let hasApprovedContinuousEval = document.getElementById("ContinuousEval")
-    .checked;
+  let hasApprovedContinuousEval =
+    //@ts-ignore
+    document.getElementById("ContinuousEval").checked;
+  //@ts-ignore
   let hasApprovedAllUrls = document.getElementById("AllUrls").checked;
-  let hasApprovedNexusRepoUrl = document.getElementById("EnableNexusScan")
-    .checked;
+  let hasApprovedNexusRepoUrl =
+    //@ts-ignore
+    document.getElementById("EnableNexusScan").checked;
+  //@ts-ignore
   let nexusRepoUrl = document.getElementById("nexusurl").value;
+
   let hasApprovedArtifactoryRepoUrl = document.getElementById(
     "EnableArtifactoryScan"
+    //@ts-ignore
   ).checked;
+  //@ts-ignore
   let artifactoryRepoUrl = document.getElementById("artifactoryurl").value;
 
   if (!isValidForm(url, username, password, app)) {
@@ -691,11 +766,15 @@ const saveForm = async () => {
   await setSettings({ username: username });
   await setSettings({ password: password });
   await setSettings({ appId: appId });
-  await setSettings({ appInternalId: appInternalId });
+  await setSettings({
+    appInternalId: appInternalId,
+  });
   await setSettings({
     hasApprovedContinuousEval: hasApprovedContinuousEval,
   });
-  await setSettings({ hasApprovedAllUrls: hasApprovedAllUrls });
+  await setSettings({
+    hasApprovedAllUrls: hasApprovedAllUrls,
+  });
 
   let repoOK;
   repoOK = await setRepoSettings(
@@ -805,7 +884,9 @@ const CheckIsOriginalOrigins = async (urlHref) => {
   return new Promise(async (resolve, reject) => {
     console.log("CheckIsOriginalOrigins", urlHref);
     let initialPermissions = await GetSettings(["installedPermissions"]);
+    //@ts-ignore
     console.log("initialPermissions", initialPermissions.installedPermissions);
+    //@ts-ignore
     let perms = initialPermissions.installedPermissions;
     let found = false;
     for (let origin of perms.origins) {
@@ -822,7 +903,7 @@ const CheckIsOriginalOrigins = async (urlHref) => {
 
 document.getElementById("token").onclick = async () => {
   try {
-    let token = await generateToken();
+    let token: any = await generateToken();
     console.log("token", token);
     //add dom elements
 
@@ -832,7 +913,9 @@ document.getElementById("token").onclick = async () => {
     //   existingdiv1 = document.getElementById("tokendisplay");
     // $("body").append($newdiv1, [newdiv2, existingdiv1]);
     $("#tokendisplay").append(document.createTextNode(tokenDisplay));
+    //@ts-ignore
     document.getElementById("userCode").value = token.response.data.userCode;
+    //@ts-ignore
     document.getElementById("passCode").value = token.response.data.passCode;
   } catch (error) {
     message(error);
@@ -846,8 +929,11 @@ const generateToken = async () => {
 
   return new Promise(async (resolve, reject) => {
     let retVal;
+    //@ts-ignore
     var url = document.getElementById("url").value;
+    //@ts-ignore
     var username = document.getElementById("username").value;
+    //@ts-ignore
     var password = document.getElementById("password").value;
 
     let tok = `${username}:${password}`;
@@ -876,7 +962,10 @@ const generateToken = async () => {
       .then((data) => {
         console.log("axios then", data);
         responseVal = data;
-        retVal = { error: error, response: responseVal };
+        retVal = {
+          error: error,
+          response: responseVal,
+        };
         resolve(retVal);
       })
       .catch((error) => {
@@ -892,7 +981,10 @@ const generateToken = async () => {
           // response data
           responseVal = error.response.data;
         }
-        retVal = { error: code, response: responseVal }; // error = error.response;
+        retVal = {
+          error: code,
+          response: responseVal,
+        }; // error = error.response;
         resolve(retVal);
       });
   });

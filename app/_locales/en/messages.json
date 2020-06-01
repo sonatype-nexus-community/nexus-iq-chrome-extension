@@ -1,0 +1,18 @@
+{
+  "appName": {
+    "message": "Sonatype Nexus IQ Evaluation",
+    "description": "The name of the application"
+  },
+  "appShortName": {
+    "message": "Chrome Extension for IQ Evaluation",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
+  "appDescription": {
+    "message": "Sonatype Nexus IQ Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
+    "description": "The description of the application"
+  },
+  "browserActionTitle": {
+    "message": "Chrome Extension for IQ Evaluation",
+    "description": "The title of the browser action button"
+  }
+}

@@ -1,6 +1,6 @@
 /*jslint es6  -W024 */
 "use strict";
-console.log("background.js");
+console.log("background.ts");
 // import {
 //   checkPageIsHandled,
 //   beginEvaluation,
@@ -17,6 +17,29 @@ console.log("background.js");
 // const evaluateComponent = require('./utils.js');
 // const GetActiveTab = require('./utils.js');
 
+import {
+  BuildSettings,
+  checkPageIsHandled,
+  beginEvaluation,
+  // messageTypes,
+  BuildSettingsFromGlobal,
+  evaluateComponent,
+  GetActiveTab,
+  GetCVEDetails,
+  GetSettings,
+  NexusFormat,
+  addDataOSSIndex,
+  addCookies,
+  removeCookies,
+  setSettings,
+  checkAllPermissions,
+} from "./Shared/utils";
+
+// import * as utils from "./Shared/utils";
+import { dataSources } from "./Shared/DataSources";
+import { messageTypes } from "./Shared/MessageTypes";
+import { appendFile } from "fs";
+import * as url from "url";
 var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
@@ -28,7 +51,7 @@ if (typeof chrome !== "undefined") {
  * @param {*} sender -the sender
  * @param {*} sendResponse -callback handler
  */
-const gotMessage = async (message, sender, sendResponse) => {
+var gotMessage = async (message, sender, sendResponse) => {
   console.log("gotMessage", message);
   // var settings;
   var retval;
@@ -51,8 +74,9 @@ const gotMessage = async (message, sender, sendResponse) => {
       let settings = await BuildSettingsFromGlobal();
       console.log("settings", settings);
       let displayMessage = await evaluateComponent(artifact, settings);
-      let tab = await GetActiveTab();
+      let tab: any = await GetActiveTab();
       if (tab) {
+        //@ts-ignore
         let tabId = tab.id;
         await displayEvaluationResults(displayMessage, tabId);
       }
@@ -65,10 +89,14 @@ const gotMessage = async (message, sender, sendResponse) => {
       baseURL = message.baseURL;
       username = message.username;
       password = message.password;
+      //@ts-ignore
       settings = BuildSettings(baseURL, username, password);
-      window.baseURL = baseURL;
-      window.username = username;
-      window.password = password;
+      //@ts-ignore
+      // window.baseURL = baseURL;
+      //@ts-ignore
+      // window.username = username;
+      //@ts-ignore
+      // window.password = password;
       retval = login(settings);
       break;
     case messageTypes.evaluate:
@@ -97,25 +125,31 @@ const gotMessage = async (message, sender, sendResponse) => {
 };
 
 browser.runtime.onMessage.addListener(gotMessage);
-
-window.serverBaseURL = "";
-window.username = "";
-window.password = "";
-window.haveLoggedIn = false;
-window.message = "";
+//@ts-ignore
+// window.serverBaseURL = "";
+//@ts-ignore
+// window.username = "";
+//@ts-ignore
+// window.password = "";
+//@ts-ignore
+// window.haveLoggedIn = false;
+//@ts-ignore
+// window.message = "";
 /**
  *When installing the plugin this is called. We go straight to the options page to show the login screen
  *
  * @returns
  */
 const install_notice = async () => {
+  //TODO: FIX THIS AND CALL THIS FUNCTION REMOVE THE RETURNS
+  // return;
   if (localStorage.getItem("install_time")) return;
-
-  var now = new Date().getTime();
+  //TODO: correct format of todstrinig for my international users
+  var now = new Date().getTime().toString();
   localStorage.setItem("install_time", now);
   let initialPermissions = await checkAllPermissions();
   await setSettings({ installedPermissions: initialPermissions });
-  browser.tabs.create({ url: "html/options.html?initial=true" });
+  browser.tabs.create({ url: "pages/options.html?initial=true" });
 };
 install_notice();
 
@@ -159,8 +193,11 @@ const sendNotification = async (securityData, artifact) => {
   browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     browser.tabs.sendMessage(tabs[0].id, vulnMessage);
   });
+
   let hasApproved = await GetSettings(["hasApprovedContinuousEval"]);
+  //@ts-ignore
   console.log("hasApproved", hasApproved.hasApprovedContinuousEval);
+  //@ts-ignore
   if (hasApproved.hasApprovedContinuousEval) {
     browser.notifications.create(
       "NexusIQNotification",
@@ -212,6 +249,7 @@ const loadSettingsAndEvaluate = (artifact) => {
       console.log(errorMessage);
       browser.runtime.sendMessage(errorMessage);
     } else {
+      //@ts-ignore
       settings = BuildSettings(baseURL, username, password, appId);
       retval = evaluate(artifact, settings);
     }
@@ -265,7 +303,8 @@ const login = (settings) => {
         messagetype: messageTypes.loggedIn,
         message: retVal,
       };
-      window.haveLoggedIn = true;
+      //@ts-ignore
+      // window.haveLoggedIn = true;
       console.log("sendmessage: loggedInMessage", loggedInMessage);
       browser.runtime.sendMessage(loggedInMessage);
       return retVal;
@@ -418,7 +457,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       //this may need to install scripts into the background page so the next stuff
       //will be handled by the send message from the content script
       if (displayMessageData !== "installScripts") {
-        displayEvaluationResults(displayMessageData, tabId, url);
+        displayEvaluationResults(displayMessageData, tabId);
       }
     } else {
       browser.pageAction.setIcon({

@@ -1,9 +1,21 @@
+
 /*jslint es6  -W024 */
 "use strict";
 
-console.log("content.js?v1.9.4");
+console.log("content.ts?v1.9.4");
 // import { formats } as utils from "./utils.js";
 // const { formats } = require("../src/Scripts/utils");
+
+import * as $ from "jquery";
+import { ParsePage, findRepoType } from "./Shared/utils";
+import { nexusRepoformats } from "./Shared/NexusRepoFormats";
+import { dataSources } from "./Shared/DataSources";
+import { messageTypes } from "./Shared/MessageTypes";
+import { formats } from "./Shared/Formats";
+// typescript will not remove this as the point of this syntax is: import for mutations!
+// import { MDCDialog } from "@material/dialog";
+
+
 
 var browser;
 var message;
@@ -95,9 +107,11 @@ function processPage(message = { messagetype: messageTypes.beginEvaluate }) {
     );
 
     browser.runtime.sendMessage(evaluatemessage);
+    //@ts-ignore
   } else if (message.messagetype !== messageTypes.annotateComponent) {
     console.log("message.messagetype", message.messagetype);
   } else {
     console.log("message.messagetype", message.messagetype);
   }
 }
+processPage();

@@ -1,7 +1,23 @@
 /*jslint es6  -W024 */
-"use strict";
 
-console.log("utils.js");
+"use strict";
+console.log("utils.ts");
+import axios from "axios";
+// import { v4 as uuidv4 } from 'uuid';
+// import * as url from "url";
+// // import { CVSS } from "../lib/cvssCalculator.txt";
+// import { Cookie } from "cookies";
+// import { Settings } from "./Settings";
+// import { Artifact } from "./Artifact";
+// import { GitHubArtifact } from "./GitHubArtifact";
+// import { NPMArtifact } from "./NPMArtifact";
+// import { MavenArtifact } from "./MavenArtifact";
+import { formats } from "./Formats";
+import { nexusRepoformats } from "./NexusRepoFormats";
+// import { artifactoryRepoformats } from "./ArtifactoryRepoFormats";
+import { dataSources } from "./DataSources";
+import { messageTypes } from "./MessageTypes";
+
 var artifact, nexusArtifact, hasVulns, settings;
 var valueCSRF;
 
@@ -12,27 +28,6 @@ var browser;
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
-
-var formats = {
-  alpine: "alpine",
-  cargo: "cargo", //cargo == crates == rust
-  chocolatey: "chocolatey",
-  clojars: "clojars",
-  cocoapods: "cocoapods",
-  composer: "composer", //packagist website but composer format, php language
-  conan: "conan",
-  conda: "conda",
-  cran: "cran",
-  debian: "deb",
-  gem: "gem",
-  github: "github",
-  golang: "golang",
-  maven: "maven",
-  npm: "npm",
-  nuget: "nuget",
-  pypi: "pypi",
-  rpm: "rpm",
-};
 
 var masterSettingsList = [
   "url",
@@ -53,15 +48,6 @@ var masterSettingsList = [
   "installedPermissions",
 ];
 
-//This is the format in nexus repo for proxy repos
-var nexusRepoformats = {
-  maven: "maven2",
-  npm: "npm",
-  nuget: "nuget",
-  gem: "rubygems",
-  pypi: "pypi",
-};
-
 //This is the format in artifactory repo for proxy repos
 var artifactoryRepoformats = {
   maven: "maven2",
@@ -71,29 +57,18 @@ var artifactoryRepoformats = {
   pypi: "pypi",
 };
 
-var dataSources = {
-  NEXUSIQ: "NEXUSIQ",
-  OSSINDEX: "OSSINDEX",
-};
-
 var repositoryManagers = {
   nexus: "nexus",
   artifactory: "artifactory",
 };
 
-var messageTypes = {
-  login: "login", //message to send that we are in the process of logging in
-  evaluate: "evaluate", //message to send that we are evaluating
-  loggedIn: "loggedIn", //message to send that we are in the loggedin
-  displayMessage: "displayMessage", //message to send that we have data from REST and wish to display it
-  loginFailedMessage: "loginFailedMessage", //message to send that login failed
-  beginEvaluate: "beginEvaluate", //message to send that we are beginning the evaluation process, it's different to the evaluatew message for a readon that TODO I fgogot
-  artifact: "artifact", //passing a artifact/package identifier from content to the background to kick off the eval
-  evaluateComponent: "evaluateComponent", //used to evaluate on the popup only
-  vulnerability: "vulnerability", // vuln scan results
-  error: "error", //used to pass errors from background and content script to the popup
-  annotateComponent: "annotateComponent",
+var repoSettings: any = {
+  hasApprovedNexusRepoUrl: "",
+  nexusRepoUrl: "",
+  hasApprovedArtifactoryRepoUrl: "",
+  artifactoryRepoUrl: "",
 };
+
 const checkAllPermissions = async () => {
   return new Promise((resolve, reject) => {
     chrome.permissions.getAll((results) => {
@@ -101,6 +76,7 @@ const checkAllPermissions = async () => {
     });
   });
 };
+
 class Component {
   constructor(hash) {}
 }
@@ -115,6 +91,8 @@ class Coordinates {
   }
 }
 class NPMCoordinates extends Coordinates {
+  private packageId;
+  private version;
   constructor(packageId, version) {
     super();
   }
@@ -122,16 +100,20 @@ class NPMCoordinates extends Coordinates {
     return `${this.packageId}:${this.version}`;
   }
 }
-
+//@ts-ignore
 class MavenCoordinates extends Coordinates {
-  constructor(groupId, artifactId, version) {
+  //field
+  groupId: string;
+  artifactId: string;
+  version: string;
+  constructor(groupId: string, artifactId: string, version: string) {
     // console.log("groupId", groupId);
     super();
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.version = version;
   }
-  display() {
+  display(): string {
     console.log("groupId", this.groupId);
     return `<tr>
                             <td class="label">Group:</td>
@@ -140,7 +122,7 @@ class MavenCoordinates extends Coordinates {
                         <tr>
                             <td class="label">Artifact:</td>
                             <td class="data"><span id="artifact">${this.artifactId}</span></td>
-                        </tr>                        
+                        </tr>
                         <tr>
                             <td class="label">Version:</td>
                             <td class="data"><span id="version">${this.version}</span></td>
@@ -149,6 +131,7 @@ class MavenCoordinates extends Coordinates {
 }
 
 class Artifact {
+  private _format: string;
   constructor(format, hash, datasource) {
     this.format = format;
     this.hash = hash;
@@ -160,22 +143,22 @@ class Artifact {
     return this.format;
   }
   set hash(value) {
-    this._hash = value;
+    this.hash = value;
   }
   get hash() {
-    return this._hash;
+    return this.hash;
   }
   set datasource(value) {
-    this._datasource = value;
+    this.datasource = value;
   }
   get datasource() {
-    return this._datasource;
+    return this.datasource;
   }
   set format(value) {
-    this._format = value;
+    this.format = value;
   }
   get format() {
-    return this._format;
+    return this.format;
   }
 }
 
@@ -185,8 +168,8 @@ class AlpineArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.name = name;
-    this.version = version;
+    // this.name = name;
+    // this.version = version;
   }
 }
 
@@ -196,7 +179,7 @@ class CocoaPodsArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.name = name;
+    // this.name = name;
     // this.format = formats.maven;
     // this.hash = null;
     // this.datasource = dataSources.NEXUSIQ;
@@ -208,8 +191,8 @@ class ChocolateyArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.OSSINDEX;
     super(_format, _hash, _datasource);
-    this.name = name;
-    this.version = version;
+    // this.name = name;
+    // this.version = version;
   }
 }
 
@@ -219,9 +202,9 @@ class ClojarsArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.OSSINDEX;
     super(_format, _hash, _datasource);
-    this.name = name;
-    this.namespace = namespace;
-    this.version = version;
+    // this.name = name;
+    // this.namespace = namespace;
+    // this.version = version;
   }
 }
 class ComposerArtifact extends Artifact {
@@ -230,8 +213,8 @@ class ComposerArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.name = name;
-    this.namespace = namespace;
+    // this.name = name;
+    // this.namespace = namespace;
     // this.format = formats.maven;
     // this.hash = null;
     // this.datasource = dataSources.NEXUSIQ;
@@ -243,8 +226,8 @@ class CargoArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.name = name;
-    this.version = version;
+    // this.name = name;
+    // this.version = version;
   }
 }
 
@@ -254,7 +237,7 @@ class ConanArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.name = name;
+    // this.name = name;
     // this.format = formats.maven;
     // this.hash = null;
     // this.datasource = dataSources.NEXUSIQ;
@@ -267,8 +250,8 @@ class CondaArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.name = name;
-    this.version = version;
+    // this.name = name;
+    // this.version = version;
   }
 }
 
@@ -278,8 +261,8 @@ class DebianArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.name = name;
-    this.version = version;
+    // this.name = name;
+    // this.version = version;
   }
 }
 class MavenArtifact extends Artifact {
@@ -288,11 +271,11 @@ class MavenArtifact extends Artifact {
     let _hash = null;
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
-    this.groupId = groupId;
-    this.artifactId = artifactId;
-    this.version = version;
-    this.extension = extension;
-    this.classifier = classifier;
+    // this.groupId = groupId;
+    // this.artifactId = artifactId;
+    // this.version = version;
+    // this.extension = extension;
+    // this.classifier = classifier;
     // this.format = formats.maven;
     // this.hash = null;
     // this.datasource = dataSources.NEXUSIQ;
@@ -308,11 +291,12 @@ class NPMArtifact extends Artifact {
     // this.format = format;
     // this.hash = hash;
     // this.datasource = datasource;
-    this.packageName = packageName;
-    this.version = version;
+    // this.packageName = packageName;
+    // this.version = version;
   }
   display() {
-    return this.packageId;
+    //@ts-ignore
+    return packageId;
   }
 }
 class NugetArtifact extends Artifact {
@@ -322,11 +306,12 @@ class NugetArtifact extends Artifact {
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
 
-    this.packageId = packageId;
-    this.version = version;
+    // this.packageId = packageId;
+    // this.version = version;
   }
   display() {
-    return this.packageId;
+    //@ts-ignore
+    return packageId;
   }
 }
 class PyPIArtifact extends Artifact {
@@ -342,22 +327,25 @@ class PyPIArtifact extends Artifact {
     let _datasource = dataSources.NEXUSIQ;
     super(_format, _hash, _datasource);
 
-    this.name = name;
-    this.version = version;
+    // this.name = name;
+    // this.version = version;
     // this.qualifier = qualifier;
     // this.extension = extension;
-    this.extension = "tar.gz";
-    this.qualifier = "";
+    // this.qualifier = "";
+    // this.extension = "tar.gz";
   }
   display() {
-    return this.name;
+    return name;
   }
 }
 
 const canLogin = async (url, username, password) => {
+  //TODO: Nasty side effect, sets the messages on the page. Should just return a response message
+  //need to refactor caller to handle error messages
+  let message;
   return new Promise((resolve, reject) => {
     console.log("canLogin", url, username, password);
-    message("");
+    message = "";
     let baseURL = url + (url.substr(-1) === "/" ? "" : "/");
     let urlEndPoint = baseURL + "rest/user/session";
     console.log("urlEndPoint", urlEndPoint);
@@ -374,14 +362,14 @@ const canLogin = async (url, username, password) => {
       })
       .then((data) => {
         console.log("Logged in", data);
-        message("Login successful");
+        message = "Login successful";
         retval = true;
         resolve(retval);
         return retval;
       })
       .catch((error) => {
         console.log(error);
-        message(error);
+        message = error;
         retval = false;
         resolve(retval);
         return retval;
@@ -1100,7 +1088,7 @@ const parseGitHubURL = (url) => {
 
   let packageName;
   let version;
-  let artifact = "";
+  let artifact: any = "";
   if (url.search("/releases/tag/") > 0) {
     //has version in URL
     var urlElements = url.split("/");
@@ -1145,7 +1133,7 @@ const parseCratesURL = (url) => {
   }
 };
 
-const parseURLConda = () => {
+const parseURLConda = (url) => {
   return false;
 };
 
@@ -1167,12 +1155,7 @@ const parseURLClojars = (url) => {
     let packageName = pathElements[2];
     let version = pathElements[4];
     let datasource = dataSources.OSSINDEX;
-    let artifact = new ClojarsArtifact(
-      nameSpace,
-      packageName,
-      version,
-      datasource
-    );
+    let artifact = new ClojarsArtifact(nameSpace, packageName, version);
     return artifact;
   }
   return;
@@ -1186,7 +1169,7 @@ const parseURLChocolatey = (url) => {
   let packageName = pathElements[2];
   let version = pathElements[3];
   let datasource = dataSources.OSSINDEX;
-  let artifact = new ChocolateyArtifact(packageName, version, datasource);
+  let artifact = new ChocolateyArtifact(packageName, version);
   return artifact;
 };
 const parseMavenURL = (url) => {
@@ -1251,8 +1234,7 @@ const parseMavenURL = (url) => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
   return artifact;
 };
@@ -1268,7 +1250,7 @@ const parseNPMURL = (url) => {
   let hash;
   let packageName;
   let version;
-  let artifact = "";
+  let artifact: any = "";
   if (url.search("/v/") > 0) {
     //has version in URL
     var urlElements = url.split("/");
@@ -1279,13 +1261,7 @@ const parseNPMURL = (url) => {
       packageName = urlElements[4];
       version = urlElements[6];
     }
-    let rartifact = new NPMArtifact(
-      packageName,
-      version,
-      format,
-      hash,
-      datasource
-    );
+    let rartifact = new NPMArtifact(packageName, version);
     artifact = rartifact;
     // artifact = {
     //   format: format,
@@ -1325,7 +1301,7 @@ const parseNugetURL = (url) => {
 
 const parsePackagistURL = (url) => {
   //server is packagist, format is composer
-  console.log("parsePackagist:" + url);
+  console.log("parsePackagistURL:" + url);
   const elements = url.split("/");
   let format = formats.composer;
   let datasource = dataSources.NEXUSIQ;
@@ -1786,7 +1762,7 @@ function ParsePage() {
   console.log("ParsePage Complete - artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
-  message = {
+  let message = {
     messagetype: messageTypes.artifact,
     payload: artifact,
   };
@@ -2045,7 +2021,7 @@ function parseDebian(format, url) {
   let name = elements[4];
 
   let versionHtml = $("h1");
-
+  //@ts-ignore
   let nameVersion = versionHtml.textContent.trim();
   version = nameVersion.split("(")[1].replace(")", "");
   console.log("version", version);
@@ -2375,8 +2351,10 @@ function parsePyPI(format, url) {
     version = elements[5];
   }
   //qualifier is
-  let qualifierHTML = document.querySelectorAll(
+
+  let qualifierHTML: string = document.querySelectorAll(
     "#files > table > tbody > tr > th > a"
+    //@ts-ignore
   )[0].href;
   qualifierHTML = qualifierHTML.split("/")[qualifierHTML.split("/").length - 1];
   console.log("qualifierHTML", qualifierHTML);
@@ -2749,8 +2727,9 @@ var repoTypes = [
   },
 ];
 
-function findRepoType() {
-  let url = location.href;
+function findRepoType(url?) {
+  //TODO: fix url parameter handling
+  url = location.href;
   for (let i = 0; i < repoTypes.length; i++) {
     console.log("url", repoTypes[i].url, url);
     if (url.search(repoTypes[i].url) >= 0) {
@@ -2814,7 +2793,7 @@ const BuildSettings = (
 
 const BuildSettingsFromGlobal = async () => {
   console.log("BuildSettingsFromGlobal");
-  let retSettings = await GetSettings([
+  let retSettings: any = await GetSettings([
     "url",
     "username",
     "password",
@@ -3053,7 +3032,7 @@ const beginEvaluation = async (tab) => {
           messagetype: messageTypes.evaluateComponent,
         };
         await BuildSettingsFromGlobal();
-        let displayMessage = await evaluateComponent(artifact, settings, url);
+        let displayMessage = await evaluateComponent(artifact, settings);
         return displayMessage;
       } else {
         //this sends a message to the content tab
@@ -3061,6 +3040,7 @@ const beginEvaluation = async (tab) => {
         //this fixes a bug where we did not get the right DOM because we did not know what page we were on
         // TODO: CPT I Iwant to get rid of this logic, we should be passnig a message not callingthe function directly
         installScripts(tab, message);
+        // identifyComponent(tab, message);
         //install scripts will run, and I hope that we receive a message back
         return "installScripts";
       }
@@ -3075,6 +3055,13 @@ const beginEvaluation = async (tab) => {
     console.log("beginEvaluation - finally");
   }
 };
+const identifyComponent = (tab, message) => {
+  console.log("identifyComponent, sending message", tab, message);
+
+  browser.runtime.sendMessage(message);
+  console.log("identifyComponent, sent  message");
+};
+
 const evaluateComponent = async (artifact, settings) => {
   console.log("evaluateComponent", artifact, settings);
   try {
@@ -3110,7 +3097,7 @@ const evaluatePackage = async (artifact, settings) => {
   let domain = getDomainName(servername);
   console.log("domain", domain);
   // let cookie = await GetCookie(domain, xsrfCookieName);
-  let getSettings = await GetSettings(["IQCookieToken"]);
+  let getSettings: any = await GetSettings(["IQCookieToken"]);
   //valueCSRF is a global varriable//TODO shold be fixed
   valueCSRF = getSettings.IQCookieToken;
   console.log("valueCSRF", valueCSRF);
@@ -3485,8 +3472,10 @@ const CVSSDetails = (cvssText, version = "3.0") => {
   });
   let score;
   if (version === "3.0") {
+    // @ts-ignore
     score = CVSS.calculateCVSSFromVector(cvssText);
   } else {
+    // @ts-ignore
     score = CVSS31.calculateCVSSFromVector(cvssText);
   }
   console.log("score", score);
@@ -3611,6 +3600,7 @@ const getUserAgentHeader = () => {
 };
 
 const getExtensionVersion = () => {
+  // @ts-ignore
   var version = chrome.app.getDetails().version;
   // var version = chrome.app;
   if (version != undefined) {
@@ -3667,7 +3657,7 @@ const installScripts = async (tab, message) => {
   let scripts = [];
   //hasApprovedNexusRepoUrl
   //nexusRepoUrl
-  let repoSettings = await GetSettings([
+  let repoSettings: any = await GetSettings([
     "hasApprovedNexusRepoUrl",
     "nexusRepoUrl",
     "hasApprovedArtifactoryRepoUrl",
@@ -3701,22 +3691,34 @@ const installScripts = async (tab, message) => {
     // { file: "Scripts/utils.js" },
     // // { code: "var message = " + message  + ";"},
     // { file: "Scripts/content.js" },
+    // scripts.push({
+    //   file: "scripts/lib/jquery.min.js",
+    // });
     scripts.push({
-      file: "Scripts/lib/jquery.min.js",
+      file: "scripts/vendor.js",
     });
     scripts.push({
-      file: "Scripts/utils.js",
-    });
-    scripts.push({
-      file: "Scripts/content.js",
+      file: "scripts/content.js",
     });
   }
 
-  scripts.push({
-    code: "processPage();",
-  });
+  // scripts.push({
+  //   code: "processPage();",
+  // });
+  executeScripts(null, [
+    { file: "scripts/lib/jquery.min.js" },
+    // { file: "scripts/utils_original.js" },
+    // { code: "var message = " + message  + ";"},
+    { file: "scripts/vendor.js" },
+    // { file: "scripts/lib/jquery-ui-1.12.1/jquery-ui.min.js" },
+
+    { file: "scripts/content.js" },
+    { code: "processPage();" },
+  ]);
+  console.log("Injecting scripts", scripts);
   executeScripts(null, scripts);
   // browser.tabs.sendMessage(tab.tabId, message);
+  // browser.runtime.sendMessage(message);
   console.log("end installScripts");
 };
 /////////////
@@ -3731,134 +3733,120 @@ function validateUrl(url) {
   }
   return retVal;
 }
-/////////////
-if (typeof module !== "undefined") {
-  module.exports = {
-    artifact: artifact,
-    addDataOSSIndex: addDataOSSIndex,
-    Artifact: Artifact,
-    AlpineArtifact: AlpineArtifact,
-    ChocolateyArtifact: ChocolateyArtifact,
-    ChocolateyArtifact: ChocolateyArtifact,
-    ConanArtifact: ConanArtifact,
-    CondaArtifact: CondaArtifact,
-    DebianArtifact: DebianArtifact,
-    MavenArtifact: MavenArtifact,
-    NPMArtifact: NPMArtifact,
-    NugetArtifact: NugetArtifact,
-    PyPIArtifact: PyPIArtifact,
-    beginEvaluation: beginEvaluation,
-    BuildEmptySettings: BuildEmptySettings,
-    BuildSettings: BuildSettings,
-    BuildSettingsFromGlobal: BuildSettingsFromGlobal,
-    callServer: callServer,
-    ChangeIconMessage: ChangeIconMessage,
-    checkPageIsHandled: checkPageIsHandled,
-    CVSSDetails: CVSSDetails,
-    dataSources: dataSources,
-    encodeComponentIdentifier: encodeComponentIdentifier,
-    epochToJsDate: epochToJsDate,
-    evaluateComponent: evaluateComponent,
-    evaluatePackage: evaluatePackage,
-    formats: formats,
-    GetActiveTab: GetActiveTab,
-    GetAllVersions: GetAllVersions,
-    GetCookie: GetCookie,
-    GetCVEDetails: GetCVEDetails,
-    GetSettings: GetSettings,
-    getDomainName: getDomainName,
-    getExtensionVersion: getExtensionVersion,
-    getRemediation: getRemediation,
-    getUserAgentHeader: getUserAgentHeader,
-    jsDateToEpoch: jsDateToEpoch,
-    MavenCoordinates: MavenCoordinates,
-    //Nexus Formatters
-    NexusFormat: NexusFormat,
-    NexusFormatAlpine: NexusFormatAlpine,
-    NexusFormatCargo: NexusFormatCargo,
-    NexusFormatCocoaPods: NexusFormatCocoaPods,
-    NexusFormatComposer: NexusFormatComposer,
-    NexusFormatConan: NexusFormatConan,
-    NexusFormatConda: NexusFormatConda,
-    NexusFormatCran: NexusFormatCran,
-    NexusFormatDebian: NexusFormatDebian,
-    NexusFormatMaven: NexusFormatMaven,
-    NexusFormatNPM: NexusFormatNPM,
-    NexusFormatNuget: NexusFormatNuget,
-    NexusFormatPyPI: NexusFormatPyPI,
-    NexusFormatRuby: NexusFormatRuby,
-    //URL Parsers
-    parseArtifactoryURL: parseURLArtifactory,
-    parseURLChocolatey: parseURLChocolatey,
-    parseURLClojars: parseURLClojars,
-    parseCRANURL: parseCRANURL,
-    parseCratesURL: parseCratesURL,
-    parseCocoaPodsURL: parseCocoaPodsURL,
-    parseURLConan: parseURLConan,
-    parseGoLangURL: parseGoLangURL,
-    parseGitHubURL: parseGitHubURL,
-    parseMavenURL: parseMavenURL,
-    parseNexusRepoURL: parseNexusRepoURL,
-    parseNPMURL: parseNPMURL,
-    parseNugetURL: parseNugetURL,
-    parsePackagistURL: parsePackagistURL,
-    ParsePageURL: ParsePageURL,
-    parsePyPIURL: parsePyPIURL,
-    parseRubyURL: parseRubyURL,
-    //Page parsers
-    ParsePage: ParsePage,
-    parseAlpine: parseAlpine,
-    parseCRAN: parseCRAN,
-    parseChocolatey: parseChocolatey,
-    parseClojars: parseClojars,
-    parseCocoaPods: parseCocoaPods,
-    parseConan: parseConan,
-    parseConda: parseConda,
-    parseCrates: parseCrates,
-    parsePackagist: parsePackagist,
-    parseDebian: parseDebian,
-    parseDebianTracker: parseDebianTracker,
-    parseGoLang: parseGoLang,
-    parseMaven: parseMaven,
-    parseNexusRepo: parseNexusRepo,
-    parseNPM: parseNPM,
-    parseNuget: parseNuget,
-    parsePackagist: parsePackagist,
-    parsePyPI: parsePyPI,
-    parseRuby: parseRuby,
-    removeCookies: removeCookies,
-    repoTypes: repoTypes,
-    SetHash: SetHash,
-    setHasVulns: setHasVulns,
-    setArtifact: setArtifact,
-    styleCVSS: styleCVSS,
-    validateUrl: validateUrl,
-  };
-}
 
-// export {
-//   artifact,
-//   beginEvaluation,
-//   BuildSettingsFromGlobal,
-//   checkPageIsHandled,
-//   CVSSDetails,
-//   dataSources,
-//   evaluateComponent,
-//   formats,
-//   GetActiveTab,
-//   GetAllVersions,
-//   GetCVEDetails,
-//   getDomainName,
-//   getRemediation,
-//   getUserAgentHeader,
-//   hasVulns,
-//   MavenCoordinates,
-//   messageTypes,
-//   nexusArtifact,
-//   NexusFormat,
-//   setArtifact,
-//   settings,
-//   SetHash,
-//   setHasVulns,
-//   styleCVSS
-// };
+export {
+  addCookies,
+  artifact,
+  addDataOSSIndex,
+  //artifacts bloock
+  Artifact,
+  AlpineArtifact,
+  ChocolateyArtifact,
+  ConanArtifact,
+  CondaArtifact,
+  DebianArtifact,
+  MavenArtifact,
+  NPMArtifact,
+  NugetArtifact,
+  PyPIArtifact,
+  beginEvaluation,
+  BuildEmptySettings,
+  BuildSettings,
+  BuildSettingsFromGlobal,
+  callServer,
+  ChangeIconMessage,
+  checkAllPermissions,
+  checkPageIsHandled,
+  CVSSDetails,
+  dataSources,
+  encodeComponentIdentifier,
+  epochToJsDate,
+  evaluateComponent,
+  evaluatePackage,
+  formats,
+  GetActiveTab,
+  GetAllVersions,
+  GetCookie,
+  GetCVEDetails,
+  GetSettings,
+  getDomainName,
+  getExtensionVersion,
+  getRemediation,
+  getUserAgentHeader,
+  jsDateToEpoch,
+  MavenCoordinates,
+  //Nexus Formatters
+  NexusFormat,
+  NexusFormatAlpine,
+  NexusFormatCargo,
+  NexusFormatCocoaPods,
+  NexusFormatComposer,
+  NexusFormatConan,
+  NexusFormatConda,
+  NexusFormatCran,
+  NexusFormatDebian,
+  NexusFormatMaven,
+  NexusFormatNPM,
+  NexusFormatNuget,
+  NexusFormatPyPI,
+  NexusFormatRuby,
+  //URL Parsers
+  parseURLArtifactory,
+  parseURLChocolatey,
+  parseURLClojars,
+  parseCRANURL,
+  parseCratesURL,
+  parseCocoaPodsURL,
+  parseURLConan,
+  parseGoLangURL,
+  parseGitHubURL,
+  parseMavenURL,
+  parseNexusRepoURL,
+  parseNPMURL,
+  parseNugetURL,
+  parsePackagistURL,
+  ParsePageURL,
+  parsePyPIURL,
+  parseRubyURL,
+  //Page parsers
+  ParsePage,
+  parseAlpine,
+  parseCRAN,
+  parseChocolatey,
+  parseClojars,
+  parseCocoaPods,
+  parseConan,
+  parseConda,
+  parseCrates,
+  parsePackagist,
+  parseDebian,
+  parseDebianTracker,
+  parseGoLang,
+  parseMaven,
+  parseNexusRepo,
+  parseNPM,
+  parseNuget,
+  parsePyPI,
+  parseRuby,
+  removeCookies,
+  repoTypes,
+  findRepoType,
+  SetHash,
+  setHasVulns,
+  setArtifact,
+  setSettings,
+  styleCVSS,
+  validateUrl,
+  xsrfCookieName,
+  xsrfHeaderName,
+  uuidv4,
+  canLogin,
+  nexusArtifact,
+  settings,
+  hasVulns,
+  GetAllApplications,
+  valueCSRF,
+  extractHostname,
+  masterSettingsList,
+  identifyComponent,
+};
