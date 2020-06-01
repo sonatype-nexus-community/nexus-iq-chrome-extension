@@ -1,24 +1,35 @@
 const puppeteer = require("puppeteer");
 const assert = require("assert");
 const fs = require("fs");
+
+const path = require("path");
+// const ava = require("ava");
+
 // const CRX_PATH = require("path").join(__dirname, "../src/");
-var browser;
+let browser;
+let page;
 beforeAll(async () => {
+  const extensionPath = path.resolve(__dirname, "../dist/chrome/");
   browser = await puppeteer.launch({
     headless: false,
-    args: ["--no-sandbox", "--disable-web-security", `--user-data-dir=data`]
+    args: [
+      "--no-sandbox",
+      "--disable-web-security",
+      `--user-data-dir=data`,
+
+    ],
   });
 });
 afterAll(async () => {
   await browser.close();
 });
-describe.skip("Dom parsing script testing", () => {
+describe("Dom parsing script testing", () => {
   test("npmjs lodash dom parse", async () => {
     const page = await browser.newPage();
 
     let url = "https://www.npmjs.com/package/lodash/";
     await page.goto(url);
-    const packageName = await page.$eval("h2 span", el => el.innerText);
+    const packageName = await page.$eval("h2 span", (el) => el.innerText);
     // const packageName = titleEl.innerText;
     // //version
 
@@ -28,7 +39,7 @@ describe.skip("Dom parsing script testing", () => {
     // console.log("versionParent", versionParent);
     // var next = versionParent.next("span");
     // console.log("next", next);
-    let newV = await page.evaluate(el => el.innerText, versionParent);
+    let newV = await page.evaluate((el) => el.innerText, versionParent);
     // console.log("newV", newV);
     let version;
     let findnbsp = newV.search(String.fromCharCode(160));
@@ -50,12 +61,12 @@ describe.skip("Dom parsing script testing", () => {
 
     let url = "https://www.nuget.org/packages/LibGit2Sharp/";
     await page.goto(url);
-    let title = await page.$eval("title", el => el.innerText);
+    let title = await page.$eval("title", (el) => el.innerText);
     // console.log("title", title);
     let titleElements = title
       .trim()
       .split(" ")
-      .filter(el => el != "");
+      .filter((el) => el != "");
 
     // console.log("titleElements", titleElements);
     let packageId = titleElements[3];
@@ -67,7 +78,7 @@ describe.skip("Dom parsing script testing", () => {
     assert(version != null);
   }, 5000);
 
-  test("parsePyPI Django dom parse", async () => {
+  xtest("parsePyPI Django dom parse", async () => {
     const page = await browser.newPage();
     let url = "https://pypi.org/project/Django/";
     await page.goto(url);
@@ -75,7 +86,7 @@ describe.skip("Dom parsing script testing", () => {
     let name = elements[4];
     let versionHTML = await page.$eval(
       "h1.package-header__name",
-      el => el.innerText
+      (el) => el.innerText
     );
 
     // console.log("versionHTML", versionHTML);
@@ -84,14 +95,14 @@ describe.skip("Dom parsing script testing", () => {
     // console.log("version", version);
     let qualifierHTML = await page.$$eval(
       "#files > table > tbody > tr > th > a",
-      el => el[0].href
+      (el) => el[0].href
     );
     qualifierHTML = qualifierHTML.split("/")[
       qualifierHTML.split("/").length - 1
     ];
     // console.log("qualifierHTML", qualifierHTML);
     let name_ver = `${name}-${version}-`;
-    qualifier = qualifierHTML.substr(
+    let qualifier = qualifierHTML.substr(
       name_ver.length,
       qualifierHTML.lastIndexOf(".") - name_ver.length
     );
@@ -109,7 +120,7 @@ describe.skip("Dom parsing script testing", () => {
     //npm show lodash time --json
   });
 
-  test("parseRuby bundler dom parse", async () => {
+  xtest("parseRuby bundler dom parse", async () => {
     //https://rubygems.org/gems/bundler
     // https://rubygems.org/gems/omniauth/
 
@@ -120,7 +131,7 @@ describe.skip("Dom parsing script testing", () => {
     let name = elements[4];
     let versionHTML = await page.$eval(
       "i.page__subheading",
-      el => el.innerText
+      (el) => el.innerText
     );
     // console.log("versionHTML", versionHTML);
     let version = versionHTML;
@@ -130,7 +141,7 @@ describe.skip("Dom parsing script testing", () => {
     assert(version != null);
   });
 
-  test("parsePackagist drupal dom parse", async () => {
+  xtest("parsePackagist drupal dom parse", async () => {
     //server is packagist, format is composer
     //https://packagist.org/packages/drupal/drupal
 
@@ -143,7 +154,7 @@ describe.skip("Dom parsing script testing", () => {
     let name = namePt1 + "/" + namePt2;
     let versionHTML = await page.$eval(
       "span.version-number",
-      el => el.innerText
+      (el) => el.innerText
     );
     // console.log("versionHTML:", versionHTML);
     let version = versionHTML.trim();
@@ -160,7 +171,7 @@ describe.skip("Dom parsing script testing", () => {
     await page.goto(url);
     let elements = url.split("/");
     let name = elements[4];
-    let versionHTML = await page.$eval("H1 span", el => el.innerText);
+    let versionHTML = await page.$eval("H1 span", (el) => el.innerText);
     // console.log("versionHTML:", versionHTML);
     let version = versionHTML.trim();
     assert.equal(version, "1.22.0");
@@ -168,7 +179,7 @@ describe.skip("Dom parsing script testing", () => {
     assert(version != null);
   });
 
-  test("parseCRAN clustcurv dom parse", async () => {
+  xtest("parseCRAN clustcurv dom parse", async () => {
     // https://cran.r-project.org/package=clustcurv
 
     const page = await browser.newPage();
@@ -176,11 +187,11 @@ describe.skip("Dom parsing script testing", () => {
     await page.goto(url);
     let elements = url.split("/");
 
-    let nameHTML = await page.$eval("h2", el => el.innerText);
+    let nameHTML = await page.$eval("h2", (el) => el.innerText);
     let name = nameHTML.split(":")[0];
     let versionHTML = await page.$eval(
       "table tr:nth-child(1) td:nth-child(2)",
-      el => el.innerText
+      (el) => el.innerText
     );
     // console.log("versionHTML:", versionHTML);
     let version = versionHTML.trim();
@@ -195,8 +206,9 @@ describe.skip("Dom parsing script testing", () => {
     let url = "https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions";
     await page.goto(url, { waitUntil: ["load", "networkidle0"] });
     await page.waitForSelector("span.version-name", {
-      visible: true
+      visible: true,
     });
+    let type, namespace, name;
     let elements = url.split("/");
     if (url.search("search.gocenter.io") >= 0) {
       //has packagename in 5
@@ -215,7 +227,7 @@ describe.skip("Dom parsing script testing", () => {
 
     let elArray = await page.$$("span.version-name");
     const versionElement = elArray[0];
-    let version = await page.evaluate(el => el.innerText, versionElement);
+    let version = await page.evaluate((el) => el.innerText, versionElement);
 
     assert.equal(version, "v3.4.2+incompatible");
     assert.equal(name, "github.com/etcd-io/etcd");
@@ -229,17 +241,17 @@ describe.skip("Dom parsing script testing", () => {
     let name = elements[4];
 
     await page.goto(url, {
-      waitUntil: ["load", "networkidle2", "networkidle0"]
+      waitUntil: ["load", "networkidle2", "networkidle0"],
     });
     await page.waitForSelector("div.info h2", {
-      visible: true
+      visible: true,
     });
     let elArray = await page.$$("div.info h2");
     const versionElement = elArray[0];
     // console.log("versionParent", versionParent);
     // var next = versionParent.next("span");
     // console.log("next", next);
-    let version = await page.evaluate(el => el.innerText, versionElement);
+    let version = await page.evaluate((el) => el.innerText, versionElement);
     // console.log("versionElement", versionElement);
     // let version = versionHTML.trim();
     assert.equal(version, "0.7.3");
@@ -255,6 +267,7 @@ describe.skip("Dom parsing script testing", () => {
     await page.goto(url);
     // await page.waitFor(1000);
     let elements = url.split("/");
+    let type, namespace, name;
     if (url.search("search.gocenter.io") >= 0) {
       //has packagename in 5
       let fullname = elements[3];
@@ -279,7 +292,7 @@ describe.skip("Dom parsing script testing", () => {
       //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
       versionHTMLElement = await page.$$eval(
         "#select-header > span > span.ui-select-match-text.pull-left",
-        el => el[0].innerText
+        (el) => el[0].innerText
       );
       // console.log("else versionHTMLElement", versionHTMLElement);
     }
