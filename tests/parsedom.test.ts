@@ -11,12 +11,12 @@ let page;
 beforeAll(async () => {
   const extensionPath = path.resolve(__dirname, "../dist/chrome/");
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       "--no-sandbox",
       "--disable-web-security",
       `--user-data-dir=data`,
-
+      `–disable-setuid-sandbox`
     ],
   });
 });
