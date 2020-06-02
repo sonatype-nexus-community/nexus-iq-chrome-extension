@@ -1,21 +1,13 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
+  "version": "0.1.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}/src/bussolution.ts",
-      "preLaunchTask": "tsc: build - tsconfig.json",
-      "outFiles": [
-        "${workspaceFolder}/dist/**/*.js"
-      ]
+      "name": "Attach to url with files served from ./dist/chrome/",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}/dist/chrome/",
+      "url": "chrome-extension://abfcclpponjpbknahidpgohhifollaog/pages/options.html?ver=1.9.4"
     }
   ]
 }

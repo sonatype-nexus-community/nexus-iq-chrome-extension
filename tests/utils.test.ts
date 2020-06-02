@@ -1,27 +1,17 @@
 /*jslint es6 */
 // import BuildEmptySettings from '../dist/Scripts/util';
-const {
-  Artifact,
-  BuildEmptySettings,
+import {
   BuildSettings,
-  checkPageIsHandled,
-  dataSources,
-  epochToJsDate,
   encodeComponentIdentifier,
   evaluatePackage,
-  formats,
   GetActiveTab,
   getDomainName,
   getExtensionVersion,
   getUserAgentHeader,
-  jsDateToEpoch,
-  ConanArtifact,
-  MavenArtifact,
-  NPMArtifact,
-  NugetArtifact,
-  CranArtifact,
-  PyPIArtifact,
-  ChocolateyArtifact,
+  validateUrl,
+} from "../src/scripts/Shared/utils";
+import { Settings } from "../src/scripts/Shared/Settings";
+import {
   NexusFormat,
   NexusFormatCargo,
   NexusFormatCocoaPods,
@@ -33,6 +23,20 @@ const {
   NexusFormatNuget,
   NexusFormatPyPI,
   NexusFormatRuby,
+} from "../src/scripts/Shared/NexusFormat";
+import { Artifact } from "../src/scripts/Shared/Artifact";
+import { ConanArtifact } from "../src/scripts/Shared/ConanArtifact";
+import { PyPIArtifact } from "../src/scripts/Shared/PyPIArtifact";
+// const { CranArtifact } = require("../src/scripts/Shared/CranArtifact");
+import { NugetArtifact } from "../src/scripts/Shared/NugetArtifact";
+import { NPMArtifact } from  "../src/scripts/Shared/NPMArtifact";
+import { MavenArtifact } from "../src/scripts/Shared/MavenArtifact";
+import { ChocolateyArtifact } from "../src/scripts/Shared/ChocolateyArtifact";
+
+import { jsDateToEpoch, epochToJsDate } from "../src/scripts/Shared/DateHelper";
+import { formats } from "../src/scripts/Shared/Formats";
+import { dataSources } from "../src/scripts/Shared/DataSources";
+import {
   parseURLArtifactory,
   parseCocoaPodsURL,
   parseURLChocolatey,
@@ -49,8 +53,8 @@ const {
   parseRubyURL,
   parseNexusRepoURL,
   ParsePageURL,
-  validateUrl,
-} = require("../app/scripts/Shared/utils");
+  checkPageIsHandled,
+} from "../src/scripts/Shared/RepoTypes";
 
 xtest("evaluatePackage does not throw error when server down", async () => {
   let message = false;
@@ -76,7 +80,7 @@ xtest("evaluatePackage does not throw error when server down", async () => {
 });
 
 test("Can build empty Settings", () => {
-  let actual = BuildEmptySettings();
+  let actual = Settings.BuildEmptySettings();
   let expected = {
     username: "",
     password: "",
@@ -88,6 +92,18 @@ test("Can build empty Settings", () => {
     url: "",
     loginEndPoint: "",
     loginurl: "",
+
+    appId: "",
+    appInternalId: "",
+    hasApprovedServer: false,
+    hasApprovedAllUrls: false,
+    hasApprovedContinuousEval: false,
+    nexusRepoUrl: "",
+    hasApprovedNexusRepoUrl: false,
+    artifactoryRepoUrl: "",
+    hasApprovedArtifactoryRepoUrl: false,
+    installedPermissions: null,
+    IQCookieToken: "",
   };
   expect(expected).toEqual(actual);
 });
@@ -624,8 +640,8 @@ test("Check MavenArtifact class", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
+
   );
 
   //${groupId}:${artifactId}`;
@@ -634,8 +650,7 @@ test("Check MavenArtifact class", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
   expect(actual).toEqual(expected);
 });
@@ -655,8 +670,7 @@ test("Check MavenArtifact display method", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
 
   let actual = artifact.display();
@@ -699,9 +713,9 @@ test("Check NugetArtifact class", () => {
 test("Check pypiArtifact class", () => {
   let name = "a";
   let version = "1";
-
-  let actual = new PyPIArtifact(name, version);
-  let expected = new PyPIArtifact(name, version);
+  let q = "", e = "";
+  let actual = new PyPIArtifact(name,q, e, version);
+  let expected = new PyPIArtifact(name, q, e, version);
   expect(actual).toEqual(expected);
 });
 test("Check parseURLChocolatey positive test", () => {
@@ -714,8 +728,8 @@ test("Check parseURLChocolatey positive test", () => {
   let artifact = new ChocolateyArtifact(
     // format: format,
     name,
-    version,
-    datasource
+    version
+
   );
   let url = "https://chocolatey.org/packages/python3/3.9.0-a5";
   let actual = parseURLChocolatey(url);
@@ -732,8 +746,7 @@ test("Check parseURLConan positive test", () => {
   let artifact = new ConanArtifact(
     // format: format,
     name,
-    version,
-    datasource
+    version
   );
   let url = "https://conan.io/center/apache-apr/1.6.3/";
   let actual = parseURLConan(url);
@@ -756,8 +769,8 @@ test("Check parseMavenURL(format, search.maven.org) positive test", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
+
   );
 
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
@@ -784,8 +797,8 @@ test("Check parseMavenURL(format, mvnrepository) positive test", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
+
   );
 
   let url =
@@ -810,8 +823,8 @@ test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () =>
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
+
   );
 
   let url =
@@ -836,8 +849,7 @@ test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () =>
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
 
   let url =
@@ -862,8 +874,7 @@ test("Check parseMavenURL(format, https://repo.maven.apache.org/maven2/) positiv
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
 
   let url =
@@ -888,8 +899,7 @@ test("Check parseMavenURL(format, https://repo1.maven.org) positive test", () =>
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
 
   let url =
@@ -1224,8 +1234,7 @@ test("Check ParsePageURL(search.maven.org) positive test", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
   //SEARCH      https://search.maven.org/artifact/commons-collections/commons-collections/3.2.1/jar
   let url =
@@ -1268,8 +1277,7 @@ test("Check ParsePageURL( mvnrepository) positive test", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
 
   let url =
@@ -1294,8 +1302,8 @@ test("Check ParsePageURL( https://repo1.maven.org) positive test", () => {
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
+
   );
 
   let url =
@@ -1334,13 +1342,11 @@ test("Check ParsePageURL( https://repo.maven.apache.org/maven2/) positive test",
   let datasource = "NEXUSIQ";
 
   let artifact = new MavenArtifact(
-    // format: format,
     groupId,
     artifactId,
     version,
     extension,
-    classifier,
-    datasource
+    classifier
   );
 
   let url =

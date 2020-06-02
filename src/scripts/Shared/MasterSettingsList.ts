@@ -1,0 +1,18 @@
+export let masterSettingsList: string[] = [
+  "url",
+  "username",
+  "password",
+  "appId",
+  "appInternalId",
+  "hasApprovedServer",
+  "hasApprovedContinuousEval",
+  "hasApprovedAllUrls",
+  "hasApprovedNexusRepoUrl",
+  "nexusRepoUrl",
+  "hasApprovedArtifactoryRepoUrl",
+  "artifactoryRepoUrl",
+  "IQCookie",
+  "IQCookieSet",
+  "IQCookieToken",
+  "installedPermissions",
+];

@@ -5,17 +5,31 @@ import {
   GetSettings,
   validateUrl,
   setSettings,
-  jsDateToEpoch,
   uuidv4,
   canLogin,
   masterSettingsList,
 } from "./Shared/utils";
+import {
+  jsDateToEpoch
+} from "./Shared/DateHelper";
+import { repositoryManagers } from "./Shared/RepositoryManagers";
 
 import axios from "axios";
 import * as $ from "jquery";
 import "jquery-ui/ui/widgets/tooltip";
-import * as url from "url";
 
+import { library, dom, icon } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { Cookie } from "cookies";
+import { Settings } from "./Shared/Settings";
+library.add(fas);
+dom.watch();
+// const faquestion = icon({ prefix: "fas", iconName: "faQuestionCircle" });
+//@ts-ignore
+// var faquestion = window.FontAwesome.icon({
+//   prefix: "fas",
+//   iconName: "faQuestionCircle",
+// });
 
 $(function () {
   $(document).tooltip();
@@ -62,7 +76,7 @@ window.onload = async () => {
   };
   document.getElementById("login").onclick = async () => {
     try {
-      await loginUser();
+      let messages = await loginUser();
     } catch (error) {
       message(error);
     }
@@ -73,8 +87,9 @@ window.onload = async () => {
   };
 
   document.getElementById("ContinuousEval").onclick = async () => {
-    //@ts-ignore
-    let isChecked = document.getElementById("ContinuousEval").checked;
+    let isChecked = (<HTMLInputElement>(
+      document.getElementById("ContinuousEval")
+    )).checked;
     console.log("isChecked", isChecked);
     if (isChecked) {
       await ContinuousEval(isChecked);
@@ -83,8 +98,8 @@ window.onload = async () => {
     }
   };
   document.getElementById("AllUrls").onclick = async () => {
-    //@ts-ignore
-    let isChecked = document.getElementById("AllUrls").checked;
+    let isChecked = (<HTMLInputElement>document.getElementById("AllUrls"))
+      .checked;
     console.log("AllUrls", isChecked);
     if (isChecked) {
       await SetAllUrls(isChecked);
@@ -95,12 +110,13 @@ window.onload = async () => {
   //
   document.getElementById("nexusurl").oninput = async () => {
     message("Remember to set the Enable Nexus Switch");
-    //@ts-ignore
-    document.getElementById("EnableNexusScan").checked = false;
+    (<HTMLInputElement>(
+      document.getElementById("EnableNexusScan")
+    )).checked = false;
   };
-  //@ts-ignore
-  document.getElementById("EnableNexusScan").onclick = async () => {
-    //@ts-ignore
+  (<HTMLInputElement>(
+    document.getElementById("EnableNexusScan")
+  )).onclick = async () => {
     let repoManager = repositoryManagers.nexus;
     let elRepoEnable = "EnableNexusScan";
     let elRepoAddress = "nexusurl";
@@ -171,11 +187,12 @@ const SetNexusUrl = async (isChecked, url) => {
 
 document.getElementById("artifactoryurl").oninput = async () => {
   message("Remember to set the Enable Artifactory Switch");
-  //@ts-ignore
-  document.getElementById("EnableArtifactoryScan").checked = false;
+  (<HTMLInputElement>(
+    document.getElementById("EnableArtifactoryScan")
+  )).checked = false;
 };
+
 document.getElementById("EnableArtifactoryScan").onclick = async () => {
-  //@ts-ignore
   let repoManager = repositoryManagers.artifactory;
   let elRepoEnable = "EnableArtifactoryScan";
   let elRepoAddress = "artifactoryurl";
@@ -200,11 +217,11 @@ const handleRepoSwitch = async (
   /////
 
   message("");
-  //@ts-ignore
-  let isChecked = document.getElementById(elRepoEnable).checked;
+  let isChecked = (<HTMLInputElement>document.getElementById(elRepoEnable))
+    .checked;
   console.log("handleRepoSwitch", isChecked);
-  //@ts-ignore
-  let repoUrl = document.getElementById(elRepoAddress).value;
+  let repoUrl = (<HTMLInputElement>document.getElementById(elRepoAddress))
+    .value;
   let url, isValidUrl;
   isValidUrl = await validateUrl(repoUrl);
   console.log("EnableRepoScan-isValidUrl", repoUrl);
@@ -229,16 +246,18 @@ const handleRepoSwitch = async (
         message("Permission  granted");
       } else {
         message("Permission not granted");
-        //@ts-ignore
-        document.getElementById(elRepoEnable).checked = false;
+
+        (<HTMLInputElement>(
+          document.getElementById(elRepoEnable)
+        )).checked = false;
       }
     } else {
       //not valid
-      //@ts-ignore
-      document.getElementById(elRepoEnable).checked = false;
+      (<HTMLInputElement>document.getElementById(elRepoEnable)).checked = false;
       document.getElementById(elRepoAddress).focus();
-      //@ts-ignore
-      let prompt = document.getElementById(elRepoAddress).placeholder;
+
+      let prompt = (<HTMLInputElement>document.getElementById(elRepoAddress))
+        .placeholder;
       message(`Enter a valid ${prompt} first`);
       return;
     }
@@ -401,19 +420,17 @@ const checkOriginsPermissions = async (url) => {
 const loginUser = async () => {
   return new Promise((resolve, reject) => {
     console.log("login");
-    //@ts-ignore
-    var url = document.getElementById("url").value;
-    //@ts-ignore
-    var username = document.getElementById("username").value;
-    //@ts-ignore
-    var password = document.getElementById("password").value;
+    var url = (<HTMLInputElement>document.getElementById("url")).value;
+    var username = (<HTMLInputElement>document.getElementById("username"))
+      .value;
+    var password = (<HTMLInputElement>document.getElementById("password"))
+      .value;
 
     if (url === "" || username === "" || password === "" || !validateUrl(url)) {
       console.log("not valid entries");
       message("Please provide valid IQ Server, Username and Password");
     } else {
-      //@ts-ignore
-      let app = document.getElementById("appId").value;
+      let app = (<HTMLInputElement>document.getElementById("appId")).value;
       let appValues = app.split(" ");
       let appInternalId = appValues[0];
       let appId = appValues[1];
@@ -485,7 +502,8 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
 
     let loggedIn = await canLogin(destUrl, username, password);
     if (!loggedIn) return;
-    let cookie = await getCookie2(destUrl, xsrfCookieName);
+    message("Successfully logged in. Please remember to save your settings.");
+    let cookie: any = await getCookie2(destUrl, xsrfCookieName);
     let token, expires;
     let saveSetting;
 
@@ -498,9 +516,7 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
       // message("Error retrieving cookie. Click login again");
       // return;
     } else {
-      //@ts-ignore
       token = cookie.value;
-      //@ts-ignore
       expires = cookie.expires;
       saveSetting = await setSettings({ IQCookie: cookie });
     }
@@ -523,67 +539,6 @@ const addPerms = async (url, username, password, appId, appInternalId) => {
     }
   }
   return true;
-};
-
-/////
-const zzzzcanLogin = async (url, username, password) => {
-  return new Promise((resolve, reject) => {
-    let tok = `${username}:${password}`;
-    let hash = btoa(tok);
-    let auth = "Basic " + hash;
-    let urlEndPoint = url + "rest/user/session";
-    let options = {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth,
-      },
-      redirect: "follow", // manual, *follow, error
-      // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    };
-    //@ts-ignore
-    fetch(urlEndPoint, options)
-      .then((response) => {
-        console.log(response, response.json);
-        response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        resolve(data);
-      })
-      .catch((error) => {
-        console.log("can login error", error);
-        reject(error);
-      });
-  });
-};
-const zzloginTest = async (url, username, password) => {
-  console.log("url", url);
-  var request = new XMLHttpRequest();
-  request.open("GET", url, true);
-  let tok = `${username}:${password}`;
-  let hash = btoa(tok);
-  let auth = "Basic " + hash;
-  request.setRequestHeader("Authorization", auth);
-
-  request.onload = function () {
-    // Begin accessing JSON data here
-
-    // Begin accessing JSON data here
-    var data = JSON.parse(this.response);
-
-    if (request.status >= 200 && request.status < 400) {
-      return data;
-    } else {
-      console.log("error");
-    }
-  };
-
-  // Send request
-  request.send();
 };
 
 const addApps = async (url, username, password, appId, appInternalId) => {
@@ -617,8 +572,7 @@ const addApps = async (url, username, password, appId, appInternalId) => {
         });
         $("#appId").val(appInternalId + " " + appId);
         // $("#appId").disabled=false;
-        //@ts-ignore
-        document.getElementById("appId").disabled = false;
+        (<HTMLInputElement>document.getElementById("appId")).disabled = false;
         // console.log($("#appId").value)
         console.log("addApps successful");
         resolve($("#appId").length);
@@ -638,82 +592,55 @@ const load_data = async () => {
     let url, username, password, appId, appInternalId;
     let hasApprovedServer;
     let hasApprovedContinuousEval, hasApprovedAllUrls;
-    //@ts-ignore
-    let settings = await GetSettings(masterSettingsList);
+    let settings: Settings = await GetSettings(masterSettingsList);
     console.log("settings", settings);
 
     if (
-      //@ts-ignore
       typeof settings.url === "undefined" ||
-      //@ts-ignore
       typeof settings.username === "undefined" ||
-      //@ts-ignore
       typeof settings.password === "undefined"
     ) {
       hasApprovedServer = false;
     } else {
-      //@ts-ignore
       url = settings.url;
-      //@ts-ignore
-      document.getElementById("url").value = url;
-      //@ts-ignore
+      (<HTMLInputElement>document.getElementById("url")).value = url;
       username = settings.username;
-      //@ts-ignore
-      document.getElementById("username").value = username;
-      //@ts-ignore
+      (<HTMLInputElement>document.getElementById("username")).value = username;
       password = settings.password;
-      //@ts-ignore
-      document.getElementById("password").value = password;
-      //@ts-ignore
+      (<HTMLInputElement>document.getElementById("password")).value = password;
       appId = settings.appId;
-      //@ts-ignore
       appInternalId = settings.appInternalId;
-      //@ts-ignore
       hasApprovedServer = settings.hasApprovedServer;
-      //@ts-ignore
       hasApprovedAllUrls = settings.hasApprovedAllUrls;
       console.log("load_data canLogin", isAbleToLogin);
 
       if (hasApprovedServer) {
-        //@ts-ignore
-        document.getElementById("appId").disabled = false;
-        //@ts-ignore
+        (<HTMLInputElement>document.getElementById("appId")).disabled = false;
         await canLogin(url, username, password);
-        //@ts-ignore
         await addApps(url, username, password, appId, appInternalId);
       }
-      //@ts-ignore
       hasApprovedContinuousEval = settings.hasApprovedContinuousEval;
       console.log("ContinuousEval", hasApprovedContinuousEval);
-      document.getElementById(
-        "ContinuousEval"
-        //@ts-ignore
-      ).checked = hasApprovedContinuousEval;
-      //@ts-ignore
+      (<HTMLInputElement>(
+        document.getElementById("ContinuousEval")
+      )).checked = hasApprovedContinuousEval;
       hasApprovedAllUrls = settings.hasApprovedAllUrls;
       console.log("hasApprovedAllUrls", hasApprovedAllUrls);
-      //@ts-ignore
-      document.getElementById("AllUrls").checked = hasApprovedAllUrls;
-      //@ts-ignore
-      document.getElementById("nexusurl").value =
-        //@ts-ignore
+      (<HTMLInputElement>(
+        document.getElementById("AllUrls")
+      )).checked = hasApprovedAllUrls;
+      (<HTMLInputElement>document.getElementById("nexusurl")).value =
         settings.nexusRepoUrl || "";
-      //@ts-ignore
       let isNexus = settings.hasApprovedNexusRepoUrl;
       console.log("isNexusApproved", isNexus);
-      //@ts-ignore
-      document.getElementById("EnableNexusScan").checked = isNexus || false;
+      (<HTMLInputElement>document.getElementById("EnableNexusScan")).checked =
+        isNexus || false;
       ///
-      //@ts-ignore
-      document.getElementById("artifactoryurl").value =
-        //@ts-ignore
+      (<HTMLInputElement>document.getElementById("artifactoryurl")).value =
         settings.artifactoryRepoUrl || "";
-      //@ts-ignore
-      document.getElementById("EnableArtifactoryScan").checked =
-        //@ts-ignore
-        settings.hasApprovedArtifactoryRepoUrl || false;
-
-      ///
+      (<HTMLInputElement>(
+        document.getElementById("EnableArtifactoryScan")
+      )).checked = settings.hasApprovedArtifactoryRepoUrl || false;
     }
   });
 };
@@ -722,32 +649,27 @@ const saveForm = async () => {
   console.log("saveForm");
 
   let isFormOK = true;
-  //@ts-ignore
-  var url = document.getElementById("url").value;
-  //@ts-ignore
-  var username = document.getElementById("username").value;
-  //@ts-ignore
-  var password = document.getElementById("password").value;
-  //@ts-ignore
-  var app = document.getElementById("appId").value;
-  let hasApprovedContinuousEval =
-    //@ts-ignore
-    document.getElementById("ContinuousEval").checked;
-  //@ts-ignore
-  let hasApprovedAllUrls = document.getElementById("AllUrls").checked;
-  let hasApprovedNexusRepoUrl =
-    //@ts-ignore
-    document.getElementById("EnableNexusScan").checked;
-  //@ts-ignore
-  let nexusRepoUrl = document.getElementById("nexusurl").value;
-
-  let hasApprovedArtifactoryRepoUrl = document.getElementById(
-    "EnableArtifactoryScan"
-    //@ts-ignore
-  ).checked;
-  //@ts-ignore
-  let artifactoryRepoUrl = document.getElementById("artifactoryurl").value;
-
+  var url = (<HTMLInputElement>document.getElementById("url")).value;
+  var username = (<HTMLInputElement>document.getElementById("username")).value;
+  var password = (<HTMLInputElement>document.getElementById("password")).value;
+  var app = (<HTMLInputElement>document.getElementById("appId")).value;
+  let hasApprovedContinuousEval = (<HTMLInputElement>(
+    document.getElementById("ContinuousEval")
+  )).checked;
+  let hasApprovedAllUrls = (<HTMLInputElement>(
+    document.getElementById("AllUrls")
+  )).checked;
+  let hasApprovedNexusRepoUrl = (<HTMLInputElement>(
+    document.getElementById("EnableNexusScan")
+  )).checked;
+  let nexusRepoUrl = (<HTMLInputElement>document.getElementById("nexusurl"))
+    .value;
+  let hasApprovedArtifactoryRepoUrl = (<HTMLInputElement>(
+    document.getElementById("EnableArtifactoryScan")
+  )).checked;
+  let artifactoryRepoUrl = (<HTMLInputElement>(
+    document.getElementById("artifactoryurl")
+  )).value;
   if (!isValidForm(url, username, password, app)) {
     message(
       "Entries not valid. You need to fill in the URL, username, password, application and approve the permissions for the URL."
@@ -883,10 +805,10 @@ const validateEnteredUrl = (nexusRepoUrl, nexusIQURL) => {
 const CheckIsOriginalOrigins = async (urlHref) => {
   return new Promise(async (resolve, reject) => {
     console.log("CheckIsOriginalOrigins", urlHref);
-    let initialPermissions = await GetSettings(["installedPermissions"]);
-    //@ts-ignore
+    let initialPermissions: Settings = await GetSettings([
+      "installedPermissions",
+    ]);
     console.log("initialPermissions", initialPermissions.installedPermissions);
-    //@ts-ignore
     let perms = initialPermissions.installedPermissions;
     let found = false;
     for (let origin of perms.origins) {
@@ -903,7 +825,16 @@ const CheckIsOriginalOrigins = async (urlHref) => {
 
 document.getElementById("token").onclick = async () => {
   try {
-    let token: any = await generateToken();
+    var url = (<HTMLInputElement>document.getElementById("url")).value;
+    var username = (<HTMLInputElement>document.getElementById("username"))
+      .value;
+    var password = (<HTMLInputElement>document.getElementById("password"))
+      .value;
+
+    let deleteThis: any = await deleteToken(url, username, password);
+    console.log("deleteThis", deleteThis);
+    // return;
+    let token: any = await generateToken(url, username, password);
     console.log("token", token);
     //add dom elements
 
@@ -912,30 +843,23 @@ document.getElementById("token").onclick = async () => {
     //   newdiv2 = document.createElement("div"),
     //   existingdiv1 = document.getElementById("tokendisplay");
     // $("body").append($newdiv1, [newdiv2, existingdiv1]);
-    $("#tokendisplay").append(document.createTextNode(tokenDisplay));
-    //@ts-ignore
-    document.getElementById("userCode").value = token.response.data.userCode;
-    //@ts-ignore
-    document.getElementById("passCode").value = token.response.data.passCode;
+    // $("#tokendisplay").append(document.createTextNode(tokenDisplay));
+    (<HTMLInputElement>document.getElementById("userCode")).value =
+      token.response.data.userCode;
+    (<HTMLInputElement>document.getElementById("passCode")).value =
+      token.response.data.passCode;
   } catch (error) {
     message(error);
   }
 };
 
-const generateToken = async () => {
+const generateToken = async (url, username, password) => {
   //check I am logged in
   //if so call the API
   //get the response and popup it up. allow them to copy and paste
 
   return new Promise(async (resolve, reject) => {
     let retVal;
-    //@ts-ignore
-    var url = document.getElementById("url").value;
-    //@ts-ignore
-    var username = document.getElementById("username").value;
-    //@ts-ignore
-    var password = document.getElementById("password").value;
-
     let tok = `${username}:${password}`;
     let hash = btoa(tok);
     let auth = "Basic " + hash;
@@ -945,7 +869,10 @@ const generateToken = async () => {
     console.log("urlEndPoint", urlEndPoint);
     let responseVal,
       error = "",
-      valueCSRF = "3d0366c4-e7c5-476b-a777-d9be6c132cac";
+      //TODO: get real cookie value
+      tokenSetting = await GetSettings(["IQCookieToken"]); //"3d0366c4-e7c5-476b-a777-d9be6c132cac";
+    let valueCSRF = tokenSetting.IQCookieToken;
+    console.log("valueCSRF", valueCSRF);
     let response = await axios(urlEndPoint, {
       method: "post",
       withCredentials: true,
@@ -980,6 +907,85 @@ const generateToken = async () => {
           code = error.response.status;
           // response data
           responseVal = error.response.data;
+        }
+        retVal = {
+          error: code,
+          response: responseVal,
+        }; // error = error.response;
+        resolve(retVal);
+      });
+  });
+};
+
+const deleteToken = async (url, username, password) => {
+  return new Promise(async (resolve, reject) => {
+    console.log(
+      "deleteToken = async (url, username, password) ",
+      url,
+      username,
+      password
+    );
+    let retVal;
+    // var url = (<HTMLInputElement>document.getElementById("url")).value;
+    // var username = (<HTMLInputElement>document.getElementById("username"))
+    //   .value;
+    // var password = (<HTMLInputElement>document.getElementById("password"))
+    //   .value;
+    let tok = `${username}:${password}`;
+    let hash = btoa(tok);
+    let auth = "Basic " + hash;
+    let theURL = new URL(url);
+    console.log("auth", auth);
+    let urlEndPoint = `${theURL.href}}/api/v2/userTokens/currentUser`;
+    console.log("urlEndPoint", urlEndPoint);
+    let responseVal,
+      error = "",
+      tokenSetting = await GetSettings(["IQCookieToken"]); //"3d0366c4-e7c5-476b-a777-d9be6c132cac";
+    let valueCSRF = tokenSetting.IQCookieToken;
+    console.log("valueCSRF", valueCSRF);
+    let response = await axios(urlEndPoint, {
+      method: "DELETE",
+      withCredentials: true,
+      xsrfCookieName: xsrfCookieName,
+      xsrfHeaderName: xsrfHeaderName,
+      auth: {
+        username: username,
+        password: password,
+      },
+      headers: {
+        [xsrfHeaderName]: valueCSRF,
+      },
+    })
+      .then((data) => {
+        console.log("axios then", data);
+        responseVal = data;
+        retVal = {
+          error: error,
+          response: responseVal,
+        };
+        resolve(retVal);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        let code, response;
+        if (!error.response) {
+          // network error
+          code = 1;
+          responseVal = `Server unreachable ${url}. ${error.toString()}`;
+        } else {
+          // http status code
+          code = error.response.status;
+          // response data
+          responseVal = error.response.data;
+          if (code === 404) {
+            //ignore this, just means that we dont have a token yet
+            // response data
+            responseVal = "No token found";
+            console.log("delete error 404", error);
+          } else {
+            // response data
+            responseVal = error.response.data;
+          }
         }
         retVal = {
           error: code,

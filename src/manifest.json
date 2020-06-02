@@ -3,10 +3,10 @@
   "short_name": "__MSG_appShortName__",
   "description": "__MSG_appDescription__",
   "author": "Cameron Townshend - ctownshend@sonatype.com",
-  "version": "1.9.4",
+  "version": "0.0.0",
   "manifest_version": 2,
   "default_locale": "en",
-  "content_security_policy": "default-src 'none'; script-src 'self'; object-src 'none'; connect-src *; style-src 'self' data: 'unsafe-inline'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; sandbox allow-popups allow-same-origin allow-scripts;  ",
+  "content_security_policy": "default-src *; script-src 'self' 'unsafe-eval'; object-src 'none'; connect-src *; style-src 'self' data: 'unsafe-inline'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; sandbox allow-popups allow-same-origin allow-scripts;  ",
   "optional_permissions": ["*://*/*", "tabs", "notifications"],
   "__chrome__permissions": [
     "activeTab",

@@ -16,7 +16,7 @@ var sourceTab;
 import {
   GetSettings,
   setSettings,
-  findRepoType,
+  // findRepoType,
   settings,
   nexusArtifact,
   artifact,
@@ -26,9 +26,6 @@ import {
   extractHostname,
   styleCVSS,
   SetHash,
-  formats,
-  MavenCoordinates,
-  dataSources,
   setHasVulns,
   valueCSRF,
   GetAllApplications,
@@ -40,7 +37,22 @@ import {
   beginEvaluation,
   GetActiveTab,
 } from "./Shared/utils";
+import { MavenCoordinates } from "./Shared/MavenCoordinates";
 import { messageTypes } from "./Shared/MessageTypes";
+import { findRepoType } from "./Shared/RepoTypes";
+import { formats } from "./Shared/Formats";
+import { dataSources } from "./Shared/DataSources";
+import * as $ from "jquery";
+import "jquery-ui/ui/widgets/accordion";
+import "jquery-ui/ui/widgets/tabs";
+import "jquery-ui/ui/widgets/dialog";
+
+import { library, dom, icon } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+library.add(fas);
+dom.watch();
+
+
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }

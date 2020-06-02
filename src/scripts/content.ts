@@ -7,11 +7,13 @@ console.log("content.ts?v1.9.4");
 // const { formats } = require("../src/Scripts/utils");
 
 import * as $ from "jquery";
-import { ParsePage, findRepoType } from "./Shared/utils";
+import { ParsePage } from "./Shared/utils";
 import { nexusRepoformats } from "./Shared/NexusRepoFormats";
 import { dataSources } from "./Shared/DataSources";
 import { messageTypes } from "./Shared/MessageTypes";
 import { formats } from "./Shared/Formats";
+import { findRepoType } from "./Shared/RepoTypes";
+
 // typescript will not remove this as the point of this syntax is: import for mutations!
 // import { MDCDialog } from "@material/dialog";
 

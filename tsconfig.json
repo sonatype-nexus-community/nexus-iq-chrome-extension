@@ -18,10 +18,11 @@
     "forceConsistentCasingInFileNames": true ///* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "app/**/*", "app/scripts/lib/jquery.min.js"
+    "src/**/*", "src/scripts/lib/jquery.min.js"
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+
   ]
 }

@@ -19,7 +19,6 @@ console.log("background.ts");
 
 import {
   BuildSettings,
-  checkPageIsHandled,
   beginEvaluation,
   // messageTypes,
   BuildSettingsFromGlobal,
@@ -27,7 +26,7 @@ import {
   GetActiveTab,
   GetCVEDetails,
   GetSettings,
-  NexusFormat,
+
   addDataOSSIndex,
   addCookies,
   removeCookies,
@@ -38,6 +37,8 @@ import {
 // import * as utils from "./Shared/utils";
 import { dataSources } from "./Shared/DataSources";
 import { messageTypes } from "./Shared/MessageTypes";
+import { NexusFormat } from "./Shared/NexusFormat";
+import { checkPageIsHandled } from "./Shared/RepoTypes";
 import { appendFile } from "fs";
 import * as url from "url";
 var browser;
@@ -141,10 +142,9 @@ browser.runtime.onMessage.addListener(gotMessage);
  * @returns
  */
 const install_notice = async () => {
-  //TODO: FIX THIS AND CALL THIS FUNCTION REMOVE THE RETURNS
-  // return;
   if (localStorage.getItem("install_time")) return;
-  //TODO: correct format of todstrinig for my international users
+  //TODO: correct format of todstring for my international users
+  debugger;
   var now = new Date().getTime().toString();
   localStorage.setItem("install_time", now);
   let initialPermissions = await checkAllPermissions();

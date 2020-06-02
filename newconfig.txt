@@ -1,4 +1,5 @@
 const path = require("path");
+
 const GlobEntriesPlugin = require("webpack-watched-glob-entries-plugin");
 // const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 //   .BundleAnalyzerPlugin;
@@ -8,19 +9,23 @@ const GlobEntriesPlugin = require("webpack-watched-glob-entries-plugin");
 module.exports = {
   webpack: (config, { dev, vendor }) => {
     const envName = dev ? "development" : "production";
-    config.devtool = "eval";
-    config.module = config.module || { rules: [] };
-    config.module.rules.push({
+    return {
+      mode: envName,
+      devtool = "eval",
+      //jquery
+    plugins: [
+      new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery",
+        "window.jQuery": "jquery'",
+        "window.$": "jquery",
+      })
+      ],
+      module: { rules: [{
       enforce: "pre",
       test: /\.js$/,
       use: ["source-map-loader"],
-    });
-    config.resolve.extensions.push(".ts");
-    config.entry = GlobEntriesPlugin.getEntries([
-      path.resolve("src", "*.{js,mjs,jsx,ts}"),
-      path.resolve("src", "?(scripts)/*.{js,mjs,jsx,ts}")
-    ]);
-    config.module.rules.push({
+    }, {
       test: /\.ts$/,
       exclude: path.resolve("src", "./scripts/lib"),
       use: [
@@ -28,16 +33,20 @@ module.exports = {
           loader: "ts-loader"
         }
       ]
-    });
-    config.optimization.splitChunks = {
+    }] },
+    // resolve.extensions.push(".ts"),
+    entry: GlobEntriesPlugin.getEntries([
+      path.resolve("src", "*.{js,mjs,jsx,ts}"),
+      path.resolve("src", "?(scripts)/*.{js,mjs,jsx,ts}")
+    ]),
+     optimization.splitChunks : {
       name: "scripts/vendor",
       chunks: "initial"
-    };
-    config.output.chunkFilename = "[name].js";
-    // Disable minimize for vendor review
-    config.optimization.minimize = false;
+    },
+    output.chunkFilename : "[name].js",
 
-    return config;
+    // Disable minimize for vendor review
+    optimization.minimize:false
   },
   copyIgnore: ["**/*.ts"]
 };

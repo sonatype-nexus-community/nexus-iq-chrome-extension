@@ -9,8 +9,8 @@
     "doc": "jsdoc -c jsdoc.json",
     "scan-ossi": "auditjs ossi",
     "scan-iq": "auditjs iq -s develop -a chrome-extension-nexus-iq -u admin -h http://iq-server:8070",
-    "dev": "webextension-toolbox dev",
-    "build": "webextension-toolbox build",
+    "dev": "webextension-toolbox dev -s src",
+    "build": "webextension-toolbox build -s src",
     "lint": "eslint ./app/scripts/**/*",
     "lint:fix": "eslint ./app/scripts/**/* --fix"
   },
@@ -45,6 +45,10 @@
     "@babel/plugin-transform-modules-commonjs": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
     "@babel/preset-typescript": "^7.8.3",
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-brands-svg-icons": "^5.13.0",
+    "@fortawesome/free-regular-svg-icons": "^5.13.0",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/github": "^7.0.5",
@@ -75,6 +79,7 @@
     "selenium-webdriver": "^4.0.0-alpha.7",
     "semantic-release": "^17.0.7",
     "semantic-release-chrome": "^1.1.3",
+    "source-map-loader": "^1.0.0",
     "ts-jest": "^26.1.0",
     "ts-loader": "^6.2.2",
     "typescript": "^3.9.3",
@@ -85,8 +90,11 @@
     "webpack-merge": "~4.2.2"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@material/dialog": "^5.1.0",
     "axios": "^0.19.2",
+    "bootstrap": "^4.5.0",
+    "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
     "jquery-ui": "^1.12.1"
   }
