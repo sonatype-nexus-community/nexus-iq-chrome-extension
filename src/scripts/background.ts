@@ -28,12 +28,13 @@ import {
   GetSettings,
 
   addDataOSSIndex,
-  addCookies,
+  // addCookies,
   removeCookies,
   setSettings,
-  checkAllPermissions,
-} from "./Shared/utils";
 
+} from "./Shared/utils";
+import { addCookies } from "./Shared/IQServerService";
+import { checkAllPermissions } from "./Shared/ChromeFunctions";
 // import * as utils from "./Shared/utils";
 import { dataSources } from "./Shared/DataSources";
 import { messageTypes } from "./Shared/MessageTypes";
@@ -75,9 +76,9 @@ var gotMessage = async (message, sender, sendResponse) => {
       let settings = await BuildSettingsFromGlobal();
       console.log("settings", settings);
       let displayMessage = await evaluateComponent(artifact, settings);
-      let tab: any = await GetActiveTab();
+      let tab: chrome.tabs.Tab = await GetActiveTab();
       if (tab) {
-        //@ts-ignore
+
         let tabId = tab.id;
         await displayEvaluationResults(displayMessage, tabId);
       }
@@ -90,7 +91,7 @@ var gotMessage = async (message, sender, sendResponse) => {
       baseURL = message.baseURL;
       username = message.username;
       password = message.password;
-      //@ts-ignore
+
       settings = BuildSettings(baseURL, username, password);
       //@ts-ignore
       // window.baseURL = baseURL;

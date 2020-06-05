@@ -1662,7 +1662,7 @@ describe.skip("chrome.tabs.update test", () => {
 });
 
 //cant unit test chrome app apis
-test.skip("Check getExtensionVersion positive test", () => {
+xtest("Check getExtensionVersion positive test", () => {
   let actual = getExtensionVersion();
   let expected = "1.7.17";
   expect(actual).toEqual(expected);

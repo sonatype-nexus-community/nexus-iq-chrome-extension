@@ -455,7 +455,7 @@ function parseDebianTracker(format, url) {
   return artifact;
 }
 
-function parseGoLang(format, url) {
+const parseGoLang = (format, url) =>{
   //server is non-defined, language is go/golang
   //index of github stored at jfrog
   /////////Todo get this working better

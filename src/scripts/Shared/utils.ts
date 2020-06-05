@@ -39,7 +39,7 @@ import {
   ParsePageURL,
   checkPageIsHandled,
 } from "./RepoTypes";
-
+import { callServer, addCookies } from "./IQServerService";
 var artifact, nexusArtifact, hasVulns, settings;
 var valueCSRF;
 
@@ -58,13 +58,6 @@ var repoSettings: any = {
   artifactoryRepoUrl: "",
 };
 
-const checkAllPermissions = async () => {
-  return new Promise((resolve, reject) => {
-    chrome.permissions.getAll((results) => {
-      resolve(results);
-    });
-  });
-};
 
 const canLogin = async (url, username, password) => {
   //TODO: Nasty side effect, sets the messages on the page. Should just return a response message
@@ -104,17 +97,6 @@ const canLogin = async (url, username, password) => {
   });
 };
 
-const addCookies = (url) => {
-  return;
-
-  console.log("addCookies", url);
-  browser.cookies.set({
-    url: url,
-    name: "CLMSESSIONID", //"CLM-CSRF-TOKEN"
-    value: "foo",
-  });
-  return;
-};
 
 const extractHostname = (url) => {
   var hostname;
@@ -240,8 +222,8 @@ const BuildSettings = (
   baseURL,
   username,
   password,
-  appId,
-  appInternalId,
+  appId?,
+  appInternalId?,
   IQCookie?,
   IQCookieSet?,
   IQCookieToken?,
@@ -437,69 +419,6 @@ const GetCVEDetails = async (cve, nexusArtifact, settings) => {
   return { cvedetail: retVal };
 };
 
-const callServer = async (valueCSRF, artifact, settings) => {
-  console.log("callServer", valueCSRF, artifact, settings);
-  nexusArtifact = NexusFormat(artifact);
-  console.log("nexusArtifact", nexusArtifact);
-  let inputStr = JSON.stringify(nexusArtifact);
-  console.log("inputStr", inputStr);
-  let retVal;
-  let error = 0;
-  let servername = settings.baseURL;
-  let url = `${servername}api/v2/components/details`;
-  let responseVal;
-  let displayMessage;
-  console.log("CSRF", valueCSRF);
-  // let cookieName = "CLM-CSRF-TOKEN";
-  // let xsrfHeaderName = "X-CSRF-TOKEN";
-  let response = await axios(url, {
-    method: "post",
-    data: nexusArtifact,
-    withCredentials: true,
-    xsrfCookieName: xsrfCookieName,
-    xsrfHeaderName: xsrfHeaderName,
-    auth: {
-      username: settings.username,
-      password: settings.password,
-    },
-    headers: {
-      [xsrfHeaderName]: valueCSRF,
-    },
-  })
-    .then((data) => {
-      console.log("axios then", data);
-      responseVal = data.data;
-      retVal = { error: error, response: responseVal };
-      addCookies(servername);
-    })
-    .catch((error) => {
-      console.log("error", error);
-      let code, response;
-      if (!error.response) {
-        // network error
-        code = 1;
-        responseVal = `Server unreachable ${url}. ${error.toString()}`;
-      } else {
-        // http status code
-        code = error.response.status;
-        // response data
-        responseVal = error.response.data;
-      }
-      retVal = { error: code, response: responseVal }; // error = error.response;
-    });
-  //handle error
-  // console.log(xhr);
-  // error = xhr.status;
-  // response = xhr.responseText;
-  displayMessage = {
-    messagetype: messageTypes.displayMessage,
-    message: retVal,
-    artifact: artifact,
-  };
-  console.log("callServer - displayMessage", displayMessage);
-
-  return displayMessage;
-};
 
 const beginEvaluation = async (tab) => {
   try {
@@ -608,7 +527,13 @@ const evaluatePackage = async (artifact, settings) => {
   // } else {
   //   valueCSRF = cookie.value;
   // }
-  let displayMessage = await callServer(valueCSRF, artifact, settings);
+  nexusArtifact = NexusFormat(artifact);
+  let displayMessage = await callServer(
+    valueCSRF,
+    artifact,
+    settings,
+    nexusArtifact
+  );
   return displayMessage;
   // } catch (error) {
   //   console.log("evaluatePackage-Error", error);
@@ -822,16 +747,16 @@ const styleCVSS = (severity) => {
   return className;
 };
 
-const GetActiveTab = async () => {
+const GetActiveTab = async (): Promise<chrome.tabs.Tab> => {
   let params = {
     currentWindow: true,
     active: true,
   };
 
-  let promise = new Promise((resolve, reject) => {
+  let promise = new Promise<chrome.tabs.Tab>((resolve, reject) => {
     let tabs = browser.tabs.query(params, gotTabs);
     function gotTabs(tabs) {
-      let thisTab = tabs[0];
+      let thisTab: chrome.tabs.Tab = tabs[0];
       let err = browser.runtime.lastError;
       if (err) {
         reject(err);
@@ -1093,8 +1018,7 @@ const getUserAgentHeader = () => {
 };
 
 const getExtensionVersion = () => {
-  // @ts-ignore
-  var version = chrome.app.getDetails().version;
+  var version = chrome.runtime.getManifest().version;
   // var version = chrome.app;
   if (version != undefined) {
     return version;
@@ -1228,16 +1152,15 @@ function validateUrl(url) {
 }
 
 export {
-  addCookies,
+  // addCookies,
   artifact,
   addDataOSSIndex,
   beginEvaluation,
   // BuildEmptySettings,
   BuildSettings,
   BuildSettingsFromGlobal,
-  callServer,
+  // callServer,
   ChangeIconMessage,
-  checkAllPermissions,
   CVSSDetails,
   encodeComponentIdentifier,
   evaluateComponent,

@@ -1,5 +1,19 @@
+Steps to release
+1) change csp back to the real version. This needs to be automated
+2) run unit tests
+3) Go through gui of test cases
+4) Push and merge too master. PR will trigger circle ci publiish work flow
+
+Steps to test with chrome debugger
+1) a) shut down all chromes
+2) Launch chrome in debug mode b) start with port 9222
+--/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+3) yarn dev chrome
+3) Attach using the launch json
+4) Use chrome it will hit break pointts now
+
 Steps to add a new format and repo
-1) Add address to manifest 
+1) Add address to manifest
 1.1) permissions url
 1.2) content script
 
@@ -10,7 +24,7 @@ Steps to add a new format and repo
 ---add formats.rpm
 ---checkPageIsHandled
 ---ParsePageURL -add/update case
----add parseXXXXURL -> add parseURLXXXX 
+---add parseXXXXURL -> add parseURLXXXX
 ---if nexusIQ based then
 ----add case to NexusFormat
 ----add method NexusFormatXXX

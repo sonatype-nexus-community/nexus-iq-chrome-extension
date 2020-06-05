@@ -7,7 +7,7 @@
       "request": "attach",
       "port": 9222,
       "webRoot": "${workspaceFolder}/dist/chrome/",
-      "url": "chrome-extension://abfcclpponjpbknahidpgohhifollaog/pages/options.html?ver=1.9.4"
+      "url": ""
     }
   ]
 }
