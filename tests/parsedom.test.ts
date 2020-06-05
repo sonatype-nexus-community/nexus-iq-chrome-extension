@@ -175,7 +175,7 @@ describe("(IntegrationTest): Dom parsing script testing", () => {
     waitTime
   );
 
-  test(
+  xtest(
     "parsePackagist drupal dom parse",
     async () => {
       //server is packagist, format is composer
