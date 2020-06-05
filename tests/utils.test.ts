@@ -9,6 +9,7 @@ import {
   getExtensionVersion,
   getUserAgentHeader,
   validateUrl,
+  canLogin,
 } from "../src/scripts/Shared/utils";
 import { Settings } from "../src/scripts/Shared/Settings";
 import {
@@ -1675,4 +1676,28 @@ describe("(UnitTest): utils functions", () => {
 
   //   expect(actual).toEqual(expected);
   // });
+
+  xtest("can login to IQ Server", async () => {
+      //to doo add the logi
+      //Arrrange
+      let valueCSRF = "91cd69d3-186c-4c51-a772-e0a68ccd36f1";
+      let settings = {
+        IQCookieToken: valueCSRF,
+        username: "admin",
+        password: "admin123",
+        baseURL: "http://iq-server:8070/",
+        url: "http://iq-server:8070/rest/user/session",
+      };
+
+
+      let expected = {
+        response: true
+      };
+
+      //Action
+      let loggedIn = await canLogin(settings.url, settings.username, settings.password);
+      //Assert
+      expect(loggedIn).toStrictEqual(expected);
+    });
+
 });
