@@ -12,7 +12,7 @@
     "declaration": false, ///* Generates corresponding '.d.ts' file. */
     "strict": false, ///* Enable all strict type-checking options. */
     "esModuleInterop": false, //very important that this remains false as it breaks the app /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
-    "forceConsistentCasingInFileNames": true ///* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true, ///* Disallow inconsistently-cased references to the same file. */
 
   },
   "include": ["src/**/*", "src/scripts/lib/jquery.min.js"],

@@ -1,0 +1,81 @@
+{
+  "componentsDetailsLodash": {
+    "componentDetails": [
+      {
+        "component": {
+          "packageUrl": "pkg:npm/lodash@4.17.9",
+          "hash": "9c056579af0bdbb4322e",
+          "componentIdentifier": {
+            "format": "npm",
+            "coordinates": {
+              "packageId": "lodash",
+              "version": "4.17.9"
+            }
+          }
+        },
+        "matchState": "exact",
+        "catalogDate": "2018-04-24T17:44:40.268Z",
+        "relativePopularity": null,
+        "licenseData": {
+          "declaredLicenses": [
+            {
+              "licenseId": "MIT",
+              "licenseName": "MIT"
+            }
+          ],
+          "observedLicenses": [
+            {
+              "licenseId": "Not-Supported",
+              "licenseName": "Not Supported"
+            }
+          ],
+          "effectiveLicenses": [
+            {
+              "licenseId": "MIT",
+              "licenseName": "MIT"
+            }
+          ]
+        },
+        "securityData": {
+          "securityIssues": [
+            {
+              "source": "cve",
+              "reference": "CVE-2018-16487",
+              "severity": 9.8,
+              "url": "http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-16487",
+              "threatCategory": "critical"
+            },
+            {
+              "source": "cve",
+              "reference": "CVE-2019-10744",
+              "severity": 9.8,
+              "url": "http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-10744",
+              "threatCategory": "critical"
+            },
+            {
+              "source": "sonatype",
+              "reference": "sonatype-2017-0580",
+              "severity": 6.5,
+              "url": null,
+              "threatCategory": "severe"
+            },
+            {
+              "source": "sonatype",
+              "reference": "sonatype-2019-0500",
+              "severity": 9.8,
+              "url": null,
+              "threatCategory": "critical"
+            },
+            {
+              "source": "sonatype",
+              "reference": "sonatype-2020-0292",
+              "severity": 7.5,
+              "url": null,
+              "threatCategory": "critical"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

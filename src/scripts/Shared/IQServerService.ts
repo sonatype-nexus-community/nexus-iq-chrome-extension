@@ -37,7 +37,7 @@ const callServer = async (valueCSRF, artifact, settings, nexusArtifact) => {
     },
   })
     .then((data) => {
-      console.log("axios then", data);
+      // console.log("axios then", data);
       responseVal = data.data;
       retVal = { error: error, response: responseVal };
       // addCookies(servername);

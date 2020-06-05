@@ -1,0 +1,1 @@
+var payload = JSON.parse('{"constructor":{"prototype": {"isAdmin": true}}}');
