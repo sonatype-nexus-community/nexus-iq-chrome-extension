@@ -4,8 +4,8 @@
   "description": "Sonatype Nexus IQ Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
   "main": "background.js",
   "scripts": {
-    "test": "jest --runInBand --testNamePattern=UnitTest",
-    "test:UnitTest": "jest --testNamePattern=UnitTest",
+    "test": "jest --runInBand",
+    "test:UnitTest": "jest --testNamePattern=UnitTest --watch",
     "test:IntegrationTest": "jest --runInBand --testNamePattern=IntegrationTest",
     "test:EndToEnd": "jest --runInBand",
     "semantic-release": "semantic-release",
