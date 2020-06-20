@@ -532,6 +532,14 @@ browser.runtime.onInstalled.addListener(function () {
     browser.declarativeContent.onPageChanged.addRules([
       {
         conditions: [
+          //
+          new browser.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "www.jsdelivr.com",
+              schemes: ["https"],
+              pathContains: "package",
+            },
+          }),
           //https://pkgs.alpinelinux.org/package/edge/main/x86/openssl
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {

@@ -15,6 +15,7 @@ const checkPageIsHandled = (url) => {
   // let url = tab.url
   let found = false;
   if (
+    url.search("https://www.jsdelivr.com/package/npm/") >= 0 ||
     url.search("https://pkgs.alpinelinux.org/package/") >= 0 ||
     url.search("https://anaconda.org/anaconda/") >= 0 ||
     url.search("https://chocolatey.org/packages/") >= 0 ||
@@ -165,6 +166,25 @@ function parseNexusRepo(iformat, url) {
       console.log("Unhandled so exit gracefully", nexusRepoformat);
   }
   console.log("component", artifact);
+  return artifact;
+}
+function parseJSDelivr(format, url) {
+  console.log("parseJSDelivr -  format, url:", format, url);
+  let theUrl = new URL(url);
+  let urlPathElements = theUrl.pathname.split("/");
+  let packageName = urlPathElements[3];
+  let versionHTML = $(
+    "#page > div.p-package.page > div > div:nth-child(1) > div > div > div:nth-child(1) > div:nth-child(1) > div.col-md-8 > div > div:nth-child(2) > div > span:nth-child(2)"
+  )
+    .text()
+    .trim();
+  let version = versionHTML;
+  let artifact = {
+    format: format,
+    datasource: dataSources.NEXUSIQ,
+    packageName: packageName,
+    version: version,
+  };
   return artifact;
 }
 
@@ -455,7 +475,7 @@ function parseDebianTracker(format, url) {
   return artifact;
 }
 
-const parseGoLang = (format, url) =>{
+const parseGoLang = (format, url) => {
   //server is non-defined, language is go/golang
   //index of github stored at jfrog
   /////////Todo get this working better
@@ -536,7 +556,7 @@ const parseGoLang = (format, url) =>{
     version: version,
   };
   return artifact;
-}
+};
 
 function parseMaven(format, url) {
   console.log("parseMaven - format, url:", format, url);
@@ -582,6 +602,7 @@ function parseNPM(format, url) {
   //https://www.npmjs.com/package/lodash/v/4.17.9
   //No version in URL so read DOM
   //https://www.npmjs.com/package/lodash/
+  //do not escape package name - handle https://www.npmjs.com/package/@hapi/hoek
   let doc = $("html")[0].outerHTML;
   // let docelements = $(doc);
 
@@ -592,9 +613,15 @@ function parseNPM(format, url) {
   let version;
   if (url.search("/v/") > 0) {
     //has version in URL
+    //need to handle https://www.npmjs.com/package/@hapi/hoek/v/9.0.2
     var urlElements = url.split("/");
-    packageName = urlElements[4];
-    version = urlElements[6];
+    if (urlElements.length >= 8) {
+      packageName = urlElements[4] + "/" + urlElements[5];
+      version = urlElements[7];
+    } else {
+      packageName = urlElements[4];
+      version = urlElements[6];
+    }
   } else {
     //try to parse the URL
     //Seems like node has changed their selector
@@ -621,8 +648,8 @@ function parseNPM(format, url) {
   }
   //
   //  packageName=url.substr(url.lastIndexOf('/')+1);
-  packageName = encodeURIComponent(packageName);
-  version = encodeURIComponent(version);
+  // packageName = encodeURIComponent(packageName);
+  // version = encodeURIComponent(version);
   let datasource = dataSources.NEXUSIQ;
   return {
     format: format,
@@ -818,6 +845,15 @@ function parseRuby(format, url) {
 }
 
 var repoTypes = [
+  {
+    url: "https://www.jsdelivr.com/package/npm/",
+    repoFormat: formats.npm,
+    parseFunction: parseJSDelivr,
+    titleSelector: "h1.package-name",
+    versionPath: "",
+    dataSource: dataSources.NEXUSIQ,
+    appendVersionPath: "",
+  },
   {
     url: "https://pkgs.alpinelinux.org/package/",
     repoFormat: formats.alpine,
@@ -1214,6 +1250,7 @@ const parseNPMURL = (url) => {
   //so can not see the dom
   //need to handle when the component has a slash in the name
   //https://www.npmjs.com/package/@angular/animation/v/4.0.0-beta.8
+  //https://www.npmjs.com/package/@hapi/hoek/v/9.0.2
   let format = formats.npm;
   let datasource = dataSources.NEXUSIQ;
   let hash;
@@ -1691,7 +1728,9 @@ const parseRPMRepoURL = (url) => {
   return artifact;
 };
 ////////////////////////
-
+const parseURLJSDelivery = (url) => {
+  return;
+};
 const parseURLConan = (url) => {
   // https://conan.io/center/apache-apr/1.6.3/
   let format = formats.conan;
@@ -1822,14 +1861,14 @@ const ParsePageURL = (url) => {
     artifact = parseRPMRepoURL(url);
   } else if (url.search("https://conan.io/center/") >= 0) {
     artifact = parseURLConan(url);
+  } else if (url.search("https://www.jsdelivr.com/package/npm/")) {
+    artifact = parseURLJSDelivery(url);
   }
   console.log("ParsePageURL Complete. artifact:", artifact);
   //now we write this to background as
   //we pass variables through background
   return artifact;
 };
-
-
 
 export {
   checkPageIsHandled,

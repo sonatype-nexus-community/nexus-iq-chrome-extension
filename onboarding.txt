@@ -17,7 +17,7 @@ Steps to add a new format and repo
 1.1) permissions url
 1.2) content script
 
--add background.js
+-in background.js
 --add PageStateMatcher to  browser.runtime.onInstalled.addListener
 
 --utils.js
@@ -44,7 +44,7 @@ Steps to add a new format and repo
 ---if nexus format add case to renderComponentData
 ---else OSSInDEX - ALL renderComponentDataOSSINDEX HANDLED THE SAME
 ---add to formats object (need to remove this duplicate)
----addd tp findrepotypes -duplicate need to fix this
+---addd to findrepotype -duplicate need to fix this
 
 --content.js
 ---add parseXXXX
