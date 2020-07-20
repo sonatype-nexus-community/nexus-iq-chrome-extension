@@ -1,4 +1,10 @@
 /*jslint es6  -W024 */
+import axios from "axios";
+import * as $ from "jquery";
+import { library, dom, icon } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { Cookie } from "cookies";
+
 import {
   xsrfCookieName,
   xsrfHeaderName,
@@ -9,21 +15,23 @@ import {
   canLogin,
   masterSettingsList,
 } from "./Shared/utils";
-import {
-  jsDateToEpoch
-} from "./Shared/DateHelper";
+import { jsDateToEpoch } from "./Shared/DateHelper";
 import { repositoryManagers } from "./Shared/RepositoryManagers";
 
-import axios from "axios";
-import * as $ from "jquery";
-import "jquery-ui/ui/widgets/tooltip";
+// import "jquery-ui/ui/widgets/tooltip";
 
-import { library, dom, icon } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { Cookie } from "cookies";
 import { Settings } from "./Shared/Settings";
+//font awesome
 library.add(fas);
 dom.watch();
+//end font awesome
+//React
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Component } from "./Shared/Component";
+// import  DangerButton from "./Components/DangerButton";
+const e = React.createElement;
+ReactDOM.render(e("div", null, "Hello World from React"), document.getElementById("root"));
 // const faquestion = icon({ prefix: "fas", iconName: "faQuestionCircle" });
 //@ts-ignore
 // var faquestion = window.FontAwesome.icon({
@@ -31,9 +39,10 @@ dom.watch();
 //   iconName: "faQuestionCircle",
 // });
 
-$(function () {
-  $(document).tooltip();
-});
+//remove jquery ui tooltip
+// $(function () {
+//   $(document).tooltip();
+// });
 
 window.onload = async () => {
   console.log("window.onload", window.location.search.substring(1));
