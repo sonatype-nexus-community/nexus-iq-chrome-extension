@@ -18,7 +18,7 @@ import {
   setSettings,
   // findRepoType,
   settings,
-  nexusArtifact,
+  // nexusArtifact,
   artifact,
   getRemediation,
   CVSSDetails,
@@ -27,7 +27,7 @@ import {
   styleCVSS,
   SetHash,
   setHasVulns,
-  valueCSRF,
+  // valueCSRF,
   GetAllApplications,
   hasVulns,
   GetAllVersions,
@@ -56,7 +56,8 @@ dom.watch();
 if (typeof chrome !== "undefined") {
   browser = chrome;
 }
-
+var nexusArtifact;
+var valueCSRF;
 //var settings;
 //var componentInfoData;
 $(async function () {
@@ -952,7 +953,7 @@ const displayMessageDataHTML = async (respMessage, sourceUrl) => {
     console.log("coming in here really late.-respMessage", respMessage);
     //need to set the artifact
     //@ts-ignore
-    artifact = respMessage.artifact;
+    let artifact = respMessage.artifact;
     console.log("after content parsed artifact", artifact);
 
     var componentDetails = respMessage.message.response;
