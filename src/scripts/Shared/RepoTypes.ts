@@ -787,14 +787,20 @@ function parsePyPI(format, url) {
   //"numpy-1.16.4-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"
   //qualifier is ->cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64
   let name_ver = `${name}-${version}-`;
-  qualifier = qualifierHTML.substr(
-    name_ver.length,
-    qualifierHTML.lastIndexOf(".") - name_ver.length
-  );
+  if (qualifierHTML.lastIndexOf("tar.gz") > 0) {
+    qualifier = "";
+    extension = "tar.gz";
+  } else {
+    qualifier = qualifierHTML.substr(
+      name_ver.length,
+      qualifierHTML.lastIndexOf(".") - name_ver.length
+    );
+    extension = qualifierHTML.substring(qualifierHTML.lastIndexOf(".") + 1);
+  }
   // extension = qualifierHTML.substr(qualifierHTML.lastIndexOf(".") + 1);
   //$("#files > table > tbody:contains('.zip')").text()
   console.log("qualifier", qualifier);
-  extension = qualifierHTML.substring(qualifierHTML.lastIndexOf(".") + 1);
+
   console.log("extension", extension);
   name = encodeURIComponent(name);
   version = encodeURIComponent(version);

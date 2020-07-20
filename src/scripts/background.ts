@@ -789,3 +789,16 @@ const displayEvaluationResults = async (displayMessageData, tabId) => {
 function receiveText(resultsArray) {
   console.log(resultsArray[0]);
 }
+
+const getSonatype= (info,tab) =>{
+  console.log("Word " + info.selectionText + " was clicked.");
+  chrome.tabs.create({  
+    url: "http://www.google.com/search?q=" + info.selectionText
+  });
+}
+//http://mirror.centos.org/centos-7/7.8.2003/os/x86_64/Packages/
+chrome.contextMenus.create({
+  title: "Scan with IQ: %s", 
+  contexts:["selection"], 
+  onclick: getSonatype
+});

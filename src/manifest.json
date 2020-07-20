@@ -38,7 +38,9 @@
     "https://repo.spring.io/list/",
     "https://conan.io/center/",
     "https://tracker.debian.org/pkg/",
-    "https://www.jsdelivr.com/package/npm/"
+    "https://www.jsdelivr.com/package/npm/",
+    "http://mirror.centos.org/",
+    "contextMenus"
   ],
   "__firefox__permissions": [
     "activeTab",
@@ -69,7 +71,8 @@
     "https://repo.spring.io/list/",
     "https://conan.io/center/",
     "https://tracker.debian.org/pkg/",
-    "https://www.jsdelivr.com/package/npm/"
+    "https://www.jsdelivr.com/package/npm/",
+    "http://mirror.centos.org/"
   ],
   "content_scripts": [
     {
@@ -98,7 +101,8 @@
         "https://rubygems.org/*",
         "https://search.gocenter.io/*",
         "https://search.maven.org/*",
-        "https://www.jsdelivr.com/package/npm/*"
+        "https://www.jsdelivr.com/package/npm/*",
+        "http://mirror.centos.org/*"
       ],
       "css": ["styles/pagestyle.css", "styles/material-components-web.min.css"],
       "js": [ "scripts/lib/jquery.min.js", "scripts/vendor.js", "scripts/content.js"],
