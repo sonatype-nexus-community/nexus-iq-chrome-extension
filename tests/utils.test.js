@@ -1120,7 +1120,7 @@ test("Check parseGoLangURL(GOCENTER GOLANG) negative test", () => {
   };
 
   let url =
-    "https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions";
+    "https://gocenter.jfrog.com/github.com/hansrodtang/randomcolor";
   let actual = parseGoLangURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();
@@ -1530,7 +1530,7 @@ test("Check ParsePageURL(parseGoLangURL) negative test", () => {
   };
 
   let url =
-    "https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions";
+    "https://gocenter.jfrog.com/github.com/hansrodtang/randomcolor";
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();

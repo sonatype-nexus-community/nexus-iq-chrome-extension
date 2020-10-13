@@ -131,7 +131,7 @@ Pattern - `https://www.nuget.org/packages/<package>/<version>`
 ### Golang - Gocenter
 
 `https://search.gocenter.io/`
-<br/>e.g. <https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions>
+<br/>e.g. <https://search.gocenter.io/github.com/etcd-io/etcd>
 
 ### Java - maven
 

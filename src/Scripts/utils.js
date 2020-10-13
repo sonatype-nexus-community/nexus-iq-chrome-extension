@@ -1078,8 +1078,7 @@ const parseCRANURL = (url) => {
 };
 
 const parseGoLangURL = (url) => {
-  //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
-  //https://search.gocenter.io/github.com~2Fbazelbuild~2Fbazel-integration-testing/versions
+  //https://search.gocenter.io/github.com/bazelbuild/bazel-integration-testing
   let format = formats.golang;
   let datasource = dataSources.NEXUSIQ;
   return false;
@@ -2045,59 +2044,32 @@ function parseGoLang(format, url) {
   //server is non-defined, language is go/golang
   //index of github stored at jfrog
   /////////Todo get this working better
-  //https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
+  //https://search.gocenter.io/github.com/etcd-io/etcd?version=v3.3.13
   //becomes
   //https://ossindex.sonatype.org/component/pkg:golang/github.com/etcd-io:etcd@v3.3.13
-
   // pkg:golang/github.com/etcd-io/etcd@3.3.1
-  // pkg:github/etcd-io/etcd@3.3.1
+
   //https://search.gocenter.io/github.com/go-gitea/gitea
   console.log("parseGolang:", format, url);
   let elements = url.split("/");
-  //CRAN may have the packagename in the URL
-  //but not the version in URL
-  //could also be just in the body
   let name;
   let namespace;
   let type;
   if (url.search("search.gocenter.io") >= 0) {
-    //has packagename in 5
-    let fullname = elements[3];
-    //"github.com~2Fhansrodtang~2Frandomcolor"
-    //tthe've cleaned it up
-    //now looks like https://search.gocenter.io/github.com/go-gitea/gitea
-    // let nameElements = fullname.split("");
-    // 0: "github.com"
-    // 1: "hansrodtang"
-    // 2: "randomcolor"
-    type = elements[3]; //"github.com";
-    namespace = elements[4];
-    name = elements[5];
+    //https://search.gocenter.io/github.com/go-gitea/gitea
+    //https://search.gocenter.io/github.com/go-gitea/gitea?version=xxx
+    type = elements[3]; // "github.com"
+    namespace = elements[4]; // "go-gitea"
+    name = elements[5].split('?')[0]; // "gitea"
   }
 
-  //CPT 19/09/19 - Gocenter keep changing their markup for golang so we are having trouble
-  //parsing.
-  let versionHTMLElement;
-  if (elements[4] == "versions") {
-    //last element in array is versions
-    //then we parse for latest version in the document
-    //e.g. https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
-    // versionHTMLElement = $(
-    //   "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
-    // )[0];
-    //<span data-v-43be9f46="" class="red--text mr-2">v1.18.0</span>
-    versionHTMLElement = $(".version-name")[0];
-    console.log("if versionHTMLElement", versionHTMLElement);
-  } else {
-    //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
-    //<div class="v-select__selection v-select__selection--comma">v1.9.0-dev</div>
-    // versionHTMLElement = $(
-    //   "#select-header > span > span.ui-select-match-text.pull-left"
-    // )[0];
-    versionHTMLElement = $("div.v-select__selection")[0];
-    console.log("else versionHTMLElement", versionHTMLElement);
-  }
+  //<div class="v-select__selection v-select__selection--comma">v1.9.0-dev</div>
+  // versionHTMLElement = $(
+  //   "#select-header > span > span.ui-select-match-text.pull-left"
+  // )[0];
+  let versionHTMLElement = $("div.v-select__selection")[0];
   console.log("versionHTMLElement", versionHTMLElement);
+
   if (typeof versionHTMLElement === "undefined") {
     //raiserror  "DOM changed"
     console.log("DOM changed");
@@ -2106,12 +2078,7 @@ function parseGoLang(format, url) {
   console.log("versionHTML", versionHTML);
   let version = versionHTML.trim();
   console.log("version", version);
-  //keep the v in version
-  // if (version.substr(0, 1) === "v") {
-  //   version = version.substr(1);
-  // }
-  // name = encodeURIComponent(name);
-  // version = encodeURIComponent(version);
+
   let datasource = dataSources.NEXUSIQ;
   let artifact = {
     format: format,
@@ -2612,9 +2579,9 @@ var repoTypes = [
     repoFormat: formats.golang,
     parseFunction: parseGoLang,
     titleSelector: "#app div.v-application--wrap h1",
-    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    versionPath: "{url}/{packagename}?version={versionNumber}", // https://search.gocenter.io/github.com/go-gitea/gitea?version=v1.5.1
     dataSource: dataSources.NEXUSIQ,
-    appendVersionPath: "/info?version={versionNumber}",
+    appendVersionPath: "?version={versionNumber}",
   },
   {
     url: "https://repo1.maven.org/maven2/",
