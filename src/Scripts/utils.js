@@ -2054,17 +2054,13 @@ function parseGoLang(format, url) {
   //https://search.gocenter.io/github.com/go-gitea/gitea
   console.log("parseGolang:", format, url);
   let elements = url.split("/");
-  //CRAN may have the packagename in the URL
-  //but not the version in URL
-  //could also be just in the body
+
   let name;
   let namespace;
   let type;
   if (url.search("search.gocenter.io") >= 0) {
     //has packagename in 5
     let fullname = elements[3];
-    //"github.com~2Fhansrodtang~2Frandomcolor"
-    //tthe've cleaned it up
     //now looks like https://search.gocenter.io/github.com/go-gitea/gitea
     // let nameElements = fullname.split("");
     // 0: "github.com"
@@ -2072,7 +2068,15 @@ function parseGoLang(format, url) {
     // 2: "randomcolor"
     type = elements[3]; //"github.com";
     namespace = elements[4];
-    name = elements[5];
+
+    // Handles URLs with a query string param like so:
+    // https://search.gocenter.io/github.com/go-gitea/gitea?version=v1.5.1
+    let names = elements[5].split("?")
+    if (names.length > 1) {
+      name = names[0];
+    } else {
+      name = elements[5];
+    }
   }
 
   //CPT 19/09/19 - Gocenter keep changing their markup for golang so we are having trouble
