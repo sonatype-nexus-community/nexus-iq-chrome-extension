@@ -2075,7 +2075,7 @@ function parseGoLang(format, url) {
     if (names.length > 1) {
       name = names[0];
     } else {
-      names = elements[5];
+      name = elements[5];
     }
   }
 
