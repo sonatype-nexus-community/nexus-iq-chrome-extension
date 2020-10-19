@@ -18,6 +18,7 @@
 ## Purpose
 
 To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
+
 The plugin can scan packages at the following repositories:
 
 1. .Net – NuGet – `https://www.nuget.org/`
@@ -52,11 +53,11 @@ The plugin can scan packages at the following repositories:
 
 ## Data
 
-The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems. For some repositories e.g. Chocolatey the extension gets its data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
+The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems. For some repositories e.g. Chocolatey, the extension gets its data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
 
 ## Usage
 
-When you browse to a website that is covered by the tool, such as maven central and click on the plugin, it will open with the Sonatype Lifecycle data relevant to that library.<br/>
+When you browse to a website that is covered by the tool, such as Maven Central and click on the plugin, it will open with the Sonatype Lifecycle data relevant to that library.<br/>
 
 ### Main icon
 
@@ -74,41 +75,41 @@ When you browse to a website that is covered by the tool, such as maven central 
    <br/>
 3. Navigate to one of the pages that the extension is compatible with (see the detailed list below).
    <br/>
-4. Click on the Blue Sonatype Logo...<br/>
+4. Click on the blue Sonatype logo...<br/>
    <img src="images/Extension_lodash_-_npm_4.17.9.png" alt="Extension Lodash 4.17.9" width="300"/>
    <br/>
-   4.1 ...The solution will think for a second and show the Sonatype hexagon log while it retrieves the data...Then show the Data.<br/>
+   4.1 ...The solution will think for a second and show the Sonatype hexagon logo while it retrieves the data...Then show the Data.<br/>
    <img src="images/Extension_thinking_icon.png" alt="Extension Thinking Icon" width="300"/>
    <br/>
 5. Component Information<br/>
    <img src="images/Extension_Component_info.png" alt="Extension Componen Info" width="300"/>
    <br/>
-6. Security Information
+6. Security Information<br/>
    The security data is presented in a list with clickable sections for each vulnerability.<br/>
    <img src="images/Extension_Security.png" alt="Extension Security List" width="300"/>
    <br/>
-7. Security Details
+7. Security Details<br/>
    The security details for each vulnerability is available. Click on the reference to display the security details.<br/>
    <img src="images/Extension_Vulnerability_Detail.png" alt="Extension Vulnerability Detail" width="300"/>
    <br/>
-8. Remediation
+8. Remediation<br/>
    The version history is available for each component.<br/>
    <img src="images/Extension_VersionHistoryGraph.png" alt="Extension Version History" width="300"/>
    <br/>
-9. Remediation Guidance
+9. Remediation Guidance<br/>
    The remediation guidance API has been added. The recommended fix version will be listed at the top of the screen.
    <br/>
 10. License Information<br/>
     <img src="images/Extension_Licensing.png" alt="Extension Licensing" width="300"/>
     <br/>
-11. Unsupported page.
+11. Unsupported Page<br/>
     If you click on an unsupported page then the following screen will appear.
     <img src="images/unsupported_page.png" alt="Unsupported Page" width="300"/>
     <br/>
 
 ## Examples
 
-The list of pages that are supported are here.
+The list of pages that are supported are here:
 
 1. Alpine – Linux – https://pkgs.alpinelinux.org/
 2. Chocolatey – Windows – https://chocolatey.org/
@@ -133,7 +134,7 @@ Pattern - `https://www.nuget.org/packages/<package>/<version>`
 `https://search.gocenter.io/`
 <br/>e.g. <https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions>
 
-### Java - maven
+### Java - Maven
 
 Pattern - `https://search.maven.org/artifact/<group>/<artifact>/<version>/<extension>`
 <br/>e.g. <https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar>
@@ -155,7 +156,7 @@ Pattern - `https://www.npmjs.com/package/<package>`
 <br/>Pattern - `https://www.npmjs.com/package/<package>/v/<version>`
 <br/>e.g. <https://www.npmjs.com/package/lodash/v/4.17.9>
 
-### php - packagist/composer/
+### PHP - Packagist/Composer
 
 Pattern - `https://packagist.org/`
 <br/>e.g. <https://packagist.org/packages/drupal/drupal>
@@ -184,7 +185,7 @@ Pattern - `https://cran.r-project.org/`
 Pattern - `https://crates.io/`
 <br/>e.g. <https://crates.io/crates/random>
 
-### NexusRepo - npm, maven2 and rubygems
+### NexusRepo - npm, Maven and rubygems
 
 e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.0.gem>
 
@@ -192,10 +193,26 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
 
 ### Production
 
-1. Install from [Chrome Store]<https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/>
-2. Provide Configuration in the Options Screen.
+1. Install from [Chrome Store](https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/)
+2. Click `Add to Chrome`
 
-3. Browse to a supported public repo.
+Note: You will be asked to "Add Sonatype Nexus IQ Extension". Click "Add extension"
+
+3. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it. You can use a token for your password though. <https://help.sonatype.com/iqserver/managing/user-management/user-tokens>)
+   <br/>
+   <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
+   <br/>
+4. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
+   <br/>
+   <img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
+   <br/>
+5. Click Save to save your credentials.
+   <br/>
+6. You will be advised that your details are saved. Click Close when you are done and You will be taken back to the Extensions Install screen in Chrome. Close the screen and begin using.
+7. The installer will have created a new icon in your Chrome Menu Bar.
+   <br/>
+   <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
+   <br/>
 
 ### Developer mode
 
@@ -215,42 +232,7 @@ e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.
    <br/>
    <img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
    <br/>
-6. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it.)
-   <br/>
-   <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
-   <br/>
-7. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
-   <br/>
-   <img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
-   <br/>
-8. Click Save to save your credentials.
-   <br/>
-
-1) Navigate to Chrome store
-2) Search for Sonatype
-
-- Link is <https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd>
-
-3. Click `Add to Chrome`
-
-Note: You will be asked to "Add Sonatype Nexus IQ Extension". Click "Add extension"
-
-4. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it. You can use a token for your password though. <https://help.sonatype.com/iqserver/managing/user-management/user-tokens>)
-   <br/>
-   <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
-   <br/>
-5. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
-   <br/>
-   <img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
-   <br/>
-6. Click Save to save your credentials.
-   <br/>
-
-7. You will be advised that your details are saved. Click Close when you are done and You will be taken back to the Extensions Install screen in Chrome. Close the screen and begin using.
-8. The installer will have created a new icon in your Chrome Menu Bar.
-   <br/>
-   <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
-   <br/>
+6. Configure the plugin like in the Production mode...
 
 ### Uninstall
 
