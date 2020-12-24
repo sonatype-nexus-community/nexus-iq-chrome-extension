@@ -524,7 +524,7 @@ const renderSecuritySummaryOSSIndex = (message) => {
 const renderLicenseData = (message) => {
   var thisComponent = message.message.response.componentDetails["0"];
   let licenseData = thisComponent.licenseData;
-  
+
   // Temporary fix, HTML, etc.. should likely be revamped
   if (licenseData.declaredLicenses.length > 0) {
     for (let i = 0; i < licenseData.declaredLicenses.length; i++) {
@@ -537,6 +537,7 @@ const renderLicenseData = (message) => {
         text: licenseData.declaredLicenses[i].licenseId,
         title: 'License ID',
         href: link,
+        target: '_blank',
       }).appendTo("#declaredLicensesSpan");
 
       if (licenseData.declaredLicenses.length - i != 1) {
