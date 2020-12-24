@@ -524,34 +524,53 @@ const renderSecuritySummaryOSSIndex = (message) => {
 const renderLicenseData = (message) => {
   var thisComponent = message.message.response.componentDetails["0"];
   let licenseData = thisComponent.licenseData;
+  
+  // Temporary fix, HTML, etc.. should likely be revamped
   if (licenseData.declaredLicenses.length > 0) {
-    if (licenseData.declaredLicenses["0"].licenseId) {
-      //$("#declaredlicenses_licenseId").html(licenseData.declaredLicenses["0"].licenseId);
-      //<a href="https://en.wikipedia.org/wiki/{{{licenseId}}}_License" target="_blank">https://en.wikipedia.org/wiki/{{{licenseId}}}_License</a>
-      //https://spdx.org/licenses/0BSD.html
+    for (let i = 0; i < licenseData.declaredLicenses.length; i++) {
       let link =
         "https://en.wikipedia.org/wiki/" +
-        licenseData.declaredLicenses["0"].licenseId +
+        licenseData.declaredLicenses[i].licenseId +
         "_License";
-      console.log("link", link, licenseData.declaredLicenses["0"].licenseName);
-      $("#declaredlicenses_licenseLink").attr("href", link);
-      $("#declaredlicenses_licenseLink").html(
-        licenseData.declaredLicenses["0"].licenseId
+
+      $('<a>', {
+        text: licenseData.declaredLicenses[i].licenseId,
+        title: 'License ID',
+        href: link,
+      }).appendTo("#declaredLicensesSpan");
+
+      if (licenseData.declaredLicenses.length - i != 1) {
+        $("#declaredLicensesSpan").append(", ");
+      }
+      console.log("link", link, licenseData.declaredLicenses[i].licenseName);
+
+      $("#declaredLicensesNamesSpan").append(
+        licenseData.declaredLicenses[i].licenseName
       );
+
+      if (licenseData.declaredLicenses.length - i != 1) {
+        $("#declaredLicensesNamesSpan").append(", ");
+      }
     }
-    //$("#declaredlicenses_licenseLink").html(licenseData.declaredLicenses["0"].licenseId);
-    $("#declaredlicenses_licenseName").html(
-      licenseData.declaredLicenses["0"].licenseName
-    );
   }
-  if (thisComponent.licenseData.observedLicenses.length > 0) {
-    $("#observedLicenses_licenseId").html(
-      thisComponent.licenseData.observedLicenses["0"].licenseId
-    );
-    //document.getElementById("observedLicenses_licenseLink").innerHTML = componentInfoData.componentDetails["0"].licenseData.observedLicenses["0"].licenseName;
-    $("#observedLicenses_licenseName").html(
-      thisComponent.licenseData.observedLicenses["0"].licenseName
-    );
+  if (licenseData.observedLicenses.length > 0) {
+    for (let i = 0; i < licenseData.observedLicenses.length; i++) {
+      $("#observedLicensesSpan").append(
+        licenseData.observedLicenses[i].licenseId
+      );
+
+      if (licenseData.observedLicenses.length - i != 1) {
+        $("#observedLicensesSpan").append(", ");
+      }
+  
+      $("#observedLicensesNameSpan").append(
+        licenseData.observedLicenses[i].licenseName
+      );
+
+      if (licenseData.observedLicenses.length - i != 1) {
+        $("#observedLicensesNameSpan").append(", ");
+      }
+    }
   }
 };
 
