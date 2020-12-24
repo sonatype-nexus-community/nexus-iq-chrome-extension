@@ -540,7 +540,7 @@ const renderLicenseData = (message) => {
         target: '_blank',
       }).appendTo("#declaredLicensesSpan");
 
-      if (licenseData.declaredLicenses.length - i != 1) {
+      if (i < licenseData.declaredLicenses.length - 1) {
         $("#declaredLicensesSpan").append(", ");
       }
       console.log("link", link, licenseData.declaredLicenses[i].licenseName);
@@ -549,7 +549,7 @@ const renderLicenseData = (message) => {
         licenseData.declaredLicenses[i].licenseName
       );
 
-      if (licenseData.declaredLicenses.length - i != 1) {
+      if (i < licenseData.declaredLicenses.length - 1) {
         $("#declaredLicensesNamesSpan").append(", ");
       }
     }
@@ -560,7 +560,7 @@ const renderLicenseData = (message) => {
         licenseData.observedLicenses[i].licenseId
       );
 
-      if (licenseData.observedLicenses.length - i != 1) {
+      if (i < licenseData.observedLicenses.length - 1) {
         $("#observedLicensesSpan").append(", ");
       }
   
@@ -568,7 +568,7 @@ const renderLicenseData = (message) => {
         licenseData.observedLicenses[i].licenseName
       );
 
-      if (licenseData.observedLicenses.length - i != 1) {
+      if (i < licenseData.observedLicenses.length - 1) {
         $("#observedLicensesNameSpan").append(", ");
       }
     }
