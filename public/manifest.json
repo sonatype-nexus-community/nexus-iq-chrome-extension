@@ -1,0 +1,80 @@
+{
+  "name": "Sonatype Nexus IQ Evaluation",
+  "description": "Sonatype Nexus IQ Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
+  "author": "Cameron Townshend - ctownshend@sonatype.com",
+  "version": "2.0.0",
+  "manifest_version": 3,
+  "content_security_policy": {
+    "script-src": "self", 
+    "object-src": "self"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Open the popup"
+  },
+  "optional_permissions": [
+    "tabs",
+    "notifications"
+  ],
+  "host_permissions": [
+    "http://*/",
+    "https://*/"
+  ],
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "cookies",
+    "background",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://pkgs.alpinelinux.org/package/*",
+        "https://anaconda.org/anaconda/*",
+        "https://chocolatey.org/packages/*",
+        "https://clojars.org/*",
+        "https://cocoapods.org/*",
+        "https://conan.io/center/*",
+        "https://cran.r-project.org/*",
+        "https://crates.io/*",
+        "https://packages.debian.org/*",
+        "https://tracker.debian.org/pkg/*",
+        "https://github.com/*/releases/tag/*",
+        "https://mvnrepository.com/*",
+        "https://www.npmjs.com/*",
+        "https://www.nuget.org/*",
+        "https://ossindex.sonatype.org/*",
+        "https://packagist.org/*",
+        "https://pypi.org/*",
+        "https://repo1.maven.org/*",
+        "https://repo.maven.apache.org/*",
+        "https://repo.spring.io/list/*",
+        "https://rpmfind.net/linux/RPM/epel/*",
+        "https://rubygems.org/*",
+        "https://search.gocenter.io/*",
+        "https://search.maven.org/*"
+      ],
+      "js": [
+        "/static/js/content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "web_accessible_resources": [{
+    "resources": [
+      "images/*",
+      "static/*"
+    ],
+    "matches": []
+  }],
+  "icons": {
+    "16": "images/SON_logo_favicon.png",
+    "32": "images/SON_logo_favicon.png",
+    "48": "images/SON_logo_favicon.png",
+    "128": "images/SON_logo_favicon.png"
+  }
+}

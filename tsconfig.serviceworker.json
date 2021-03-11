@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext", "webworker"],
+    "strict": true,
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "outDir": "build",
+    "composite": true,
+    "declarationMap": true,
+    "sourceMap": true,
+  },
+  "include": [
+    "src/types/*.ts",
+    "src/utils/*.ts",
+    "src/service-worker.ts"
+  ]
+}
