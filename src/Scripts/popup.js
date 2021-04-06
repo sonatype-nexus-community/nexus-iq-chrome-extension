@@ -947,12 +947,13 @@ const renderGraph = async (versionsData, currentVersion, sourceUrl) => {
   const versionClickHandler = async (cbdata) => {
     UpdateBrowser(cbdata, currentVersion, sourceUrl);
   };
-  Insight.ComponentInformation({
+  versionGraph.renderVersionGraph({
     selectable: true,
     versionClick: versionClickHandler,
+    showDetails: true,
+    showCurrentVersionLabel: true,
     data: {
       version: currentVersion,
-      nextMajorRevisionIndex: undefined,
       versions: versionsData,
     },
   });
