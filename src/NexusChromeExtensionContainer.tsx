@@ -18,12 +18,12 @@ import Popup from './components/Popup/Popup';
 import { NexusContext, NexusContextInterface } from './context/NexusContext';
 import { RepoType } from './utils/Constants';
 import { findRepoType } from './utils/UrlParsing';
-import { ArtifactMessageResponse, ComponentContainer } from './types/ArtifactMessage';
+import { IqRequestService } from './services/IqRequestService';
 
 type AppProps = {};
 
 class NexusChromeExtensionContainer extends React.Component<AppProps, NexusContextInterface> {
-  private channel = new BroadcastChannel("artifact-messages");
+  private iqRequestService = new IqRequestService();
 
   constructor(props: AppProps) {
     super(props);
@@ -31,16 +31,6 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       scanType: "",
       vulnerabilities: [],
       componentDetails: undefined
-    }
-
-    this.channel.onmessage = (event: MessageEvent<ArtifactMessageResponse>) => {
-
-      if (event.data.type == "artifactResponse") {
-        if (event.data.artifact.componentDetails && event.data.artifact.componentDetails.length > 0) {
-          console.info("Component Details recieved", event.data.artifact.componentDetails[0]);
-          this.setState({ componentDetails: event.data.artifact.componentDetails[0] });
-        }
-      }
     }
   }
 
@@ -62,10 +52,15 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   }
 
   handleResponse = (purl: string) => {
-    this.channel.postMessage({
-      type: "getArtifactDetailsFromService", 
-      purl: purl
-    });
+    this.iqRequestService.getComponentDetails(purl)
+      .then((res) => {
+        if (res.componentDetails && res.componentDetails.length > 0) {
+          this.setState({ componentDetails: res.componentDetails[0] });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   render() {

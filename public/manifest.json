@@ -61,9 +61,6 @@
       "run_at": "document_end"
     }
   ],
-  "background": {
-    "service_worker": "service-worker.js"
-  },
   "web_accessible_resources": [{
     "resources": [
       "images/*",

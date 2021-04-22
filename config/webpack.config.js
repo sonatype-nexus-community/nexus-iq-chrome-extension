@@ -454,32 +454,4 @@ const reactConfig = {
   performance: false,
 };
 
-const serviceWorkerConfig = {
-  target: "node",
-  mode: "none",
-  devtool: "source-map",
-  entry: {
-    index: path.join(__dirname, "..", "src", "service-worker.ts"),
-  },
-  resolve: {
-    extensions: [".ts"],
-  },
-  output: {
-    path: path.join(__dirname, "..", "build"),
-    filename: "service-worker.js"
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        loader: 'ts-loader',
-        options: {
-          configFile: paths.serviceWorkerTsConfig
-        }
-      }
-    ]
-  },
-  plugins: [],
-};
-
-module.exports = [reactConfig, serviceWorkerConfig];
+module.exports = [reactConfig];

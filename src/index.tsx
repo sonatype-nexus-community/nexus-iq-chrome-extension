@@ -17,7 +17,6 @@ import { NxButton } from '@sonatype/react-shared-components';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import NexusChromeExtensionContainer from './NexusChromeExtensionContainer';
-import registerServiceWorker from './registerServiceWorker';
 
 const askForPermissions = (event: any) => {
   console.log(event);
@@ -41,5 +40,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-registerServiceWorker();
