@@ -20,7 +20,7 @@ import {RepoType} from './utils/Constants';
 import {findRepoType} from './utils/UrlParsing';
 import {IqRequestService} from './services/IqRequestService';
 
-type AppProps = Record<string, unknown>;
+type AppProps = {};
 
 class NexusChromeExtensionContainer extends React.Component<AppProps, NexusContextInterface> {
   private iqRequestService = new IqRequestService();
