@@ -17,6 +17,13 @@ const copyWebpackPlugin = new CopyWebpackPlugin({
   patterns: [
     {
       from: 'public',
+      globOptions: {
+        dot: true,
+        gitignore: true,
+        ignore: [
+          "**/index.html"
+        ],
+      },
     },
   ],
 });
