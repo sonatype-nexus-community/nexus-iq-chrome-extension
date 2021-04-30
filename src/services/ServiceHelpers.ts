@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import {version} from '../../package.json';
+
 export class ServiceHelpers {
   static getBasicAuth = (user: string, token: string): string => {
     const usernameToken = user + ':' + token;
@@ -23,6 +25,6 @@ export class ServiceHelpers {
   };
 
   static getUserAgent = (): HeadersInit => {
-    return {'User-Agent': `Nexus_IQ_Chrome_Extension/0.0.1`};
+    return {'User-Agent': `Nexus_IQ_Chrome_Extension/${version}`};
   };
 }

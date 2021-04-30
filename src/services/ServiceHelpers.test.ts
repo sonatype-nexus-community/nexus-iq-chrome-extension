@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { ServiceHelpers } from './ServiceHelpers';
+import {ServiceHelpers} from './ServiceHelpers';
+import {version} from '../../package.json';
 
 describe('Service Helpers', () => {
   test('allow you to get a proper user agent', () => {
     const userAgent = ServiceHelpers.getUserAgent();
 
     expect(userAgent).toBeDefined();
-    expect(userAgent).toEqual({'User-Agent': `Nexus_IQ_Chrome_Extension/0.0.1`});
+    expect(userAgent).toEqual({'User-Agent': `Nexus_IQ_Chrome_Extension/${version}`});
   });
 
   test('allow you to get a Basic Auth string', () => {
-    const baseAuth = ServiceHelpers.getBasicAuth("admin", "admin123");
+    const baseAuth = ServiceHelpers.getBasicAuth('admin', 'admin123');
 
     expect(baseAuth).toBeDefined();
-    expect(baseAuth).toBe("Basic YWRtaW46YWRtaW4xMjM=");
+    expect(baseAuth).toBe('Basic YWRtaW46YWRtaW4xMjM=');
   });
 });
