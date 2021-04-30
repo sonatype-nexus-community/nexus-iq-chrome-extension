@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import React from 'react';
-import { ComponentContainer } from '../types/ArtifactMessage';
+import {ComponentContainer} from '../types/ArtifactMessage';
 
 export interface NexusContextInterface {
-  scanType?: string,
-  vulnerabilities?: any[],
-  componentDetails?: ComponentContainer
+  scanType?: string;
+  vulnerabilities?: any[];
+  componentDetails?: ComponentContainer;
 }
 
 const initialContext: NexusContextInterface = {};

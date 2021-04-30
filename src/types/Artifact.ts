@@ -16,13 +16,13 @@
 import {PackageURL} from 'packageurl-js';
 
 export class Artifact {
-
   constructor(
-    readonly format: string, 
-    readonly hash: string | undefined | null, 
+    readonly format: string,
+    readonly hash: string | undefined | null,
     readonly datasource: string,
     readonly name: string,
-    readonly version: string) {}
+    readonly version: string
+  ) {}
 
   public display(): string {
     return this.format;
@@ -30,6 +30,12 @@ export class Artifact {
 
   public toPurl(): string {
     return new PackageURL(
-      this.format, undefined, this.name, this.version, undefined, undefined).toString();
+      this.format,
+      undefined,
+      this.name,
+      this.version,
+      undefined,
+      undefined
+    ).toString();
   }
 }

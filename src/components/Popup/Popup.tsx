@@ -13,56 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { 
-  NxTab, 
-  NxTabList, 
-  NxTabPanel, 
-  NxTabs } 
-  from '@sonatype/react-shared-components';
+import {NxTab, NxTabList, NxTabPanel, NxTabs} from '@sonatype/react-shared-components';
 import ComponentInfoPage from './ComponentInfoPage/ComponentInfoPage';
 import LicensingPage from './LicensingPage/LicensingPage';
 import SecurityPage from './SecurityPage/SecurityPage';
-import React, { useContext, useState } from 'react';
-import { NexusContext, NexusContextInterface } from '../../context/NexusContext';
+import React, {useContext, useState} from 'react';
+import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 
 const Popup = () => {
-
   const [activeTabId, setActiveTabId] = useState(0);
 
   const nexusContext = useContext(NexusContext);
 
   const renderPopup = (nexusContext: NexusContextInterface | undefined) => {
-
     if (nexusContext && nexusContext.componentDetails) {
-      return <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-        <NxTabList>
-          <NxTab>
-            Component Info
-          </NxTab>
-          <NxTab>
-            Security
-          </NxTab>
-          <NxTab>
-            Licensing
-          </NxTab>
-        </NxTabList>
-        <NxTabPanel>
-          <ComponentInfoPage></ComponentInfoPage>
-        </NxTabPanel>
-        <NxTabPanel>
-          <SecurityPage></SecurityPage>
-        </NxTabPanel>
-        <NxTabPanel>
-          <LicensingPage></LicensingPage>
-        </NxTabPanel>
-      </NxTabs>
+      return (
+        <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+          <NxTabList>
+            <NxTab>Component Info</NxTab>
+            <NxTab>Security</NxTab>
+            <NxTab>Licensing</NxTab>
+          </NxTabList>
+          <NxTabPanel>
+            <ComponentInfoPage></ComponentInfoPage>
+          </NxTabPanel>
+          <NxTabPanel>
+            <SecurityPage></SecurityPage>
+          </NxTabPanel>
+          <NxTabPanel>
+            <LicensingPage></LicensingPage>
+          </NxTabPanel>
+        </NxTabs>
+      );
     }
     return null;
-  }
+  };
 
-  return (
-    renderPopup(nexusContext)
-  )
-}
+  return renderPopup(nexusContext);
+};
 
 export default Popup;

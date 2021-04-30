@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useContext } from 'react';
-import { NexusContext, NexusContextInterface } from '../../../../../context/NexusContext';
-import { NxVulnerabilityDetails } from '@sonatype/react-shared-components';
+import React, {useContext} from 'react';
+import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import {NxVulnerabilityDetails} from '@sonatype/react-shared-components';
 
 const VulnDetails = () => {
-
   const nexusContext = useContext(NexusContext);
 
   const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
@@ -26,11 +25,9 @@ const VulnDetails = () => {
     //   return <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails} />
     // }
     return null;
-  }
+  };
 
-  return (
-    renderVulnerability(nexusContext)
-  )
-}
+  return renderVulnerability(nexusContext);
+};
 
 export default VulnDetails;

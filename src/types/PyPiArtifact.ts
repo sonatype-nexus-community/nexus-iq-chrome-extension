@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PackageURL } from "packageurl-js";
-import { DATA_SOURCES, FORMATS } from "../utils/Constants";
-import { Artifact } from "./Artifact";
+import {PackageURL} from 'packageurl-js';
+import {DATA_SOURCES, FORMATS} from '../utils/Constants';
+import {Artifact} from './Artifact';
 
 export class PyPIArtifact extends Artifact {
-
   constructor(
-    readonly name: string, 
-    readonly version: string, 
-    readonly qualifier: string = "", 
-    readonly extension: string = "tar.gz") {
+    readonly name: string,
+    readonly version: string,
+    readonly qualifier: string = '',
+    readonly extension: string = 'tar.gz'
+  ) {
     super(FORMATS.pypi, null, DATA_SOURCES.NEXUSIQ, name, version);
   }
 
@@ -32,9 +32,15 @@ export class PyPIArtifact extends Artifact {
   }
 
   public toPurl(): string {
-    const qualifiers = { "extension": this.extension };
-    
+    const qualifiers = {extension: this.extension};
+
     return new PackageURL(
-      this.format, undefined, this.name, this.version, qualifiers, undefined).toString();
+      this.format,
+      undefined,
+      this.name,
+      this.version,
+      qualifiers,
+      undefined
+    ).toString();
   }
 }

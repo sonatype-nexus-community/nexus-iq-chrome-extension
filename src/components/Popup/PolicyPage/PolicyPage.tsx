@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { 
-  useContext } from 'react';
-import { 
-  NexusContext, 
-  NexusContextInterface } from '../../../context/NexusContext';
+import React, {useContext} from 'react';
+import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
 
 const PolicyPage = () => {
-
   const nexusContext = useContext(NexusContext);
 
   const renderPolicyViolation = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.componentDetails ) {
-      return (
-        <React.Fragment>
-        </React.Fragment>
-      )
+    if (nexusContext && nexusContext.componentDetails) {
+      return <React.Fragment></React.Fragment>;
     }
     return null;
-  }
+  };
 
-  return (
-    renderPolicyViolation(nexusContext)
-  )
-}
+  return renderPolicyViolation(nexusContext);
+};
 
 export default PolicyPage;

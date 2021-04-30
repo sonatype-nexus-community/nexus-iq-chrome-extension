@@ -15,40 +15,37 @@
  */
 import * as React from 'react';
 import VulnDetails from './VulnDetails/VulnDetails';
-import { 
-  NxAccordion, 
+import {
+  NxAccordion,
   NxPolicyViolationIndicator,
-  ThreatLevelNumber } from '@sonatype/react-shared-components';
+  ThreatLevelNumber
+} from '@sonatype/react-shared-components';
 
 type SecurityItemProps = {
-  securityIssue: any,
-  open: boolean,
-  packageUrl: string,
-  remediationEvent: (packageUrl: string, vulnID: string) => void
-}
+  securityIssue: any;
+  open: boolean;
+  packageUrl: string;
+  remediationEvent: (packageUrl: string, vulnID: string) => void;
+};
 
 const SecurityItemDisplay = (props: SecurityItemProps) => {
-
-    return (
-      <NxAccordion 
-        open={ props.open } 
-        onToggle={() => props.remediationEvent(props.packageUrl, props.securityIssue.reference) }>
-        <NxAccordion.Header>
-          <h2 className="nx-accordion__header-title">
-            { props.securityIssue.reference }
-          </h2>
-          <div className="nx-btn-bar">
-            <NxPolicyViolationIndicator 
-              policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber} 
-              />
-          </div>
-        </NxAccordion.Header>
-        <h3 className="nx-h3">
-          Details
-        </h3>
-        <VulnDetails />
-      </NxAccordion>
-    );
-}
+  return (
+    <NxAccordion
+      open={props.open}
+      onToggle={() => props.remediationEvent(props.packageUrl, props.securityIssue.reference)}
+    >
+      <NxAccordion.Header>
+        <h2 className="nx-accordion__header-title">{props.securityIssue.reference}</h2>
+        <div className="nx-btn-bar">
+          <NxPolicyViolationIndicator
+            policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
+          />
+        </div>
+      </NxAccordion.Header>
+      <h3 className="nx-h3">Details</h3>
+      <VulnDetails />
+    </NxAccordion>
+  );
+};
 
 export default SecurityItemDisplay;

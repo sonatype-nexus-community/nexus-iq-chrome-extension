@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import { ArtifactMessage } from './types/ArtifactMessage';
-import { getArtifactDetailsFromDOM } from './utils/PageParsing';
+import {ArtifactMessage} from './types/ArtifactMessage';
+import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 
 chrome.runtime.onMessage.addListener((event: ArtifactMessage, sender, respCallback) => {
-  console.info("Recieved a message on content.js", event);
+  console.info('Recieved a message on content.js', event);
 
   if (event.type === 'getArtifactDetailsFromWebpage') {
-    console.info("Message says to get some artifact details from the webpage, will do boss!");
+    console.info('Message says to get some artifact details from the webpage, will do boss!');
 
     const purl = getArtifactDetailsFromDOM(event.format, event.url!);
 
-    console.info("Got a purl back from scraping url or webpage", purl);
+    console.info('Got a purl back from scraping url or webpage', purl);
     if (purl) {
       respCallback(purl.toString());
     }

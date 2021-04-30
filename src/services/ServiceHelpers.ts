@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as React from 'react';
-import {NxTableRow, NxTableCell} from '@sonatype/react-shared-components';
-import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
-type LicensingDisplayProps = {
-  licenseData: LicenseDetail;
-};
+export class ServiceHelpers {
+  static getBasicAuth = (user: string, token: string): string => {
+    const usernameToken = user + ':' + token;
+    const _base64 = btoa(usernameToken);
 
-const LicensingDisplay = (props: LicensingDisplayProps) => {
-  return (
-    <NxTableRow>
-      <NxTableCell>ID: {props.licenseData.licenseId}</NxTableCell>
-      <NxTableCell>Name: {props.licenseData.licenseName}</NxTableCell>
-    </NxTableRow>
-  );
-};
+    return `Basic ${_base64}`;
+  };
 
-export default LicensingDisplay;
+  static getUserAgent = (): HeadersInit => {
+    return {'User-Agent': `Nexus_IQ_Chrome_Extension/0.0.1`};
+  };
+}

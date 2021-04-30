@@ -14,211 +14,211 @@
  * limitations under the License.
  */
 export const DATA_SOURCES = {
-  NEXUSIQ: "NEXUSIQ",
-  OSSINDEX: "OSSINDEX",
+  NEXUSIQ: 'NEXUSIQ',
+  OSSINDEX: 'OSSINDEX'
 };
 
 export const REPOSITORY_MANAGERS = {
-  NEXUS: "nexus",
-  ARTIFACTORY: "artifactory",
+  NEXUS: 'nexus',
+  ARTIFACTORY: 'artifactory'
 };
 
 export const FORMATS = {
-  alpine: "alpine",
-  cargo: "cargo", //cargo == crates == rust
-  chocolatey: "chocolatey",
-  clojars: "clojars",
-  cocoapods: "cocoapods",
-  composer: "composer", //packagist website but composer format, php language
-  conan: "conan",
-  conda: "conda",
-  cran: "cran",
-  debian: "deb",
-  gem: "gem",
-  github: "github",
-  golang: "golang",
-  maven: "maven",
-  npm: "npm",
-  nuget: "nuget",
-  pypi: "pypi",
-  rpm: "rpm",
+  alpine: 'alpine',
+  cargo: 'cargo', //cargo == crates == rust
+  chocolatey: 'chocolatey',
+  clojars: 'clojars',
+  cocoapods: 'cocoapods',
+  composer: 'composer', //packagist website but composer format, php language
+  conan: 'conan',
+  conda: 'conda',
+  cran: 'cran',
+  debian: 'deb',
+  gem: 'gem',
+  github: 'github',
+  golang: 'golang',
+  maven: 'maven',
+  npm: 'npm',
+  nuget: 'nuget',
+  pypi: 'pypi',
+  rpm: 'rpm'
 };
 
 export interface RepoType {
-  url: string,
-  repoFormat?: string,
-  titleSelector?: string,
-  versionPath?: string,
-  dataSource: string,
-  appendVersionPath?: string,
+  url: string;
+  repoFormat?: string;
+  titleSelector?: string;
+  versionPath?: string;
+  dataSource: string;
+  appendVersionPath?: string;
 }
 
 export const REPO_TYPES = [
   {
-    url: "https://pkgs.alpinelinux.org/package/",
+    url: 'https://pkgs.alpinelinux.org/package/',
     repoFormat: FORMATS.alpine,
-    titleSelector: "th.header ~ td",
-    versionPath: "",
+    titleSelector: 'th.header ~ td',
+    versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
+    appendVersionPath: ''
   },
   {
-    url: "https://anaconda.org/anaconda/",
+    url: 'https://anaconda.org/anaconda/',
     repoFormat: FORMATS.conda,
-    titleSelector: "span.long-breadcrumb",
-    versionPath: "",
+    titleSelector: 'span.long-breadcrumb',
+    versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
+    appendVersionPath: ''
   },
   {
-    url: "https://chocolatey.org/packages/",
+    url: 'https://chocolatey.org/packages/',
     repoFormat: FORMATS.chocolatey,
-    titleSelector: "h1",
-    versionPath: "{url}/{packagename}/{versionNumber}",
-    dataSource: DATA_SOURCES.OSSINDEX,
+    titleSelector: 'h1',
+    versionPath: '{url}/{packagename}/{versionNumber}',
+    dataSource: DATA_SOURCES.OSSINDEX
   },
   {
-    url: "https://clojars.org/",
+    url: 'https://clojars.org/',
     repoFormat: FORMATS.clojars,
-    titleSelector: "#jar-title > h1 > a",
-    versionPath: "",
+    titleSelector: '#jar-title > h1 > a',
+    versionPath: '',
     dataSource: DATA_SOURCES.OSSINDEX,
-    appendVersionPath: "/versions/{version}",
+    appendVersionPath: '/versions/{version}'
   },
   {
-    url: "https://cocoapods.org/pods/",
+    url: 'https://cocoapods.org/pods/',
     repoFormat: FORMATS.cocoapods,
-    titleSelector: "h1",
-    versionPath: "",
+    titleSelector: 'h1',
+    versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
+    appendVersionPath: ''
   },
   {
-    url: "https://conan.io/center/",
+    url: 'https://conan.io/center/',
     repoFormat: FORMATS.conan,
-    titleSelector: ".package-name",
-    versionPath: "",
-    appendVersionPath: "",
-    dataSource: DATA_SOURCES.NEXUSIQ,
+    titleSelector: '.package-name',
+    versionPath: '',
+    appendVersionPath: '',
+    dataSource: DATA_SOURCES.NEXUSIQ
   },
   {
-    url: "https://cran.r-project.org/",
+    url: 'https://cran.r-project.org/',
     repoFormat: FORMATS.cran,
-    titleSelector: "h2", //"h2.title",?
-    versionPath: "",
-    appendVersionPath: "",
-    dataSource: DATA_SOURCES.NEXUSIQ,
+    titleSelector: 'h2', //"h2.title",?
+    versionPath: '',
+    appendVersionPath: '',
+    dataSource: DATA_SOURCES.NEXUSIQ
   },
   {
-    url: "https://crates.io/crates/",
+    url: 'https://crates.io/crates/',
     repoFormat: FORMATS.cargo,
     titleSelector: "div[class*='heading'] h1",
-    versionPath: "{url}/{packagename}/{versionNumber}", // https://crates.io/crates/claxon/0.4.0
+    versionPath: '{url}/{packagename}/{versionNumber}', // https://crates.io/crates/claxon/0.4.0
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "/{versionNumber}",
+    appendVersionPath: '/{versionNumber}'
   },
   {
-    url: "https://packages.debian.org",
+    url: 'https://packages.debian.org',
     repoFormat: FORMATS.debian,
-    titleSelector: "",
-    versionPath: "",
-    dataSource: DATA_SOURCES.NEXUSIQ,
+    titleSelector: '',
+    versionPath: '',
+    dataSource: DATA_SOURCES.NEXUSIQ
   },
   {
-    url: "https://tracker.debian.org/pkg",
+    url: 'https://tracker.debian.org/pkg',
     repoFormat: FORMATS.debian,
-    titleSelector: "li.list-group-item",
-    versionPath: "",
-    dataSource: DATA_SOURCES.NEXUSIQ,
+    titleSelector: 'li.list-group-item',
+    versionPath: '',
+    dataSource: DATA_SOURCES.NEXUSIQ
   },
   {
-    url: "https://search.gocenter.io/",
+    url: 'https://search.gocenter.io/',
     repoFormat: FORMATS.golang,
-    titleSelector: "#app div.v-application--wrap h1",
-    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    titleSelector: '#app div.v-application--wrap h1',
+    versionPath: '{url}/{packagename}/info?version={versionNumber}', // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "/info?version={versionNumber}",
+    appendVersionPath: '/info?version={versionNumber}'
   },
   {
-    url: "https://repo1.maven.org/maven2/",
+    url: 'https://repo1.maven.org/maven2/',
     repoFormat: FORMATS.maven,
-    titleSelector: "h1",
-    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    titleSelector: 'h1',
+    versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
+    appendVersionPath: ''
   },
   {
-    url: "https://repo.maven.apache.org/maven2/",
+    url: 'https://repo.maven.apache.org/maven2/',
     repoFormat: FORMATS.maven,
-    titleSelector: "h1",
-    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    titleSelector: 'h1',
+    versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
+    appendVersionPath: ''
   },
   {
-    url: "https://search.maven.org/artifact/",
+    url: 'https://search.maven.org/artifact/',
     repoFormat: FORMATS.maven,
-    titleSelector: ".artifact-title",
-    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}/{extension}",
+    titleSelector: '.artifact-title',
+    versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
+    appendVersionPath: ''
   },
   {
-    url: "https://mvnrepository.com/artifact/",
+    url: 'https://mvnrepository.com/artifact/',
     repoFormat: FORMATS.maven,
-    titleSelector: "h2.im-title",
-    versionPath: "{url}/{groupid}/{artifactid}/{versionNumber}",
+    titleSelector: 'h2.im-title',
+    versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
+    appendVersionPath: ''
   },
   {
-    url: "https://www.npmjs.com/package/",
+    url: 'https://www.npmjs.com/package/',
     repoFormat: FORMATS.npm,
-    titleSelector: "#top > div > h2 > span", //".package-name-redundant",
+    titleSelector: '#top > div > h2 > span', //".package-name-redundant",
     // titleSelector: ".package-name-redundant",
-    versionPath: "{url}/{packagename}/v/{versionNumber}",
+    versionPath: '{url}/{packagename}/v/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "/v/{versionNumber}",
+    appendVersionPath: '/v/{versionNumber}'
   },
   {
     //https://www.nuget.org/packages/LibGit2Sharp/0.20.1
-    url: "https://www.nuget.org/packages/",
+    url: 'https://www.nuget.org/packages/',
     repoFormat: FORMATS.nuget,
-    titleSelector: ".package-title > h1",
-    versionPath: "{url}/{packagename}/{versionNumber}",
+    titleSelector: '.package-title > h1',
+    versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "/{versionNumber}",
+    appendVersionPath: '/{versionNumber}'
   },
 
   {
-    url: "https://packagist.org/packages/",
+    url: 'https://packagist.org/packages/',
     repoFormat: FORMATS.composer,
-    titleSelector: "h2.title",
-    versionPath: "{url}/{packagename}#{versionNumber}",
+    titleSelector: 'h2.title',
+    versionPath: '{url}/{packagename}#{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "#{versionNumber}",
+    appendVersionPath: '#{versionNumber}'
   },
   {
-    url: "https://pypi.org/project/",
+    url: 'https://pypi.org/project/',
     repoFormat: FORMATS.pypi,
-    titleSelector: "h1.package-header__name",
-    versionPath: "{url}/{packagename}/{versionNumber}",
+    titleSelector: 'h1.package-header__name',
+    versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "{versionNumber}",
+    appendVersionPath: '{versionNumber}'
   },
   {
-    url: "https://rubygems.org/gems/",
+    url: 'https://rubygems.org/gems/',
     repoFormat: FORMATS.gem,
-    titleSelector: "h1.t-display",
-    versionPath: "{url}/{packagename}/versions/{versionNumber}",
+    titleSelector: 'h1.t-display',
+    versionPath: '{url}/{packagename}/versions/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "/versions/{versionNumber}",
+    appendVersionPath: '/versions/{versionNumber}'
   },
   {
-    url: "/#browse/browse:",
+    url: '/#browse/browse:',
     titleSelector: "div[id*='-coreui-component-componentinfo-'",
-    versionPath: "",
+    versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: "",
-  },
+    appendVersionPath: ''
+  }
 ];

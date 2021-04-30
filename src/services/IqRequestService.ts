@@ -15,13 +15,14 @@
  */
 
 export class IqRequestService {
-  private readonly xsrfCookieName = "CLM-CSRF-TOKEN";
-  private readonly xsrfHeaderName = "X-CSRF-TOKEN";
-  
+  private readonly xsrfCookieName = 'CLM-CSRF-TOKEN';
+  private readonly xsrfHeaderName = 'X-CSRF-TOKEN';
+
   constructor(
     readonly url: string = 'http://localhost:8070',
     readonly user: string = 'admin',
-    readonly token: string = 'admin123') {}
+    readonly token: string = 'admin123'
+  ) {}
 
   public async getComponentDetails(purl: string): Promise<any> {
     await this.canLogin();
@@ -30,61 +31,64 @@ export class IqRequestService {
     headers.set('Content-Type', 'application/json');
 
     const data = {
-      components: [{
-        packageUrl: purl
-      }]
+      components: [
+        {
+          packageUrl: purl
+        }
+      ]
     };
 
     return new Promise((resolve, reject) => {
-
       fetch(`${this.url}/api/v2/components/details`, {
         method: 'POST',
         headers: headers,
         mode: 'cors',
         body: JSON.stringify(data)
-      }).then(async (res) => {
-        if (res.ok) {
-          const body = await res.json();
-          resolve(body);
+      })
+        .then(async (res) => {
+          if (res.ok) {
+            const body = await res.json();
+            resolve(body);
 
-          return;
-        }
-        reject(res);
-      }).catch((err) => {
-        reject(err);
-      });
+            return;
+          }
+          reject(res);
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 
   canLogin = async (): Promise<void> => {
-
     const headers = await this.getHeaders();
 
     return new Promise((resolve, reject) => {
-
       fetch(`${this.url}/rest/user/session`, {
         method: 'GET',
         headers: headers
-      }).then(async (res) => {
-        if (res.ok) {
-          resolve();
+      })
+        .then(async (res) => {
+          if (res.ok) {
+            resolve();
 
-          return;
-        }
-      }).catch((err) => {
-        reject(err);
-      });
-    })
-  }
+            return;
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  };
 
   private getHeaders(): Promise<Headers> {
     return new Promise((resolve, reject) => {
       const meta = this.getUserAgent();
 
       const headers = new Headers(meta);
-  
+
       headers.append('Authorization', this.getBasicAuth());
-  
+
       this.getCookie(this.xsrfCookieName, (val: string) => {
         if (val) {
           headers.append(this.xsrfHeaderName, val);
@@ -92,15 +96,15 @@ export class IqRequestService {
 
         resolve(headers);
       });
-    })
+    });
   }
 
   private getUserAgent() {
-    return { 'User-Agent': `Nexus_IQ_Chrome_Extension/0.0.1` };
+    return {'User-Agent': `Nexus_IQ_Chrome_Extension/0.0.1`};
   }
 
   private getBasicAuth(): string {
-    const usernameToken = this.user + ":" + this.token;
+    const usernameToken = this.user + ':' + this.token;
     const _base64 = btoa(usernameToken);
 
     return `Basic ${_base64}`;
@@ -112,5 +116,5 @@ export class IqRequestService {
         cb(cookies[0].value);
       }
     });
-  }
+  };
 }

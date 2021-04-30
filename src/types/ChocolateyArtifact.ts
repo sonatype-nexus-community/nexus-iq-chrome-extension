@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DATA_SOURCES, FORMATS } from "../utils/Constants";
-import { Artifact } from "./Artifact";
+import {DATA_SOURCES, FORMATS} from '../utils/Constants';
+import {Artifact} from './Artifact';
 
 export class ChocolateyArtifact extends Artifact {
-
   constructor(readonly name: string, readonly version: string) {
     super(FORMATS.chocolatey, null, DATA_SOURCES.OSSINDEX, name, version);
   }

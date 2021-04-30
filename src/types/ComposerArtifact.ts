@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PackageURL } from "packageurl-js";
-import { DATA_SOURCES, FORMATS } from "../utils/Constants";
-import { Artifact } from "./Artifact";
+import {PackageURL} from 'packageurl-js';
+import {DATA_SOURCES, FORMATS} from '../utils/Constants';
+import {Artifact} from './Artifact';
 
 export class ComposerArtifact extends Artifact {
-
   constructor(readonly namespace: string, readonly name: string, readonly version: string) {
     super(FORMATS.composer, null, DATA_SOURCES.NEXUSIQ, name, version);
   }
 
   public toPurl(): string {
     return new PackageURL(
-      this.format, this.namespace, this.name, this.version, undefined, undefined).toString();
+      this.format,
+      this.namespace,
+      this.name,
+      this.version,
+      undefined,
+      undefined
+    ).toString();
   }
 }

@@ -13,102 +13,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useContext } from 'react';
-import { NexusContext, NexusContextInterface } from '../../../context/NexusContext';
-import { 
-  NxTable, 
-  NxTableHead, 
-  NxTableRow, 
-  NxTableCell, 
-  NxTableBody } 
-  from '@sonatype/react-shared-components';
+import React, {useContext} from 'react';
+import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+import {
+  NxTable,
+  NxTableHead,
+  NxTableRow,
+  NxTableCell,
+  NxTableBody
+} from '@sonatype/react-shared-components';
 
 const ComponentInfoPage = () => {
-
   const nexusContext = useContext(NexusContext);
 
   const formatDate = (date: string): string => {
     if (date) {
-      var dateTime = new Date(date);
+      const dateTime = new Date(date);
       return dateTime.toDateString();
     }
-    return "Unknown";
-  }
+    return 'Unknown';
+  };
 
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext && nexusContext.componentDetails) {
-      return <NxTable>
-      <NxTableHead>
-        <NxTableRow>
-          <NxTableCell colSpan={2}>
-            <h2>{ nexusContext.componentDetails.component.name }</h2>
-          </NxTableCell>
-        </NxTableRow>
-      </NxTableHead>
-      <NxTableBody>
-        <NxTableRow>
-          <NxTableCell>
-            Package URL
-          </NxTableCell>
-          <NxTableCell>
-            { nexusContext.componentDetails.component.packageUrl }
-          </NxTableCell>
-        </NxTableRow>
-        <NxTableRow>
-          <NxTableCell>
-            Hash
-          </NxTableCell>
-          <NxTableCell>
-            { nexusContext.componentDetails.component.hash }
-          </NxTableCell>
-        </NxTableRow>
-        <NxTableRow>
-          <NxTableCell>
-            Version
-          </NxTableCell>
-          <NxTableCell>
-            <span id="version">
-              { nexusContext.componentDetails.component.componentIdentifier.coordinates.version }
-            </span>
-          </NxTableCell>
-        </NxTableRow>
-        <NxTableRow>
-          <NxTableCell>
-            Match State
-          </NxTableCell>
-          <NxTableCell>
-            { nexusContext.componentDetails.matchState }
-          </NxTableCell>
-        </NxTableRow>
-        <NxTableRow>
-          <NxTableCell>
-            Catalog Date
-          </NxTableCell>
-          <NxTableCell>
-            <span id="catalogdate">
-              { formatDate(nexusContext.componentDetails.catalogDate) }
-            </span>
-          </NxTableCell>
-        </NxTableRow>
-        <NxTableRow>
-          <NxTableCell>
-            Relative Popularity
-          </NxTableCell>
-          <NxTableCell>
-            <span id="relativepopularity">
-              { nexusContext.componentDetails.relativePopularity }
-            </span>
-          </NxTableCell>
-        </NxTableRow>
-      </NxTableBody>
-    </NxTable>
+      return (
+        <NxTable>
+          <NxTableHead>
+            <NxTableRow>
+              <NxTableCell colSpan={2}>
+                <h2>{nexusContext.componentDetails.component.name}</h2>
+              </NxTableCell>
+            </NxTableRow>
+          </NxTableHead>
+          <NxTableBody>
+            <NxTableRow>
+              <NxTableCell>Package URL</NxTableCell>
+              <NxTableCell>{nexusContext.componentDetails.component.packageUrl}</NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Hash</NxTableCell>
+              <NxTableCell>{nexusContext.componentDetails.component.hash}</NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Version</NxTableCell>
+              <NxTableCell>
+                <span id="version">
+                  {nexusContext.componentDetails.component.componentIdentifier.coordinates.version}
+                </span>
+              </NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Match State</NxTableCell>
+              <NxTableCell>{nexusContext.componentDetails.matchState}</NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Catalog Date</NxTableCell>
+              <NxTableCell>
+                <span id="catalogdate">
+                  {formatDate(nexusContext.componentDetails.catalogDate)}
+                </span>
+              </NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Relative Popularity</NxTableCell>
+              <NxTableCell>
+                <span id="relativepopularity">
+                  {nexusContext.componentDetails.relativePopularity}
+                </span>
+              </NxTableCell>
+            </NxTableRow>
+          </NxTableBody>
+        </NxTable>
+      );
     }
     return null;
-  }
+  };
 
-  return (
-    renderCIPPage(nexusContext)
-  )
-}
+  return renderCIPPage(nexusContext);
+};
 
 export default ComponentInfoPage;

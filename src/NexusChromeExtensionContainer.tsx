@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Popup from './components/Popup/Popup';
-import { NexusContext, NexusContextInterface } from './context/NexusContext';
-import { RepoType } from './utils/Constants';
-import { findRepoType } from './utils/UrlParsing';
-import { IqRequestService } from './services/IqRequestService';
+import {NexusContext, NexusContextInterface} from './context/NexusContext';
+import {RepoType} from './utils/Constants';
+import {findRepoType} from './utils/UrlParsing';
+import {IqRequestService} from './services/IqRequestService';
 
-type AppProps = {};
+type AppProps = Record<string, unknown>;
 
 class NexusChromeExtensionContainer extends React.Component<AppProps, NexusContextInterface> {
   private iqRequestService = new IqRequestService();
@@ -28,45 +28,47 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   constructor(props: AppProps) {
     super(props);
     this.state = {
-      scanType: "",
+      scanType: '',
       vulnerabilities: [],
       componentDetails: undefined
-    }
+    };
   }
 
   componentDidMount = () => {
-    chrome.tabs.query({active: true, currentWindow: true})
-    .then((tabs) => {
+    chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
       if (tabs[0]) {
         const repoType: RepoType | undefined = findRepoType(tabs[0].url!);
 
-        console.info("Found repoType", repoType);
-  
+        console.info('Found repoType', repoType);
+
         chrome.tabs.sendMessage(
-          tabs[0].id!, 
-          {"type": "getArtifactDetailsFromWebpage", "format": repoType?.repoFormat, "url": tabs[0].url!},
+          tabs[0].id!,
+          {type: 'getArtifactDetailsFromWebpage', format: repoType?.repoFormat, url: tabs[0].url!},
           this.handleResponse
         );
       }
-    })
-  }
+    });
+  };
 
   handleResponse = (purl: string) => {
-    this.iqRequestService.getComponentDetails(purl)
+    this.iqRequestService
+      .getComponentDetails(purl)
       .then((res) => {
         if (res.componentDetails && res.componentDetails.length > 0) {
-          this.setState({ componentDetails: res.componentDetails[0] });
+          this.setState({componentDetails: res.componentDetails[0]});
         }
       })
       .catch((err) => {
         console.error(err);
       });
-  }
+  };
 
   render() {
-    return <NexusContext.Provider value={this.state}>
-      <Popup />
-    </NexusContext.Provider>
+    return (
+      <NexusContext.Provider value={this.state}>
+        <Popup />
+      </NexusContext.Provider>
+    );
   }
 }
 

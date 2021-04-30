@@ -13,63 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { 
-  useContext } from 'react';
+import React, {useContext} from 'react';
 import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
-import { 
-  NexusContext, 
-  NexusContextInterface } from '../../../context/NexusContext';
-import { 
-  NxTable, 
-  NxTableHead, 
-  NxTableRow, 
-  NxTableCell, 
-  NxTableBody } 
-  from '@sonatype/react-shared-components';
+import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+import {
+  NxTable,
+  NxTableHead,
+  NxTableRow,
+  NxTableCell,
+  NxTableBody
+} from '@sonatype/react-shared-components';
 
 const LicensingPage = () => {
-
   const nexusContext = useContext(NexusContext);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext && nexusContext.componentDetails) {
-      return <React.Fragment>
-        <NxTable>
-          <NxTableHead>
-            <NxTableRow>
-              <NxTableCell colSpan={2}>
-                Declared Licenses
-              </NxTableCell>
-            </NxTableRow>
-          </NxTableHead>
-          <NxTableBody>
-            { nexusContext.componentDetails.licenseData.declaredLicenses.map(function(license: any) {
-              return <LicensingDisplay licenseData={license} />
-            })}
-          </NxTableBody>
-        </NxTable>
-        <NxTable>
-          <NxTableHead>
-            <NxTableRow>
-              <NxTableCell colSpan={2}>
-                Observed Licenses
-              </NxTableCell>
-            </NxTableRow>
-          </NxTableHead>
-          <NxTableBody>
-            { nexusContext.componentDetails.licenseData.observedLicenses.map(function(license: any) {
-              return <LicensingDisplay licenseData={license} />
-            })}
-          </NxTableBody>
-        </NxTable>
-      </React.Fragment>
+      return (
+        <React.Fragment>
+          <NxTable>
+            <NxTableHead>
+              <NxTableRow>
+                <NxTableCell colSpan={2}>Declared Licenses</NxTableCell>
+              </NxTableRow>
+            </NxTableHead>
+            <NxTableBody>
+              {nexusContext.componentDetails.licenseData.declaredLicenses.map(function (
+                license: any
+              ) {
+                return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+              })}
+            </NxTableBody>
+          </NxTable>
+          <NxTable>
+            <NxTableHead>
+              <NxTableRow>
+                <NxTableCell colSpan={2}>Observed Licenses</NxTableCell>
+              </NxTableRow>
+            </NxTableHead>
+            <NxTableBody>
+              {nexusContext.componentDetails.licenseData.observedLicenses.map(function (
+                license: any
+              ) {
+                return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+              })}
+            </NxTableBody>
+          </NxTable>
+        </React.Fragment>
+      );
     }
     return null;
-  }
+  };
 
-  return (
-    renderLicensePage(nexusContext)
-  )
-}
+  return renderLicensePage(nexusContext);
+};
 
 export default LicensingPage;

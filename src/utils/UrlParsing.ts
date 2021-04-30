@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RepoType, REPO_TYPES } from './Constants';
+import {RepoType, REPO_TYPES} from './Constants';
 
 const findRepoType = (url: string): RepoType | undefined => {
   for (let i = 0; i < REPO_TYPES.length; i++) {
-
-    console.info("url", REPO_TYPES[i].url, url);
+    console.info('url', REPO_TYPES[i].url, url);
 
     if (url.search(REPO_TYPES[i].url) >= 0) {
       return REPO_TYPES[i];
     }
   }
-  
-  return undefined;
-}
 
-export { findRepoType };
+  return undefined;
+};
+
+export {findRepoType};
