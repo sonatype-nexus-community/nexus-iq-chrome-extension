@@ -1,0 +1,27 @@
+orbs:
+  node: circleci/node4.0.0
+
+version: 2.1
+
+jobs:
+  test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn test
+          name: Run YARN tests
+
+workflows:
+  chrome-extension-matrix-tests:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              version:
+                - 12.22.1
+                - 14.16.1
+                - 16.0.0
