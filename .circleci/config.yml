@@ -9,7 +9,8 @@ workflows:
       - node/test:
           matrix:
             parameters:
-              pkg-manager: yarn
+              pkg-manager: 
+                - yarn
               version:
                 - 12.22.1
                 - 14.16.1
