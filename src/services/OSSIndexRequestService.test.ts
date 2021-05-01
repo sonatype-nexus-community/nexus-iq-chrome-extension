@@ -115,6 +115,24 @@ beforeEach(() => {
       {
         overwriteRoutes: false
       }
+    )
+    .post(
+      {
+        url: 'end:api/v3/component-report',
+        body: {
+          coordinates: ['string']
+        }
+      },
+      {
+        status: 400,
+        body: {
+          code: 400,
+          message: "Unable to process JSON"
+        }
+      },
+      {
+        overwriteRoutes: false
+      }
     );
 });
 
@@ -143,5 +161,17 @@ describe('OSS Index Request Service', () => {
       'https://ossindex.sonatype.org/component/pkg:npm/jquery@3.1.3?utm_source=mozilla&utm_medium=integration&utm_content=5.0'
     );
     expect(res[0].vulnerabilities.length).toBe(4);
+  });
+
+  test('rejects a 400 response on an invalid purl/json', async () => {
+    expect.assertions(4);
+    try {
+      await ossIndexRequestService.getComponentDetails('string');
+    } catch (e) {
+      expect(e).toBeDefined();
+      expect(e).toBeInstanceOf(Response);
+      expect((e as Response).status).toBe(400);
+      expect(await (e as Response).json()).toStrictEqual({ "code": 400, "message": "Unable to process JSON"});
+    }
   });
 });
