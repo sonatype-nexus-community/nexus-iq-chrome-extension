@@ -16,7 +16,7 @@ jobs:
           name: Run YARN tests
 
 workflows:
-  chrome-extension-matrix-tests:
+  matrix-tests:
     jobs:
       - test:
           matrix:
