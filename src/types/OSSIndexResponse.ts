@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import {version} from '../../package.json';
-
-export class ServiceHelpers {
-  static getBasicAuth = (user: string, token: string): string => {
-    const usernameToken = user + ':' + token;
-    const _base64 = btoa(usernameToken);
-
-    return `Basic ${_base64}`;
-  };
-
-  static getUserAgent = (): Record<string, string> => {
-    return {'User-Agent': `Nexus_IQ_Chrome_Extension/${version}`};
-  };
+export interface OSSIndexResponse {
+  coordinates: string;
+  description: string;
+  reference: string;
+  vulnerabilities: [];
 }

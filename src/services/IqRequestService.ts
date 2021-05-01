@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import {ServiceHelpers} from './ServiceHelpers';
+
 export class IqRequestService {
   private readonly xsrfCookieName = 'CLM-CSRF-TOKEN';
   private readonly xsrfHeaderName = 'X-CSRF-TOKEN';
@@ -83,11 +85,11 @@ export class IqRequestService {
 
   private getHeaders(): Promise<Headers> {
     return new Promise((resolve, reject) => {
-      const meta = this.getUserAgent();
+      const meta = ServiceHelpers.getUserAgent();
 
       const headers = new Headers(meta);
 
-      headers.append('Authorization', this.getBasicAuth());
+      headers.append('Authorization', ServiceHelpers.getBasicAuth(this.user, this.token));
 
       this.getCookie(this.xsrfCookieName, (val: string) => {
         if (val) {
@@ -97,17 +99,6 @@ export class IqRequestService {
         resolve(headers);
       });
     });
-  }
-
-  private getUserAgent() {
-    return {'User-Agent': `Nexus_IQ_Chrome_Extension/0.0.1`};
-  }
-
-  private getBasicAuth(): string {
-    const usernameToken = this.user + ':' + this.token;
-    const _base64 = btoa(usernameToken);
-
-    return `Basic ${_base64}`;
   }
 
   getCookie = (name: string, cb: any) => {

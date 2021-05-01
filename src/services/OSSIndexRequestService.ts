@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
+import {ServiceHelpers} from './ServiceHelpers';
+import {OSSIndexResponse} from '../types/OSSIndexResponse';
+
 export class OSSIndexRequestService {
   private readonly xsrfCookieName = 'CLM-CSRF-TOKEN';
   private readonly xsrfHeaderName = 'X-CSRF-TOKEN';
 
   constructor(
     readonly url: string = 'https://ossindex.sonatype.org/',
-    readonly user: string,
-    readonly token: string
+    readonly user: string = '',
+    readonly token: string = ''
   ) {}
 
-  public async getComponentDetails(purl: string): Promise<any> {
+  public async getComponentDetails(purl: string): Promise<Array<OSSIndexResponse>> {
     const headers = await this.getHeaders();
     headers.set('Content-Type', 'application/json');
 
@@ -56,40 +59,15 @@ export class OSSIndexRequestService {
 
   private getHeaders(): Promise<Headers> {
     return new Promise((resolve, reject) => {
-      const meta = this.getUserAgent();
+      const meta = ServiceHelpers.getUserAgent();
 
       const headers = new Headers(meta);
 
       if (this.user !== '' || this.token !== '') {
-        headers.append('Authorization', this.getBasicAuth());
+        headers.append('Authorization', ServiceHelpers.getBasicAuth(this.user, this.token));
       }
 
-      this.getCookie(this.xsrfCookieName, (val: string) => {
-        if (val) {
-          headers.append(this.xsrfHeaderName, val);
-        }
-
-        resolve(headers);
-      });
+      resolve(headers);
     });
   }
-
-  private getUserAgent() {
-    return {'User-Agent': `Nexus_IQ_Chrome_Extension/0.0.1`};
-  }
-
-  private getBasicAuth(): string {
-    const usernameToken = this.user + ':' + this.token;
-    const _base64 = btoa(usernameToken);
-
-    return `Basic ${_base64}`;
-  }
-
-  getCookie = (name: string, cb: any) => {
-    chrome.cookies.getAll({name: name}, (cookies: chrome.cookies.Cookie[]) => {
-      if (cookies && cookies.length > 0) {
-        cb(cookies[0].value);
-      }
-    });
-  };
 }
