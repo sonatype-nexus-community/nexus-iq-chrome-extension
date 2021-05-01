@@ -3,22 +3,10 @@ orbs:
 
 version: 2.1
 
-jobs:
-  test:
-    executor:
-      name: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: yarn
-      - run:
-          command: yarn test
-          name: Run YARN tests
-
 workflows:
   matrix-tests:
     jobs:
-      - test:
+      - node/test:
           matrix:
             parameters:
               version:
