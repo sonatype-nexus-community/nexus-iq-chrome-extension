@@ -13,32 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxButton} from '@sonatype/react-shared-components';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import NexusChromeExtensionContainer from './NexusChromeExtensionContainer';
 
-const askForPermissions = (event: any) => {
-  console.log(event);
-  console.info('grantOriginsPermissions');
-
-  chrome.permissions.request(
-    {
-      origins: [`http://localhost:8070/`]
-    },
-    (granted) => {
-      if (granted) {
-        console.debug('Granted!!!');
-      } else {
-        console.debug('Not granted!!');
-      }
-    }
-  );
-};
-
 ReactDOM.render(
   <React.StrictMode>
-    <NxButton onClick={askForPermissions}></NxButton>
     <NexusChromeExtensionContainer />
   </React.StrictMode>,
   document.getElementById('root')

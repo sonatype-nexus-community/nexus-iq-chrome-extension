@@ -16,7 +16,7 @@
 import React from 'react';
 import Popup from './components/Popup/Popup';
 import {NexusContext, NexusContextInterface} from './context/NexusContext';
-import {DATA_SOURCES, RepoType} from './utils/Constants';
+import {DATA_SOURCES, DEFAULT_OSSINDEX_URL, RepoType} from './utils/Constants';
 import {findRepoType} from './utils/UrlParsing';
 import {IqRequestService} from './services/IqRequestService';
 import {RequestService} from './services/RequestService';
@@ -29,20 +29,54 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
   constructor(props: AppProps) {
     super(props);
-    this.state = {
-      scanType: '',
-      vulnerabilities: [],
-      componentDetails: undefined
-    };
 
-    const scanType = window.localStorage.getItem('scanType');
+    const scanType = this.getValueFromLocalStore('scanType');
+    if (scanType) {
+      if (scanType === DATA_SOURCES.NEXUSIQ) {
+        const iqServerURL = this.getValueFromLocalStore('iqServerURL');
+        const iqServerUser = this.getValueFromLocalStore('iqServerUser');
+        const iqServerToken = this.getValueFromLocalStore('iqServerToken');
 
-    if (scanType === DATA_SOURCES.NEXUSIQ) {
-      this._requestService = new IqRequestService();
+        this._requestService = new IqRequestService(iqServerURL!, iqServerUser!, iqServerToken!);
+
+        this.state = {
+          scanType: scanType,
+          vulnerabilities: [],
+          componentDetails: undefined
+        };
+
+        return;
+      }
+    }
+
+    const ossIndexUser = this.getValueFromLocalStore('ossIndexUser');
+    const ossIndexToken = this.getValueFromLocalStore('ossIndexToken');
+
+    if (ossIndexUser && ossIndexToken) {
+      this._requestService = new OSSIndexRequestService(
+        DEFAULT_OSSINDEX_URL,
+        ossIndexUser,
+        ossIndexToken
+      );
     } else {
       this._requestService = new OSSIndexRequestService();
     }
+
+    this.state = {
+      scanType: scanType ? scanType : DATA_SOURCES.OSSINDEX,
+      vulnerabilities: [],
+      componentDetails: undefined
+    };
   }
+
+  getValueFromLocalStore = (key: string): string | undefined => {
+    const val = window.localStorage.getItem(key);
+
+    if (val) {
+      return JSON.parse(val);
+    }
+    return undefined;
+  };
 
   componentDidMount = () => {
     chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {

@@ -23,6 +23,8 @@ export const REPOSITORY_MANAGERS = {
   ARTIFACTORY: 'artifactory'
 };
 
+export const DEFAULT_OSSINDEX_URL = 'https://ossindex.sonatype.org/';
+
 export const FORMATS = {
   alpine: 'alpine',
   cargo: 'cargo', //cargo == crates == rust

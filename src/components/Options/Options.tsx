@@ -25,6 +25,8 @@ import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import {DATA_SOURCES} from '../../utils/Constants';
+import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
+import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
 
 const Options = () => {
   const [activeTabId, setActiveTabId] = useState(0);
@@ -65,8 +67,12 @@ const Options = () => {
               <NxTab>OSS Index</NxTab>
             </NxTabList>
             <NxTabPanel></NxTabPanel>
-            <NxTabPanel></NxTabPanel>
-            <NxTabPanel></NxTabPanel>
+            <NxTabPanel>
+              <IQServerOptionsPage />
+            </NxTabPanel>
+            <NxTabPanel>
+              <OSSIndexOptionsPage />
+            </NxTabPanel>
           </NxTabs>
         </React.Fragment>
       );

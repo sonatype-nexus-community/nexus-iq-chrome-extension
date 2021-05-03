@@ -16,14 +16,15 @@
 
 import {ServiceHelpers} from './ServiceHelpers';
 import {OSSIndexResponse} from '../types/OSSIndexResponse';
-import {ComponentContainer, ComponentDetails} from '../types/ArtifactMessage';
+import {ComponentContainer} from '../types/ArtifactMessage';
+import {DEFAULT_OSSINDEX_URL} from '../utils/Constants';
 
 export class OSSIndexRequestService {
   private readonly xsrfCookieName = 'CLM-CSRF-TOKEN';
   private readonly xsrfHeaderName = 'X-CSRF-TOKEN';
 
   constructor(
-    readonly url: string = 'https://ossindex.sonatype.org/',
+    readonly url: string = DEFAULT_OSSINDEX_URL,
     readonly user: string = '',
     readonly token: string = ''
   ) {}

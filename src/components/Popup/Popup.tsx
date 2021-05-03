@@ -25,16 +25,14 @@ import {DATA_SOURCES} from '../../utils/Constants';
 const Popup = () => {
   const [activeTabId, setActiveTabId] = useState(0);
 
-  const [scanType, _] = useState(() => {
-    const scanTypeValue = window.localStorage.getItem('scanType');
-
-    return scanTypeValue !== null ? scanTypeValue : DATA_SOURCES.OSSINDEX;
-  });
-
   const nexusContext = useContext(NexusContext);
 
   const renderPopup = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.componentDetails && scanType === DATA_SOURCES.NEXUSIQ) {
+    if (
+      nexusContext &&
+      nexusContext.componentDetails &&
+      nexusContext.scanType === DATA_SOURCES.NEXUSIQ
+    ) {
       return (
         <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
           <NxTabList>
@@ -56,7 +54,7 @@ const Popup = () => {
     } else if (
       nexusContext &&
       nexusContext.componentDetails &&
-      scanType === DATA_SOURCES.OSSINDEX
+      nexusContext.scanType === DATA_SOURCES.OSSINDEX
     ) {
       console.info('Rendering OSS Index View');
       return (
