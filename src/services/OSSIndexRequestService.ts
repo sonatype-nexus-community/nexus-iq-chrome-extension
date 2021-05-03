@@ -16,6 +16,7 @@
 
 import {ServiceHelpers} from './ServiceHelpers';
 import {OSSIndexResponse} from '../types/OSSIndexResponse';
+import {ComponentContainer, ComponentDetails} from '../types/ArtifactMessage';
 
 export class OSSIndexRequestService {
   private readonly xsrfCookieName = 'CLM-CSRF-TOKEN';
@@ -27,7 +28,7 @@ export class OSSIndexRequestService {
     readonly token: string = ''
   ) {}
 
-  public async getComponentDetails(purl: string): Promise<Array<OSSIndexResponse>> {
+  public async getComponentDetails(purl: string): Promise<ComponentContainer> {
     const headers = await this.getHeaders();
     headers.set('Content-Type', 'application/json');
 
@@ -44,10 +45,29 @@ export class OSSIndexRequestService {
       })
         .then(async (res) => {
           if (res.ok) {
-            const body = await res.json();
-            resolve(body);
+            const body = (await res.json()) as Array<OSSIndexResponse>;
 
-            return;
+            if (body.length > 0) {
+              const container: ComponentContainer = {
+                component: {
+                  packageUrl: body[0].coordinates,
+                  name: '',
+                  hash: '',
+                  componentIdentifier: body[0].coordinates
+                },
+                matchState: 'PURL',
+                catalogDate: '',
+                relativePopularity: '',
+                securityData: undefined,
+                licenseData: undefined
+              };
+
+              resolve(container);
+
+              return;
+            }
+
+            reject(res);
           }
           reject(res);
         })

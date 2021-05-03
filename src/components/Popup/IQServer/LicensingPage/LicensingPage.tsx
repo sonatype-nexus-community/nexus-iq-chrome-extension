@@ -15,7 +15,7 @@
  */
 import React, {useContext} from 'react';
 import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
-import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {
   NxTable,
   NxTableHead,
@@ -38,7 +38,7 @@ const LicensingPage = () => {
               </NxTableRow>
             </NxTableHead>
             <NxTableBody>
-              {nexusContext.componentDetails.licenseData.declaredLicenses.map(function (
+              {nexusContext.componentDetails.licenseData!.declaredLicenses.map(function (
                 license: any
               ) {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
@@ -52,7 +52,7 @@ const LicensingPage = () => {
               </NxTableRow>
             </NxTableHead>
             <NxTableBody>
-              {nexusContext.componentDetails.licenseData.observedLicenses.map(function (
+              {nexusContext.componentDetails.licenseData!.observedLicenses.map(function (
                 license: any
               ) {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;

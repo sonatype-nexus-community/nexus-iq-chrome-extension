@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {
   NxTable,
   NxTableHead,
@@ -70,7 +70,7 @@ const ComponentInfoPage = () => {
               <NxTableCell>Catalog Date</NxTableCell>
               <NxTableCell>
                 <span id="catalogdate">
-                  {formatDate(nexusContext.componentDetails.catalogDate)}
+                  {formatDate(nexusContext.componentDetails.catalogDate!)}
                 </span>
               </NxTableCell>
             </NxTableRow>

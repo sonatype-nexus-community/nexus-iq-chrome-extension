@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 
 const PolicyPage = () => {
   const nexusContext = useContext(NexusContext);

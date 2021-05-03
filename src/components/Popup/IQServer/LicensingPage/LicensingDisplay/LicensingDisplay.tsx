@@ -13,9 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as React from 'react';
+import {NxTableRow, NxTableCell} from '@sonatype/react-shared-components';
+import {LicenseDetail} from '../../../../../types/ArtifactMessage';
 
-import {ComponentContainer} from '../types/ArtifactMessage';
+type LicensingDisplayProps = {
+  licenseData: LicenseDetail;
+};
 
-export interface RequestService {
-  getComponentDetails(p: string): Promise<ComponentContainer>;
-}
+const LicensingDisplay = (props: LicensingDisplayProps) => {
+  return (
+    <NxTableRow>
+      <NxTableCell>ID: {props.licenseData.licenseId}</NxTableCell>
+      <NxTableCell>Name: {props.licenseData.licenseName}</NxTableCell>
+    </NxTableRow>
+  );
+};
+
+export default LicensingDisplay;

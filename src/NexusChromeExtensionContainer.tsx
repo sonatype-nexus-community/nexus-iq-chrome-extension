@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useState} from 'react';
+import React from 'react';
 import Popup from './components/Popup/Popup';
 import {NexusContext, NexusContextInterface} from './context/NexusContext';
-import {RepoType} from './utils/Constants';
+import {DATA_SOURCES, RepoType} from './utils/Constants';
 import {findRepoType} from './utils/UrlParsing';
 import {IqRequestService} from './services/IqRequestService';
+import {RequestService} from './services/RequestService';
+import {OSSIndexRequestService} from './services/OSSIndexRequestService';
 
 type AppProps = {};
 
 class NexusChromeExtensionContainer extends React.Component<AppProps, NexusContextInterface> {
-  private iqRequestService = new IqRequestService();
+  private _requestService: RequestService;
 
   constructor(props: AppProps) {
     super(props);
@@ -32,6 +34,14 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       vulnerabilities: [],
       componentDetails: undefined
     };
+
+    const scanType = window.localStorage.getItem('scanType');
+
+    if (scanType === DATA_SOURCES.NEXUSIQ) {
+      this._requestService = new IqRequestService();
+    } else {
+      this._requestService = new OSSIndexRequestService();
+    }
   }
 
   componentDidMount = () => {
@@ -51,11 +61,11 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   };
 
   handleResponse = (purl: string) => {
-    this.iqRequestService
+    this._requestService
       .getComponentDetails(purl)
       .then((res) => {
-        if (res.componentDetails && res.componentDetails.length > 0) {
-          this.setState({componentDetails: res.componentDetails[0]});
+        if (res) {
+          this.setState({componentDetails: res});
         }
       })
       .catch((err) => {

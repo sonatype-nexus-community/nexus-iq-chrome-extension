@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {ComponentContainer, ComponentDetails} from '../types/ArtifactMessage';
 import {ServiceHelpers} from './ServiceHelpers';
 
 export class IqRequestService {
@@ -26,7 +27,7 @@ export class IqRequestService {
     readonly token: string = 'admin123'
   ) {}
 
-  public async getComponentDetails(purl: string): Promise<any> {
+  public async getComponentDetails(purl: string): Promise<ComponentContainer> {
     await this.canLogin();
 
     const headers = await this.getHeaders();
@@ -49,8 +50,9 @@ export class IqRequestService {
       })
         .then(async (res) => {
           if (res.ok) {
-            const body = await res.json();
-            resolve(body);
+            const body = (await res.json()) as ComponentDetails;
+
+            resolve(body.componentDetails[0]);
 
             return;
           }

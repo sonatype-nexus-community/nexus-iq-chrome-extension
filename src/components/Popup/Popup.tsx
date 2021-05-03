@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 import {NxTab, NxTabList, NxTabPanel, NxTabs} from '@sonatype/react-shared-components';
-import ComponentInfoPage from './ComponentInfoPage/ComponentInfoPage';
-import LicensingPage from './LicensingPage/LicensingPage';
-import SecurityPage from './SecurityPage/SecurityPage';
+import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
+import LicensingPage from './IQServer/LicensingPage/LicensingPage';
+import SecurityPage from './IQServer/SecurityPage/SecurityPage';
 import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
+import LiteComponentInfoPage from './OSSIndex/LiteComponentInfoPage/LiteComponentInfoPage';
+import {DATA_SOURCES} from '../../utils/Constants';
 
 const Popup = () => {
   const [activeTabId, setActiveTabId] = useState(0);
 
+  const [scanType, _] = useState(() => {
+    const scanTypeValue = window.localStorage.getItem('scanType');
+
+    return scanTypeValue !== null ? scanTypeValue : DATA_SOURCES.OSSINDEX;
+  });
+
   const nexusContext = useContext(NexusContext);
 
   const renderPopup = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.componentDetails) {
+    if (nexusContext && nexusContext.componentDetails && scanType === DATA_SOURCES.NEXUSIQ) {
       return (
         <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
           <NxTabList>
@@ -42,6 +50,22 @@ const Popup = () => {
           </NxTabPanel>
           <NxTabPanel>
             <LicensingPage></LicensingPage>
+          </NxTabPanel>
+        </NxTabs>
+      );
+    } else if (
+      nexusContext &&
+      nexusContext.componentDetails &&
+      scanType === DATA_SOURCES.OSSINDEX
+    ) {
+      console.info('Rendering OSS Index View');
+      return (
+        <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+          <NxTabList>
+            <NxTab>Component Info</NxTab>
+          </NxTabList>
+          <NxTabPanel>
+            <LiteComponentInfoPage></LiteComponentInfoPage>
           </NxTabPanel>
         </NxTabs>
       );

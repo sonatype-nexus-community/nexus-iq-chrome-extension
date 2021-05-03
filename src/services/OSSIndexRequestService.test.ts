@@ -127,7 +127,7 @@ beforeEach(() => {
         status: 400,
         body: {
           code: 400,
-          message: "Unable to process JSON"
+          message: 'Unable to process JSON'
         }
       },
       {
@@ -141,26 +141,13 @@ describe('OSS Index Request Service', () => {
     const res = await ossIndexRequestService.getComponentDetails('pkg:npm/jquery@3.5.1');
 
     expect(res).toBeDefined();
-    expect(res.length).toBe(1);
-    expect(res[0].coordinates).toBe('pkg:npm/jquery@3.5.1');
-    expect(res[0].description).toBe('JavaScript library for DOM operations');
-    expect(res[0].reference).toBe(
-      'https://ossindex.sonatype.org/component/pkg:npm/jquery@3.5.1?utm_source=mozilla&utm_medium=integration&utm_content=5.0'
-    );
-    expect(res[0].vulnerabilities.length).toBe(0);
+    expect(res.component.packageUrl).toBe('pkg:npm/jquery@3.5.1');
   });
 
   test('can get a response given a valid purl with vulnerabilities', async () => {
     const res = await ossIndexRequestService.getComponentDetails('pkg:npm/jquery@3.1.3');
 
     expect(res).toBeDefined();
-    expect(res.length).toBe(1);
-    expect(res[0].coordinates).toBe('pkg:npm/jquery@3.1.3');
-    expect(res[0].description).toBe('JavaScript library for DOM operations');
-    expect(res[0].reference).toBe(
-      'https://ossindex.sonatype.org/component/pkg:npm/jquery@3.1.3?utm_source=mozilla&utm_medium=integration&utm_content=5.0'
-    );
-    expect(res[0].vulnerabilities.length).toBe(4);
   });
 
   test('rejects a 400 response on an invalid purl/json', async () => {
@@ -171,7 +158,10 @@ describe('OSS Index Request Service', () => {
       expect(e).toBeDefined();
       expect(e).toBeInstanceOf(Response);
       expect((e as Response).status).toBe(400);
-      expect(await (e as Response).json()).toStrictEqual({ "code": 400, "message": "Unable to process JSON"});
+      expect(await (e as Response).json()).toStrictEqual({
+        code: 400,
+        message: 'Unable to process JSON'
+      });
     }
   });
 });

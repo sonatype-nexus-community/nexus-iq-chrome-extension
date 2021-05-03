@@ -15,7 +15,7 @@
  */
 import React, {useContext, useState} from 'react';
 import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
-import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 
 const SecurityPage = () => {
   const [open, setOpen] = useState('');

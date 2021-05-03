@@ -53,7 +53,26 @@ const htmlPlugin = new HtmlWebpackPlugin({
   },
 });
 
-module.exports = {
+const optionsHtmlPlugin = new HtmlWebpackPlugin({
+  inject: true,
+  chunks: ['options'],
+  template: './public/index.html',
+  filename: 'options.html',
+  minify: {
+    removeComments: true,
+    collapseWhitespace: true,
+    removeRedundantAttributes: true,
+    useShortDoctype: true,
+    removeEmptyAttributes: true,
+    removeStyleLinkTypeAttributes: true,
+    keepClosingSlash: true,
+    minifyJS: true,
+    minifyCSS: true,
+    minifyURLs: true,
+  },
+});
+
+const appConfig = {
   entry: {
     main: './src/index.tsx',
     content: './src/content.ts',
@@ -131,3 +150,77 @@ module.exports = {
     copyWebpackPlugin,
   ],
 };
+
+const optionsConfig = {
+  entry: {
+    options: './src/options.tsx',
+  },
+
+  devtool: 'source-map',
+
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+        ],
+      },
+      {
+        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        loader: require.resolve('url-loader'),
+        options: {
+          limit: imageInlineSizeLimit,
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader',
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/',
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+    ],
+  },
+
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+
+  output: {
+    pathinfo: false,
+    filename: 'static/js/[name].js',
+    chunkFilename: 'static/js/[name].js',
+    path: path.resolve(__dirname, "build"),
+  },
+
+  plugins: [
+    optionsHtmlPlugin, 
+    miniCssExtractPlugin, 
+    forkTsCheckerWebpackPlugin,
+  ],
+
+};
+
+module.exports = [ appConfig, optionsConfig ]

@@ -73,5 +73,6 @@
     "32": "images/SON_logo_favicon.png",
     "48": "images/SON_logo_favicon.png",
     "128": "images/SON_logo_favicon.png"
-  }
+  },
+  "options_page": "options.html"
 }

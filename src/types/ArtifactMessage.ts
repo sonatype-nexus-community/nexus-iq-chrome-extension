@@ -17,16 +17,16 @@ export interface ComponentDetails {
 export interface ComponentContainer {
   component: Component;
   matchState: any;
-  catalogDate: string;
-  relativePopularity: string;
-  securityData: SecurityData;
-  licenseData: LicenseData;
+  catalogDate: string | null | undefined;
+  relativePopularity: string | null | undefined;
+  securityData: SecurityData | null | undefined;
+  licenseData: LicenseData | null | undefined;
 }
 
 export interface Component {
   packageUrl: string;
-  name: string;
-  hash: string;
+  name: string | null | undefined;
+  hash: string | null | undefined;
   componentIdentifier: any;
 }
 
