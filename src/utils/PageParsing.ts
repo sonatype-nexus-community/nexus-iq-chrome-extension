@@ -22,6 +22,8 @@ const getArtifactDetailsFromDOM = (format: string, url: string): PackageURL | un
 
   if (format === 'npm') {
     return parseNPM(url);
+  } else if (format === 'nuget') {
+    return parseNuget(url);
   }
   return undefined;
 };
@@ -57,6 +59,18 @@ const parseNPM = (url: string): PackageURL | undefined => {
         return npmNameOrNamespace(name, newVText);
       }
     }
+  }
+
+  return undefined;
+};
+
+const parseNuget = (url: string): PackageURL | undefined => {
+  const elements = url.split('/');
+  if (elements.length == 6) {
+    const packageId = encodeURIComponent(elements[4]);
+    const version = encodeURIComponent(elements[5]);
+
+    return generatePackageURL('nuget', packageId, version);
   }
 
   return undefined;
