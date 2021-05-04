@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((event: ArtifactMessage, sender, respCallba
   if (event.type === 'getArtifactDetailsFromWebpage') {
     console.info('Message says to get some artifact details from the webpage, will do boss!');
 
-    const purl = getArtifactDetailsFromDOM(event.format, event.url!);
+    const purl = getArtifactDetailsFromDOM(event.repoTypeInfo, event.url);
 
     console.info('Got a purl back from scraping url or webpage', purl);
     if (purl) {

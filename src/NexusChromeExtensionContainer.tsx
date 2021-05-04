@@ -85,11 +85,17 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
         console.info('Found repoType', repoType);
 
-        chrome.tabs.sendMessage(
-          tabs[0].id!,
-          {type: 'getArtifactDetailsFromWebpage', format: repoType?.repoFormat, url: tabs[0].url!},
-          this.handleResponse
-        );
+        if (repoType) {
+          chrome.tabs.sendMessage(
+            tabs[0].id!,
+            {
+              type: 'getArtifactDetailsFromWebpage',
+              url: tabs[0].url,
+              repoTypeInfo: repoType
+            },
+            this.handleResponse
+          );
+        }
       }
     });
   };

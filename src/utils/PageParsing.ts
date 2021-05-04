@@ -15,14 +15,15 @@
  */
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
+import {RepoType} from './Constants';
 
-const getArtifactDetailsFromDOM = (format: string, url: string): PackageURL | undefined => {
+const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   console.info('url', url);
-  console.info('format', format);
+  console.info('format', repoFormat.repoFormat);
 
-  if (format === 'npm') {
+  if (repoFormat.repoFormat === 'npm') {
     return parseNPM(url);
-  } else if (format === 'nuget') {
+  } else if (repoFormat.repoFormat === 'nuget') {
     return parseNuget(url);
   }
   return undefined;
