@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
 import {generatePackageURL, generatePackageURLWithNamespace} from './PurlUtils';
 
