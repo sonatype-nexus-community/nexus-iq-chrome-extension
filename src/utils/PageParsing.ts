@@ -15,6 +15,7 @@
  */
 import {PackageURL} from 'packageurl-js';
 import {FORMATS, RepoType} from './Constants';
+import {parseAlpine} from './PageParsing/Alpine';
 import {parseNPM} from './PageParsing/NPM';
 import {parseNuget} from './PageParsing/Nuget';
 import {parseRuby} from './PageParsing/RubyGems';
@@ -22,6 +23,8 @@ import {parseRuby} from './PageParsing/RubyGems';
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   if (repoFormat.repoFormat === FORMATS.npm) {
     return parseNPM(url);
+  } else if (repoFormat.repoFormat === FORMATS.alpine) {
+    return parseAlpine(url);
   } else if (repoFormat.repoFormat === FORMATS.nuget) {
     return parseNuget(url);
   } else if (repoFormat.repoFormat === FORMATS.gem) {
