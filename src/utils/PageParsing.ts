@@ -23,10 +23,33 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
 
   if (repoFormat.repoFormat === 'npm') {
     return parseNPM(url);
+  } else if (repoFormat.repoFormat === 'alpine') {
+    return parseAlpine(url);
   } else if (repoFormat.repoFormat === 'nuget') {
     return parseNuget(url);
   }
   return undefined;
+};
+
+const parseAlpine = (url: string): PackageURL | undefined => {
+  console.log('parseAlpine, url:', url);
+
+  const elements = url.split('/');
+  console.log(elements.length);
+  // let version;
+  let name = elements[7];
+  name = name.replace('#', '');
+
+  const version = $('#package > tbody > tr:nth-child(2) > td > strong > a').text().trim();
+
+  console.log('version', version);
+  // let artifact = {
+  //   // datasource: dataSources.NEXUSIQ,
+  //   name: name,
+  //   version: version,
+  // };
+  // return artifact;
+  return generatePackageURL('alpine', name, version);
 };
 
 const parseNPM = (url: string): PackageURL | undefined => {
