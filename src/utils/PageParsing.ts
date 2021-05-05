@@ -25,6 +25,8 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseNPM(url);
   } else if (repoFormat.repoFormat === FORMATS.nuget) {
     return parseNuget(url);
+  } else if (repoFormat.repoFormat === FORMATS.gem) {
+    return parseRuby(url);
   }
   return undefined;
 };
@@ -72,6 +74,18 @@ const parseNuget = (url: string): PackageURL | undefined => {
     const version = encodeURIComponent(elements[5]);
 
     return generatePackageURL('nuget', packageId, version);
+  }
+
+  return undefined;
+};
+
+const parseRuby = (url: string): PackageURL | undefined => {
+  const elements = url.split('/');
+  if (elements.length > 5) {
+    const packageId = encodeURIComponent(elements[4]);
+    const version = encodeURIComponent(elements[6]);
+
+    return generatePackageURL('gem', packageId, version);
   }
 
   return undefined;
