@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {readFileSync} from 'fs';
+import { join } from 'path';
 import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Alpine Page Parsing', () => {
   test('should parse a valid Alpine page', () => {
+    const html = readFileSync(join(__dirname, 'testdata/alpine.html'));
+
+    window.document.body.innerHTML = html.toString();
+
     const rt: RepoType = {
       url: '',
       repoFormat: FORMATS.alpine,
@@ -35,7 +41,7 @@ describe('Alpine Page Parsing', () => {
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.type).toBe('alpine');
     expect(PackageURL?.name).toBe('openssl');
-    // Need to figure out how to mock dom
-    //expect(PackageURL?.version).toBe('1.1.1k-r0');
+
+    expect(PackageURL?.version).toBe('1.1.1k-r0');
   });
 });
