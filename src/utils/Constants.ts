@@ -134,7 +134,7 @@ export const REPO_TYPES = [
     dataSource: DATA_SOURCES.NEXUSIQ
   },
   {
-    url: 'https://search.gocenter.io/',
+    url: 'https://pkg.go.dev/',
     repoFormat: FORMATS.golang,
     titleSelector: '#app div.v-application--wrap h1',
     versionPath: '{url}/{packagename}/info?version={versionNumber}', // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
@@ -183,7 +183,7 @@ export const REPO_TYPES = [
     appendVersionPath: '/v/{versionNumber}'
   },
   {
-    //https://www.nuget.org/packages/LibGit2Sharp/0.20.1
+    // https://www.nuget.org/packages/LibGit2Sharp/0.20.1
     url: 'https://www.nuget.org/packages/',
     repoFormat: FORMATS.nuget,
     titleSelector: '.package-title > h1',
