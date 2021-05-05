@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
 import {FORMATS, RepoType} from './Constants';
+import {parseNPM} from './PageParsing/NPM';
+import {parseNuget} from './PageParsing/Nuget';
+import {parseRuby} from './PageParsing/RubyGems';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  console.info('url', url);
-  console.info('format', repoFormat.repoFormat);
-
   if (repoFormat.repoFormat === FORMATS.npm) {
     return parseNPM(url);
   } else if (repoFormat.repoFormat === FORMATS.nuget) {
@@ -29,94 +28,6 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseRuby(url);
   }
   return undefined;
-};
-
-const parseNPM = (url: string): PackageURL | undefined => {
-  if (url && url.search('/v/') > 0) {
-    console.info('Parsing URL', url);
-
-    const urlElements = url.split('/');
-    const name: string = urlElements[4];
-    const version: string = urlElements[6];
-
-    return npmNameOrNamespace(name, version);
-  } else {
-    const found = $('h2 span');
-
-    if (typeof found !== 'undefined') {
-      console.log('h2 span found', found);
-
-      const name = found.text().trim();
-
-      const newV = $('h2').next('span');
-
-      if (typeof newV !== 'undefined') {
-        const newVText = newV.text();
-
-        const findnbsp = newVText.search(String.fromCharCode(160));
-
-        if (findnbsp >= 0) {
-          return npmNameOrNamespace(name, newVText.substring(0, findnbsp));
-        }
-
-        return npmNameOrNamespace(name, newVText);
-      }
-    }
-  }
-
-  return undefined;
-};
-
-const parseNuget = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  if (elements.length == 6) {
-    const packageId = encodeURIComponent(elements[4]);
-    const version = encodeURIComponent(elements[5]);
-
-    return generatePackageURL('nuget', packageId, version);
-  }
-
-  return undefined;
-};
-
-const parseRuby = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  if (elements.length > 5) {
-    const packageId = encodeURIComponent(elements[4]);
-    const version = encodeURIComponent(elements[6]);
-
-    return generatePackageURL('gem', packageId, version);
-  }
-
-  return undefined;
-};
-
-const npmNameOrNamespace = (name: string, version: string): PackageURL => {
-  if (name.includes('/')) {
-    const namespaceAndName = name.split('/');
-
-    return generatePackageURLWithNamespace(
-      'npm',
-      namespaceAndName[1],
-      version,
-      namespaceAndName[0]
-    );
-  }
-
-  return generatePackageURL('npm', name, version);
-};
-
-const generatePackageURL = (format: string, name: string, version: string): PackageURL => {
-  return generatePackageURLWithNamespace(format, name, version, undefined);
-};
-
-const generatePackageURLWithNamespace = (
-  format: string,
-  name: string,
-  version: string,
-  namespace: string | undefined
-): PackageURL => {
-  return new PackageURL(format, namespace, name, version, undefined, undefined);
 };
 
 export {getArtifactDetailsFromDOM};
