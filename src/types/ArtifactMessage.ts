@@ -47,7 +47,14 @@ export interface Component {
 }
 
 export interface SecurityData {
-  securityIssues: any[];
+  securityIssues: SecurityIssue[];
+}
+
+export interface SecurityIssue {
+  source: string;
+  reference: string;
+  severity: number;
+  url: string;
 }
 
 export interface LicenseData {

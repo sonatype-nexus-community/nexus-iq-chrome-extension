@@ -36,7 +36,7 @@ const parseNPM = (url: string): PackageURL | undefined => {
       if (typeof newV !== 'undefined') {
         const newVText = newV.text().trim();
 
-        const findnbsp = newVText.search(" ");
+        const findnbsp = newVText.search(' ');
 
         if (findnbsp >= 0) {
           return npmNameOrNamespace(name, newVText.substring(0, findnbsp));

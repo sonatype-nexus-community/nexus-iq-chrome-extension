@@ -16,7 +16,7 @@
 
 import {ServiceHelpers} from './ServiceHelpers';
 import {OSSIndexResponse} from '../types/OSSIndexResponse';
-import {ComponentContainer} from '../types/ArtifactMessage';
+import {ComponentContainer, SecurityData, SecurityIssue} from '../types/ArtifactMessage';
 import {DEFAULT_OSSINDEX_URL} from '../utils/Constants';
 
 export class OSSIndexRequestService {
@@ -49,6 +49,20 @@ export class OSSIndexRequestService {
             const body = (await res.json()) as Array<OSSIndexResponse>;
 
             if (body.length > 0) {
+              const securityIssues: SecurityIssue[] = new Array<SecurityIssue>();
+              if (body[0].vulnerabilities.length > 0) {
+                body[0].vulnerabilities.forEach((vuln) => {
+                  const source: string = vuln.cve ? 'cve' : vuln.cwe ? 'cwe' : 'unknown';
+                  const securityIssue: SecurityIssue = {
+                    reference: vuln.title,
+                    severity: vuln.cvssScore,
+                    url: vuln.reference,
+                    source: source
+                  };
+                  securityIssues.push(securityIssue);
+                });
+              }
+
               const container: ComponentContainer = {
                 component: {
                   packageUrl: body[0].coordinates,
@@ -59,7 +73,7 @@ export class OSSIndexRequestService {
                 matchState: 'PURL',
                 catalogDate: '',
                 relativePopularity: '',
-                securityData: undefined,
+                securityData: {securityIssues: securityIssues},
                 licenseData: undefined
               };
 

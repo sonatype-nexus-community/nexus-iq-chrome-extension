@@ -148,6 +148,7 @@ describe('OSS Index Request Service', () => {
     const res = await ossIndexRequestService.getComponentDetails('pkg:npm/jquery@3.1.3');
 
     expect(res).toBeDefined();
+    expect(res.securityData?.securityIssues.length).toBe(4);
   });
 
   test('rejects a 400 response on an invalid purl/json', async () => {

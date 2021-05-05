@@ -21,6 +21,7 @@ import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import LiteComponentInfoPage from './OSSIndex/LiteComponentInfoPage/LiteComponentInfoPage';
 import {DATA_SOURCES} from '../../utils/Constants';
+import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
 
 const Popup = () => {
   const [activeTabId, setActiveTabId] = useState(0);
@@ -61,9 +62,13 @@ const Popup = () => {
         <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
           <NxTabList>
             <NxTab>Component Info</NxTab>
+            <NxTab>Security</NxTab>
           </NxTabList>
           <NxTabPanel>
             <LiteComponentInfoPage></LiteComponentInfoPage>
+          </NxTabPanel>
+          <NxTabPanel>
+            <LiteSecurityPage></LiteSecurityPage>
           </NxTabPanel>
         </NxTabs>
       );
