@@ -18,13 +18,73 @@ import {PackageURL} from 'packageurl-js';
 import {FORMATS, RepoType} from './Constants';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  console.info('url', url);
-  console.info('format', repoFormat.repoFormat);
+  console.info('getArtifactDetailsFromDOM url', url, repoFormat.repoFormat);
 
   if (repoFormat.repoFormat === FORMATS.npm) {
     return parseNPM(url);
   } else if (repoFormat.repoFormat === FORMATS.nuget) {
     return parseNuget(url);
+  } else if (repoFormat.repoFormat === FORMATS.golang) {
+    // console.log('parsegolang', url);
+    const purl: PackageURL | undefined = parseGolang(url);
+
+    // console.log('purl', purl);
+    return purl;
+  }
+
+  return undefined;
+};
+
+const parseGolang = (url: string): PackageURL | undefined => {
+  console.log('parseGolang', url);
+  // const name = 'etcd-io/etcd';
+  // const version = 'v3.3.25+incompatible';
+  // pkg:GOLANG/google.golang.org/genproto#/googleapis/api/annotations/;
+  // return generatePackageURL(FORMATS.golang, packageId, version);
+  // The following coordinates are missing for given format: [version]
+  //https://pkg.go.dev/github.com/etcd-io/etcd@v0.3.0 ->CVE-2020-15115, CVE - 2020 - 15136;
+  //https://pkg.go.dev/github.com/etcd-io/etcd -> v->v3.3.25+incompatible ->unknown
+  //https://pkg.go.dev/github.com/go-gitea/gitea ->Version: v1.8.3 ->CVE-2018-15192 and others
+
+  const elements = url.split('/');
+  const type = 'golang';
+  const namespace = 'github.com';
+  let name;
+  // const version = 'v3.3.25+incompatible';
+  const qualifiers = null;
+  const subpath = null;
+  let version = undefined;
+  if (elements.length == 6) {
+    const name1 = elements[4];
+    let name2 = elements[5];
+    const whereVersion = name2.search('@v'); //version in the URL
+    if (whereVersion > -1) {
+      version = name2.substring(whereVersion + 1);
+      name2 = name2.substring(0, whereVersion);
+    } else {
+      //parse the body for the version
+      const found = $(
+        'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a'
+      );
+      if (typeof found !== 'undefined') {
+        console.log('found', found);
+        version = found.text().trim();
+        version = version.replace('Version: ', '').trim();
+      } else {
+        return undefined;
+      }
+    }
+    name = name1 + '/' + name2;
+    const purl: PackageURL | undefined = new PackageURL(
+      FORMATS.golang,
+      namespace,
+      name,
+      version,
+      qualifiers,
+      subpath
+    );
+    // console.log('purl', purl);
+    return purl;
   }
   return undefined;
 };

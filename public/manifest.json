@@ -53,7 +53,8 @@
         "https://rpmfind.net/linux/RPM/epel/*",
         "https://rubygems.org/*",
         "https://search.gocenter.io/*",
-        "https://search.maven.org/*"
+        "https://search.maven.org/*",
+        "https://pkg.go.dev/github.com/*"
       ],
       "js": [
         "/static/js/content.js"
