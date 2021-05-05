@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {readFileSync} from 'fs';
-import { join } from 'path';
+import {join} from 'path';
 import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
@@ -41,7 +41,6 @@ describe('Alpine Page Parsing', () => {
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.type).toBe('alpine');
     expect(PackageURL?.name).toBe('openssl');
-
     expect(PackageURL?.version).toBe('1.1.1k-r0');
   });
 });
