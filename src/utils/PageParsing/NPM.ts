@@ -20,8 +20,6 @@ import {generatePackageURL, generatePackageURLWithNamespace} from './PurlUtils';
 
 const parseNPM = (url: string): PackageURL | undefined => {
   if (url && url.search('/v/') > 0) {
-    console.info('Parsing URL', url);
-
     const urlElements = url.split('/');
     const name: string = urlElements[4];
     const version: string = urlElements[6];
@@ -31,16 +29,14 @@ const parseNPM = (url: string): PackageURL | undefined => {
     const found = $('h2 span');
 
     if (typeof found !== 'undefined') {
-      console.log('h2 span found', found);
-
       const name = found.text().trim();
 
       const newV = $('h2').next('span');
 
       if (typeof newV !== 'undefined') {
-        const newVText = newV.text();
+        const newVText = newV.text().trim();
 
-        const findnbsp = newVText.search(String.fromCharCode(160));
+        const findnbsp = newVText.search(" ");
 
         if (findnbsp >= 0) {
           return npmNameOrNamespace(name, newVText.substring(0, findnbsp));
