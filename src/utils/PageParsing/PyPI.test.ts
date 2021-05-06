@@ -33,10 +33,7 @@ describe('PyPI Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const PackageURL = getArtifactDetailsFromDOM(
-      rt,
-      'https://pypi.org/project/Django/'
-    );
+    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pypi.org/project/Django/');
 
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.type).toBe(FORMATS.pypi);
@@ -45,22 +42,19 @@ describe('PyPI Page Parsing', () => {
   });
 
   test('should parse valid PyPI page with the version', () => {
-      const rt: RepoType = {
-        url: '',
-        repoFormat: FORMATS.pypi,
-        titleSelector: '',
-        versionPath: '',
-        dataSource: DATA_SOURCES.OSSINDEX,
-        appendVersionPath: ''
-      };
-      const PackageURL = getArtifactDetailsFromDOM(
-        rt,
-        'https://pypi.org/project/jake/0.2.70/'
-      );
-    
-      expect(PackageURL).toBeDefined();
-      expect(PackageURL?.type).toBe(FORMATS.pypi);
-      expect(PackageURL?.name).toBe('jake');
-      expect(PackageURL?.version).toBe('0.2.70');
+    const rt: RepoType = {
+      url: '',
+      repoFormat: FORMATS.pypi,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.OSSINDEX,
+      appendVersionPath: ''
+    };
+    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pypi.org/project/jake/0.2.70/');
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe(FORMATS.pypi);
+    expect(PackageURL?.name).toBe('jake');
+    expect(PackageURL?.version).toBe('0.2.70');
   });
 });

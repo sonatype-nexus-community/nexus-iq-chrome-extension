@@ -15,25 +15,24 @@
  */
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import { FORMATS } from '../Constants';
+import {FORMATS} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 
 // https://pypi.org/project/Django/
 const parsePyPIURL = (url: string): PackageURL | undefined => {
-    const elements = url.split("/");
+  const elements = url.split('/');
 
-    const name = elements[4];
-    if (elements.length > 6) {
-        return generatePackageURL(FORMATS.pypi, name, elements[5]);
+  const name = elements[4];
+  if (elements.length > 6) {
+    return generatePackageURL(FORMATS.pypi, name, elements[5]);
+  }
+  const version = $('#content > div.banner > div > div.package-header__left > h1 ').text().trim();
+  if (typeof version !== 'undefined') {
+    const versionArray = version.split(' ');
+    if (versionArray.length > 0) {
+      return generatePackageURL(FORMATS.pypi, name, versionArray[1]);
     }
-    const version = $('#content > div.banner > div > div.package-header__left > h1 ').text().trim();
-    if (typeof version !== 'undefined') {
-        const versionArray = version.split(' ');   
-        if (versionArray.length > 0) {
-            return generatePackageURL(FORMATS.pypi, name, versionArray[1]);
-        }
-    }
-    return undefined;
-  };
-
-  export {parsePyPIURL};
+  }
+  return undefined;
+};
+export {parsePyPIURL};
