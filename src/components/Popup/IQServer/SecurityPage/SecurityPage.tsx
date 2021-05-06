@@ -16,8 +16,9 @@
 import React, {useContext, useState} from 'react';
 import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {SecurityIssue} from '../../../../types/ArtifactMessage';
 
-const SecurityPage = () => {
+const SecurityPage = (): JSX.Element | null => {
   const [open, setOpen] = useState('');
 
   const nexusContext = useContext(NexusContext);
@@ -44,7 +45,7 @@ const SecurityPage = () => {
       return (
         <React.Fragment>
           {' '}
-          {nexusContext.componentDetails.securityData.securityIssues.map((issue: any) => {
+          {nexusContext.componentDetails.securityData.securityIssues.map((issue: SecurityIssue) => {
             return (
               <SecurityItemDisplay
                 key={issue.reference}
@@ -61,7 +62,7 @@ const SecurityPage = () => {
     return null;
   };
 
-  return renderAccordion(nexusContext!);
+  return renderAccordion(nexusContext);
 };
 
 export default SecurityPage;

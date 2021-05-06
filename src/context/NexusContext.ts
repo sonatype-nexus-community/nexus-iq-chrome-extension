@@ -18,7 +18,6 @@ import {ComponentContainer} from '../types/ArtifactMessage';
 
 export interface NexusContextInterface {
   scanType?: string;
-  vulnerabilities?: any[];
   componentDetails?: ComponentContainer;
 }
 

@@ -24,7 +24,7 @@ import {
   NxTableBody
 } from '@sonatype/react-shared-components';
 
-const LicensingPage = () => {
+const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {

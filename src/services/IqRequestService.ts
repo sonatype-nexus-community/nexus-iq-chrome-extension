@@ -104,7 +104,7 @@ export class IqRequestService {
     });
   }
 
-  getCookie = (name: string, cb: any) => {
+  getCookie = (name: string, cb: any): void => {
     chrome.cookies.getAll({name: name}, (cookies: chrome.cookies.Cookie[]) => {
       if (cookies && cookies.length > 0) {
         cb(cookies[0].value);

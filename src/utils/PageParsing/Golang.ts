@@ -15,7 +15,7 @@
  */
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import { FORMATS } from '../Constants';
+import {FORMATS} from '../Constants';
 import {generatePackageURLWithNamespace} from './PurlUtils';
 
 /*
@@ -27,7 +27,8 @@ import {generatePackageURLWithNamespace} from './PurlUtils';
   https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl ->Todo Version: v1.26.0 ->No vulns, but different namespace and some stuff at the end
 */
 
-const PKG_GO_DEV_SELECTOR = 'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
+const PKG_GO_DEV_SELECTOR =
+  'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
 const GO_PKG_IN_V1 = /^gopkg.in\/([^.]+).*/;
 const GO_PKG_IN_V2 = /^gopkg.in\/([^\/]+)\/([^.]+).*/;
 
@@ -43,12 +44,12 @@ const parsePkgGoDevURLIntoPackageURL = (url: string): PackageURL | undefined => 
   let version = getVersionFromURI(uri);
 
   if (version !== undefined) {
-    nameAndNamespace = getName(handleGoPkgIn(nameVersion[0].replace(/^\//,'')));
+    nameAndNamespace = getName(handleGoPkgIn(nameVersion[0].replace(/^\//, '')));
   } else {
     const found = $(PKG_GO_DEV_SELECTOR);
 
     if (typeof found !== 'undefined') {
-      nameAndNamespace = getName(handleGoPkgIn(uri.pathname.replace(/^\//,'')));
+      nameAndNamespace = getName(handleGoPkgIn(uri.pathname.replace(/^\//, '')));
 
       version = found.text().trim().replace('Version: ', '').trim();
     }
@@ -104,7 +105,7 @@ const handleGoPkgIn = (namespace: string): string => {
   }
 
   return namespace;
-}
+};
 
 interface NamespaceContainer {
   name: string;

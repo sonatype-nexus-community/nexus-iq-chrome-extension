@@ -16,7 +16,7 @@
 import React, {useState} from 'react';
 import {NxAccordion, NxPolicyViolationIndicator} from '@sonatype/react-shared-components';
 
-const PolicyViolation = (props: any) => {
+const PolicyViolation = (props: any): JSX.Element | null => {
   const [open, setOpen] = useState(false);
 
   const printPolicyViolation = (policyViolation: any) => {

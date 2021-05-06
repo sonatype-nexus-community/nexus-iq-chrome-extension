@@ -23,7 +23,7 @@ import {
   NxTableBody
 } from '@sonatype/react-shared-components';
 
-const ComponentInfoPage = () => {
+const ComponentInfoPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const formatDate = (date: string): string => {
@@ -58,7 +58,7 @@ const ComponentInfoPage = () => {
               <NxTableCell>Version</NxTableCell>
               <NxTableCell>
                 <span id="version">
-                  {nexusContext.componentDetails.component.componentIdentifier.coordinates.version}
+                  {nexusContext.componentDetails.component.componentIdentifier!.coordinates.version}
                 </span>
               </NxTableCell>
             </NxTableRow>

@@ -17,7 +17,7 @@ import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../../context/NexusContext';
 import {NxVulnerabilityDetails} from '@sonatype/react-shared-components';
 
-const VulnDetails = () => {
+const VulnDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {

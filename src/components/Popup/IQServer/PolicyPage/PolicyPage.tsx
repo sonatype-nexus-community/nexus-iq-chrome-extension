@@ -16,7 +16,7 @@
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 
-const PolicyPage = () => {
+const PolicyPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderPolicyViolation = (nexusContext: NexusContextInterface | undefined) => {

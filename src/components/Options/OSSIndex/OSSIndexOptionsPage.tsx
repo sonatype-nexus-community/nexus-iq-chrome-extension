@@ -17,7 +17,7 @@ import React from 'react';
 import {NxFormGroup, NxStatefulTextInput} from '@sonatype/react-shared-components';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
-const OSSIndexOptionsPage = () => {
+const OSSIndexOptionsPage = (): JSX.Element => {
   const [ossIndexUser, setOSSIndexUser] = useLocalStorage('ossIndexUser', '');
   const [ossIndexToken, setOSSIndexToken] = useLocalStorage('ossIndexToken', '');
 

@@ -21,7 +21,7 @@ type LicensingDisplayProps = {
   licenseData: LicenseDetail;
 };
 
-const LicensingDisplay = (props: LicensingDisplayProps) => {
+const LicensingDisplay = (props: LicensingDisplayProps): JSX.Element => {
   return (
     <NxTableRow>
       <NxTableCell>ID: {props.licenseData.licenseId}</NxTableCell>

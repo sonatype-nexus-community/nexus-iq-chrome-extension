@@ -20,15 +20,16 @@ import {
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
+import {SecurityIssue} from '../../../../../types/ArtifactMessage';
 
 type SecurityItemProps = {
-  securityIssue: any;
+  securityIssue: SecurityIssue;
   open: boolean;
   packageUrl: string;
   remediationEvent: (packageUrl: string, vulnID: string) => void;
 };
 
-const SecurityItemDisplay = (props: SecurityItemProps) => {
+const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element => {
   return (
     <NxAccordion
       open={props.open}

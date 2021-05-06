@@ -57,7 +57,8 @@ export class OSSIndexRequestService {
                     reference: vuln.title,
                     severity: vuln.cvssScore,
                     url: vuln.reference,
-                    source: source
+                    source: source,
+                    description: vuln.description
                   };
                   securityIssues.push(securityIssue);
                 });
@@ -67,8 +68,7 @@ export class OSSIndexRequestService {
                 component: {
                   packageUrl: body[0].coordinates,
                   name: '',
-                  hash: '',
-                  componentIdentifier: body[0].coordinates
+                  hash: ''
                 },
                 matchState: 'PURL',
                 catalogDate: '',

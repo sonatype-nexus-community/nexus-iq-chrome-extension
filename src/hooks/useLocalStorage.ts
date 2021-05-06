@@ -1,7 +1,7 @@
 import {useState} from 'react';
 
 // Hook
-const useLocalStorage = (key: any, initialValue: any) => {
+const useLocalStorage = (key: any, initialValue: any): any[] => {
   const [storedValue, setStoredValue] = useState(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -13,7 +13,7 @@ const useLocalStorage = (key: any, initialValue: any) => {
     }
   });
 
-  const setValue = (value: any) => {
+  const setValue = (value: any): void => {
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore = value instanceof Function ? value(storedValue) : value;

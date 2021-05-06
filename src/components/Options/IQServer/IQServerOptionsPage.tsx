@@ -17,7 +17,7 @@ import React from 'react';
 import {NxButton, NxFormGroup, NxStatefulTextInput} from '@sonatype/react-shared-components';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
-const IQServerOptionsPage = () => {
+const IQServerOptionsPage = (): JSX.Element => {
   const [iqServerURL, setIQServerURL] = useLocalStorage('iqServerURL', '');
   const [iqServerUser, setIQServerUser] = useLocalStorage('iqServerUser', '');
   const [iqServerToken, setIQServerToken] = useLocalStorage('iqServerToken', '');

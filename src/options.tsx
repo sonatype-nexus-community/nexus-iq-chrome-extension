@@ -22,5 +22,5 @@ ReactDOM.render(
     <h1>Options</h1>
     <Options />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('ui')
 );

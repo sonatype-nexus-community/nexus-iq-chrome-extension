@@ -28,7 +28,7 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
 
-const Options = () => {
+const Options = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
 
   const [scanType, setScanType] = useLocalStorage('scanType', DATA_SOURCES.OSSINDEX);

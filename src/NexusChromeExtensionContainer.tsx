@@ -41,7 +41,6 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
         this.state = {
           scanType: scanType,
-          vulnerabilities: [],
           componentDetails: undefined
         };
 
@@ -64,7 +63,6 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
     this.state = {
       scanType: scanType ? scanType : DATA_SOURCES.OSSINDEX,
-      vulnerabilities: [],
       componentDetails: undefined
     };
   }
@@ -78,16 +76,16 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     return undefined;
   };
 
-  componentDidMount = () => {
+  componentDidMount = (): void => {
     chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
       if (tabs[0]) {
         const repoType: RepoType | undefined = findRepoType(tabs[0].url!);
 
         console.info('Found repoType', repoType);
 
-        if (repoType) {
+        if (repoType && tabs[0].id) {
           chrome.tabs.sendMessage(
-            tabs[0].id!,
+            tabs[0].id,
             {
               type: 'getArtifactDetailsFromWebpage',
               url: tabs[0].url,
@@ -100,7 +98,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     });
   };
 
-  handleResponse = (purl: string) => {
+  handleResponse = (purl: string): void => {
     this._requestService
       .getComponentDetails(purl)
       .then((res) => {
@@ -113,10 +111,12 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       });
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <NexusContext.Provider value={this.state}>
-        <Popup />
+        <main className="nx-page-main nx-viewport-sized">
+          <Popup />
+        </main>
       </NexusContext.Provider>
     );
   }

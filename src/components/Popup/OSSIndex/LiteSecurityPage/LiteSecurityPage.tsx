@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import {NxPolicyViolationIndicator, ThreatLevelNumber} from '@sonatype/react-shared-components';
+import {
+  NxAccordion,
+  NxPolicyViolationIndicator,
+  NxStatefulAccordion,
+  ThreatLevelNumber
+} from '@sonatype/react-shared-components';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {useContext} from 'react';
 import {SecurityIssue} from '../../../../types/ArtifactMessage';
 
-const LiteSecurityPage = () => {
+const LiteSecurityPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
-  const renderSecurityItems = (nexusContext: NexusContextInterface | undefined) => {
+  const renderSecurityItems = (
+    nexusContext: NexusContextInterface | undefined
+  ): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.componentDetails &&
@@ -30,20 +37,32 @@ const LiteSecurityPage = () => {
       nexusContext.componentDetails.securityData.securityIssues
     ) {
       return (
-        <React.Fragment>
-          {nexusContext.componentDetails.securityData.securityIssues.map((issue: SecurityIssue) => {
-            return (
-              <>
-                <h2 className="nx-accordion__header-title">{issue.reference}</h2>
-                <div className="nx-btn-bar">
-                  <NxPolicyViolationIndicator
-                    policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
-                  />
-                </div>
-              </>
-            );
-          })}
-        </React.Fragment>
+        <section className="nx-tile">
+          <header className="nx-tile-header">
+            <div className="nx-tile-header__title">
+              <h2 className="nx-h2">Vulnerabilities</h2>
+            </div>
+          </header>
+          <div className="nx-tile-content nx-tile-content--accordion-container">
+            {nexusContext.componentDetails.securityData.securityIssues.map(
+              (issue: SecurityIssue) => {
+                return (
+                  <NxStatefulAccordion key={issue.reference}>
+                    <NxAccordion.Header>
+                      <h2 className="nx-accordion__header-title">{issue.reference}</h2>
+                      <div className="nx-btn-bar">
+                        <NxPolicyViolationIndicator
+                          policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
+                        />
+                      </div>
+                    </NxAccordion.Header>
+                    <p className="nx-p">{issue.description}</p>
+                  </NxStatefulAccordion>
+                );
+              }
+            )}
+          </div>
+        </section>
       );
     }
     return null;

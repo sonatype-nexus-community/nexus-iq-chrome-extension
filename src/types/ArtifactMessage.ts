@@ -32,7 +32,7 @@ export interface ComponentDetails {
 
 export interface ComponentContainer {
   component: Component;
-  matchState: any;
+  matchState: string | null | undefined;
   catalogDate: string | null | undefined;
   relativePopularity: string | null | undefined;
   securityData: SecurityData | null | undefined;
@@ -43,7 +43,20 @@ export interface Component {
   packageUrl: string;
   name: string | null | undefined;
   hash: string | null | undefined;
-  componentIdentifier: any;
+  componentIdentifier?: ComponentIdentifier;
+}
+
+export interface ComponentIdentifier {
+  format: string;
+  coordinates: Coordinates;
+}
+
+export interface Coordinates {
+  artifactId: string;
+  classifier: string;
+  extension: string;
+  groupId: string;
+  version: string;
 }
 
 export interface SecurityData {
@@ -55,6 +68,7 @@ export interface SecurityIssue {
   reference: string;
   severity: number;
   url: string;
+  description: string | null | undefined;
 }
 
 export interface LicenseData {

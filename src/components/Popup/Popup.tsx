@@ -22,8 +22,9 @@ import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import LiteComponentInfoPage from './OSSIndex/LiteComponentInfoPage/LiteComponentInfoPage';
 import {DATA_SOURCES} from '../../utils/Constants';
 import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
+import './Popup.css';
 
-const Popup = () => {
+const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
 
   const nexusContext = useContext(NexusContext);
@@ -35,22 +36,31 @@ const Popup = () => {
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
       return (
-        <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-          <NxTabList>
-            <NxTab>Component Info</NxTab>
-            <NxTab>Security</NxTab>
-            <NxTab>Licensing</NxTab>
-          </NxTabList>
-          <NxTabPanel>
-            <ComponentInfoPage></ComponentInfoPage>
-          </NxTabPanel>
-          <NxTabPanel>
-            <SecurityPage></SecurityPage>
-          </NxTabPanel>
-          <NxTabPanel>
-            <LicensingPage></LicensingPage>
-          </NxTabPanel>
-        </NxTabs>
+        <section className="nx-tile nx-viewport-sized__container">
+          <header className="nx-tile-header">
+            <div className="nx-tile-header__title">
+              <h2 className="nx-h2">Sonatype Nexus Lifecycle Results</h2>
+            </div>
+          </header>
+          <div className="nx-tile-content nx-viewport-sized__container">
+            <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+              <NxTabList>
+                <NxTab>Component Info</NxTab>
+                <NxTab>Security</NxTab>
+                <NxTab>Licensing</NxTab>
+              </NxTabList>
+              <NxTabPanel>
+                <ComponentInfoPage></ComponentInfoPage>
+              </NxTabPanel>
+              <NxTabPanel>
+                <SecurityPage></SecurityPage>
+              </NxTabPanel>
+              <NxTabPanel>
+                <LicensingPage></LicensingPage>
+              </NxTabPanel>
+            </NxTabs>
+          </div>
+        </section>
       );
     } else if (
       nexusContext &&
@@ -59,18 +69,27 @@ const Popup = () => {
     ) {
       console.info('Rendering OSS Index View');
       return (
-        <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-          <NxTabList>
-            <NxTab>Component Info</NxTab>
-            <NxTab>Security</NxTab>
-          </NxTabList>
-          <NxTabPanel>
-            <LiteComponentInfoPage></LiteComponentInfoPage>
-          </NxTabPanel>
-          <NxTabPanel>
-            <LiteSecurityPage></LiteSecurityPage>
-          </NxTabPanel>
-        </NxTabs>
+        <section className="nx-tile nx-viewport-sized__container">
+          <header className="nx-tile-header">
+            <div className="nx-tile-header__title">
+              <h2 className="nx-h2">Sonatype OSS Index Results</h2>
+            </div>
+          </header>
+          <div className="nx-tile-content nx-viewport-sized__container">
+            <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+              <NxTabList>
+                <NxTab>Component Info</NxTab>
+                <NxTab>Security</NxTab>
+              </NxTabList>
+              <NxTabPanel>
+                <LiteComponentInfoPage></LiteComponentInfoPage>
+              </NxTabPanel>
+              <NxTabPanel>
+                <LiteSecurityPage></LiteSecurityPage>
+              </NxTabPanel>
+            </NxTabs>
+          </div>
+        </section>
       );
     }
     return null;

@@ -23,10 +23,10 @@ import {
   NxTableBody
 } from '@sonatype/react-shared-components';
 
-const LiteComponentInfoPage = () => {
+const LiteComponentInfoPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
-  const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
+  const renderCIPPage = (nexusContext: NexusContextInterface | undefined): JSX.Element | null => {
     if (nexusContext && nexusContext.componentDetails) {
       return (
         <NxTable>
