@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 import $ from 'cash-dom';
-import {Url} from 'node:url';
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
-import {generatePackageURL} from './PurlUtils';
+import {generatePackageURLWithNamespace} from './PurlUtils';
 
 /*
   The following coordinates are missing for given format: [version]
@@ -33,41 +31,42 @@ const parseGolang = (url: string): PackageURL | undefined => {
 
 const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
   const uri = new URL(url);
-
+  let nameAndNamespace: NamespaceContainer | undefined;
+  let version;
   const nameVersion = uri.pathname.split('@');
-
-  if (nameVersion.length > 1) {
-    //check that the version doesnt have slashes to handle @v1.26.0/runtime/protoimpl
-    const version = nameVersion[1].split('/')[0];
-
-    const nameAndNamespace = getName(nameVersion[0]);
-    if (nameAndNamespace) {
-      return new PackageURL(
-        'golang',
-        nameAndNamespace.namespace,
-        nameAndNamespace.name,
-        version,
-        undefined,
-        undefined
-      );
-    }
+  version = getVersionFromURI(uri);
+  if (version !== undefined) {
+    nameAndNamespace = getName(nameVersion[0]);
   } else {
     const found = $(
       'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a'
     );
 
     if (typeof found !== 'undefined') {
-      const name = getName(uri.pathname);
-      const version = found.text().trim().replace('Version: ', '').trim();
-      if (name) {
-        return new PackageURL('golang', name.namespace, name.name, version, undefined, undefined);
-      }
+      nameAndNamespace = getName(uri.pathname);
+      version = found.text().trim().replace('Version: ', '').trim();
     }
   }
-
+  if (nameAndNamespace) {
+    return generatePackageURLWithNamespace(
+      'golang',
+      nameAndNamespace.name,
+      String(version),
+      nameAndNamespace.namespace
+    );
+  }
   return undefined;
 };
-
+const getVersionFromURI = (uri: URL) => {
+  const nameVersion = uri.pathname.split('@');
+  let version;
+  if (nameVersion.length > 1) {
+    //check that the version doesnt have slashes to handle @v1.26.0/runtime/protoimpl
+    version = nameVersion[1].split('/')[0];
+    return version;
+  }
+  return undefined;
+};
 const getName = (name: string): NamespaceContainer | undefined => {
   // console.log('getName name', name);
   while (name.charAt(0) === '/') {
@@ -93,4 +92,4 @@ interface NamespaceContainer {
   namespace: string;
 }
 
-export {parseGolang, parseUrlIntoGolangThing};
+export {parseGolang};
