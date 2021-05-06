@@ -5,28 +5,17 @@
   "version": "2.0.0",
   "manifest_version": 3,
   "content_security_policy": {
-    "script-src": "self", 
+    "script-src": "self",
     "object-src": "self"
   },
   "action": {
     "default_popup": "popup.html",
     "default_title": "Open the popup"
   },
-  "optional_permissions": [
-    "*://*/*",
-    "tabs",
-    "notifications"
-  ],
+  "optional_permissions": ["tabs", "notifications"],  
   "host_permissions": [
     "http://*/",
-    "https://*/"
-  ],
-  "permissions": [
-    "activeTab",
-    "declarativeContent",
-    "cookies",
-    "background",
-    "storage",
+    "https://*/",
     "https://pkgs.alpinelinux.org/",
     "https://anaconda.org/anaconda/",
     "https://chocolatey.org/packages/",
@@ -51,8 +40,9 @@
     "https://rubygems.org/",
     "https://search.gocenter.io/",
     "https://search.maven.org/",
-    "https://pkg.go.dev/github.com/"
+    "https://pkg.go.dev/"
   ],
+  "permissions": ["activeTab", "declarativeContent", "cookies", "background", "storage"],
   "content_scripts": [
     {
       "matches": [
@@ -80,21 +70,18 @@
         "https://rubygems.org/*",
         "https://search.gocenter.io/*",
         "https://search.maven.org/*",
-        "https://pkg.go.dev/github.com/*"
+        "https://pkg.go.dev/*"
       ],
-      "js": [
-        "/static/js/content.js"
-      ],
+      "js": ["/static/js/content.js"],
       "run_at": "document_end"
     }
   ],
-  "web_accessible_resources": [{
-    "resources": [
-      "images/*",
-      "static/*"
-    ],
-    "matches": []
-  }],
+  "web_accessible_resources": [
+    {
+      "resources": ["images/*", "static/*"],
+      "matches": []
+    }
+  ],
   "icons": {
     "16": "images/SON_logo_favicon.png",
     "32": "images/SON_logo_favicon.png",

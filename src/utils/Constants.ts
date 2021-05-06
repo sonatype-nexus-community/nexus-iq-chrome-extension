@@ -134,7 +134,7 @@ export const REPO_TYPES = [
     dataSource: DATA_SOURCES.NEXUSIQ
   },
   {
-    url: 'https://pkg.go.dev/github.com/',
+    url: 'https://pkg.go.dev/',
     //old gocenter path ->// https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
     //https://pkg.go.dev/github.com/etcd-io/etcd
     //https://pkg.go.dev/github.com/etcd-io/etcd@v3.3.25+incompatible
