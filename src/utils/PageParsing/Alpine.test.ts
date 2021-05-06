@@ -13,26 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import {DATA_SOURCES, FORMATS, RepoType} from './Constants';
-import {getArtifactDetailsFromDOM} from './PageParsing';
+import {readFileSync} from 'fs';
+import {join} from 'path';
+import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {getArtifactDetailsFromDOM} from '../PageParsing';
 
-describe('Page Parsing', () => {
-  test('Parse go page', () => {
+describe('Alpine Page Parsing', () => {
+  test('should parse a valid Alpine page', () => {
+    const html = readFileSync(join(__dirname, 'testdata/alpine.html'));
+
+    window.document.body.innerHTML = html.toString();
+
     const rt: RepoType = {
       url: '',
-      repoFormat: FORMATS.golang,
+      repoFormat: FORMATS.alpine,
       titleSelector: '',
       versionPath: '',
-      dataSource: DATA_SOURCES.NEXUSIQ,
+      dataSource: DATA_SOURCES.OSSINDEX,
       appendVersionPath: ''
     };
 
     const PackageURL = getArtifactDetailsFromDOM(
       rt,
-      'https://pkg.go.dev/github.com/etcd-io/etcd@v0.3.0'
+      'https://pkgs.alpinelinux.org/package/edge/main/x86/openssl'
     );
 
     expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe('alpine');
+    expect(PackageURL?.name).toBe('openssl');
+    expect(PackageURL?.version).toBe('1.1.1k-r0');
   });
 });
