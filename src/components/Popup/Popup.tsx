@@ -22,6 +22,7 @@ import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import LiteComponentInfoPage from './OSSIndex/LiteComponentInfoPage/LiteComponentInfoPage';
 import {DATA_SOURCES} from '../../utils/Constants';
 import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
+import {Puff} from '@agney/react-loading';
 import './Popup.css';
 
 const Popup = (): JSX.Element | null => {
@@ -92,7 +93,7 @@ const Popup = (): JSX.Element | null => {
         </section>
       );
     }
-    return null;
+    return <Puff />;
   };
 
   return renderPopup(nexusContext);
