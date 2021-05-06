@@ -40,7 +40,7 @@ const LiteSecurityPage = (): JSX.Element | null => {
         <section className="nx-tile">
           <header className="nx-tile-header">
             <div className="nx-tile-header__title">
-              <h2 className="nx-h2">Vulnerabilities</h2>
+              <h2 className="nx-h2">Known Vulnerabilities</h2>
             </div>
           </header>
           <div className="nx-tile-content nx-tile-content--accordion-container">
@@ -56,7 +56,13 @@ const LiteSecurityPage = (): JSX.Element | null => {
                         />
                       </div>
                     </NxAccordion.Header>
-                    <p className="nx-p">{issue.description}</p>
+                    <p className="nx-p">
+                      {issue.description}
+                      Learn more at{' '}
+                      <a href={issue.url} target="_blank" rel="noreferrer">
+                        OSS Index
+                      </a>
+                    </p>
                   </NxStatefulAccordion>
                 );
               }

@@ -114,9 +114,11 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   render(): JSX.Element {
     return (
       <NexusContext.Provider value={this.state}>
-        <main className="nx-page-main nx-viewport-sized">
-          <Popup />
-        </main>
+        <div className="nx-page-content">
+          <main className="nx-page-main nx-viewport-sized">
+            <Popup />
+          </main>
+        </div>
       </NexusContext.Provider>
     );
   }
