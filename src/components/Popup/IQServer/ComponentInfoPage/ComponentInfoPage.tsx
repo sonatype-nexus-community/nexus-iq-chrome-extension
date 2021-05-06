@@ -26,7 +26,7 @@ import {
 const ComponentInfoPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
-  const formatDate = (date: string): string => {
+  const formatDate = (date: string | null | undefined): string => {
     if (date) {
       const dateTime = new Date(date);
       return dateTime.toDateString();
@@ -35,7 +35,11 @@ const ComponentInfoPage = (): JSX.Element | null => {
   };
 
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.componentDetails) {
+    if (
+      nexusContext &&
+      nexusContext.componentDetails &&
+      nexusContext.componentDetails.component.componentIdentifier
+    ) {
       return (
         <NxTable>
           <NxTableHead>
@@ -58,7 +62,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
               <NxTableCell>Version</NxTableCell>
               <NxTableCell>
                 <span id="version">
-                  {nexusContext.componentDetails.component.componentIdentifier!.coordinates.version}
+                  {nexusContext.componentDetails.component.componentIdentifier.coordinates.version}
                 </span>
               </NxTableCell>
             </NxTableRow>
@@ -70,7 +74,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
               <NxTableCell>Catalog Date</NxTableCell>
               <NxTableCell>
                 <span id="catalogdate">
-                  {formatDate(nexusContext.componentDetails.catalogDate!)}
+                  {formatDate(nexusContext.componentDetails.catalogDate)}
                 </span>
               </NxTableCell>
             </NxTableRow>

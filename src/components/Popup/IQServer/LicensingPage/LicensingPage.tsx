@@ -23,12 +23,17 @@ import {
   NxTableCell,
   NxTableBody
 } from '@sonatype/react-shared-components';
+import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
 const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.componentDetails) {
+    if (
+      nexusContext &&
+      nexusContext.componentDetails &&
+      nexusContext.componentDetails.licenseData
+    ) {
       return (
         <React.Fragment>
           <NxTable>
@@ -38,8 +43,8 @@ const LicensingPage = (): JSX.Element | null => {
               </NxTableRow>
             </NxTableHead>
             <NxTableBody>
-              {nexusContext.componentDetails.licenseData!.declaredLicenses.map(function (
-                license: any
+              {nexusContext.componentDetails.licenseData.declaredLicenses.map(function (
+                license: LicenseDetail
               ) {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
               })}
@@ -52,8 +57,8 @@ const LicensingPage = (): JSX.Element | null => {
               </NxTableRow>
             </NxTableHead>
             <NxTableBody>
-              {nexusContext.componentDetails.licenseData!.observedLicenses.map(function (
-                license: any
+              {nexusContext.componentDetails.licenseData.observedLicenses.map(function (
+                license: LicenseDetail
               ) {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
               })}

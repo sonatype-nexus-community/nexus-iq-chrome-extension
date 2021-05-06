@@ -21,9 +21,6 @@ import {DEFAULT_OSSINDEX_URL} from '../utils/Constants';
 import {PackageURL} from 'packageurl-js';
 
 export class OSSIndexRequestService {
-  private readonly xsrfCookieName = 'CLM-CSRF-TOKEN';
-  private readonly xsrfHeaderName = 'X-CSRF-TOKEN';
-
   constructor(
     readonly url: string = DEFAULT_OSSINDEX_URL,
     readonly user: string = '',

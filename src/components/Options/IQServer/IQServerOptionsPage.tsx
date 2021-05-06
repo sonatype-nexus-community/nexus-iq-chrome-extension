@@ -28,8 +28,9 @@ const IQServerOptionsPage = (): JSX.Element => {
     return val.length ? null : 'Must be non-empty';
   };
 
-  const askForPermissions = (event: any) => {
+  const askForPermissions = (event: React.MouseEvent<HTMLButtonElement>) => {
     console.log(event);
+
     console.info('grantOriginsPermissions');
 
     chrome.permissions.request(

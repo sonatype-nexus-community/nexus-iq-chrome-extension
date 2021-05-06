@@ -17,9 +17,9 @@ import {RepoType, REPO_TYPES} from './Constants';
 
 const findRepoType = (url: string): RepoType | undefined => {
   for (let i = 0; i < REPO_TYPES.length; i++) {
-    console.info('url', REPO_TYPES[i].url, url);
-
     if (url.search(REPO_TYPES[i].url) >= 0) {
+      console.info('Found matching url', REPO_TYPES[i].url, url);
+
       return REPO_TYPES[i];
     }
   }

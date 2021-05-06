@@ -42,6 +42,8 @@ const SecurityPage = (): JSX.Element | null => {
       nexusContext.componentDetails.securityData &&
       nexusContext.componentDetails.securityData.securityIssues
     ) {
+      const purl = nexusContext.componentDetails.component.packageUrl;
+
       return (
         <React.Fragment>
           {' '}
@@ -50,7 +52,7 @@ const SecurityPage = (): JSX.Element | null => {
               <SecurityItemDisplay
                 key={issue.reference}
                 open={isOpen(issue.reference)}
-                packageUrl={nexusContext.componentDetails!.component.packageUrl}
+                packageUrl={purl}
                 securityIssue={issue}
                 remediationEvent={getRemediationAndOpen}
               />
