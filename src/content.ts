@@ -25,8 +25,9 @@ chrome.runtime.onMessage.addListener((event: ArtifactMessage, sender, respCallba
 
     const purl = getArtifactDetailsFromDOM(event.repoTypeInfo, event.url);
 
-    console.info('Got a purl back from scraping url or webpage', purl);
     if (purl) {
+      console.info('Got a purl back from scraping url or webpage', purl);
+
       respCallback(purl.toString());
     }
   }

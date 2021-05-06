@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {PackageURL} from 'packageurl-js';
 import {ComponentContainer, ComponentDetails} from '../types/ArtifactMessage';
 import {ServiceHelpers} from './ServiceHelpers';
 
@@ -27,17 +28,16 @@ export class IqRequestService {
     readonly token: string = 'admin123'
   ) {}
 
-  public async getComponentDetails(purl: string): Promise<ComponentContainer> {
+  public async getComponentDetails(purl: PackageURL): Promise<ComponentContainer> {
     await this.canLogin();
 
     const headers = await this.getHeaders();
     headers.set('Content-Type', 'application/json');
     //CPT Hot fix until library fixed
-    purl = purl.replace('%2F', '/').replace('%2B', '+');
     const data = {
       components: [
         {
-          packageUrl: purl
+          packageUrl: purl.toString().replace('%2F', '/').replace('%2B', '+')
         }
       ]
     };

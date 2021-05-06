@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+import {PackageURL} from 'packageurl-js';
 import {ComponentContainer} from '../types/ArtifactMessage';
 
 export interface RequestService {
-  getComponentDetails(p: string): Promise<ComponentContainer>;
+  getComponentDetails(p: PackageURL): Promise<ComponentContainer>;
 }

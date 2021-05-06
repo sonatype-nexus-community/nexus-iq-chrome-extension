@@ -21,6 +21,7 @@ import {findRepoType} from './utils/UrlParsing';
 import {IqRequestService} from './services/IqRequestService';
 import {RequestService} from './services/RequestService';
 import {OSSIndexRequestService} from './services/OSSIndexRequestService';
+import {PackageURL} from 'packageurl-js';
 
 type AppProps = {};
 
@@ -98,7 +99,9 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     });
   };
 
-  handleResponse = (purl: string): void => {
+  handleResponse = (purlString: string): void => {
+    const purl = PackageURL.fromString(purlString);
+
     this._requestService
       .getComponentDetails(purl)
       .then((res) => {

@@ -16,8 +16,9 @@
 
 import {ServiceHelpers} from './ServiceHelpers';
 import {OSSIndexResponse} from '../types/OSSIndexResponse';
-import {ComponentContainer, SecurityData, SecurityIssue} from '../types/ArtifactMessage';
+import {ComponentContainer, SecurityIssue} from '../types/ArtifactMessage';
 import {DEFAULT_OSSINDEX_URL} from '../utils/Constants';
+import {PackageURL} from 'packageurl-js';
 
 export class OSSIndexRequestService {
   private readonly xsrfCookieName = 'CLM-CSRF-TOKEN';
@@ -29,12 +30,12 @@ export class OSSIndexRequestService {
     readonly token: string = ''
   ) {}
 
-  public async getComponentDetails(purl: string): Promise<ComponentContainer> {
+  public async getComponentDetails(purl: PackageURL): Promise<ComponentContainer> {
     const headers = await this.getHeaders();
     headers.set('Content-Type', 'application/json');
 
     const data = {
-      coordinates: [purl]
+      coordinates: [this.sanitizePurl(purl)]
     };
 
     return new Promise((resolve, reject) => {
@@ -91,6 +92,15 @@ export class OSSIndexRequestService {
         });
     });
   }
+
+  private sanitizePurl = (purl: PackageURL): string => {
+    // Handles golang versions having v in front of them
+    while (purl.version?.charAt(0) == 'v') {
+      purl.version = purl.version.substring(1);
+    }
+
+    return purl.toString().replace('%2F', '/').replace('%2B', '+');
+  };
 
   private getHeaders(): Promise<Headers> {
     return new Promise((resolve, reject) => {

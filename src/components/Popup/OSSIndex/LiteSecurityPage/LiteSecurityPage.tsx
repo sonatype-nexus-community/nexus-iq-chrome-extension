@@ -56,13 +56,13 @@ const LiteSecurityPage = (): JSX.Element | null => {
                         />
                       </div>
                     </NxAccordion.Header>
-                    <p className="nx-p">
-                      {issue.description}
+                    <h3>
                       Learn more at{' '}
                       <a href={issue.url} target="_blank" rel="noreferrer">
                         OSS Index
                       </a>
-                    </p>
+                    </h3>
+                    <p className="nx-p">{issue.description}</p>
                   </NxStatefulAccordion>
                 );
               }

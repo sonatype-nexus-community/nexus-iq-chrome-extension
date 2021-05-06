@@ -15,6 +15,7 @@
  */
 
 import fetchMock from 'fetch-mock-jest';
+import {PackageURL} from 'packageurl-js';
 import {OSSIndexRequestService} from './OSSIndexRequestService';
 
 const ossIndexRequestService = new OSSIndexRequestService();
@@ -120,7 +121,7 @@ beforeEach(() => {
       {
         url: 'end:api/v3/component-report',
         body: {
-          coordinates: ['string']
+          coordinates: ['pkg:does/not-exist-not-valid@1.0.0']
         }
       },
       {
@@ -138,14 +139,16 @@ beforeEach(() => {
 
 describe('OSS Index Request Service', () => {
   test('can get a response given a valid purl with no vulnerabilities', async () => {
-    const res = await ossIndexRequestService.getComponentDetails('pkg:npm/jquery@3.5.1');
+    const purl = PackageURL.fromString('pkg:npm/jquery@3.5.1');
+    const res = await ossIndexRequestService.getComponentDetails(purl);
 
     expect(res).toBeDefined();
     expect(res.component.packageUrl).toBe('pkg:npm/jquery@3.5.1');
   });
 
   test('can get a response given a valid purl with vulnerabilities', async () => {
-    const res = await ossIndexRequestService.getComponentDetails('pkg:npm/jquery@3.1.3');
+    const purl = PackageURL.fromString('pkg:npm/jquery@3.1.3');
+    const res = await ossIndexRequestService.getComponentDetails(purl);
 
     expect(res).toBeDefined();
     expect(res.securityData?.securityIssues.length).toBe(4);
@@ -154,7 +157,8 @@ describe('OSS Index Request Service', () => {
   test('rejects a 400 response on an invalid purl/json', async () => {
     expect.assertions(4);
     try {
-      await ossIndexRequestService.getComponentDetails('string');
+      const purl = PackageURL.fromString('pkg:does/not-exist-not-valid@1.0.0');
+      await ossIndexRequestService.getComponentDetails(purl);
     } catch (e) {
       expect(e).toBeDefined();
       expect(e).toBeInstanceOf(Response);
