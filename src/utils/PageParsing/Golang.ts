@@ -15,6 +15,7 @@
  */
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
+import {FORMATS} from '../Constants';
 import {generatePackageURLWithNamespace} from './PurlUtils';
 
 /*
@@ -25,50 +26,55 @@ import {generatePackageURLWithNamespace} from './PurlUtils';
   https://pkg.go.dev/google.golang.org/protobuf@v1.26.0 ->Version: v1.26.0 ->No vulns, but different namespace
   https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl ->Todo Version: v1.26.0 ->No vulns, but different namespace and some stuff at the end
 */
+const PKG_GO_DEV_SELECTOR =
+  'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
+
 const parseGolang = (url: string): PackageURL | undefined => {
-  return parseUrlIntoGolangThing(url);
+  return parsePkgGoDevURLIntoPackageURL(url);
 };
 
-const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
+const parsePkgGoDevURLIntoPackageURL = (url: string): PackageURL | undefined => {
   const uri = new URL(url);
   let nameAndNamespace: NamespaceContainer | undefined;
-  let version;
   const nameVersion = uri.pathname.split('@');
-  version = getVersionFromURI(uri);
+
+  let version = getVersionFromURI(uri);
+
   if (version !== undefined) {
     nameAndNamespace = getName(nameVersion[0]);
   } else {
-    const found = $(
-      'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a'
-    );
+    const found = $(PKG_GO_DEV_SELECTOR);
 
     if (typeof found !== 'undefined') {
       nameAndNamespace = getName(uri.pathname);
       version = found.text().trim().replace('Version: ', '').trim();
     }
   }
-  if (nameAndNamespace) {
+
+  if (nameAndNamespace && version) {
     return generatePackageURLWithNamespace(
-      'golang',
+      FORMATS.golang,
       nameAndNamespace.name,
-      String(version),
+      version,
       nameAndNamespace.namespace
     );
   }
+
   return undefined;
 };
-const getVersionFromURI = (uri: URL) => {
+
+const getVersionFromURI = (uri: URL): string | undefined => {
   const nameVersion = uri.pathname.split('@');
-  let version;
+
   if (nameVersion.length > 1) {
     //check that the version doesnt have slashes to handle @v1.26.0/runtime/protoimpl
-    version = nameVersion[1].split('/')[0];
-    return version;
+    return nameVersion[1].split('/')[0];
   }
+
   return undefined;
 };
+
 const getName = (name: string): NamespaceContainer | undefined => {
-  // console.log('getName name', name);
   while (name.charAt(0) === '/') {
     name = name.substring(1);
   }
