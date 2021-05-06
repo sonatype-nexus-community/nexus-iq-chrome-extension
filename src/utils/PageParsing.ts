@@ -20,6 +20,7 @@ import {parseNPM} from './PageParsing/NPM';
 import {parseNuget} from './PageParsing/Nuget';
 import {parseRuby} from './PageParsing/RubyGems';
 import {parseGolang} from './PageParsing/Golang';
+import {parsePyPIURL} from './PageParsing/PyPI';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   // console.info('getArtifactDetailsFromDOM url', url, repoFormat.repoFormat);
@@ -38,6 +39,8 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
 
     // console.log('purl', purl);
     return purl;
+  } else if (repoFormat.repoFormat === FORMATS.pypi) {
+    return parsePyPIURL(url);
   }
 
   return undefined;
