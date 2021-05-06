@@ -14,16 +14,6 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   chunkFilename: 'static/css/[name].css',
 });
 
-// const cspConfigPolicy = {
-//   'default-src': "'none'",
-//   'base-uri': "'self'",
-//   'connect-src': '*',
-//   'data': "'unsafe-inline'",
-//   'object-src': "'none'",
-//   'script-src': ["'self'"],
-//   'style-src': ''
-// };
-
 const cspHtmlWebpackPlugin = new CspHtmlWebpackPlugin();
 
 const copyWebpackPlugin = new CopyWebpackPlugin({
