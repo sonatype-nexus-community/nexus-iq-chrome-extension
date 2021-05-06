@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import $ from 'cash-dom';
-import { Url } from 'node:url';
+import {Url} from 'node:url';
 import {PackageURL} from 'packageurl-js';
 import {FORMATS} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
@@ -39,7 +39,14 @@ const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
   if (nameVersion.length > 1) {
     const nameAndNamespace = getName(nameVersion[0]);
     if (nameAndNamespace) {
-      return new PackageURL('golang', nameAndNamespace.namespace, nameAndNamespace.name, nameVersion[1], undefined, undefined);
+      return new PackageURL(
+        'golang',
+        nameAndNamespace.namespace,
+        nameAndNamespace.name,
+        nameVersion[1],
+        undefined,
+        undefined
+      );
     }
   } else {
     const found = $(
@@ -56,10 +63,10 @@ const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
   }
 
   return undefined;
-}
+};
 
-const getName = (name: string): temporary | undefined => {
-  while(name.charAt(0) === '/') {
+const getName = (name: string): NamespaceContainer | undefined => {
+  while (name.charAt(0) === '/') {
     name = name.substring(1);
   }
 
@@ -67,17 +74,17 @@ const getName = (name: string): temporary | undefined => {
 
   if (nameAndNamespace.length > 0) {
     if (nameAndNamespace.length > 2) {
-      const namespace = nameAndNamespace.slice(0, nameAndNamespace.length - 1).join("/");
+      const namespace = nameAndNamespace.slice(0, nameAndNamespace.length - 1).join('/');
 
-      return {name: nameAndNamespace[nameAndNamespace.length -1], namespace: namespace};
+      return {name: nameAndNamespace[nameAndNamespace.length - 1], namespace: namespace};
     }
     return {name: nameAndNamespace[1], namespace: nameAndNamespace[0]};
   }
 
   return undefined;
-}
+};
 
-interface temporary {
+interface NamespaceContainer {
   name: string;
   namespace: string;
 }
