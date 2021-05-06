@@ -135,11 +135,15 @@ export const REPO_TYPES = [
   },
   {
     url: 'https://pkg.go.dev/',
+    //old gocenter path ->// https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    //https://pkg.go.dev/github.com/etcd-io/etcd
+    //https://pkg.go.dev/github.com/etcd-io/etcd@v3.3.25+incompatible
     repoFormat: FORMATS.golang,
-    titleSelector: '#app div.v-application--wrap h1',
-    versionPath: '{url}/{packagename}/info?version={versionNumber}', // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    titleSelector:
+      'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a',
+    versionPath: '{url}/{packagename}/@{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: '/info?version={versionNumber}'
+    appendVersionPath: '@{versionNumber}'
   },
   {
     url: 'https://repo1.maven.org/maven2/',

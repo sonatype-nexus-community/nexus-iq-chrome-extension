@@ -32,7 +32,8 @@ export class IqRequestService {
 
     const headers = await this.getHeaders();
     headers.set('Content-Type', 'application/json');
-
+    //CPT Hot fix until library fixed
+    purl = purl.replace('%2F', '/').replace('%2B', '+');
     const data = {
       components: [
         {
