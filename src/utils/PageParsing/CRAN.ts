@@ -16,7 +16,7 @@
 
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import { FORMATS } from '../Constants';
+import {FORMATS} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 /*
   https://ossindex.sonatype.org/api/v3/component-report/cran%3AA3%400.0.1
@@ -25,25 +25,25 @@ import {generatePackageURL} from './PurlUtils';
   https://cran.r-project.org/package=clustcurv
 */
 const parseCRAN = (url: string): PackageURL | undefined => {
-  const elements = url.split("/");
+  const elements = url.split('/');
   let name;
   let version;
   if (elements.length > 5) {
     name = elements[5];
   } else if (elements.length > 3) {
-    const pckg = "package=";
+    const pckg = 'package=';
     name = elements[3];
     if (name.search(pckg) >= 0) {
       name = name.substr(pckg.length);
     }
   } else {
-    name = $("h2").text();
-    if (name.search(":") >= 0) {
-      name = name.substring(0, name.search(":"));
+    name = $('h2').text();
+    if (name.search(':') >= 0) {
+      name = name.substring(0, name.search(':'));
     }
   }
 
-  const found = $("table tr:nth-child(1) td:nth-child(2)").first().text();
+  const found = $('table tr:nth-child(1) td:nth-child(2)').first().text();
   if (typeof found !== 'undefined') {
     version = found.trim();
     name = encodeURIComponent(name);
