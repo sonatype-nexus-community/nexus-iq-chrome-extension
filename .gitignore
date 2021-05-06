@@ -21,3 +21,10 @@ build
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+data
+dist
+packages
+
+.circleci/local-config.yml
+SAVETEXT.txt

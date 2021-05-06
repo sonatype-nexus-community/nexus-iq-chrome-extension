@@ -54,6 +54,18 @@ describe('Golang Page Parsing', () => {
     // expect(PackageURL?.subpath).toBe('protoimpl');
     //https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl
   });
+
+  test('Parse golang page protobuf version in url and subpath', () => {
+    const PackageURL = getArtifactDetailsFromDOM(
+      rt,
+      'https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl'
+    );
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.version).toBe('v1.26.0');
+    expect(PackageURL?.namespace).toBe('google.golang.org');
+    expect(PackageURL?.name).toBe('protobuf');
+    expect(PackageURL?.toString()).toBe('pkg:golang/google.golang.org/protobuf@v1.26.0');
+  });
   test('Parse golang page gopkg.in version in url', () => {
     const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pkg.go.dev/gopkg.in/ini.v1@v1.61.0');
     expect(PackageURL).toBeDefined();
@@ -69,7 +81,7 @@ describe('Golang Page Parsing', () => {
     expect(PackageURL?.namespace).toBe('gopkg.in');
     expect(PackageURL?.name).toBe('yaml.v2');
   });
-  test('should parse a valid Golang page', () => {
+  test('should parse a valid Golang page etcd', () => {
     const html = readFileSync(join(__dirname, 'testdata/golang.html'));
 
     window.document.body.innerHTML = html.toString();

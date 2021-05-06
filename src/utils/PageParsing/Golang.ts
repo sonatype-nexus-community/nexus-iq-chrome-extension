@@ -37,13 +37,16 @@ const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
   const nameVersion = uri.pathname.split('@');
 
   if (nameVersion.length > 1) {
+    //check that the version doesnt have slashes to handle @v1.26.0/runtime/protoimpl
+    const version = nameVersion[1].split('/')[0];
+
     const nameAndNamespace = getName(nameVersion[0]);
     if (nameAndNamespace) {
       return new PackageURL(
         'golang',
         nameAndNamespace.namespace,
         nameAndNamespace.name,
-        nameVersion[1],
+        version,
         undefined,
         undefined
       );
@@ -66,6 +69,7 @@ const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
 };
 
 const getName = (name: string): NamespaceContainer | undefined => {
+  // console.log('getName name', name);
   while (name.charAt(0) === '/') {
     name = name.substring(1);
   }
