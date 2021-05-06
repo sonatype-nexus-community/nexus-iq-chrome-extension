@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 import $ from 'cash-dom';
-import {Url} from 'node:url';
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
-import {generatePackageURL} from './PurlUtils';
+import {generatePackageURLWithNamespace} from './PurlUtils';
 
 /*
   The following coordinates are missing for given format: [version]
@@ -39,13 +37,11 @@ const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
   if (nameVersion.length > 1) {
     const nameAndNamespace = getName(nameVersion[0]);
     if (nameAndNamespace) {
-      return new PackageURL(
+      return generatePackageURLWithNamespace(
         'golang',
         nameAndNamespace.namespace,
         nameAndNamespace.name,
-        nameVersion[1],
-        undefined,
-        undefined
+        nameVersion[1]
       );
     }
   } else {
@@ -57,7 +53,7 @@ const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
       const name = getName(uri.pathname);
       const version = found.text().trim().replace('Version: ', '').trim();
       if (name) {
-        return new PackageURL('golang', name.namespace, name.name, version, undefined, undefined);
+        return generatePackageURLWithNamespace('golang', name.namespace, name.name, version);
       }
     }
   }
@@ -89,4 +85,4 @@ interface NamespaceContainer {
   namespace: string;
 }
 
-export {parseGolang, parseUrlIntoGolangThing};
+export {parseGolang};
