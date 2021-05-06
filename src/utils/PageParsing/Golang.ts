@@ -14,67 +14,72 @@
  * limitations under the License.
  */
 import $ from 'cash-dom';
+import { Url } from 'node:url';
 import {PackageURL} from 'packageurl-js';
 import {FORMATS} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 
+/*
+  The following coordinates are missing for given format: [version]
+  https://pkg.go.dev/github.com/etcd-io/etcd@v0.3.0 ->CVE-2020-15115, CVE - 2020 - 15136;
+  https://pkg.go.dev/github.com/etcd-io/etcd -> v->v3.3.25+incompatible ->unknown
+  https://pkg.go.dev/github.com/go-gitea/gitea ->Version: v1.8.3 ->CVE-2018-15192 and others
+  https://pkg.go.dev/google.golang.org/protobuf@v1.26.0 ->Version: v1.26.0 ->No vulns, but different namespace
+  https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl ->Todo Version: v1.26.0 ->No vulns, but different namespace and some stuff at the end
+*/
 const parseGolang = (url: string): PackageURL | undefined => {
-  // console.log('parseGolang', url);
-  // const name = 'etcd-io/etcd';
-  // const version = 'v3.3.25+incompatible';
-  // pkg:GOLANG/google.golang.org/genproto#/googleapis/api/annotations/;
-  // return generatePackageURL(FORMATS.golang, packageId, version);
-  // The following coordinates are missing for given format: [version]
-  //https://pkg.go.dev/github.com/etcd-io/etcd@v0.3.0 ->CVE-2020-15115, CVE - 2020 - 15136;
-  //https://pkg.go.dev/github.com/etcd-io/etcd -> v->v3.3.25+incompatible ->unknown
-  //https://pkg.go.dev/github.com/go-gitea/gitea ->Version: v1.8.3 ->CVE-2018-15192 and others
-  //https://pkg.go.dev/google.golang.org/protobuf@v1.26.0 ->Version: v1.26.0 ->No vulns, but different namespace
-  //https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl ->Todo Version: v1.26.0 ->No vulns, but different namespace and some stuff at the end
-  const elements = url.split('/');
-  const type = FORMATS.golang;
-  const namespace = elements[3];
-  let name = '';
-  const qualifiers = null;
-  const subpath = null;
-  let version = undefined;
-  const lastElementIndex = elements.length - 1;
-  const name1 = '';
-  const lastElement = elements[lastElementIndex];
-  const whereVersion = lastElement.search('@v');
-  let lastElementWithoutVersion = '';
-  if (whereVersion > -1) {
-    //version in the url
-    version = lastElement.substring(whereVersion + 1);
-    lastElementWithoutVersion = lastElement.substring(0, whereVersion);
+  return parseUrlIntoGolangThing(url);
+};
+
+const parseUrlIntoGolangThing = (url: string): PackageURL | undefined => {
+  const uri = new URL(url);
+
+  const nameVersion = uri.pathname.split('@');
+
+  if (nameVersion.length > 1) {
+    const nameAndNamespace = getName(nameVersion[0]);
+    if (nameAndNamespace) {
+      return new PackageURL('golang', nameAndNamespace.namespace, nameAndNamespace.name, nameVersion[1], undefined, undefined);
+    }
   } else {
-    lastElementWithoutVersion = lastElement;
-    //parse the body for the version
     const found = $(
       'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a'
     );
+
     if (typeof found !== 'undefined') {
-      console.log('found', found);
-      version = found.text().trim();
-      version = version.replace('Version: ', '').trim();
-    } else {
-      return undefined;
+      const name = getName(uri.pathname);
+      const version = found.text().trim().replace('Version: ', '').trim();
+      if (name) {
+        return new PackageURL('golang', name.namespace, name.name, version, undefined, undefined);
+      }
     }
   }
-  if (elements.length == 5) {
-    name = lastElementWithoutVersion;
-  } else if (elements.length == 6) {
-    name = elements[4] + '/' + lastElementWithoutVersion;
-  }
-  const purl: PackageURL | undefined = new PackageURL(
-    FORMATS.golang,
-    namespace,
-    name,
-    version,
-    qualifiers,
-    subpath
-  );
-  // console.log('purl', purl);
-  return purl;
-};
 
-export {parseGolang};
+  return undefined;
+}
+
+const getName = (name: string): temporary | undefined => {
+  while(name.charAt(0) === '/') {
+    name = name.substring(1);
+  }
+
+  const nameAndNamespace = name.split('/');
+
+  if (nameAndNamespace.length > 0) {
+    if (nameAndNamespace.length > 2) {
+      const namespace = nameAndNamespace.slice(0, nameAndNamespace.length - 1).join("/");
+
+      return {name: nameAndNamespace[nameAndNamespace.length -1], namespace: namespace};
+    }
+    return {name: nameAndNamespace[1], namespace: nameAndNamespace[0]};
+  }
+
+  return undefined;
+}
+
+interface temporary {
+  name: string;
+  namespace: string;
+}
+
+export {parseGolang, parseUrlIntoGolangThing};

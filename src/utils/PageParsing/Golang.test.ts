@@ -35,10 +35,8 @@ describe('Golang Page Parsing', () => {
 
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.version).toBe('v0.3.0');
-    expect(PackageURL?.namespace).toBe('github.com');
-    expect(PackageURL?.name).toBe('etcd-io/etcd');
-
-    expect(PackageURL?.toString()).toBe('pkg:golang/github.com/etcd-io%2Fetcd@v0.3.0');
+    expect(PackageURL?.namespace).toBe('github.com/etcd-io');
+    expect(PackageURL?.name).toBe('etcd');
   });
 
   test('Parse golang page protobuf version in url', () => {
@@ -62,7 +60,6 @@ describe('Golang Page Parsing', () => {
     expect(PackageURL?.version).toBe('v1.61.0');
     expect(PackageURL?.namespace).toBe('gopkg.in');
     expect(PackageURL?.name).toBe('ini.v1');
-    expect(PackageURL?.toString()).toBe('pkg:golang/gopkg.in/ini.v1@v1.61.0');
   });
 
   test('Parse golang page gopkg.in version in url', () => {
@@ -71,7 +68,6 @@ describe('Golang Page Parsing', () => {
     expect(PackageURL?.version).toBe('v2.4.0');
     expect(PackageURL?.namespace).toBe('gopkg.in');
     expect(PackageURL?.name).toBe('yaml.v2');
-    expect(PackageURL?.toString()).toBe('pkg:golang/gopkg.in/yaml.v2@v2.4.0');
   });
   test('should parse a valid Golang page', () => {
     const html = readFileSync(join(__dirname, 'testdata/golang.html'));
@@ -80,11 +76,8 @@ describe('Golang Page Parsing', () => {
     const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pkg.go.dev/github.com/etcd-io/etcd');
 
     expect(PackageURL).toBeDefined();
-    expect(PackageURL?.namespace).toBe('github.com');
-    expect(PackageURL?.name).toBe('etcd-io/etcd');
+    expect(PackageURL?.namespace).toBe('github.com/etcd-io');
+    expect(PackageURL?.name).toBe('etcd');
     expect(PackageURL?.version).toBe('v3.3.25+incompatible');
-    expect(PackageURL?.toString()).toBe(
-      'pkg:golang/github.com/etcd-io%2Fetcd@v3.3.25%2Bincompatible'
-    );
   });
 });
