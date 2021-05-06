@@ -38,43 +38,50 @@ const Options = (): JSX.Element | null => {
   const renderOptions = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext) {
       return (
-        <React.Fragment>
-          <NxFieldset label={`Selected Scan Type: ${scanType}`}>
-            <NxRadio
-              name="scanType"
-              value={DATA_SOURCES.OSSINDEX}
-              onChange={setScanType}
-              isChecked={scanType === DATA_SOURCES.OSSINDEX}
-              radioId="scanType-OSS-Index"
-            >
-              OSS Index
-            </NxRadio>
-            <NxRadio
-              name="scanType"
-              value={DATA_SOURCES.NEXUSIQ}
-              onChange={setScanType}
-              isChecked={scanType === DATA_SOURCES.NEXUSIQ}
-              radioId="scanType-IQ-Server"
-            >
-              IQ Server
-            </NxRadio>
-          </NxFieldset>
+        <section className="nx-tile nx-viewport-sized__container">
+          <header className="nx-tile-header">
+            <div className="nx-tile-header__title">
+              <h2 className="nx-h2">Options</h2>
+            </div>
+          </header>
+          <div className="nx-tile-content nx-viewport-sized__container">
+            <NxFieldset label={`Selected Scan Type: ${scanType}`}>
+              <NxRadio
+                name="scanType"
+                value={DATA_SOURCES.OSSINDEX}
+                onChange={setScanType}
+                isChecked={scanType === DATA_SOURCES.OSSINDEX}
+                radioId="scanType-OSS-Index"
+              >
+                OSS Index
+              </NxRadio>
+              <NxRadio
+                name="scanType"
+                value={DATA_SOURCES.NEXUSIQ}
+                onChange={setScanType}
+                isChecked={scanType === DATA_SOURCES.NEXUSIQ}
+                radioId="scanType-IQ-Server"
+              >
+                IQ Server
+              </NxRadio>
+            </NxFieldset>
 
-          <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-            <NxTabList>
-              <NxTab>General</NxTab>
-              <NxTab>Nexus IQ</NxTab>
-              <NxTab>OSS Index</NxTab>
-            </NxTabList>
-            <NxTabPanel></NxTabPanel>
-            <NxTabPanel>
-              <IQServerOptionsPage />
-            </NxTabPanel>
-            <NxTabPanel>
-              <OSSIndexOptionsPage />
-            </NxTabPanel>
-          </NxTabs>
-        </React.Fragment>
+            <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+              <NxTabList>
+                <NxTab>General</NxTab>
+                <NxTab>Nexus IQ</NxTab>
+                <NxTab>OSS Index</NxTab>
+              </NxTabList>
+              <NxTabPanel></NxTabPanel>
+              <NxTabPanel>
+                <IQServerOptionsPage />
+              </NxTabPanel>
+              <NxTabPanel>
+                <OSSIndexOptionsPage />
+              </NxTabPanel>
+            </NxTabs>
+          </div>
+        </section>
       );
     }
     return null;

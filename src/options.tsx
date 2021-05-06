@@ -19,8 +19,11 @@ import Options from './components/Options/Options';
 
 ReactDOM.render(
   <React.StrictMode>
-    <h1>Options</h1>
-    <Options />
+    <div className="nx-page-content">
+      <main className="nx-page-main nx-viewport-sized">
+        <Options />
+      </main>
+    </div>
   </React.StrictMode>,
   document.getElementById('ui')
 );

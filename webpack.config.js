@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CspHtmlWebpackPlugin = require('csp-html-webpack-plugin');
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -12,6 +13,18 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: 'static/css/[name].css',
   chunkFilename: 'static/css/[name].css',
 });
+
+// const cspConfigPolicy = {
+//   'default-src': "'none'",
+//   'base-uri': "'self'",
+//   'connect-src': '*',
+//   'data': "'unsafe-inline'",
+//   'object-src': "'none'",
+//   'script-src': ["'self'"],
+//   'style-src': ''
+// };
+
+const cspHtmlWebpackPlugin = new CspHtmlWebpackPlugin();
 
 const copyWebpackPlugin = new CopyWebpackPlugin({
   patterns: [
@@ -144,7 +157,8 @@ const appConfig = {
   },
 
   plugins: [
-    htmlPlugin, 
+    htmlPlugin,
+    cspHtmlWebpackPlugin,
     miniCssExtractPlugin, 
     forkTsCheckerWebpackPlugin, 
     copyWebpackPlugin,
@@ -216,7 +230,8 @@ const optionsConfig = {
   },
 
   plugins: [
-    optionsHtmlPlugin, 
+    optionsHtmlPlugin,
+    cspHtmlWebpackPlugin,
     miniCssExtractPlugin, 
     forkTsCheckerWebpackPlugin,
   ],
