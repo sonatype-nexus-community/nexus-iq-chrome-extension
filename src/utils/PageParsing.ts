@@ -21,6 +21,7 @@ import {parseNuget} from './PageParsing/Nuget';
 import {parseRuby} from './PageParsing/RubyGems';
 import {parseGolang} from './PageParsing/Golang';
 import {parseCRAN} from './PageParsing/CRAN';
+import {parseConda} from './PageParsing/Anaconda';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   if (repoFormat.repoFormat === FORMATS.npm) {
@@ -35,6 +36,8 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseGolang(url);
   } else if (repoFormat.repoFormat === FORMATS.cran) {
     return parseCRAN(url);
+  } else if (repoFormat.repoFormat === FORMATS.conda) {
+    return parseConda(url);
   }
 
   return undefined;
