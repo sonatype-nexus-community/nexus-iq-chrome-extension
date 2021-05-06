@@ -23,7 +23,7 @@ const SecurityPage = (): JSX.Element | null => {
 
   const nexusContext = useContext(NexusContext);
 
-  const getRemediationAndOpen = (packageUrl: string, securityIssue: string): void => {
+  const getRemediationAndOpen = (securityIssue: string): void => {
     if (open == securityIssue) {
       setOpen('');
     } else {

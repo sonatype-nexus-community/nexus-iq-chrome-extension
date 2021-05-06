@@ -26,14 +26,14 @@ type SecurityItemProps = {
   securityIssue: SecurityIssue;
   open: boolean;
   packageUrl: string;
-  remediationEvent: (packageUrl: string, vulnID: string) => void;
+  remediationEvent: (vulnID: string) => void;
 };
 
 const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element => {
   return (
     <NxAccordion
       open={props.open}
-      onToggle={() => props.remediationEvent(props.packageUrl, props.securityIssue.reference)}
+      onToggle={() => props.remediationEvent(props.securityIssue.reference)}
     >
       <NxAccordion.Header>
         <h2 className="nx-accordion__header-title">{props.securityIssue.reference}</h2>
