@@ -70,16 +70,16 @@ describe('Golang Page Parsing', () => {
     const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pkg.go.dev/gopkg.in/ini.v1@v1.61.0');
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.version).toBe('v1.61.0');
-    expect(PackageURL?.namespace).toBe('gopkg.in');
-    expect(PackageURL?.name).toBe('ini.v1');
+    expect(PackageURL?.namespace).toBe('github.com/go-ini');
+    expect(PackageURL?.name).toBe('ini');
   });
 
   test('Parse golang page gopkg.in version in url', () => {
     const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pkg.go.dev/gopkg.in/yaml.v2@v2.4.0');
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.version).toBe('v2.4.0');
-    expect(PackageURL?.namespace).toBe('gopkg.in');
-    expect(PackageURL?.name).toBe('yaml.v2');
+    expect(PackageURL?.namespace).toBe('github.com/go-yaml');
+    expect(PackageURL?.name).toBe('yaml');
   });
   test('should parse a valid Golang page etcd', () => {
     const html = readFileSync(join(__dirname, 'testdata/golang.html'));

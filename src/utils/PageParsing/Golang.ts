@@ -15,7 +15,7 @@
  */
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
+import { FORMATS } from '../Constants';
 import {generatePackageURLWithNamespace} from './PurlUtils';
 
 /*
@@ -26,8 +26,10 @@ import {generatePackageURLWithNamespace} from './PurlUtils';
   https://pkg.go.dev/google.golang.org/protobuf@v1.26.0 ->Version: v1.26.0 ->No vulns, but different namespace
   https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl ->Todo Version: v1.26.0 ->No vulns, but different namespace and some stuff at the end
 */
-const PKG_GO_DEV_SELECTOR =
-  'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
+
+const PKG_GO_DEV_SELECTOR = 'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
+const GO_PKG_IN_V1 = /^gopkg.in\/([^.]+).*/;
+const GO_PKG_IN_V2 = /^gopkg.in\/([^\/]+)\/([^.]+).*/;
 
 const parseGolang = (url: string): PackageURL | undefined => {
   return parsePkgGoDevURLIntoPackageURL(url);
@@ -41,12 +43,13 @@ const parsePkgGoDevURLIntoPackageURL = (url: string): PackageURL | undefined => 
   let version = getVersionFromURI(uri);
 
   if (version !== undefined) {
-    nameAndNamespace = getName(nameVersion[0]);
+    nameAndNamespace = getName(handleGoPkgIn(nameVersion[0].replace(/^\//,'')));
   } else {
     const found = $(PKG_GO_DEV_SELECTOR);
 
     if (typeof found !== 'undefined') {
-      nameAndNamespace = getName(uri.pathname);
+      nameAndNamespace = getName(handleGoPkgIn(uri.pathname.replace(/^\//,'')));
+
       version = found.text().trim().replace('Version: ', '').trim();
     }
   }
@@ -75,10 +78,6 @@ const getVersionFromURI = (uri: URL): string | undefined => {
 };
 
 const getName = (name: string): NamespaceContainer | undefined => {
-  while (name.charAt(0) === '/') {
-    name = name.substring(1);
-  }
-
   const nameAndNamespace = name.split('/');
 
   if (nameAndNamespace.length > 0) {
@@ -92,6 +91,20 @@ const getName = (name: string): NamespaceContainer | undefined => {
 
   return undefined;
 };
+
+const handleGoPkgIn = (namespace: string): string => {
+  const foundV2 = namespace.match(GO_PKG_IN_V2);
+  if (foundV2) {
+    return namespace.replace(GO_PKG_IN_V2, `github.com/$1/$2`);
+  }
+
+  const foundV1 = namespace.match(GO_PKG_IN_V1);
+  if (foundV1) {
+    return namespace.replace(GO_PKG_IN_V1, `github.com/go-$1/$1`);
+  }
+
+  return namespace;
+}
 
 interface NamespaceContainer {
   name: string;
