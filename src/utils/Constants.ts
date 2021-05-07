@@ -65,7 +65,7 @@ export const REPO_TYPES = [
     appendVersionPath: ''
   },
   {
-    url: 'https://anaconda.org/anaconda/',
+    url: 'https://anaconda.org/',
     repoFormat: FORMATS.conda,
     titleSelector: 'span.long-breadcrumb',
     versionPath: '',

@@ -22,6 +22,7 @@ import {parseRuby} from './PageParsing/RubyGems';
 import {parseGolang} from './PageParsing/Golang';
 import {parsePyPIURL} from './PageParsing/PyPI';
 import {parseCRAN} from './PageParsing/CRAN';
+import {parseConda} from './PageParsing/Anaconda';
 import {parsePackagist} from './PageParsing/Packagist';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
@@ -39,6 +40,8 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parsePyPIURL(url);
   } else if (repoFormat.repoFormat === FORMATS.cran) {
     return parseCRAN(url);
+  } else if (repoFormat.repoFormat === FORMATS.conda) {
+    return parseConda(url);
   } else if (repoFormat.repoFormat === FORMATS.composer) {
     return parsePackagist(url);
   }

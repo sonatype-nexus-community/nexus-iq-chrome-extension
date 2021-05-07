@@ -17,7 +17,7 @@
     "http://*/",
     "https://*/",
     "https://pkgs.alpinelinux.org/",
-    "https://anaconda.org/anaconda/",
+    "https://anaconda.org/",
     "https://chocolatey.org/packages/",
     "https://clojars.org/",
     "https://cocoapods.org/",
@@ -47,7 +47,7 @@
     {
       "matches": [
         "https://pkgs.alpinelinux.org/package/*",
-        "https://anaconda.org/anaconda/*",
+        "https://anaconda.org/*",
         "https://chocolatey.org/packages/*",
         "https://clojars.org/*",
         "https://cocoapods.org/*",
