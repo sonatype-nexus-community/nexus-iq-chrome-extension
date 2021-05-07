@@ -1,0 +1,829 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+
+        <title>fomvasss/laravel-its-lte - Packagist</title>
+        <meta name="description" content="Base Control Panel Templates" />
+        <meta name="author" content="Jordi Boggiano" />
+            <link rel="canonical" href="https://packagist.org/packages/fomvasss/laravel-its-lte" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="shortcut icon" href="/favicon.ico?v=1620329792" />
+
+        <link rel="stylesheet" href="/libs/bootstrap-3.3.5/css/bootstrap.min.css?v=1620329792" />
+        <link rel="stylesheet" href="/libs/bootstrap-3.3.5/css/bootstrap-theme.min.css?v=1620329792" />
+        <link rel="stylesheet" href="/css/main.css?v=1620329792" />
+        <link rel="stylesheet" href="/css/humane/jackedup.css?v=1620329792" />
+        
+            <link rel="alternate" type="application/rss+xml" title="New Releases - fomvasss/laravel-its-lte" href="https://packagist.org/feeds/package.fomvasss/laravel-its-lte.rss" />
+    <link rel="alternate" type="application/rss+xml" title="New Releases - fomvasss" href="https://packagist.org/feeds/vendor.fomvasss.rss" />
+            <link rel="alternate" type="application/rss+xml" title="Newly Submitted Packages - Packagist" href="https://packagist.org/feeds/packages.rss" />
+        <link rel="alternate" type="application/rss+xml" title="New Releases - Packagist" href="https://packagist.org/feeds/releases.rss" />
+        
+
+        <link rel="search" type="application/opensearchdescription+xml" href="/search.osd?v=1620329792" title="Packagist" />
+
+        
+            <link rel="stylesheet" href="/css/github/markdown.css?v=1620329792">
+        </head>
+
+    <body>
+    <section class="wrap">
+        <header class="navbar-wrapper navbar-fixed-top">
+            <nav class="container">
+                <div class="navbar" role="navigation">
+                    <div class="v2highlight"><a href="https://getcomposer.org/2">🎉🎊 Composer 2 is available! 🚀🥳</a></div>
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <h1 class="navbar-brand"><a href="/">Packagist</a> <em class="hidden-sm hidden-xs">The PHP Package Repository</em></h1>
+                    </div>
+
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="/explore/">Browse</a>
+                            </li>
+                            <li>
+                                <a href="/packages/submit">Submit</a>
+                            </li>                            <li>
+                                <a href="/register/">Create account</a>
+                            </li>
+                            <li class="nav-user">
+                                <section class="nav-user-signin">
+                                    <a href="/login/">Sign in</a>
+
+                                    <section class="signin-box">
+                                        <form action="/login/" method="POST" id="nav_login">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" id="_username" name="_username" placeholder="Username">
+                                                <span class="input-group-addon"><span class="icon-user"></span></span>
+                                            </div>
+                                            <div class="input-group">
+                                                <input class="form-control" type="password" id="_password" name="_password" placeholder="Password">
+                                                <span class="input-group-addon"><span class="icon-lock"></span></span>
+                                            </div>
+
+                                            <div class="checkbox">
+                                                <label for="_remember_me">
+                                                    <input type="checkbox" id="_remember_me" name="_remember_me" value="on" checked="checked" />Remember me
+                                                </label>
+                                            </div>                                                <input type="hidden" name="_target_path" value="https://packagist.org/explore/" />
+                                            <div class="signin-box-buttons">
+                                                <a href="https://packagist.org/login/github" class="pull-right btn btn-primary btn-github"><span class="icon-github"></span>Use Github</a>
+                                                <button type="submit" class="btn btn-success" id="_submit_mini" name="_submit">Log in</button>
+                                            </div>
+                                        </form>
+
+                                        <div class="signin-box-register">
+                                            <a href="/register/">No account yet? Create one now!</a>
+                                        </div>
+                                    </section>
+                                </section>
+                            </li>                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <section class="wrapper wrapper-search">
+    <div class="container ">
+        <form name="search_query" method="get" action="/search/" id="search-form" autocomplete="off">
+    <div class="sortable row">
+        <div class="col-xs-12 js-search-field-wrapper col-md-9">
+            <input type="search" id="search_query_query" name="search_query[query]" required="required" autocomplete="off" placeholder="Search packages..." tabindex="1" class=" form-control" value="" />
+        </div>
+    </div>
+</form>
+    </div>
+</section>
+
+
+                
+        
+        <section class="wrapper">
+            <section class="container content" role="main">
+                                    <div id="search-container" class="hidden">
+                        <div class="row">
+                            <div class="search-list col-md-9"></div>
+
+                            <div class="search-facets col-md-3">
+                                <div class="search-facets-active-filters"></div>
+                                <div class="search-facets-type"></div>
+                                <div class="search-facets-tags"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div id="powered-by">
+                                    Search by <a href="https://www.algolia.com/"><img src="/img/algolia-logo-light.svg?v=1620329792"></a>
+                                </div>
+                                <div id="pagination-container">
+                                    <div class="pagination"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+        <div class="col-xs-12 package">
+            <div class="package-header">
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <h2 class="title">
+                                                        <a href="/packages/fomvasss/">fomvasss<span class="hidden"> </span>/</a><span class="hidden"> </span>laravel-its-lte
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="requireme"><i class="glyphicon glyphicon-save"></i> <input type="text" readonly="readonly" value="composer require fomvasss/laravel-its-lte" /></p>
+
+                    
+                                        
+                    
+                    <p class="description">Base Control Panel Templates</p>
+
+                                    </div>
+
+                <div class="col-md-offset-1 col-md-3">
+                    <div class="row package-aside">
+                        <div class="details col-xs-12 col-sm-6 col-md-12">
+                            <h5>Maintainers</h5>
+                            <p class="maintainers">
+                                <a href="/users/fomvasss/"><img width="48" height="48" title="fomvasss" src="https://www.gravatar.com/avatar/4498649bb5f0779b2da3bd553d00df95?s=48&amp;d=identicon" srcset="https://www.gravatar.com/avatar/4498649bb5f0779b2da3bd553d00df95?s=96&amp;d=identicon 2x"></a>
+                                                                                            </p>
+
+                            <h5>Details</h5>
+                                                        <p class="canonical">
+                                <a href="https://github.com/fomvasss/laravel-its-lte" title="Canonical Repository URL">github.com/fomvasss/laravel-its-lte</a>
+                            </p>
+
+                                                                                        <p><a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss/laravel-its-lte/tree/4.8.0">Source</a></p>
+                                                                                        <p><a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss/laravel-its-lte/issues">Issues</a></p>
+                                                                                                                                                                                                </div>
+
+                        
+                        <div class="facts col-xs-12 col-sm-6 col-md-12">
+                            <p>
+                                <span>
+                                    <a href="/packages/fomvasss/laravel-its-lte/stats" rel="nofollow">Installs</a>:
+                                </span>
+                                N/A                            </p>
+                                                            <p>
+                                    <span>
+                                        <a href="/packages/fomvasss/laravel-its-lte/dependents?order_by=downloads" rel="nofollow">Dependents</a>:
+                                    </span>
+                                    0
+                                </p>
+                                                                                        <p>
+                                    <span>
+                                        <a href="/packages/fomvasss/laravel-its-lte/suggesters" rel="nofollow">Suggesters</a>:
+                                    </span>
+                                    0
+                                </p>
+                                                                                        <p>
+                                    <span>
+                                        <a href="/packages/fomvasss/laravel-its-lte/advisories" rel="nofollow">Security</a>:
+                                    </span>
+                                    0
+                                </p>
+                                                                                        <p>
+                                    <span>
+                                        <a href="https://github.com/fomvasss/laravel-its-lte/stargazers">Stars</a>:
+                                    </span>
+                                    0
+                                </p>
+                                                                                        <p>
+                                    <span>
+                                        <a href="https://github.com/fomvasss/laravel-its-lte/watchers">Watchers</a>:
+                                    </span> 1
+                                </p>
+                                                                                        <p>
+                                    <span>
+                                        <a href="https://github.com/fomvasss/laravel-its-lte/network">Forks</a>:
+                                    </span>
+                                    0
+                                </p>
+                                                                                        <p>
+                                    <span>
+                                        <a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss/laravel-its-lte/issues">Open Issues</a>:
+                                    </span>
+                                    10
+                                </p>
+                                                                                        <p><span>Language:</span>Blade</p>
+                                                                                </div>
+                    </div>
+                </div>
+            </div>
+
+            
+                            <div class="row versions-section">
+                    <div class="version-details col-md-9">
+                                                    <div class="title">
+    <span class="version-number">4.8.0</span>
+
+    <span class="release-date">2021-05-05 19:50 UTC</span>
+</div>
+
+<div class="clearfix package-links">
+            <div class="row">
+                            <div class="clearfix visible-sm-block"></div>                <div class="clearfix visible-md-block visible-lg-block"></div>                <div class="requires col-sm-6 col-md-4 ">
+                    <p class="link-type">Requires</p>
+                                            <ul><li><a href="/packages/illuminate/http">illuminate/http</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/routing">illuminate/routing</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/session">illuminate/session</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/support">illuminate/support</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/view">illuminate/view</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/laravelcollective/html">laravelcollective/html</a>: ^6.0</li></ul>
+                                    </div>
+                                                            <div class="devRequires col-sm-6 col-md-4 hidden-xs">
+                    <p class="link-type">Requires (Dev)</p>
+                                            <p class="no-links">None</p>
+                                    </div>
+                            <div class="clearfix visible-sm-block"></div>                                <div class="suggests col-sm-6 col-md-4 hidden-xs">
+                    <p class="link-type">Suggests</p>
+                                            <p class="no-links">None</p>
+                                    </div>
+                                            <div class="clearfix visible-md-block visible-lg-block"></div>                <div class="provides col-sm-6 col-md-4 hidden-xs">
+                    <p class="link-type">Provides</p>
+                                            <p class="no-links">None</p>
+                                    </div>
+                            <div class="clearfix visible-sm-block"></div>                                <div class="conflicts col-sm-6 col-md-4 hidden-xs">
+                    <p class="link-type">Conflicts</p>
+                                            <p class="no-links">None</p>
+                                    </div>
+                                                            <div class="replaces col-sm-6 col-md-4 hidden-xs">
+                    <p class="link-type">Replaces</p>
+                                            <p class="no-links">None</p>
+                                    </div>
+                    </div>
+    </div>
+
+<div class="metadata">
+    <p class="license"><i class="glyphicon glyphicon-copyright-mark" title="License"></i> MIT <span class="source-reference"><i class="glyphicon glyphicon-bookmark" title="Source Reference"></i> 06b8fedaf684bdf9eae23ecaa3714d1cf755c8ed</span></p>
+
+            <i class="glyphicon glyphicon-user" title="Authors"></i>
+        <ul class="authors">
+                            <li><a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss">Vasyl Fomin</a>                        <span class="visible-sm-inline visible-md-inline visible-lg-inline">&lt;fomvasss<span style="display:none">.woop</span>@gmail.com&gt;</span></li>
+                            <li>Klimovych Juriy                        <span class="visible-sm-inline visible-md-inline visible-lg-inline">&lt;web-west<span style="display:none">.woop</span>@i.ua&gt;</span></li>
+                    </ul>
+    
+            <p class="tags">
+            <i class="glyphicon glyphicon-tag" title="Tags"></i>
+            <a href="https://packagist.org/search?tags=admin">admin</a><a href="https://packagist.org/search?tags=control">control</a><a href="https://packagist.org/search?tags=panel">panel</a><a href="https://packagist.org/search?tags=dashboard">dashboard</a><a href="https://packagist.org/search?tags=fields">fields</a><a href="https://packagist.org/search?tags=lte">lte</a></p>
+    </div>
+                                            </div>
+                    <div class="col-md-3 no-padding">
+                        <div class="package-aside versions-wrapper">
+    <ul class="versions">
+                                <li class="details-toggler version" data-version-id="dev-master" data-load-more="/versions/4256881.json">
+                <a href="#dev-master" class="version-number">dev-master</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="v4.x-dev" data-load-more="/versions/5175774.json">
+                <a href="#v4.x-dev" class="version-number">v4.x-dev</a>
+
+                
+                            </li>
+                                <li class="details-toggler version open" data-version-id="4.8.0" data-load-more="/versions/5172469.json">
+                <a href="#4.8.0" class="version-number">4.8.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.7.3" data-load-more="/versions/5030882.json">
+                <a href="#4.7.3" class="version-number">4.7.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.7.2" data-load-more="/versions/4990191.json">
+                <a href="#4.7.2" class="version-number">4.7.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.7.1" data-load-more="/versions/4989979.json">
+                <a href="#4.7.1" class="version-number">4.7.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.6.2" data-load-more="/versions/4962300.json">
+                <a href="#4.6.2" class="version-number">4.6.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.6.1" data-load-more="/versions/4899081.json">
+                <a href="#4.6.1" class="version-number">4.6.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.6.0" data-load-more="/versions/4893571.json">
+                <a href="#4.6.0" class="version-number">4.6.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.5.4" data-load-more="/versions/4868403.json">
+                <a href="#4.5.4" class="version-number">4.5.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.5.3" data-load-more="/versions/4860411.json">
+                <a href="#4.5.3" class="version-number">4.5.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.5.2" data-load-more="/versions/4821599.json">
+                <a href="#4.5.2" class="version-number">4.5.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.5.1" data-load-more="/versions/4815003.json">
+                <a href="#4.5.1" class="version-number">4.5.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.5.0" data-load-more="/versions/4808410.json">
+                <a href="#4.5.0" class="version-number">4.5.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.4.1" data-load-more="/versions/4724216.json">
+                <a href="#4.4.1" class="version-number">4.4.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.4.0" data-load-more="/versions/4708571.json">
+                <a href="#4.4.0" class="version-number">4.4.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.3.0" data-load-more="/versions/4704320.json">
+                <a href="#4.3.0" class="version-number">4.3.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.2.0" data-load-more="/versions/4693773.json">
+                <a href="#4.2.0" class="version-number">4.2.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.1.0" data-load-more="/versions/4671685.json">
+                <a href="#4.1.0" class="version-number">4.1.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.0.0" data-load-more="/versions/4664145.json">
+                <a href="#4.0.0" class="version-number">4.0.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="3.1.0" data-load-more="/versions/4622509.json">
+                <a href="#3.1.0" class="version-number">3.1.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="3.0.2" data-load-more="/versions/4622452.json">
+                <a href="#3.0.2" class="version-number">3.0.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="3.0.1" data-load-more="/versions/3952477.json">
+                <a href="#3.0.1" class="version-number">3.0.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="3.0.0" data-load-more="/versions/3939666.json">
+                <a href="#3.0.0" class="version-number">3.0.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="2.3.0" data-load-more="/versions/3728765.json">
+                <a href="#2.3.0" class="version-number">2.3.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="2.2.0" data-load-more="/versions/3655268.json">
+                <a href="#2.2.0" class="version-number">2.2.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="2.1.0" data-load-more="/versions/3613443.json">
+                <a href="#2.1.0" class="version-number">2.1.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="2.0.0" data-load-more="/versions/3579240.json">
+                <a href="#2.0.0" class="version-number">2.0.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="v1.x-dev" data-load-more="/versions/5175762.json">
+                <a href="#v1.x-dev" class="version-number">v1.x-dev</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.7.0" data-load-more="/versions/5175764.json">
+                <a href="#1.7.0" class="version-number">1.7.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.6.0" data-load-more="/versions/3613473.json">
+                <a href="#1.6.0" class="version-number">1.6.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.5.0" data-load-more="/versions/3531761.json">
+                <a href="#1.5.0" class="version-number">1.5.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.4.2" data-load-more="/versions/3473848.json">
+                <a href="#1.4.2" class="version-number">1.4.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.4.1" data-load-more="/versions/3467316.json">
+                <a href="#1.4.1" class="version-number">1.4.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.4.0" data-load-more="/versions/3466741.json">
+                <a href="#1.4.0" class="version-number">1.4.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.3.1" data-load-more="/versions/3465725.json">
+                <a href="#1.3.1" class="version-number">1.3.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.3.0" data-load-more="/versions/3465724.json">
+                <a href="#1.3.0" class="version-number">1.3.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.2.0" data-load-more="/versions/3465723.json">
+                <a href="#1.2.0" class="version-number">1.2.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.1.1" data-load-more="/versions/3465722.json">
+                <a href="#1.1.1" class="version-number">1.1.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.1.0" data-load-more="/versions/3465721.json">
+                <a href="#1.1.0" class="version-number">1.1.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.0.6" data-load-more="/versions/3465720.json">
+                <a href="#1.0.6" class="version-number">1.0.6</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.0.5" data-load-more="/versions/3465719.json">
+                <a href="#1.0.5" class="version-number">1.0.5</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.0.4" data-load-more="/versions/3465718.json">
+                <a href="#1.0.4" class="version-number">1.0.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.0.3" data-load-more="/versions/3465717.json">
+                <a href="#1.0.3" class="version-number">1.0.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.0.2" data-load-more="/versions/3465716.json">
+                <a href="#1.0.2" class="version-number">1.0.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.0.1" data-load-more="/versions/3465715.json">
+                <a href="#1.0.1" class="version-number">1.0.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="1.0.0" data-load-more="/versions/3465714.json">
+                <a href="#1.0.0" class="version-number">1.0.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/ssri-6.0.2" data-load-more="/versions/5124872.json">
+                <a href="#dev-dependabot/npm_and_yarn/ssri-6.0.2" class="version-number">dev-dependabot/npm_and_yarn/ssri-6.0.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/y18n-4.0.1" data-load-more="/versions/5069212.json">
+                <a href="#dev-dependabot/npm_and_yarn/y18n-4.0.1" class="version-number">dev-dependabot/npm_and_yarn/y18n-4.0.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/elliptic-6.5.4" data-load-more="/versions/5008776.json">
+                <a href="#dev-dependabot/npm_and_yarn/elliptic-6.5.4" class="version-number">dev-dependabot/npm_and_yarn/elliptic-6.5.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/dot-prop-4.2.1" data-load-more="/versions/4664146.json">
+                <a href="#dev-dependabot/npm_and_yarn/dot-prop-4.2.1" class="version-number">dev-dependabot/npm_and_yarn/dot-prop-4.2.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/http-proxy-1.18.1" data-load-more="/versions/4440400.json">
+                <a href="#dev-dependabot/npm_and_yarn/http-proxy-1.18.1" class="version-number">dev-dependabot/npm_and_yarn/http-proxy-1.18.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/lodash-4.17.19" data-load-more="/versions/4279232.json">
+                <a href="#dev-dependabot/npm_and_yarn/lodash-4.17.19" class="version-number">dev-dependabot/npm_and_yarn/lodash-4.17.19</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/websocket-extensions-0.1.4" data-load-more="/versions/3930254.json">
+                <a href="#dev-dependabot/npm_and_yarn/websocket-extensions-0.1.4" class="version-number">dev-dependabot/npm_and_yarn/websocket-extensions-0.1.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/acorn-5.7.4" data-load-more="/versions/3698441.json">
+                <a href="#dev-dependabot/npm_and_yarn/acorn-5.7.4" class="version-number">dev-dependabot/npm_and_yarn/acorn-5.7.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/mixin-deep-1.3.2" data-load-more="/versions/3465729.json">
+                <a href="#dev-dependabot/npm_and_yarn/mixin-deep-1.3.2" class="version-number">dev-dependabot/npm_and_yarn/mixin-deep-1.3.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version last" data-version-id="dev-dependabot/npm_and_yarn/js-yaml-3.13.1" data-load-more="/versions/3465727.json">
+                <a href="#dev-dependabot/npm_and_yarn/js-yaml-3.13.1" class="version-number">dev-dependabot/npm_and_yarn/js-yaml-3.13.1</a>
+
+                
+                            </li>
+            </ul>
+    <div class="hidden versions-expander">
+        <i class="glyphicon glyphicon-chevron-down"></i>
+    </div>
+</div>
+
+    <div class="last-update">
+                    <p class="auto-update-success">This package is auto-updated.</p>
+                <p>Last update: 2021-05-06 21:27:57 UTC </p>
+            </div>
+                    </div>
+                </div>
+            
+                            <hr class="clearfix">
+                <div class="readme markdown-body">
+                    <h1>README</h1>
+                    
+<p><a href="https://packagist.org/packages/fomvasss/laravel-its-lte" rel="nofollow noindex noopener external ugc"><img src="https://camo.githubusercontent.com/d0f876344cc9d76570ba32d24a73808bcd337e3b0514654c486eba4d72b499ae/68747470733a2f2f696d672e736869656c64732e696f2f7061636b61676973742f6c2f666f6d76617373732f6c61726176656c2d6974732d6c74652e7376673f7374796c653d666f722d7468652d6261646765" alt="License"></a>
+<a href="https://github.com/fomvasss/laravel-its-lte" rel="nofollow noindex noopener external ugc"><img src="https://camo.githubusercontent.com/2e366017c50514979887507e9bf88696fb31e773774fa5959a8b0f7f35256ec1/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f666f6d76617373732f6c61726176656c2d6974732d6c74652e7376673f7374796c653d666f722d7468652d6261646765" alt="Build Status"></a>
+<a href="https://packagist.org/packages/fomvasss/laravel-its-lte" rel="nofollow noindex noopener external ugc"><img src="https://camo.githubusercontent.com/c9a85aefa43e1585d834d71e90eb3b5685d05dd893ee071625e52c55a4c9c679/68747470733a2f2f696d672e736869656c64732e696f2f7061636b61676973742f762f666f6d76617373732f6c61726176656c2d6974732d6c74652e7376673f7374796c653d666f722d7468652d6261646765" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/fomvasss/laravel-its-lte" rel="nofollow noindex noopener external ugc"><img src="https://camo.githubusercontent.com/f4fb9d5074ba8eb81dadba7b87a71e9c164814537eaea1ebed86c9ce3b782cc8/68747470733a2f2f696d672e736869656c64732e696f2f7061636b61676973742f64742f666f6d76617373732f6c61726176656c2d6974732d6c74652e7376673f7374796c653d666f722d7468652d6261646765" alt="Total Downloads"></a>
+<a href="https://scrutinizer-ci.com/g/fomvasss/laravel-its-lte" rel="nofollow noindex noopener external ugc"><img src="https://camo.githubusercontent.com/e69132cf2e8162cae8db6cfc8b051f87cba1647dbba35fa640ea1b2a49a96add/68747470733a2f2f696d672e736869656c64732e696f2f7363727574696e697a65722f672f666f6d76617373732f6c61726176656c2d6974732d6c74652e7376673f7374796c653d666f722d7468652d6261646765" alt="Quality Score"></a></p>
+<p>Base Admin LTE Control Panel Templates</p>
+<p><a target="_blank" href="https://github.com/fomvasss/laravel-its-lte/blob/HEAD/public/img/screen.png" rel="nofollow noindex noopener external ugc"><img src="https://rawcdn.githack.com/fomvasss/laravel-its-lte/HEAD/public/img/screen.png" alt="screenshot"></a></p>
+
+<h2><a id="user-content-installation" class="anchor" href="#user-content-installation" rel="nofollow noindex noopener external ugc"></a>Installation</h2>
+<p>Run from the command line:</p>
+<pre>composer require fomvasss/laravel-its-lte</pre>
+<pre>php artisan lte:install</pre>
+<p>That's all. You can usage ITS LTE in your project :)</p>
+<p>Visit the path <code>http://your-site.test/lte</code></p>
+<h2><a id="user-content-publishing-optional" class="anchor" href="#user-content-publishing-optional" rel="nofollow noindex noopener external ugc"></a>Publishing (optional)</h2>
+<p>Of course, you can publish only the necessary system components:</p>
+<ul>
+<li>views:
+<code>lte-view-fields</code>, <code>lte-view-content</code>, <code>lte-view-auth</code>, <code>lte-view-parts</code>, <code>lte-view-layouts</code>, <code>lte-view-profile</code></li>
+<li>other:
+<code>lte-config</code>, <code>lte-assets</code>, <code>lte-lang</code></li>
+</ul>
+<pre>php artisan lte:publish --tag=lte-view-fields --force</pre>
+<p>or all components</p>
+<pre>php artisan lte:publish</pre>
+<h3><a id="user-content-updating" class="anchor" href="#user-content-updating" rel="nofollow noindex noopener external ugc"></a>Updating</h3>
+<p>When updating this package, you should re-publish the assets (css, js, images):</p>
+<pre>php artisan lte:publish --tag=lte-assets --force</pre>
+<h2><a id="user-content-configuration" class="anchor" href="#user-content-configuration" rel="nofollow noindex noopener external ugc"></a>Configuration</h2>
+<p>After publishing assets, its primary configuration file will be located at <code>config/its-lte.php</code></p>
+<pre><span class="pl-ent">&lt;?php</span>
+
+<span class="pl-k">return</span> [
+
+    <span class="pl-s">'title'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'APP_NAME'</span>, <span class="pl-s">''</span>) . <span class="pl-s">' - Dashboard'</span>,
+
+    <span class="pl-s">'logo'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'LTE_LOGO'</span>, <span class="pl-s">'&lt;b&gt;ITS&lt;/b&gt;LTE'</span>),
+
+    <span class="pl-s">'logo_mini'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'LTE_LOGO_MINI'</span>, <span class="pl-s">'&lt;b&gt;IT&lt;/b&gt;LT'</span>),
+
+    <span class="pl-c">/*</span>
+<span class="pl-c">     * Dashboard home page path</span>
+<span class="pl-c">     */</span>
+    <span class="pl-s">'logo_href'</span> =&gt; <span class="pl-s">'/lte'</span>,
+
+    <span class="pl-c">/*</span>
+<span class="pl-c">     * For example pages</span>
+<span class="pl-c">     */</span>
+    <span class="pl-s">'prefix'</span> =&gt; <span class="pl-s">'lte'</span>,
+
+    <span class="pl-c">/*</span>
+<span class="pl-c">     * For /profile page</span>
+<span class="pl-c">     */</span>
+    <span class="pl-s">'use_laravel_fortify'</span> =&gt; <span class="pl-c1">true</span>,
+
+    <span class="pl-c">/*</span>
+<span class="pl-c">     * For LTE example pages (/lte/*)</span>
+<span class="pl-c">     */</span>
+    <span class="pl-s">'middleware'</span> =&gt; [<span class="pl-s">'web'</span>],
+
+    <span class="pl-c">/**</span>
+<span class="pl-c">     * Use in Fomvasss\ItsLte\Http\Middleware\ApplyRequestOptions</span>
+<span class="pl-c">     */</span>
+    <span class="pl-s">'control'</span> =&gt; [
+        <span class="pl-s">'next_destination_key'</span> =&gt; <span class="pl-s">'destination'</span>,
+    ],
+
+    <span class="pl-s">'view'</span> =&gt; [
+
+        <span class="pl-c">/**</span>
+<span class="pl-c">         * Available skins:</span>
+<span class="pl-c">         * skin-blue, skin-black, skin-purple, skin-green, skin-red,</span>
+<span class="pl-c">         * skin-yellow, skin-blue-light, skin-black-light, skin-purple-light,</span>
+<span class="pl-c">         * skin-green-light, skin-red-light, skin-yellow-light,</span>
+<span class="pl-c">         *</span>
+<span class="pl-c">         */</span>
+        <span class="pl-s">'skin'</span> =&gt; <span class="pl-s">'skin-purple'</span>,
+        <span class="pl-s">'layout_boxed'</span> =&gt; <span class="pl-c1">false</span>,
+        <span class="pl-s">'sidebar_collapse'</span> =&gt; <span class="pl-c1">false</span>,
+        <span class="pl-s">'fixed'</span> =&gt; <span class="pl-c1">false</span>,
+
+        <span class="pl-c">/**</span>
+<span class="pl-c">         * Show next type alerts in dashboard</span>
+<span class="pl-c">         * Example success type alert: \Session::flash('success', 'Welcome to Laravel Admin LTE!');</span>
+<span class="pl-c">         * Available types: success, info, warning, error</span>
+<span class="pl-c">         *</span>
+<span class="pl-c">         */</span>
+        <span class="pl-s">'alerts'</span> =&gt; [
+            <span class="pl-s">'toastr'</span>,
+            <span class="pl-c">//'sweetalert',</span>
+            <span class="pl-c">//'bootstrap',</span>
+        ],
+
+        <span class="pl-s">'btn_actions_class'</span> =&gt; <span class="pl-s">'btn-xs'</span>, <span class="pl-c">//'btn-sm btn-flat'</span>
+
+        <span class="pl-c">/**</span>
+<span class="pl-c">         * Example aside menu</span>
+<span class="pl-c">         */</span>
+        <span class="pl-s">'aside_menu'</span> =&gt; [
+            <span class="pl-s">'static'</span> =&gt; <span class="pl-c1">false</span>,
+            <span class="pl-s">'static_example'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'APP_ENV'</span>) !== <span class="pl-s">'production'</span>,
+            <span class="pl-s">'lte'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'APP_ENV'</span>) !== <span class="pl-s">'production'</span>,
+        ],
+
+        <span class="pl-s">'aside_auth_user_info'</span> =&gt; <span class="pl-c1">false</span>,
+
+        <span class="pl-s">'aside_search'</span> =&gt; <span class="pl-c1">false</span>,
+
+        <span class="pl-s">'header_filter_languages'</span> =&gt; <span class="pl-c1">true</span>,
+
+        <span class="pl-s">'header_notify_menus'</span> =&gt; <span class="pl-c1">true</span>,
+    ],
+];</pre>
+<p>In dashboard used Bootstrap styles and for correct show pagination links, set next in service provider</p>
+<pre><code>    public function boot()
+    {
+        //...
+        Paginator::useBootstrap();
+        //...
+    }
+</code></pre>
+<p>For correct work navigation in dashboard, apply next middleware for routes to dashboard:</p>
+<pre><code>\Fomvasss\ItsLte\Http\Middleware\ApplyRequestOptions::class,
+</code></pre>
+<h2><a id="user-content-structure" class="anchor" href="#user-content-structure" rel="nofollow noindex noopener external ugc"></a>Structure</h2>
+<p>After installation, you can work with the following files:</p>
+<ul>
+<li><code>config/its-lte.php</code> - configs</li>
+<li><code>public/vendor/its-lte</code> - compiled assets files</li>
+<li><code>resources/lang/vendor/lte</code> - message localization files</li>
+<li><code>resources/views/vendor/lte</code>
+<ul>
+<li><code>layouts</code> - main layout</li>
+<li><code>parts</code> - not published by default</li>
+<li><code>fields</code> - not published by default</li>
+<li><code>auth</code> - auth/register/reset forms</li>
+<li><code>content</code> - example templates for content</li>
+<li><code>profile</code> - auth user profile form</li>
+</ul>
+</li>
+</ul>
+<h3><a id="user-content-laravel-file-manager-v2" class="anchor" href="#user-content-laravel-file-manager-v2" rel="nofollow noindex noopener external ugc"></a>Laravel File Manager (v2)</h3>
+<p>If needed, install <a href="https://github.com/UniSharp/laravel-filemanager" rel="nofollow noindex noopener external ugc">LFM</a>:</p>
+<pre>composer require unisharp/laravel-filemanager</pre>
+<p>Publish LFM files:</p>
+<ul>
+<li><code>config/lfm.php</code></li>
+<li><code>public/vendor/laravel-filemanager</code>
+Recommend set LFM paths <code>config/lfm.php</code>:</li>
+</ul>
+<pre>    <span class="pl-s">'shared_folder_name'</span> =&gt; <span class="pl-s">'shares'</span>,
+    <span class="pl-c">//...</span>
+    <span class="pl-s">'folder_categories'</span> =&gt; [
+        <span class="pl-s">'file'</span> =&gt; [
+            <span class="pl-s">'folder_name'</span> =&gt; <span class="pl-s">'lfm-files'</span>,
+            <span class="pl-c">//...</span>
+        ],
+        <span class="pl-s">'image'</span> =&gt; [
+            <span class="pl-s">'folder_name'</span> =&gt; <span class="pl-s">'lfm-photos'</span>,
+            <span class="pl-c">//...</span>
+        ],      
+    ],</pre>
+<h2><a id="user-content-usage" class="anchor" href="#user-content-usage" rel="nofollow noindex noopener external ugc"></a>Usage</h2>
+<p>In dir <code>resources/views/vendor/lte</code> you can edit, create, delete blade-files.</p>
+<p>For simple manage file-fields use <a href="https://github.com/fomvasss/laravel-medialibrary-extension" rel="nofollow noindex noopener external ugc">fomvasss/laravel-medialibrary-extension</a></p>
+<h2><a id="user-content-credits" class="anchor" href="#user-content-credits" rel="nofollow noindex noopener external ugc"></a>Credits</h2>
+<ul>
+<li><a href="https://github.com/web-west/itslte" rel="nofollow noindex noopener external ugc">web-west/itslte</a></li>
+<li><a href="https://github.com/ColorlibHQ/AdminLTE" rel="nofollow noindex noopener external ugc">ColorlibHQ/AdminLTE</a></li>
+<li><a href="https://unisharp.github.io/laravel-filemanager/" rel="nofollow noindex noopener external ugc">laravel-filemanager</a></li>
+</ul>
+
+                </div>
+                    </div>
+    </div>
+            </section>
+        </section>
+    </section>
+
+        <footer class="wrapper-footer">
+            <nav class="container">
+                <div class="row">
+                    <ul class="social col-xs-7 col-sm-4 col-md-2 pull-right">
+                        <li><a href="http://github.com/composer/packagist" title="GitHub"><span class="icon-github"></span></a></li>
+                        <li><a href="https://twitter.com/packagist" title="Follow @packagist"><span class="icon-twitter"></span></a></li>
+                        <li><a href="mailto:contact@packagist.org" title="Contact"><span class="icon-mail"></span></a></li>
+                    </ul>
+
+                    <ul class="col-xs-4 col-md-2">
+                        <li><a href="/about">About Packagist</a></li>
+                        <li><a href="/feeds/" rel="nofollow">Atom/RSS Feeds</a></li>
+                    </ul>
+
+                    <div class="clearfix visible-xs-block"></div>
+
+                    <ul class="col-xs-3 col-md-2">
+                        <li><a href="/statistics" rel="nofollow">Statistics</a></li>
+                        <li><a href="/explore/">Browse Packages</a></li>
+                    </ul>
+
+                    <div class="clearfix visible-xs-block"></div>
+
+                    <ul class="col-xs-3 col-md-2">
+                        <li><a href="/apidoc">API</a></li>
+                        <li><a href="/mirrors">Mirrors</a></li>
+                    </ul>
+
+                    <div class="clearfix visible-xs-block"></div>
+
+                    <ul class="col-xs-3 col-md-2">
+                        <li><a href="https://status.packagist.org/">Status</a></li>
+                    </ul>
+                </div>
+
+                <div class="row">
+                    <p class="toran col-xs-12">Packagist maintenance and hosting is provided by <a href="https://packagist.com/">Private Packagist</a></p>
+                </div>
+            </nav>
+        </footer>
+
+        <script>
+            var algoliaConfig = {"app_id":"M58222SH95","search_key":"5ae4d03c98685bd7364c2e0fd819af05","index_name":"packagist"};
+        </script>
+
+        <script src="/libs/jquery-2.1.4.min.js?v=1620329792"></script>
+        <script src="/libs/humane-3.2.2.min.js?v=1620329792"></script>
+        <script src="/js/layout.js?v=1620329792"></script>
+        <script src="/libs/bootstrap-3.3.5/js/bootstrap.min.js?v=1620329792"></script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.7.4/dist/instantsearch.min.js"></script>
+        <script src="/js/search.js?v=1620329792"></script>        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('set', 'anonymizeIp', true);
+            ga('create', 'UA-26723099-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+            <script src="/js/view.js?v=1620329792"></script>
+    </body>
+</html>
