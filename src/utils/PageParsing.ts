@@ -20,8 +20,10 @@ import {parseNPM} from './PageParsing/NPM';
 import {parseNuget} from './PageParsing/Nuget';
 import {parseRuby} from './PageParsing/RubyGems';
 import {parseGolang} from './PageParsing/Golang';
+import {parsePyPIURL} from './PageParsing/PyPI';
 import {parseCRAN} from './PageParsing/CRAN';
 import {parseConda} from './PageParsing/Anaconda';
+import {parsePackagist} from './PageParsing/Packagist';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   if (repoFormat.repoFormat === FORMATS.npm) {
@@ -32,12 +34,16 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseNuget(url);
   } else if (repoFormat.repoFormat === FORMATS.gem) {
     return parseRuby(url);
-  } else if (repoFormat.repoFormat === FORMATS.golang) {
+  } else if (repoFormat.repoFormat === FORMATS.golang) {    
     return parseGolang(url);
+  } else if (repoFormat.repoFormat === FORMATS.pypi) {
+    return parsePyPIURL(url);
   } else if (repoFormat.repoFormat === FORMATS.cran) {
     return parseCRAN(url);
   } else if (repoFormat.repoFormat === FORMATS.conda) {
     return parseConda(url);
+  } else if (repoFormat.repoFormat === FORMATS.composer) {
+    return parsePackagist(url);
   }
 
   return undefined;

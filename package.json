@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@agney/react-loading": "^0.1.2",
     "cash-dom": "^8.1.0",
     "packageurl-js": "^0.0.4",
     "react": "^17.0.1",
