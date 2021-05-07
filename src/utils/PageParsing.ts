@@ -21,10 +21,10 @@ import {parseNuget} from './PageParsing/Nuget';
 import {parseRuby} from './PageParsing/RubyGems';
 import {parseGolang} from './PageParsing/Golang';
 import {parsePyPIURL} from './PageParsing/PyPI';
+import {parseCRAN} from './PageParsing/CRAN';
+import {parsePackagist} from './PageParsing/Packagist';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  // console.info('getArtifactDetailsFromDOM url', url, repoFormat.repoFormat);
-
   if (repoFormat.repoFormat === FORMATS.npm) {
     return parseNPM(url);
   } else if (repoFormat.repoFormat === FORMATS.alpine) {
@@ -33,14 +33,14 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseNuget(url);
   } else if (repoFormat.repoFormat === FORMATS.gem) {
     return parseRuby(url);
-  } else if (repoFormat.repoFormat === FORMATS.golang) {
-    // console.log('parsegolang', url);
-    const purl: PackageURL | undefined = parseGolang(url);
-
-    // console.log('purl', purl);
-    return purl;
+  } else if (repoFormat.repoFormat === FORMATS.golang) {    
+    return parseGolang(url);
   } else if (repoFormat.repoFormat === FORMATS.pypi) {
     return parsePyPIURL(url);
+  } else if (repoFormat.repoFormat === FORMATS.cran) {
+    return parseCRAN(url);
+  } else if (repoFormat.repoFormat === FORMATS.composer) {
+    return parsePackagist(url);
   }
 
   return undefined;

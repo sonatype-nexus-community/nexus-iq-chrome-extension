@@ -42,6 +42,12 @@ const parseNPM = (url: string): PackageURL | undefined => {
           return npmNameOrNamespace(name, newVText.substring(0, findnbsp));
         }
 
+        const findNbsp = newVText.search(String.fromCharCode(160));
+
+        if (findNbsp >= 0) {
+          return npmNameOrNamespace(name, newVText.substring(0, findNbsp));
+        }
+
         return npmNameOrNamespace(name, newVText);
       }
     }
