@@ -1,0 +1,2415 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<script>window.addEventListener('error', window.__err=function f(e){f.p=f.p||[];f.p.push(e)});</script>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="Description" content="0">
+
+<meta class="js-gtmID" data-gtmid="GTM-W8MVQXG">
+<link href="/static/css/stylesheet.css?version=2021-05-05t20-00-32ea36f178c383f3b94608d4f5decefd14f6dcdf" rel="stylesheet">
+<link href="/third_party/dialog-polyfill/dialog-polyfill.css?version=2021-05-05t20-00-32ea36f178c383f3b94608d4f5decefd14f6dcdf" rel="stylesheet">
+<title>etcd · pkg.go.dev</title>
+
+  <link href="/static/css/unit.css?version=2021-05-05t20-00-32ea36f178c383f3b94608d4f5decefd14f6dcdf" rel="stylesheet">
+  
+  <link href="/static/css/unit_details.css?version=2021-05-05t20-00-32ea36f178c383f3b94608d4f5decefd14f6dcdf" rel="stylesheet">
+
+  <link href="/static/css/unit_outline.css?version=2021-05-05t20-00-32ea36f178c383f3b94608d4f5decefd14f6dcdf" rel="stylesheet">
+
+<body class="Site Site--wide Site--redesign">
+<header class="Site-header Site-header--dark">
+  <div class="Banner">
+    <div class="Banner-inner">
+      <div class="Banner-message">Black Lives Matter</div>
+      <a class="Banner-action"
+         href="https://support.eji.org/give/153413/#!/donation/checkout"
+         target="_blank"
+         rel="noopener">Support the Equal Justice Initiative</a>
+    </div>
+  </div>
+  <div class="Header">
+    <nav class="Header-nav">
+      <a href="https://go.dev/" class="Header-logoLink" aria-label="Link to Go Homepage" data-gtmc="nav link">
+        <img class="Header-logo" src="/static/img/go-logo-white.svg" alt="Go">
+      </a>
+      
+  <form class="Header-searchForm" action="/search" role="search"
+      data-gtmc="header search form" aria-label="Search for a Package">
+    <button class="Header-searchFormSubmit" aria-label="Search for a package">
+      <svg class="Header-searchFormSubmitIcon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path><path fill="none" d="M0 0h24v24H0z"></path></svg>
+    </button>
+    <input class="Header-searchFormInput js-searchFocus"
+      aria-label="Search for a package"
+      type="text"
+      name="q"
+      placeholder="Search for a package"
+      autocapitalize="off"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+      title="Search for a package"
+      value=""
+      >
+  </form>
+
+      <ul class="Header-menu">
+        <li class="Header-menuItem">
+          <a href="https://go.dev/solutions" title="Why Go" data-gtmc="nav link">Why Go</a>
+        </li>
+        <li class="Header-menuItem">
+          <a href="https://learn.go.dev" title="Getting Started" data-gtmc="nav link">Getting Started</a>
+        </li>
+        <li class="Header-menuItem Header-menuItem--active">
+          <a href="/" title="Discover Packages" data-gtmc="nav link">Discover Packages</a>
+        </li>
+        <li class="Header-menuItem">
+          <a href="https://go.dev/about" title="" data-gtmc="nav link">About</a>
+        </li>
+      </ul>
+      <button class="Header-navOpen js-headerMenuButton" data-gtmc="nav link" aria-label="Open navigation.">
+      </button>
+    </nav>
+  </div>
+</header>
+<aside class="NavigationDrawer js-header">
+  <nav class="NavigationDrawer-nav">
+    <div class="NavigationDrawer-header">
+      <a href="https://go.dev/" data-gtmc="nav link" aria-label="Link to Go Homepage">
+        <img class="NavigationDrawer-logo" src="/static/img/go-logo-blue.svg" alt="Go">
+      </a>
+      <button class="NavigationDrawer-close js-headerMenuButton" aria-label="Close navigation.">
+      </button>
+    </div>
+    <ul class="NavigationDrawer-list">
+      <li class="NavigationDrawer-listItem">
+        <a href="https://go.dev/solutions" title="Why Go" data-gtmc="nav link">Why Go</a>
+      </li>
+      <li class="NavigationDrawer-listItem">
+        <a href="https://learn.go.dev" title="Getting Started" data-gtmc="nav link">Getting Started</a>
+      </li>
+      <li class="NavigationDrawer-listItem NavigationDrawer-listItem--active">
+        <a href="/" title="Discover Packages" data-gtmc="nav link">Discover Packages</a>
+      </li>
+      <li class="NavigationDrawer-listItem">
+        <a href="https://go.dev/about" title="" data-gtmc="nav link">About</a>
+      </li>
+      <li class="NavigationDrawer-listItem">
+        <a href="https://golang.org" title="golang.org" data-gtmc="nav link">golang.org</a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+<div class="NavigationDrawer-scrim js-scrim" role="presentation">
+</div>
+<div class="Site-content">
+  <div class="Container">
+    
+  <header class="js-unitHeader UnitHeader UnitHeader--full UnitHeader--main--package" aria-label="command etcd information" role="complementary">
+    <div class="js-headerSentinel"></div>
+    
+  <div class="UnitHeader-banners">
+    
+    
+    
+    
+  </div>
+
+    
+  <div class="UnitHeader-breadcrumbs" data-test-id="UnitHeader-breadcrumb">
+    <div class="Site-margin">
+      
+        
+          <span class="UnitHeader-breadcrumbItem" data-test-id="UnitHeader-breadcrumbItem">
+            <a href="/">Discover Packages</a>
+          </span>
+        
+        <span class="UnitHeader-breadcrumbItem">
+          <span data-test-id="UnitHeader-breadcrumbCurrent">github.com/etcd-io/etcd</span>
+          
+            <button class="CopyToClipboardButton js-copyToClipboard"
+                title="Copy path to clipboard.&#10;&#10;github.com/etcd-io/etcd"
+                data-to-copy="github.com/etcd-io/etcd"
+                data-gtmc="button" aria-label="Copy to Clipboard">
+              <img class="CopyToClipboardButton-image" src="/static/img/copy-click.svg" alt="">
+            </button>
+          
+        </span>
+      
+    </div>
+  </div>
+
+    
+  <div class="UnitHeader-content">
+    <div class="Site-margin">
+      
+  <div class="UnitHeader-title">
+    <div class="UnitHeader-logo">
+      <a href="https://go.dev/" tabindex="-1" data-gtmc="header link" aria-label="Link to Go Homepage">
+        <img height="72px" width="72px" class="UnitHeader-logo" src="/static/img/go-logo-blue.svg" alt="Go">
+      </a>
+    </div>
+    <h1 data-test-id="UnitHeader-title">etcd</h1>
+    
+      <span class="UnitHeader-badge">command</span>
+    
+      <span class="UnitHeader-badge">module</span>
+    
+  </div>
+
+      
+        
+          <button class="CopyToClipboardButton js-copyToClipboard"
+              title="Copy path to clipboard.&#10;&#10;github.com/etcd-io/etcd"
+              data-to-copy="github.com/etcd-io/etcd"
+              data-gtmc="button"
+              aria-label="Copy to Clipboard"
+              tabindex="-1">
+            <img class="CopyToClipboardButton-image" src="/static/img/copy-click.svg" alt="">
+          </button>
+        
+      
+      <div style="flex-grow: 1;"></div>
+      <div class="UnitHeader-details">
+        
+          
+  <span class="UnitHeader-detailItem" data-test-id="UnitHeader-version">
+    <a href="?tab=versions" aria-label="Go to Versions" data-gtmc="header link"><span class="UnitHeader-detailItemSubtle">Version: </span>v3.3.25+incompatible</a>
+    
+    <div class="DetailsHeader-badge DetailsHeader-badge--latest"
+        data-test-id="UnitHeader-minorVersionBanner"
+        data-version="v3.3.25+incompatible"
+        data-mpath="github.com/etcd-io/etcd"
+        data-ppath="github.com/etcd-io/etcd"
+        data-pagetype="command">
+      <span class="DetailsHeader-span--latest">Latest</span>
+      <span class="DetailsHeader-span--notAtLatest">
+        Latest
+        
+  <span class="UnitMetaDetails-toggletip">
+    <button type="button" data-gtmc="toggle tip button"
+        aria-label="More Info" data-toggletip-content="This package is not in the latest version of its module.">
+      <img src="/static/img/severity.svg" alt="" height="14" width="15">
+    </button>
+    <span role="status"></span>
+  </span>
+
+      </span>
+      <a href="/github.com/etcd-io/etcd" aria-label="Go to Latest Version" data-gtmc="header link">Go to latest</a>
+    </div>
+  </span>
+
+          
+  <span class="UnitHeader-detailItem" data-test-id="UnitHeader-commitTime">
+    Published: Aug 24, 2020
+  </span>
+
+          
+  <span class="UnitHeader-detailItem" data-test-id="UnitHeader-licenses">
+    License: <a href="/github.com/etcd-io/etcd?tab=licenses" data-test-id="UnitHeader-license"
+            aria-label="Go to Licenses" data-gtmc="header link">Apache-2.0</a>
+      
+    
+  </span>
+
+          
+            
+  <span class="UnitHeader-detailItem" data-test-id="UnitHeader-imports">
+    <a href="/github.com/etcd-io/etcd?tab=imports" aria-label="Go to Imports"
+        data-gtmc="header link">
+      <span class="UnitHeader-detailItemSubtle">Imports: </span>1
+    </a>
+  </span>
+
+            
+  <span class="UnitHeader-detailItem" data-test-id="UnitHeader-importedby">
+    <a href="/github.com/etcd-io/etcd?tab=importedby" aria-label="Go to Imported By"
+        data-gtmc="header link">
+       <span class="UnitHeader-detailItemSubtle">Imported by: </span>0
+    </a>
+  </span>
+
+          
+        
+      </div>
+      
+  <div class="UnitHeader-overflowContainer">
+    <svg class="UnitHeader-overflowImage" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+    </svg>
+    <select class="UnitHeader-overflowSelect js-overflowSelect" tabindex="-1">
+      <option>Main</option>
+      <option value="/github.com/etcd-io/etcd?tab=versions">
+        Versions
+      </option>
+      <option value="/github.com/etcd-io/etcd?tab=licenses">
+        Licenses
+      </option>
+      
+        <option value="/github.com/etcd-io/etcd?tab=imports">
+          Imports
+        </option>
+        <option value="/github.com/etcd-io/etcd?tab=importedby">
+          Imported By
+        </option>
+      
+    </select>
+  </div>
+
+    </div>
+  </div>
+
+  </header>
+
+    
+  <div class="UnitDetails" data-test-id="UnitDetails">
+    
+  <nav class="DocNavMobile js-mobileNav">
+    <label for="DocNavMobile-select" class="DocNavMobile-label">
+      <svg class="DocNavMobile-selectIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px">
+        <path d="M0 0h24v24H0z" fill="none"/><path d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"/>
+      </svg>
+      <span class="DocNavMobile-selectText js-mobileNavSelectText">Outline</span>
+    </label>
+    <select id="DocNavMobile-select" class="DocNavMobile-select">
+      <option value="">Outline</option>
+      <optgroup label="README">
+        <option value="readme-community-meetings">Community meetings</option><option value="readme-getting-started">Getting started</option><option value="readme-contact">Contact</option><option value="readme-contributing">Contributing</option><option value="readme-reporting-bugs">Reporting bugs</option>
+      </optgroup>
+      
+
+<optgroup label="Documentation">
+  
+    <option value="pkg-overview">Overview</option>
+  
+  
+  
+  
+  
+</optgroup>
+
+
+
+
+      <option class="js-sourcefilesOption" value="section-sourcefiles">Source Files</option>
+      <option class="js-directoriesOption" value="section-directories">Directories</option>
+    </select>
+  </nav>
+
+    <div class="UnitDetails-outline" role="navigation"
+        aria-label="commanddetails navigation">
+      
+  <div class="UnitOutline">
+    <div class="UnitOutline-jumpTo">
+      <button class="UnitOutline-jumpToInput js-jumpToInput"
+          aria-label="Open Jump to Identifier"
+          data-test-id="jump-to-button" data-gtmc="button">
+        Jump to ...
+      </button>
+    </div>
+    <ul class="js-tree" role="tree" aria-label="Outline">
+      
+        <li role="none" class="js-readmeOutline">
+          <a href="#section-readme" role="treeitem" aria-expanded="false" aria-selected="false"
+              aria-level="1" aria-owns="readme-outline" tabindex="0" data-gtmc="outline link">
+            README
+          </a>
+          
+  <ul role="group" id="readme-outline">
+    
+      <li role="none">
+        <a href="#readme-community-meetings" role="treeitem" aria-level="2" aria-owns="nav-group-readme"
+            tabindex="-1" 
+            data-gtmc="readme outline link">
+          Community meetings
+        </a>
+        <ul role="group" id="nav-group-readme">
+           
+        </ul>
+      </li>
+    
+      <li role="none">
+        <a href="#readme-getting-started" role="treeitem" aria-level="2" aria-owns="nav-group-readme"
+            tabindex="-1" aria-expanded="false"
+            data-gtmc="readme outline link">
+          Getting started
+        </a>
+        <ul role="group" id="nav-group-readme">
+          
+            
+            <li role="none">
+              
+                <a href="#readme-getting-etcd" role="treeitem" aria-level="3" tabindex="-1"
+                    data-gtmc="readme outline link">
+                  Getting etcd
+                </a>
+               
+            </li>
+          
+            
+            <li role="none">
+              
+                <a href="#readme-running-etcd" role="treeitem" aria-level="3" tabindex="-1"
+                    data-gtmc="readme outline link">
+                  Running etcd
+                </a>
+               
+            </li>
+          
+            
+            <li role="none">
+              
+                <a href="#readme-etcd-tcp-ports" role="treeitem" aria-level="3" tabindex="-1"
+                    data-gtmc="readme outline link">
+                  etcd TCP ports
+                </a>
+               
+            </li>
+          
+            
+            <li role="none">
+              
+                <a href="#readme-running-a-local-etcd-cluster" role="treeitem" aria-level="3" tabindex="-1"
+                    data-gtmc="readme outline link">
+                  Running a local etcd cluster
+                </a>
+               
+            </li>
+          
+            
+            <li role="none">
+              
+                <a href="#readme-running-etcd-on-kubernetes" role="treeitem" aria-level="3" tabindex="-1"
+                    data-gtmc="readme outline link">
+                  Running etcd on Kubernetes
+                </a>
+               
+            </li>
+          
+            
+            <li role="none">
+              
+                <a href="#readme-next-steps" role="treeitem" aria-level="3" tabindex="-1"
+                    data-gtmc="readme outline link">
+                  Next steps
+                </a>
+               
+            </li>
+           
+        </ul>
+      </li>
+    
+      <li role="none">
+        <a href="#readme-contact" role="treeitem" aria-level="2" aria-owns="nav-group-readme"
+            tabindex="-1" 
+            data-gtmc="readme outline link">
+          Contact
+        </a>
+        <ul role="group" id="nav-group-readme">
+           
+        </ul>
+      </li>
+    
+      <li role="none">
+        <a href="#readme-contributing" role="treeitem" aria-level="2" aria-owns="nav-group-readme"
+            tabindex="-1" 
+            data-gtmc="readme outline link">
+          Contributing
+        </a>
+        <ul role="group" id="nav-group-readme">
+           
+        </ul>
+      </li>
+    
+      <li role="none">
+        <a href="#readme-reporting-bugs" role="treeitem" aria-level="2" aria-owns="nav-group-readme"
+            tabindex="-1" aria-expanded="false"
+            data-gtmc="readme outline link">
+          Reporting bugs
+        </a>
+        <ul role="group" id="nav-group-readme">
+          
+            
+            <li role="none">
+              
+                <a href="#readme-license" role="treeitem" aria-level="3" tabindex="-1"
+                    data-gtmc="readme outline link">
+                  License
+                </a>
+               
+            </li>
+           
+        </ul>
+      </li>
+    
+  </ul>
+
+        </li>
+      
+      
+        <li role="none">
+          <a href="#section-documentation" role="treeitem" aria-expanded="false" aria-level="1"
+              aria-selected="false"aria-owns="doc-outline" tabindex="-1" data-gtmc="outline link">
+            Documentation
+          </a>
+          
+<ul role="group" id="doc-outline">
+  
+    <li role="none">
+      <a href="#pkg-overview" role="treeitem" aria-level="2" tabindex="-1"
+          data-gtmc="doc outline link">Overview</a>
+    </li>
+  
+  
+</ul>
+
+        </li>
+      
+      
+        <li role="none">
+          <a href="#section-sourcefiles" role="treeitem" aria-expanded="false"
+              aria-selected="false" aria-level="1" tabindex="-1" data-gtmc="outline link">
+            Source Files
+          </a>
+        </li>
+      
+      
+        <li role="none">
+          <a href="#section-directories" role="treeitem" aria-expanded="false"
+              aria-selected="false" aria-level="1" tabindex="-1"
+              data-gtmc="outline link">
+            Directories
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+    </div>
+    <div class="UnitDetails-content js-unitDetailsContent" role="main" data-test-id="UnitDetails-content">
+      
+        
+  <div class="UnitReadme  js-readme">
+    <h2 class="UnitReadme-title" id="section-readme">
+      <img height="25px" width="20px" src="/static/img/pkg-icon-readme_20x16.svg" alt="">README
+      <a class="UnitReadme-idLink" href="#section-readme">¶</a>
+    </h2>
+    
+      <div class="UnitReadme-content" data-test-id="Unit-readmeContent">
+        <div class="Overview-readmeContent js-readmeContent"><h3 class="h1" id="readme-etcd">etcd</h3>
+<p><a href="https://goreportcard.com/report/github.com/coreos/etcd" rel="nofollow"><img src="https://goreportcard.com/badge/github.com/coreos/etcd?style=flat-square" alt="Go Report Card"/></a>
+<a href="https://codecov.io/gh/coreos/etcd" rel="nofollow"><img src="https://codecov.io/gh/coreos/etcd/branch/master/graph/badge.svg" alt="Coverage"/></a>
+<a href="https://travis-ci.org/coreos/etcd" rel="nofollow"><img src="https://img.shields.io/travis/coreos/etcdlabs.svg?style=flat-square&amp;&amp;branch=master" alt="Build Status Travis"/></a>
+<a href="https://semaphoreci.com/coreos/etcd" rel="nofollow"><img src="https://semaphoreci.com/api/v1/coreos/etcd/branches/master/shields_badge.svg" alt="Build Status Semaphore"/></a>
+<a href="https://godoc.org/github.com/coreos/etcd" rel="nofollow"><img src="http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square" alt="Godoc"/></a>
+<a href="https://github.com/coreos/etcd/releases" rel="nofollow"><img src="https://img.shields.io/github/release/coreos/etcd/all.svg?style=flat-square" alt="Releases"/></a>
+<a href="https://github.com/coreos/etcd/raw/master/LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/coreos/etcd.svg?style=flat-square" alt="LICENSE"/></a></p>
+<p><strong>Note</strong>: The <code>master</code> branch may be in an <em>unstable or even broken state</em> during development. Please use <a href="https://github.com/coreos/etcd/releases/" rel="nofollow">releases</a> instead of the <code>master</code> branch in order to get stable binaries.</p>
+<p><em>the etcd v2 <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/v2/README.md" rel="nofollow">documentation</a> has moved</em></p>
+<p><img src="https://github.com/etcd-io/etcd/raw/v3.3.25/logos/etcd-horizontal-color.png" alt="etcd Logo"/></p>
+<p>etcd is a distributed reliable key-value store for the most critical data of a distributed system, with a focus on being:</p>
+<ul>
+<li><em>Simple</em>: well-defined, user-facing API (gRPC)</li>
+<li><em>Secure</em>: automatic TLS with optional client cert authentication</li>
+<li><em>Fast</em>: benchmarked 10,000 writes/sec</li>
+<li><em>Reliable</em>: properly distributed using Raft</li>
+</ul>
+<p>etcd is written in Go and uses the <a href="https://raft.github.io/" rel="nofollow">Raft</a> consensus algorithm to manage a highly-available replicated log.</p>
+<p>etcd is used <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/production-users.md" rel="nofollow">in production by many companies</a>, and the development team stands behind it in critical deployment scenarios, where etcd is frequently teamed with applications such as <a href="http://kubernetes.io/" rel="nofollow">Kubernetes</a>, <a href="https://github.com/coreos/fleet" rel="nofollow">fleet</a>, <a href="https://github.com/coreos/locksmith" rel="nofollow">locksmith</a>, <a href="https://github.com/vulcand/vulcand" rel="nofollow">vulcand</a>, <a href="https://github.com/youtube/doorman" rel="nofollow">Doorman</a>, and many others. Reliability is further ensured by rigorous <a href="http://dash.etcd.io" rel="nofollow">testing</a>.</p>
+<p>See <a href="https://github.com/coreos/etcd/tree/master/etcdctl" rel="nofollow">etcdctl</a> for a simple command line client.</p>
+<h4 class="h2" id="readme-community-meetings">Community meetings</h4>
+<p>etcd contributors and maintainers have bi-weekly meetings at 11:00 AM (USA Pacific) on Tuesdays. There is an <a href="https://tools.ietf.org/html/rfc5545" rel="nofollow">iCalendar</a> format for the meetings <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/meeting.ics" rel="nofollow">here</a>. Anyone is welcome to join via <a href="https://coreos.zoom.us/j/854793406" rel="nofollow">Zoom</a> or audio-only: +1 669 900 6833. An initial agenda will be posted to the <a href="https://docs.google.com/document/d/1DbVXOHvd9scFsSmL2oNg4YGOHJdXqtx583DmeVWrB_M/edit" rel="nofollow">shared Google docs</a> a day before each meeting, and everyone is welcome to suggest additional topics or other agendas.</p>
+<h4 class="h2" id="readme-getting-started">Getting started</h4>
+<h5 class="h3" id="readme-getting-etcd">Getting etcd</h5>
+<p>The easiest way to get etcd is to use one of the pre-built release binaries which are available for OSX, Linux, Windows, <a href="https://github.com/rkt/rkt/releases/" rel="nofollow">rkt</a>, and Docker. Instructions for using these binaries are on the <a href="https://github.com/coreos/etcd/releases/" rel="nofollow">GitHub releases page</a>.</p>
+<p>For those wanting to try the very latest version, <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/dl_build.md" rel="nofollow">build the latest version of etcd</a> from the <code>master</code> branch. This first needs <a href="https://golang.org/" rel="nofollow"><em>Go</em></a> installed (version 1.9+ is required). All development occurs on <code>master</code>, including new features and bug fixes. Bug fixes are first targeted at <code>master</code> and subsequently ported to release branches, as described in the <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/branch_management.md" rel="nofollow">branch management</a> guide.</p>
+<h5 class="h3" id="readme-running-etcd">Running etcd</h5>
+<p>First start a single-member cluster of etcd.</p>
+<p>If etcd is installed using the <a href="https://github.com/coreos/etcd/releases/" rel="nofollow">pre-built release binaries</a>, run it from the installation location as below:</p>
+<pre><code>/tmp/etcd-download-test/etcd
+</code></pre>
+<p>The etcd command can be simply run as such if it is moved to the system path as below:</p>
+<pre><code>mv /tmp/etcd-download-test/etcd /usr/locale/bin/
+
+etcd
+</code></pre>
+<p>If etcd is <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/dl_build.md" rel="nofollow">build from the master branch</a>, run it as below:</p>
+<pre><code>./bin/etcd
+</code></pre>
+<p>This will bring up etcd listening on port 2379 for client communication and on port 2380 for server-to-server communication.</p>
+<p>Next, let&#39;s set a single key, and then retrieve it:</p>
+<pre><code>ETCDCTL_API=3 etcdctl put mykey &#34;this is awesome&#34;
+ETCDCTL_API=3 etcdctl get mykey
+</code></pre>
+<p>That&#39;s it! etcd is now running and serving client requests. For more</p>
+<ul>
+<li><a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/demo.md" rel="nofollow">Animated quick demo</a></li>
+<li><a href="http://play.etcd.io/" rel="nofollow">Interactive etcd playground</a></li>
+</ul>
+<h5 class="h3" id="readme-etcd-tcp-ports">etcd TCP ports</h5>
+<p>The <a href="http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt" rel="nofollow">official etcd ports</a> are 2379 for client requests, and 2380 for peer communication.</p>
+<h5 class="h3" id="readme-running-a-local-etcd-cluster">Running a local etcd cluster</h5>
+<p>First install <a href="https://github.com/mattn/goreman" rel="nofollow">goreman</a>, which manages Procfile-based applications.</p>
+<p>Our <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Procfile" rel="nofollow">Procfile script</a> will set up a local example cluster. Start it with:</p>
+<pre><code>goreman start
+</code></pre>
+<p>This will bring up 3 etcd members <code>infra1</code>, <code>infra2</code> and <code>infra3</code> and etcd <code>grpc-proxy</code>, which runs locally and composes a cluster.</p>
+<p>Every cluster member and proxy accepts key value reads and key value writes.</p>
+<h5 class="h3" id="readme-running-etcd-on-kubernetes">Running etcd on Kubernetes</h5>
+<p>To run an etcd cluster on Kubernetes, try <a href="https://github.com/coreos/etcd-operator" rel="nofollow">etcd operator</a>.</p>
+<h5 class="h3" id="readme-next-steps">Next steps</h5>
+<p>Now it&#39;s time to dig into the full etcd API and other guides.</p>
+<ul>
+<li>Read the full <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/docs.md" rel="nofollow">documentation</a>.</li>
+<li>Explore the full gRPC <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/dev-guide/api_reference_v3.md" rel="nofollow">API</a>.</li>
+<li>Set up a <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/op-guide/clustering.md" rel="nofollow">multi-machine cluster</a>.</li>
+<li>Learn the <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/op-guide/configuration.md" rel="nofollow">config format, env variables and flags</a>.</li>
+<li>Find <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/integrations.md" rel="nofollow">language bindings and tools</a>.</li>
+<li>Use TLS to <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/op-guide/security.md" rel="nofollow">secure an etcd cluster</a>.</li>
+<li><a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/tuning.md" rel="nofollow">Tune etcd</a>.</li>
+</ul>
+<h4 class="h2" id="readme-contact">Contact</h4>
+<ul>
+<li>Mailing list: <a href="https://groups.google.com/forum/?hl=en#!forum/etcd-dev" rel="nofollow">etcd-dev</a></li>
+<li>IRC: #etcd on freenode.org</li>
+<li>Planning/Roadmap: <a href="https://github.com/coreos/etcd/milestones" rel="nofollow">milestones</a>, <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/ROADMAP.md" rel="nofollow">roadmap</a></li>
+<li>Bugs: <a href="https://github.com/coreos/etcd/issues" rel="nofollow">issues</a></li>
+</ul>
+<h4 class="h2" id="readme-contributing">Contributing</h4>
+<p>See <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/CONTRIBUTING.md" rel="nofollow">CONTRIBUTING</a> for details on submitting patches and the contribution workflow.</p>
+<h4 class="h2" id="readme-reporting-bugs">Reporting bugs</h4>
+<p>See <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/Documentation/reporting_bugs.md" rel="nofollow">reporting bugs</a> for details about reporting any issues.</p>
+<h5 class="h3" id="readme-license">License</h5>
+<p>etcd is under the Apache 2.0 license. See the <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/LICENSE" rel="nofollow">LICENSE</a> file for details.</p>
+</div>
+        <div class="UnitReadme-fadeOut"></div>
+      </div>
+      <button class="UnitReadme-expandLink js-readmeExpand"
+          data-test-id="readme-expand" data-gtmc="button"
+          aria-label="Expand Readme">Expand ▾</button>
+      <button class="UnitReadme-collapseLink js-readmeCollapse"
+          data-test-id="readme-collapse" data-gtmc="button"
+          aria-label="Expand Readme">Collapse ▴</button>
+    
+  </div>
+
+      
+
+      
+        
+          
+  <div class="UnitDoc">
+    <h2 class="UnitDoc-title" id="section-documentation">
+      <img height="25px" width="20px" src="/static/img/pkg-icon-doc_20x12.svg" alt="">Documentation
+      <a class="UnitDoc-idLink" href="#section-documentation">¶</a>
+    </h2>
+    
+  
+    
+  
+
+    <div class="Documentation js-documentation">
+      
+        
+<div class="Documentation-content js-docContent"> <section class="Documentation-overview">
+    <h3 tabindex="-1" id="pkg-overview" class="Documentation-overviewHeader">Overview <a href="#pkg-overview">¶</a></h3>
+
+<div role="navigation" aria-label="Table of Contents">
+		<ul class="Documentation-toc"></ul>
+	</div><p>Package main is a simple wrapper of the real etcd entrypoint package
+(located at github.com/coreos/etcd/etcdmain) to ensure that etcd is still
+&#34;go getable&#34;; e.g. `go get github.com/coreos/etcd` works as expected and
+builds a binary in $GOBIN/etcd
+</p><p>This package should NOT be extended or modified in any way; to modify the
+etcd binary, work in the `github.com/coreos/etcd/etcdmain` package.
+</p>
+</section></div> 
+
+
+
+
+      
+    </div>
+  </div>
+
+        
+      
+
+      
+        
+  <div class="UnitFiles js-unitFiles">
+    <h2 class="UnitFiles-title" id="section-sourcefiles">
+      <img height="16px" width="12px" src="/static/img/pkg-icon-file_16x12.svg" alt="">Source Files
+      <a class="UnitFiles-idLink" href="#section-sourcefiles">¶</a>
+    </h2>
+    <div class="UnitFiles-titleLink">
+      <a href="https://github.com/etcd-io/etcd/tree/v3.3.25" target="_blank" rel="noopener">View all</a>
+    </div>
+    <div>
+      <ul class="UnitFiles-fileList"><li>
+            <a href="https://github.com/etcd-io/etcd/blob/v3.3.25/main.go" target="_blank" rel="noopener" title="main.go">main.go</a>
+          </li></ul>
+    </div>
+  </div>
+
+      
+      
+        
+  <div class="UnitDirectories js-unitDirectories">
+    <h2 class="UnitDirectories-title" id="section-directories">
+      <img height="25px" width="20px" src="/static/img/pkg-icon-folder_20x16.svg" alt="">Directories
+      <a class="UnitDirectories-idLink" href="#section-directories">¶</a>
+    </h2>
+    <div class="UnitDirectories-expandButton">
+      <button class="js-expandAllDirectories" data-test-id="directories-toggle"
+          data-gtmc="button" aria-label="Expand All Directories">
+        Expand all
+      </button>
+    </div>
+    <table class="UnitDirectories-table UnitDirectories-table--tree js-expandableTable"
+          data-test-id="UnitDirectories-table">
+      <tr class="UnitDirectories-tableHeader UnitDirectories-tableHeader--tree">
+        <th>Path</th>
+        <th class="UnitDirectories-desktopSynopsis">Synopsis</th>
+      </tr>
+      
+          
+  
+  <tr>
+    <td data-id="alarm" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/alarm">alarm</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package alarm manages health status alarms in etcd.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package alarm manages health status alarms in etcd.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="auth-authpb ">
+    <td data-id="auth" data-aria-owns="auth-authpb ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="1 more from"
+                data-aria-controls="auth-authpb "
+                data-aria-labelledby="auth-button auth"
+                data-id="auth-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/auth">auth</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package auth provides client role authentication for accessing keys in etcd.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package auth provides client role authentication for accessing keys in etcd.</td></tr><tr data-id="auth-authpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/auth/authpb">authpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr>
+
+      
+          
+  
+  <tr data-aria-controls="client-integration ">
+    <td data-id="client" data-aria-owns="client-integration ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="1 more from"
+                data-aria-controls="client-integration "
+                data-aria-labelledby="client-button client"
+                data-id="client-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/client">client</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package client provides bindings for the etcd APIs.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package client provides bindings for the etcd APIs.</td></tr><tr data-id="client-integration">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/client/integration">integration</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package integration implements tests built upon embedded etcd, focusing on the correctness of the etcd v2 client.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package integration implements tests built upon embedded etcd, focusing on the correctness of the etcd v2 client.</td></tr>
+
+      
+          
+  
+  <tr data-aria-controls="clientv3-balancer clientv3-balancer/connectivity clientv3-balancer/picker clientv3-balancer/resolver/endpoint clientv3-clientv3util clientv3-concurrency clientv3-credentials clientv3-integration clientv3-leasing clientv3-mirror clientv3-namespace clientv3-naming clientv3-ordering clientv3-snapshot clientv3-yaml ">
+    <td data-id="clientv3" data-aria-owns="clientv3-balancer clientv3-balancer/connectivity clientv3-balancer/picker clientv3-balancer/resolver/endpoint clientv3-clientv3util clientv3-concurrency clientv3-credentials clientv3-integration clientv3-leasing clientv3-mirror clientv3-namespace clientv3-naming clientv3-ordering clientv3-snapshot clientv3-yaml ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="15 more from"
+                data-aria-controls="clientv3-balancer clientv3-balancer/connectivity clientv3-balancer/picker clientv3-balancer/resolver/endpoint clientv3-clientv3util clientv3-concurrency clientv3-credentials clientv3-integration clientv3-leasing clientv3-mirror clientv3-namespace clientv3-naming clientv3-ordering clientv3-snapshot clientv3-yaml "
+                data-aria-labelledby="clientv3-button clientv3"
+                data-id="clientv3-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3">clientv3</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package clientv3 implements the official Go etcd client for v3.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package clientv3 implements the official Go etcd client for v3.</td></tr><tr data-id="clientv3-balancer">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/balancer">balancer</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package balancer implements client balancer.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package balancer implements client balancer.</td><tr data-id="clientv3-balancer/connectivity">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/balancer/connectivity">balancer/connectivity</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package connectivity implements client connectivity operations.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package connectivity implements client connectivity operations.</td><tr data-id="clientv3-balancer/picker">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/balancer/picker">balancer/picker</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package picker defines/implements client balancer picker policy.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package picker defines/implements client balancer picker policy.</td><tr data-id="clientv3-balancer/resolver/endpoint">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/balancer/resolver/endpoint">balancer/resolver/endpoint</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package endpoint resolves etcd entpoints using grpc targets of the form &#39;endpoint://&lt;id&gt;/&lt;endpoint&gt;&#39;.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package endpoint resolves etcd entpoints using grpc targets of the form &#39;endpoint://&lt;id&gt;/&lt;endpoint&gt;&#39;.</td><tr data-id="clientv3-clientv3util">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/clientv3util">clientv3util</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package clientv3util contains utility functions derived from clientv3.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package clientv3util contains utility functions derived from clientv3.</td><tr data-id="clientv3-concurrency">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/concurrency">concurrency</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package concurrency implements concurrency operations on top of etcd such as distributed locks, barriers, and elections.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package concurrency implements concurrency operations on top of etcd such as distributed locks, barriers, and elections.</td><tr data-id="clientv3-credentials">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/credentials">credentials</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package credentials implements gRPC credential interface with etcd specific logic.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package credentials implements gRPC credential interface with etcd specific logic.</td><tr data-id="clientv3-integration">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/integration">integration</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package integration implements tests built upon embedded etcd, and focuses on correctness of etcd client.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package integration implements tests built upon embedded etcd, and focuses on correctness of etcd client.</td><tr data-id="clientv3-leasing">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/leasing">leasing</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package leasing serves linearizable reads from a local cache by acquiring exclusive write access to keys through a client-side leasing protocol.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package leasing serves linearizable reads from a local cache by acquiring exclusive write access to keys through a client-side leasing protocol.</td><tr data-id="clientv3-mirror">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/mirror">mirror</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package mirror implements etcd mirroring operations.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package mirror implements etcd mirroring operations.</td><tr data-id="clientv3-namespace">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/namespace">namespace</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package namespace is a clientv3 wrapper that translates all keys to begin with a given prefix.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package namespace is a clientv3 wrapper that translates all keys to begin with a given prefix.</td><tr data-id="clientv3-naming">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/naming">naming</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package naming provides an etcd-backed gRPC resolver for discovering gRPC services.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package naming provides an etcd-backed gRPC resolver for discovering gRPC services.</td><tr data-id="clientv3-ordering">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/ordering">ordering</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package ordering is a clientv3 wrapper that caches response header revisions to detect ordering violations from stale responses.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package ordering is a clientv3 wrapper that caches response header revisions to detect ordering violations from stale responses.</td><tr data-id="clientv3-snapshot">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/snapshot">snapshot</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package snapshot implements utilities around etcd snapshot.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package snapshot implements utilities around etcd snapshot.</td><tr data-id="clientv3-yaml">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/clientv3/yaml">yaml</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package yaml handles yaml-formatted clientv3 configuration data.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package yaml handles yaml-formatted clientv3 configuration data.</td></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="compactor" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/compactor">compactor</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package compactor implements automated policies for compacting etcd&#39;s mvcc storage.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package compactor implements automated policies for compacting etcd&#39;s mvcc storage.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="contrib-raftexample contrib-recipes contrib-systemd/etcd2-backup-coreos ">
+    <td data-id="contrib" data-aria-owns="contrib-raftexample contrib-recipes contrib-systemd/etcd2-backup-coreos ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="3 more from"
+                data-aria-controls="contrib-raftexample contrib-recipes contrib-systemd/etcd2-backup-coreos "
+                data-aria-labelledby="contrib-button contrib"
+                data-id="contrib-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><span>contrib</span>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr><tr data-id="contrib-raftexample">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/contrib/raftexample">raftexample</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">raftexample is a simple KV store using the raft and rafthttp libraries.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">raftexample is a simple KV store using the raft and rafthttp libraries.</td><tr data-id="contrib-recipes">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/contrib/recipes">recipes</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package recipe contains experimental client-side distributed synchronization primitives.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package recipe contains experimental client-side distributed synchronization primitives.</td><tr data-id="contrib-systemd/etcd2-backup-coreos">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/contrib/systemd/etcd2-backup-coreos">systemd/etcd2-backup-coreos</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="discovery" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/discovery">discovery</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package discovery provides an implementation of the cluster discovery that is used by etcd.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package discovery provides an implementation of the cluster discovery that is used by etcd.</td></tr></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="embed" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/embed">embed</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package embed provides bindings for embedding an etcd server in a program.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package embed provides bindings for embedding an etcd server in a program.</td></tr></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="error" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/error">error</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package error describes errors in etcd project.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package error describes errors in etcd project.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="etcdctl-ctlv2 etcdctl-ctlv2/command etcdctl-ctlv3 etcdctl-ctlv3/command ">
+    <td data-id="etcdctl" data-aria-owns="etcdctl-ctlv2 etcdctl-ctlv2/command etcdctl-ctlv3 etcdctl-ctlv3/command ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="4 more from"
+                data-aria-controls="etcdctl-ctlv2 etcdctl-ctlv2/command etcdctl-ctlv3 etcdctl-ctlv3/command "
+                data-aria-labelledby="etcdctl-button etcdctl"
+                data-id="etcdctl-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdctl">etcdctl</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">etcdctl is a command line application that controls etcd.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">etcdctl is a command line application that controls etcd.</td></tr><tr data-id="etcdctl-ctlv2">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdctl/ctlv2">ctlv2</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package ctlv2 contains the main entry point for the etcdctl for v2 API.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package ctlv2 contains the main entry point for the etcdctl for v2 API.</td><tr data-id="etcdctl-ctlv2/command">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdctl/ctlv2/command">ctlv2/command</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package command is a set of libraries for etcdctl commands.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package command is a set of libraries for etcdctl commands.</td><tr data-id="etcdctl-ctlv3">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdctl/ctlv3">ctlv3</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package ctlv3 contains the main entry point for the etcdctl for v3 API.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package ctlv3 contains the main entry point for the etcdctl for v3 API.</td><tr data-id="etcdctl-ctlv3/command">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdctl/ctlv3/command">ctlv3/command</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package command is a set of libraries for etcd v3 commands.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package command is a set of libraries for etcd v3 commands.</td></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="etcdmain" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdmain">etcdmain</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package etcdmain contains the main entry point for the etcd binary.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package etcdmain contains the main entry point for the etcd binary.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="etcdserver-api etcdserver-api/etcdhttp etcdserver-api/v2http etcdserver-api/v2http/httptypes etcdserver-api/v2v3 etcdserver-api/v3client etcdserver-api/v3election etcdserver-api/v3election/v3electionpb etcdserver-api/v3election/v3electionpb/gw etcdserver-api/v3lock etcdserver-api/v3lock/v3lockpb etcdserver-api/v3lock/v3lockpb/gw etcdserver-api/v3rpc etcdserver-api/v3rpc/rpctypes etcdserver-auth etcdserver-etcdserverpb etcdserver-etcdserverpb/gw etcdserver-membership etcdserver-stats ">
+    <td data-id="etcdserver" data-aria-owns="etcdserver-api etcdserver-api/etcdhttp etcdserver-api/v2http etcdserver-api/v2http/httptypes etcdserver-api/v2v3 etcdserver-api/v3client etcdserver-api/v3election etcdserver-api/v3election/v3electionpb etcdserver-api/v3election/v3electionpb/gw etcdserver-api/v3lock etcdserver-api/v3lock/v3lockpb etcdserver-api/v3lock/v3lockpb/gw etcdserver-api/v3rpc etcdserver-api/v3rpc/rpctypes etcdserver-auth etcdserver-etcdserverpb etcdserver-etcdserverpb/gw etcdserver-membership etcdserver-stats ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="19 more from"
+                data-aria-controls="etcdserver-api etcdserver-api/etcdhttp etcdserver-api/v2http etcdserver-api/v2http/httptypes etcdserver-api/v2v3 etcdserver-api/v3client etcdserver-api/v3election etcdserver-api/v3election/v3electionpb etcdserver-api/v3election/v3electionpb/gw etcdserver-api/v3lock etcdserver-api/v3lock/v3lockpb etcdserver-api/v3lock/v3lockpb/gw etcdserver-api/v3rpc etcdserver-api/v3rpc/rpctypes etcdserver-auth etcdserver-etcdserverpb etcdserver-etcdserverpb/gw etcdserver-membership etcdserver-stats "
+                data-aria-labelledby="etcdserver-button etcdserver"
+                data-id="etcdserver-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver">etcdserver</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package etcdserver defines how etcd servers interact and store their states.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package etcdserver defines how etcd servers interact and store their states.</td></tr><tr data-id="etcdserver-api">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api">api</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package api manages the capabilities and features that are exposed to clients by the etcd cluster.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package api manages the capabilities and features that are exposed to clients by the etcd cluster.</td><tr data-id="etcdserver-api/etcdhttp">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/etcdhttp">api/etcdhttp</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package etcdhttp implements HTTP transportation layer for etcdserver.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package etcdhttp implements HTTP transportation layer for etcdserver.</td><tr data-id="etcdserver-api/v2http">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v2http">api/v2http</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v2http provides etcd client and server implementations.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v2http provides etcd client and server implementations.</td><tr data-id="etcdserver-api/v2http/httptypes">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v2http/httptypes">api/v2http/httptypes</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package httptypes defines how etcd&#39;s HTTP API entities are serialized to and deserialized from JSON.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package httptypes defines how etcd&#39;s HTTP API entities are serialized to and deserialized from JSON.</td><tr data-id="etcdserver-api/v2v3">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v2v3">api/v2v3</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v2v3 provides a ServerV2 implementation backed by clientv3.Client.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v2v3 provides a ServerV2 implementation backed by clientv3.Client.</td><tr data-id="etcdserver-api/v3client">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3client">api/v3client</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v3client provides clientv3 interfaces from an etcdserver.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v3client provides clientv3 interfaces from an etcdserver.</td><tr data-id="etcdserver-api/v3election">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3election">api/v3election</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v3election provides a v3 election service from an etcdserver.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v3election provides a v3 election service from an etcdserver.</td><tr data-id="etcdserver-api/v3election/v3electionpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3election/v3electionpb">api/v3election/v3electionpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td><tr data-id="etcdserver-api/v3election/v3electionpb/gw">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3election/v3electionpb/gw">api/v3election/v3electionpb/gw</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v3electionpb is a reverse proxy.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v3electionpb is a reverse proxy.</td><tr data-id="etcdserver-api/v3lock">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3lock">api/v3lock</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v3lock provides a v3 locking service from an etcdserver.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v3lock provides a v3 locking service from an etcdserver.</td><tr data-id="etcdserver-api/v3lock/v3lockpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3lock/v3lockpb">api/v3lock/v3lockpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td><tr data-id="etcdserver-api/v3lock/v3lockpb/gw">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3lock/v3lockpb/gw">api/v3lock/v3lockpb/gw</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v3lockpb is a reverse proxy.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v3lockpb is a reverse proxy.</td><tr data-id="etcdserver-api/v3rpc">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3rpc">api/v3rpc</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package v3rpc implements etcd v3 RPC system based on gRPC.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package v3rpc implements etcd v3 RPC system based on gRPC.</td><tr data-id="etcdserver-api/v3rpc/rpctypes">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/api/v3rpc/rpctypes">api/v3rpc/rpctypes</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package rpctypes has types and values shared by the etcd server and client for v3 RPC interaction.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package rpctypes has types and values shared by the etcd server and client for v3 RPC interaction.</td><tr data-id="etcdserver-auth">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/auth">auth</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package auth implements etcd authentication.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package auth implements etcd authentication.</td><tr data-id="etcdserver-etcdserverpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/etcdserverpb">etcdserverpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td><tr data-id="etcdserver-etcdserverpb/gw">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/etcdserverpb/gw">etcdserverpb/gw</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package etcdserverpb is a reverse proxy.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package etcdserverpb is a reverse proxy.</td><tr data-id="etcdserver-membership">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/membership">membership</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package membership describes individual etcd members and clusters of members.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package membership describes individual etcd members and clusters of members.</td><tr data-id="etcdserver-stats">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/etcdserver/stats">stats</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package stats defines a standard interface for etcd cluster statistics.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package stats defines a standard interface for etcd cluster statistics.</td></tr>
+
+      
+          
+  
+  <tr data-aria-controls="functional-agent functional-cmd/etcd-agent functional-cmd/etcd-proxy functional-cmd/etcd-runner functional-cmd/etcd-tester functional-rpcpb functional-runner functional-tester ">
+    <td data-id="functional" data-aria-owns="functional-agent functional-cmd/etcd-agent functional-cmd/etcd-proxy functional-cmd/etcd-runner functional-cmd/etcd-tester functional-rpcpb functional-runner functional-tester ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="8 more from"
+                data-aria-controls="functional-agent functional-cmd/etcd-agent functional-cmd/etcd-proxy functional-cmd/etcd-runner functional-cmd/etcd-tester functional-rpcpb functional-runner functional-tester "
+                data-aria-labelledby="functional-button functional"
+                data-id="functional-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><span>functional</span>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr><tr data-id="functional-agent">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/agent">agent</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package agent implements functional-tester agent server.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package agent implements functional-tester agent server.</td><tr data-id="functional-cmd/etcd-agent">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/cmd/etcd-agent">cmd/etcd-agent</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">etcd-agent is a program that runs functional-tester agent.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">etcd-agent is a program that runs functional-tester agent.</td><tr data-id="functional-cmd/etcd-proxy">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/cmd/etcd-proxy">cmd/etcd-proxy</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">etcd-proxy is a proxy layer that simulates various network conditions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">etcd-proxy is a proxy layer that simulates various network conditions.</td><tr data-id="functional-cmd/etcd-runner">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/cmd/etcd-runner">cmd/etcd-runner</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">etcd-runner is a program for testing etcd clientv3 features against a fault injected cluster.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">etcd-runner is a program for testing etcd clientv3 features against a fault injected cluster.</td><tr data-id="functional-cmd/etcd-tester">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/cmd/etcd-tester">cmd/etcd-tester</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">etcd-tester is a program that runs functional-tester client.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">etcd-tester is a program that runs functional-tester client.</td><tr data-id="functional-rpcpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/rpcpb">rpcpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package rpcpb is a generated protocol buffer package.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package rpcpb is a generated protocol buffer package.</td><tr data-id="functional-runner">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/runner">runner</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package runner implements individual etcd-runner commands for the etcd-runner utility.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package runner implements individual etcd-runner commands for the etcd-runner utility.</td><tr data-id="functional-tester">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/functional/tester">tester</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package tester implements functional-tester tester server.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package tester implements functional-tester tester server.</td></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="integration" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/integration">integration</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package integration implements tests built upon embedded etcd, and focus on etcd correctness.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package integration implements tests built upon embedded etcd, and focus on etcd correctness.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="lease-leasehttp lease-leasepb ">
+    <td data-id="lease" data-aria-owns="lease-leasehttp lease-leasepb ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="2 more from"
+                data-aria-controls="lease-leasehttp lease-leasepb "
+                data-aria-labelledby="lease-button lease"
+                data-id="lease-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/lease">lease</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package lease provides an interface and implementation for time-limited leases over arbitrary resources.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package lease provides an interface and implementation for time-limited leases over arbitrary resources.</td></tr><tr data-id="lease-leasehttp">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/lease/leasehttp">leasehttp</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package leasehttp serves lease renewals made through HTTP requests.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package leasehttp serves lease renewals made through HTTP requests.</td><tr data-id="lease-leasepb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/lease/leasepb">leasepb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr>
+
+      
+          
+  
+  <tr data-aria-controls="mvcc-backend mvcc-mvccpb ">
+    <td data-id="mvcc" data-aria-owns="mvcc-backend mvcc-mvccpb ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="2 more from"
+                data-aria-controls="mvcc-backend mvcc-mvccpb "
+                data-aria-labelledby="mvcc-button mvcc"
+                data-id="mvcc-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/mvcc">mvcc</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package mvcc defines etcd&#39;s stable MVCC storage.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package mvcc defines etcd&#39;s stable MVCC storage.</td></tr><tr data-id="mvcc-backend">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/mvcc/backend">backend</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package backend defines a standard interface for etcd&#39;s backend MVCC storage.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package backend defines a standard interface for etcd&#39;s backend MVCC storage.</td><tr data-id="mvcc-mvccpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/mvcc/mvccpb">mvccpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr>
+
+      
+          
+  
+  <tr data-aria-controls="pkg-adt pkg-contention pkg-cors pkg-cpuutil pkg-crc pkg-debugutil pkg-expect pkg-fileutil pkg-flags pkg-httputil pkg-idutil pkg-ioutil pkg-logutil pkg-mock/mockserver pkg-mock/mockstorage pkg-mock/mockstore pkg-mock/mockwait pkg-netutil pkg-osutil pkg-pathutil pkg-pbutil pkg-proxy pkg-report pkg-runtime pkg-schedule pkg-srv pkg-stringutil pkg-systemd pkg-testutil pkg-tlsutil pkg-transport pkg-types pkg-wait ">
+    <td data-id="pkg" data-aria-owns="pkg-adt pkg-contention pkg-cors pkg-cpuutil pkg-crc pkg-debugutil pkg-expect pkg-fileutil pkg-flags pkg-httputil pkg-idutil pkg-ioutil pkg-logutil pkg-mock/mockserver pkg-mock/mockstorage pkg-mock/mockstore pkg-mock/mockwait pkg-netutil pkg-osutil pkg-pathutil pkg-pbutil pkg-proxy pkg-report pkg-runtime pkg-schedule pkg-srv pkg-stringutil pkg-systemd pkg-testutil pkg-tlsutil pkg-transport pkg-types pkg-wait ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="33 more from"
+                data-aria-controls="pkg-adt pkg-contention pkg-cors pkg-cpuutil pkg-crc pkg-debugutil pkg-expect pkg-fileutil pkg-flags pkg-httputil pkg-idutil pkg-ioutil pkg-logutil pkg-mock/mockserver pkg-mock/mockstorage pkg-mock/mockstore pkg-mock/mockwait pkg-netutil pkg-osutil pkg-pathutil pkg-pbutil pkg-proxy pkg-report pkg-runtime pkg-schedule pkg-srv pkg-stringutil pkg-systemd pkg-testutil pkg-tlsutil pkg-transport pkg-types pkg-wait "
+                data-aria-labelledby="pkg-button pkg"
+                data-id="pkg-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><span>pkg</span>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr><tr data-id="pkg-adt">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/adt">adt</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package adt implements useful abstract data types.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package adt implements useful abstract data types.</td><tr data-id="pkg-contention">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/contention">contention</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package contention provides facilities for detecting system contention.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package contention provides facilities for detecting system contention.</td><tr data-id="pkg-cors">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/cors">cors</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package cors handles cross-origin HTTP requests (CORS).</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package cors handles cross-origin HTTP requests (CORS).</td><tr data-id="pkg-cpuutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/cpuutil">cpuutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package cpuutil provides facilities for detecting cpu-specific features.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package cpuutil provides facilities for detecting cpu-specific features.</td><tr data-id="pkg-crc">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/crc">crc</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package crc provides utility function for cyclic redundancy check algorithms.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package crc provides utility function for cyclic redundancy check algorithms.</td><tr data-id="pkg-debugutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/debugutil">debugutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package debugutil includes utility functions for debugging.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package debugutil includes utility functions for debugging.</td><tr data-id="pkg-expect">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/expect">expect</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package expect implements a small expect-style interface</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package expect implements a small expect-style interface</td><tr data-id="pkg-fileutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/fileutil">fileutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package fileutil implements utility functions related to files and paths.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package fileutil implements utility functions related to files and paths.</td><tr data-id="pkg-flags">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/flags">flags</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package flags implements command-line flag parsing.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package flags implements command-line flag parsing.</td><tr data-id="pkg-httputil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/httputil">httputil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package httputil provides HTTP utility functions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package httputil provides HTTP utility functions.</td><tr data-id="pkg-idutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/idutil">idutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package idutil implements utility functions for generating unique, randomized ids.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package idutil implements utility functions for generating unique, randomized ids.</td><tr data-id="pkg-ioutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/ioutil">ioutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package ioutil implements I/O utility functions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package ioutil implements I/O utility functions.</td><tr data-id="pkg-logutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/logutil">logutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package logutil includes utilities to facilitate logging.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package logutil includes utilities to facilitate logging.</td><tr data-id="pkg-mock/mockserver">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/mock/mockserver">mock/mockserver</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package mockserver provides mock implementations for etcdserver&#39;s server interface.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package mockserver provides mock implementations for etcdserver&#39;s server interface.</td><tr data-id="pkg-mock/mockstorage">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/mock/mockstorage">mock/mockstorage</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package mockstorage provides mock implementations for etcdserver&#39;s storage interface.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package mockstorage provides mock implementations for etcdserver&#39;s storage interface.</td><tr data-id="pkg-mock/mockstore">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/mock/mockstore">mock/mockstore</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package mockstore provides mock structures for the etcd store package.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package mockstore provides mock structures for the etcd store package.</td><tr data-id="pkg-mock/mockwait">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/mock/mockwait">mock/mockwait</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package mockwait provides mock implementations for pkg/wait.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package mockwait provides mock implementations for pkg/wait.</td><tr data-id="pkg-netutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/netutil">netutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package netutil implements network-related utility functions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package netutil implements network-related utility functions.</td><tr data-id="pkg-osutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/osutil">osutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package osutil implements operating system-related utility functions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package osutil implements operating system-related utility functions.</td><tr data-id="pkg-pathutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/pathutil">pathutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package pathutil implements utility functions for handling slash-separated paths.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package pathutil implements utility functions for handling slash-separated paths.</td><tr data-id="pkg-pbutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/pbutil">pbutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package pbutil defines interfaces for handling Protocol Buffer objects.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package pbutil defines interfaces for handling Protocol Buffer objects.</td><tr data-id="pkg-proxy">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/proxy">proxy</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package proxy implements proxy servers for network fault testing.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package proxy implements proxy servers for network fault testing.</td><tr data-id="pkg-report">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/report">report</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package report generates human-readable benchmark reports.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package report generates human-readable benchmark reports.</td><tr data-id="pkg-runtime">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/runtime">runtime</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package runtime implements utility functions for runtime systems.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package runtime implements utility functions for runtime systems.</td><tr data-id="pkg-schedule">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/schedule">schedule</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package schedule provides mechanisms and policies for scheduling units of work.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package schedule provides mechanisms and policies for scheduling units of work.</td><tr data-id="pkg-srv">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/srv">srv</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package srv looks up DNS SRV records.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package srv looks up DNS SRV records.</td><tr data-id="pkg-stringutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/stringutil">stringutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package stringutil exports string utility functions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package stringutil exports string utility functions.</td><tr data-id="pkg-systemd">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/systemd">systemd</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package systemd provides utility functions for systemd.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package systemd provides utility functions for systemd.</td><tr data-id="pkg-testutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/testutil">testutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package testutil provides test utility functions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package testutil provides test utility functions.</td><tr data-id="pkg-tlsutil">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/tlsutil">tlsutil</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package tlsutil provides utility functions for handling TLS.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package tlsutil provides utility functions for handling TLS.</td><tr data-id="pkg-transport">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/transport">transport</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package transport implements various HTTP transport utilities based on Go net package.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package transport implements various HTTP transport utilities based on Go net package.</td><tr data-id="pkg-types">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/types">types</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package types declares various data types and implements type-checking functions.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package types declares various data types and implements type-checking functions.</td><tr data-id="pkg-wait">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/pkg/wait">wait</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package wait provides utility functions for polling, listening using Go channel.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package wait provides utility functions for polling, listening using Go channel.</td></tr>
+
+      
+          
+  
+  <tr data-aria-controls="proxy-grpcproxy proxy-grpcproxy/adapter proxy-grpcproxy/cache proxy-httpproxy proxy-tcpproxy ">
+    <td data-id="proxy" data-aria-owns="proxy-grpcproxy proxy-grpcproxy/adapter proxy-grpcproxy/cache proxy-httpproxy proxy-tcpproxy ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="5 more from"
+                data-aria-controls="proxy-grpcproxy proxy-grpcproxy/adapter proxy-grpcproxy/cache proxy-httpproxy proxy-tcpproxy "
+                data-aria-labelledby="proxy-button proxy"
+                data-id="proxy-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><span>proxy</span>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr><tr data-id="proxy-grpcproxy">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/proxy/grpcproxy">grpcproxy</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package grpcproxy is an OSI level 7 proxy for etcd v3 API requests.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package grpcproxy is an OSI level 7 proxy for etcd v3 API requests.</td><tr data-id="proxy-grpcproxy/adapter">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/proxy/grpcproxy/adapter">grpcproxy/adapter</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package adapter provides gRPC adapters between client and server gRPC interfaces without needing to go through a gRPC connection.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package adapter provides gRPC adapters between client and server gRPC interfaces without needing to go through a gRPC connection.</td><tr data-id="proxy-grpcproxy/cache">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/proxy/grpcproxy/cache">grpcproxy/cache</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package cache exports functionality for efficiently caching and mapping `RangeRequest`s to corresponding `RangeResponse`s.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package cache exports functionality for efficiently caching and mapping `RangeRequest`s to corresponding `RangeResponse`s.</td><tr data-id="proxy-httpproxy">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/proxy/httpproxy">httpproxy</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package httpproxy implements etcd httpproxy.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package httpproxy implements etcd httpproxy.</td><tr data-id="proxy-tcpproxy">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/proxy/tcpproxy">tcpproxy</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package tcpproxy is an OSI level 4 proxy for routing etcd clients to etcd servers.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package tcpproxy is an OSI level 4 proxy for routing etcd clients to etcd servers.</td></tr>
+
+      
+          
+  
+  <tr data-aria-controls="raft-raftpb raft-rafttest ">
+    <td data-id="raft" data-aria-owns="raft-raftpb raft-rafttest ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="2 more from"
+                data-aria-controls="raft-raftpb raft-rafttest "
+                data-aria-labelledby="raft-button raft"
+                data-id="raft-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/raft">raft</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package raft sends and receives messages in the Protocol Buffer format defined in the raftpb package.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package raft sends and receives messages in the Protocol Buffer format defined in the raftpb package.</td></tr><tr data-id="raft-raftpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/raft/raftpb">raftpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td><tr data-id="raft-rafttest">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/raft/rafttest">rafttest</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis">Package rafttest provides functional tests for etcd&#39;s raft implementation.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package rafttest provides functional tests for etcd&#39;s raft implementation.</td></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="rafthttp" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/rafthttp">rafthttp</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package rafthttp implements HTTP transportation layer for etcd/raft pkg.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package rafthttp implements HTTP transportation layer for etcd/raft pkg.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="snap-snappb ">
+    <td data-id="snap" data-aria-owns="snap-snappb ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="1 more from"
+                data-aria-controls="snap-snappb "
+                data-aria-labelledby="snap-button snap"
+                data-id="snap-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/snap">snap</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package snap stores raft nodes&#39; states with snapshots.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package snap stores raft nodes&#39; states with snapshots.</td></tr><tr data-id="snap-snappb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/snap/snappb">snappb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="snapshot" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/snapshot">snapshot</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package snapshot implements utilities around etcd snapshot.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package snapshot implements utilities around etcd snapshot.</td></tr></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="store" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/store">store</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package store defines etcd&#39;s in-memory key/value store.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package store defines etcd&#39;s in-memory key/value store.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="tests-e2e ">
+    <td data-id="tests" data-aria-owns="tests-e2e ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="1 more from"
+                data-aria-controls="tests-e2e "
+                data-aria-labelledby="tests-button tests"
+                data-id="tests-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><span>tests</span>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr><tr data-id="tests-e2e">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/tests/e2e">e2e</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr>
+
+      
+          
+  
+  <tr>
+    <td data-id="version" data-aria-owns="">
+      <div class="UnitDirectories-pathCell">
+        <div><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/version">version</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package version implements etcd version parsing and contains latest version information.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package version implements etcd version parsing and contains latest version information.</td></tr></tr>
+
+      
+          
+  
+  <tr data-aria-controls="wal-walpb ">
+    <td data-id="wal" data-aria-owns="wal-walpb ">
+      <div class="UnitDirectories-pathCell">
+        <div><button type="button" class="UnitDirectories-toggleButton"
+                aria-expanded="false"
+                aria-label="1 more from"
+                data-aria-controls="wal-walpb "
+                data-aria-labelledby="wal-button wal"
+                data-id="wal-button">
+              <img alt="" src="/static/img/pkg-icon-arrowRight_24x24.svg" height="24" width="24">
+            </button><a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/wal">wal</a>
+            
+          </div>
+          <div class="UnitDirectories-mobileSynopsis">Package wal provides an implementation of a write ahead log that is used by etcd.</div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis">Package wal provides an implementation of a write ahead log that is used by etcd.</td></tr><tr data-id="wal-walpb">
+      <td>
+        <div class="UnitDirectories-subdirectory">
+          <span>
+            <a href="/github.com/etcd-io/etcd@v3.3.25+incompatible/wal/walpb">walpb</a>
+            
+          </span>
+          <div class="UnitDirectories-mobileSynopsis"></div>
+        </div>
+      </td>
+      <td class="UnitDirectories-desktopSynopsis"></td></tr>
+
+      
+      
+    </table>
+  </div>
+
+      
+    </div>
+    <div class="UnitDetails-meta" role="complementary" aria-label="links">
+      
+  <div class="UnitMeta">
+    <h2 class="UnitMeta-detailsTitle">Details</h2>
+    <div class="UnitMeta-details">
+      
+  <ul>
+    <li>
+      
+  <img class="UnitMetaDetails-icon"src="/static/img/pkg-icon-cancel_24x24.svg" alt="unchecked"height="24" width="24">
+
+      Valid go.mod file
+      
+  <span class="UnitMetaDetails-toggletip">
+    <button type="button" aria-label="more info" data-toggletip-content="The Go module system was introduced in Go 1.11 and is the official dependency management solution for Go.">
+      <img class="UnitMetaDetails-icon" src="/static/img/pkg-icon-help_24x24.svg" alt="" height="24" width="24">
+    </button>
+    <span role="status"></span>
+  </span>
+
+    </li>
+    <li>
+      
+  <img class="UnitMetaDetails-icon"src="/static/img/pkg-icon-checkCircleOutline_24x24.svg" alt="checked"height="24" width="24">
+
+      Redistributable license
+      
+  <span class="UnitMetaDetails-toggletip">
+    <button type="button" aria-label="more info" data-toggletip-content="Redistributable licenses place minimal restrictions on how software can be used, modified, and redistributed.">
+      <img class="UnitMetaDetails-icon" src="/static/img/pkg-icon-help_24x24.svg" alt="" height="24" width="24">
+    </button>
+    <span role="status"></span>
+  </span>
+
+    </li>
+    <li>
+      
+  <img class="UnitMetaDetails-icon"src="/static/img/pkg-icon-checkCircleOutline_24x24.svg" alt="checked"height="24" width="24">
+
+      Tagged version
+      
+  <span class="UnitMetaDetails-toggletip">
+    <button type="button" aria-label="more info" data-toggletip-content="Modules with tagged versions give importers more predictable builds.">
+      <img class="UnitMetaDetails-icon" src="/static/img/pkg-icon-help_24x24.svg" alt="" height="24" width="24">
+    </button>
+    <span role="status"></span>
+  </span>
+
+    </li>
+    <li>
+      
+  <img class="UnitMetaDetails-icon"src="/static/img/pkg-icon-checkCircleOutline_24x24.svg" alt="checked"height="24" width="24">
+
+      Stable version
+      
+  <span class="UnitMetaDetails-toggletip">
+    <button type="button" aria-label="more info" data-toggletip-content="When a project reaches major version v1 it is considered stable.">
+      <img class="UnitMetaDetails-icon" src="/static/img/pkg-icon-help_24x24.svg" alt="" height="24" width="24">
+    </button>
+    <span role="status"></span>
+  </span>
+
+    </li>
+  </ul>
+
+    </div>
+    <div class="UnitMeta-learn">
+      <a href="/about#best-practices-h2">Learn more</a>
+    </div>
+    <h2 class="UnitMeta-repoTitle">Repository</h2>
+    <div class="UnitMeta-repo">
+      
+        <a href="https://github.com/etcd-io/etcd" title="https://github.com/etcd-io/etcd" target="_blank" rel="noopener">
+          github.com/etcd-io/etcd
+        </a>
+      
+    </div>
+    
+    <div class="UnitMeta-links">
+      <ul>
+        
+  
+
+        
+  
+
+        
+  
+
+      </ul>
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  </div>
+
+  <dialog class="JumpDialog Dialog">
+    <h2 class="Dialog-title">Jump to</h2>
+    <form method="dialog" data-gmtc="jump to form" aria-label="Jump to Identifier">
+      <div class="JumpDialog-filter">
+        <input class="JumpDialog-input" autocomplete="off" type="text">
+      </div>
+      <div class="JumpDialog-body">
+        <div class="JumpDialog-list"></div>
+      </div>
+      <div class="Dialog-actions">
+        <button class="Dialog-button" data-test-id="close-dialog">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="ShortcutsDialog Dialog">
+    <h2 class="Dialog-title">Keyboard shortcuts</h2>
+    <table>
+      <tbody>
+        <tr><td class="ShortcutsDialog-key"><b>?</b></td><td> : This menu</td></tr>
+        <tr><td class="ShortcutsDialog-key"><b>/</b></td><td> : Search site</td></tr>
+        <tr><td class="ShortcutsDialog-key"><b>f</b> or <b>F</b></td><td> : Jump to</td></tr>
+      </tbody>
+    </table>
+    <form method="dialog">
+      <div class="Dialog-actions">
+        <button class="Dialog-button">Close</button>
+      </div>
+    </form>
+  </dialog>
+</div>
+<footer class="Site-footer">
+  
+  <div class="Footer">
+    <div class="Footer-links">
+      <div class="Footer-linkColumn">
+        <a href="https://go.dev/solutions" class="Footer-link Footer-link--primary" title="Why Go"
+            data-gtmc="footer link">
+          Why Go
+        </a>
+        <a href="https://go.dev/solutions#use-cases" class="Footer-link" title="Use Cases"
+            data-gtmc="footer link">
+          Use Cases
+        </a>
+        <a href="https://go.dev/solutions#case-studies" class="Footer-link" title="Case Studies"
+            data-gtmc="footer link">
+          Case Studies
+        </a>
+      </div>
+      <div class="Footer-linkColumn">
+        <a href="https://learn.go.dev/" class="Footer-link Footer-link--primary" title="Getting Started"
+            data-gtmc="footer link">
+          Getting Started
+        </a>
+        <a href="https://play.golang.org" class="Footer-link" title="" data-gtmc="footer link">
+          Playground
+        </a>
+        <a href="https://tour.golang.org" class="Footer-link" title="" data-gtmc="footer link">
+          Tour
+        </a>
+        <a href="https://stackoverflow.com/questions/tagged/go?tab=Newest" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Stack Overflow
+        </a>
+      </div>
+      <div class="Footer-linkColumn">
+        <a href="https://pkg.go.dev" class="Footer-link Footer-link--primary" title="Discover Packages"
+            data-gtmc="footer link">
+          Discover Packages
+        </a>
+      </div>
+      <div class="Footer-linkColumn">
+        <a href="https://go.dev/about" class="Footer-link Footer-link--primary" title="About"
+            data-gtmc="footer link">
+          About
+        </a>
+        <a href="https://golang.org/dl/" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Download
+        </a>
+        <a href="https://blog.golang.org" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Blog
+        </a>
+        <a href="https://golang.org/doc/devel/release.html" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Release Notes
+        </a>
+        <a href="https://blog.golang.org/go-brand" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Brand Guidelines
+        </a>
+        <a href="https://golang.org/conduct" class="Footer-link"
+            data-gtmc="footer link">
+          Code of Conduct
+        </a>
+      </div>
+      <div class="Footer-linkColumn">
+        <a href="https://www.twitter.com/golang" class="Footer-link Footer-link--primary" title="Connect"
+            data-gtmc="footer link">
+          Connect
+        </a>
+        <a href="https://www.twitter.com/golang" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Twitter
+        </a>
+        <a href="https://github.com/golang" class="Footer-link" title=""
+            data-gtmc="footer link">
+          GitHub
+        </a>
+        <a href="https://invite.slack.golangbridge.org/" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Slack
+        </a>
+        <a href="https://www.meetup.com/pro/go" class="Footer-link" title=""
+            data-gtmc="footer link">
+          Meetup
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="Footer">
+    <div class="Container Container--fullBleed">
+      <div class="Footer-bottom">
+        <img class="Footer-gopher" src="/static/img/pilot-bust.svg" alt="Gopher in flight goggles">
+        <ul class="Footer-listRow">
+          <li class="Footer-listItem">
+            <a href="https://go.dev/copyright" data-gtmc="footer link">Copyright</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href="https://go.dev/tos" data-gtmc="footer link">Terms of Service</a>
+          </li>
+          <li class="Footer-listItem">
+            <a href="http://www.google.com/intl/en/policies/privacy/" data-gtmc="footer link" target="_blank"
+                rel="noopener">
+              Privacy Policy
+            </a>
+          </li>
+          <li class="Footer-listItem">
+            <a href="https://golang.org/s/pkgsite-feedback" target="_blank" rel="noopener"
+                data-gtmc="footer link">
+              Report an Issue
+            </a>
+          </li>
+          <li class="Footer-listItem">
+            <a href="https://golang.org" target="_blank" rel="noopener" data-gtmc="footer link">golang.org</a>
+          </li>
+        </ul>
+        <a class="Footer-googleLogo" href="https://google.com" target="_blank" rel="noopener"
+            data-gtmc="footer link">
+          <img class="Footer-googleLogoImg" src="/static/img/google-white.svg" alt="Google logo">
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function loadScript(src, props = {}) {
+    let s = document.createElement('script');
+    s.src = src;
+    for (const [k, v] of Object.entries(props)) {
+      s[k] = v
+    }
+    document.head.appendChild(s);
+  }
+  loadScript("/static/js/site.js");
+</script>
+
+
+  <div class="js-canonicalURLPath" data-canonical-url-path="/github.com/etcd-io/etcd@v3.3.25+incompatible" hidden />
+  <script>
+    loadScript('/static/js/keyboard.js', {type: 'module', async: true, defer: true})
+    loadScript('/static/js/unit.js', {type: 'module', async: true, defer: true})
+  </script>
+  
+  <script>
+    loadScript("/static/js/jump.js", {type: 'module', async: true, defer: true});
+  </script>
+  <script>
+    loadScript("/static/js/playground.js", {type: 'module', async: true, defer: true});
+  </script>
+  <script>
+    loadScript('/static/js/sidenav.js', {type: 'module', async: true, defer: true})
+  </script>
+
+
+
+
+<script async>
+  const gtmId = document.querySelector('.js-gtmID').dataset.gtmid; // this will throw if the querySelector can’t find the element
+  if (!gtmId) {
+    throw new Error('Google Tag Manager ID not found');
+  }
+  loadScript(`https://www.googletagmanager.com/gtm.js?id=${gtmId}`);
+</script>
+<noscript>
+  <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8MVQXG"
+          height="0" width="0" style="display:none;visibility:hidden">
+  </iframe>
+</noscript>
+

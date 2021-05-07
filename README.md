@@ -1,8 +1,6 @@
 # Chrome Extension for Sonatype Nexus IQ
 
-[![DepShield Badge](https://depshield.sonatype.org/badges/ctownshend/chrome-extension-nexus-iq/depshield.svg)](https://depshield.github.io) [![CircleCI](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension.svg?style=svg)](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension)
-
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![CircleCI](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension.svg?style=svg)](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension)
 
 ## Table of Contents
 
@@ -17,7 +15,7 @@
 
 ## Purpose
 
-To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin.
+To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin, but will use Sonatype's OSS Index if you do not!
 
 The plugin can scan packages at the following repositories:
 
@@ -46,6 +44,20 @@ The plugin can scan packages at the following repositories:
 23. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
 24. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
 25. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+
+## Development
+
+We use node, yarn, React and webpack.
+
+To get started developing:
+
+- clone the repo
+- `yarn`
+- `yarn build`
+
+You can run `yarn test` as well to ensure everything is setup correctly!
+
+All source code is in `src/` and follows a fairly normal React application setup.
 
 ## Documentation
 
