@@ -43,5 +43,4 @@ describe('Chocolatey Page Parsing', () => {
     expect(PackageURL?.name).toBe('python3');
     expect(PackageURL?.version).toBe('3.9.0-a5');
   });
-
 });

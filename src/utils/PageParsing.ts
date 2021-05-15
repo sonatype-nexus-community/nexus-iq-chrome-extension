@@ -35,7 +35,7 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseNuget(url);
   } else if (repoFormat.repoFormat === FORMATS.gem) {
     return parseRuby(url);
-  } else if (repoFormat.repoFormat === FORMATS.golang) {    
+  } else if (repoFormat.repoFormat === FORMATS.golang) {
     return parseGolang(url);
   } else if (repoFormat.repoFormat === FORMATS.pypi) {
     return parsePyPIURL(url);

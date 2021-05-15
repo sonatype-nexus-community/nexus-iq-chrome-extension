@@ -18,13 +18,13 @@ import {PackageURL} from 'packageurl-js';
 import {FORMATS} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 
-const parseChocolatey = (url: string): PackageURL | undefined  => {
-    //https://chocolatey.org/packages/python3/3.9.0-a5
-    const elements = url.split("/");
-    const name = elements[4];
-    const version = elements[5];
-    
-    return generatePackageURL('chocolatey', name, version);
-  };
+const parseChocolatey = (url: string): PackageURL | undefined => {
+  //https://chocolatey.org/packages/python3/3.9.0-a5
+  const elements = url.split('/');
+  const name = elements[4];
+  const version = elements[5];
+
+  return generatePackageURL('chocolatey', name, version);
+};
 
 export {parseChocolatey};
