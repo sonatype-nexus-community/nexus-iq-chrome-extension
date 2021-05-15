@@ -1,0 +1,3278 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocolatey Software | Python 3.x 3.9.0-a5</title>
+    
+    
+        <meta property="og:description" content="Python 3.x is a programming language that lets you work more quickly and integrate your systems more effectively. You can learn to use Python 3.x and see almost immediate gains in productivity and lower maintenance costs." />
+        <meta property="description" content="Python 3.x is a programming language that lets you work more quickly and integrate your systems more effectively. You can learn to use Python 3.x and see almost immediate gains in productivity and lower maintenance costs." />
+
+
+    <meta name="description" content="Chocolatey is software management automation for Windows that wraps installers, executables, zips, and scripts into compiled packages. Chocolatey integrates w/SCCM, Puppet, Chef, etc. Chocolatey is trusted by businesses to manage software deployments.">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@chocolateynuget">
+    <meta name="twitter:title" content="Python 3.x 3.9.0-a5">
+    <meta name="twitter:image" content="https://community.chocolatey.org/content/images/global-shared/twitter-share.png">
+    
+    <meta property="og:title" content="Python 3.x 3.9.0-a5">
+    <meta property="og:description" content="Chocolatey is software management automation for Windows that wraps installers, executables, zips, and scripts into compiled packages. Chocolatey integrates w/SCCM, Puppet, Chef, etc. Chocolatey is trusted by businesses to manage software deployments.">
+    <meta property="og:site_name" content="Chocolatey Software">
+    <meta property="og:type" content="product">
+    <meta property="og:image" content="https://community.chocolatey.org/content/images/global-shared/facebook-share.png">
+    <meta property="og:url" content="/packages/python3/3.9.0-a5">
+    
+    <meta property="product:brand" content="Chocolatey Software">
+    <meta property="product:category" content="software">
+    <meta name="flattr:id" content="mqgjkp">
+    <meta property="DC.title" content="Python 3.x 3.9.0-a5">
+    <meta property="copyright" content="Chocolatey is Copyright 2017 - 2021 Chocolatey Software, Inc. Copyright 2011 - 2017 RealDimensions Software, LLC.">
+    <link rel="nuget" type="application/atom+xml" title="Chocolatey" href="https://community.chocolatey.org/api/v2">
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Chocolatey Search">
+    
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,700">
+    
+<link href="/cassette.axd/stylesheet/16f8783ee67631ef9558f46886b93f256975955f/Content/css/chocolatey.bundle.min.css" type="text/css" rel="stylesheet"/>
+
+    
+    
+
+    <script>
+        if (!/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+            const theme = localStorage.getItem('theme'), html = document.getElementsByTagName("html")[0];
+            if (theme) { if (theme == 'dark') { html.setAttribute("data-user-color-scheme", "dark"); } else { html.setAttribute("data-user-color-scheme", "light"); } }
+        }
+    </script>
+    
+
+
+    
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-2743882-12"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-2743882-12');
+        </script>
+    <script type="text/javascript" async referrerpolicy="unsafe-url" src="https://ws.zoominfo.com/pixel/KPKpTJOFOv5SuV7X3eGx"></script>
+    
+    
+
+</head>
+
+
+
+
+<body class="chocolatey-org">
+    <script type="text/javascript" src="https://secure.make6pain.com/js/194108.js"></script>
+<noscript><img alt="" src="https://secure.make6pain.com/194108.png" style="display:none;" /></noscript>
+
+
+<svg class="position-absolute" style="right:999999px">
+    <defs>
+        <linearGradient id="bg-gradient-primary-theme" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:var(--theme-primary);stop-opacity:.2" />
+            <stop offset="80%" style="stop-color:var(--background);stop-opacity:.2" />
+        </linearGradient>
+        <linearGradient id="bg-gradient-theme-primary" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:var(--background);stop-opacity:.2" />
+            <stop offset="80%" style="stop-color:var(--theme-primary);stop-opacity:.2" />
+        </linearGradient>
+        <linearGradient id="bg-gradient-primary-theme-light" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:var(--theme-primary);stop-opacity:.2" />
+            <stop offset="80%" style="stop-color:var(--background-light);stop-opacity:.2" />
+        </linearGradient>
+        <linearGradient id="bg-gradient-theme-light-primary" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:var(--background-light);stop-opacity:.2" />
+            <stop offset="80%" style="stop-color:var(--theme-primary);stop-opacity:.2" />
+        </linearGradient>
+        <linearGradient id="bg-gradient-primary" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:var(--theme-primary);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:var(--theme-primary);stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="bg-gradient-light" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:var(--background-light);stop-opacity:1" />
+            <stop offset="100%" style="stop-color:var(--background-light);stop-opacity:1" />
+        </linearGradient>
+    </defs>
+</svg>
+<a class="btn btn-primary btn-collapsing-right-sidebar btn-announcement-notifications collapsed py-3 d-none d-md-block shadow" data-bs-toggle="collapse" href="#collapsing-right-sidebar" role="button" aria-expanded="false" aria-controls="collapsing-right-sidebar"><span class="notification-badge d-none" title="You have unread notifications"></span><i class="fas fa-bullhorn"></i></a>
+<nav id="collapsing-right-sidebar" class="collapsing-sidebar collapse shadow pt-3 px-3">
+    <div class="text-end text-md-start mb-3"><a class="h3 collapsed" data-bs-toggle="collapse" href="#collapsing-right-sidebar" role="button" aria-expanded="true" aria-controls="collapsing-right-sidebar"><span class="fas fa-times"></span></a></div>
+    
+<!-- When adding a new announcement, change the number on the end of the value to the next available. Example: 1 becomes 2, 2 becomes 3. -->
+<input id="announcementCookie" value="chocolatey_announcement_6" type="hidden" />
+<!-- When adding a new announcement, update the value number to the amount of new announcements added. -->
+<input id="announcementCount" value="1" type="hidden" />
+
+<div id="announcementCount"></div>
+<div id="announcementCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+    <div class="position-relative w-100 overflow-hidden">
+        <div class="carousel-item active">
+            <div class="card bg-theme-primary mb-0">
+                <div class="card-body text-center">
+                    <h3>Resources</h3>
+                    <p>Watch videos, read documentation, and hear Chocolatey success stories from companies you trust.</p>
+                    <a href="https://chocolatey.org/resources" class="btn btn-theme btn-width">View Resources</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="card bg-success text-white mb-0">
+                <div class="card-body text-center">
+                    <h3>Events</h3>
+                    <p>Find past and upcoming webinars, workshops, and conferences. New events have recently been added!</p>
+                    <a href="https://chocolatey.org/events" class="btn btn-theme btn-width">View Events</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="card bg-primary-900 mb-0">
+                <div class="card-body text-center">
+                    <h3>Courses</h3>
+                    <p>Step-by-step guides for all things Chocolatey! Earn badges as you learn through interactive digital courses.</p>
+                    <a href="https://community.chocolatey.org/courses" class="btn btn-primary btn-width">View Courses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="shuffle">
+    <div class="text-center">
+        <a href="https://chocolatey.org/resources/12-days-of-chocolatey">
+            <img class="img-fluid mb-3" src="https://chocolatey.org/assets/images/events/01-06.jpg" alt="12 Days of Chocolatey" />
+        </a>
+        <p><strong>Event from<br />December 1 - December 16 2020</strong></p>
+        <p class="text-start">
+            The 12 Days of Chocolatey livestream event may be over, but we've archived all the videos for you to watch again!
+        </p>
+        <a href="https://chocolatey.org/resources/12-days-of-chocolatey" class="btn btn-primary btn-width mt-2">Watch on-Demand</a>
+        <hr />
+    </div>
+    <div class="text-center">
+        <a href="https://chocolatey.org/events/chocolatey-deployments">
+            <img class="img-fluid mb-3" src="https://chocolatey.org/assets/images/events/01-02.jpg" alt="Webinar: Chocolatey Deployments - Easily Orchestrate Amazing Things!" />
+        </a>
+        <p><strong>Webinar Replay from<br />Tuesday, 23 June 2020</strong></p>
+        <p class="text-start">Chocolatey Central Management now includes the premiere feature of managing endpoints through a Chocolatey-centered solution aka Deployments. We are excited to share what Deployments is all about!</p>
+        <a href="https://chocolatey.org/events/chocolatey-deployments" class="btn btn-outline-primary btn-width mt-2">Learn More</a>
+        <a href="https://chocolatey.zoom.us/webinar/register/WN_MPT5b34zQnud8R0nGgpe5A" rel="noreferrer" target="_blank" class="btn btn-primary btn-width mt-2">Watch On-Demand</a>
+        <hr />
+    </div>
+    <div class="text-center">
+        <a href="https://chocolatey.org/resources/features">
+            <img class="img-fluid mb-3" src="https://chocolatey.org/assets/images/videos/04-01.jpg" alt="Chocolatey for Business Feature Video Series" />
+        </a>
+        <p class="mb-3"><strong>Chocolatey for Business Feature Video Series</strong></p>
+        <p class="text-start">
+            In this video series, come take a tour of the many features available in our Chocolatey for Business offering.
+            Many organizations choose Chocolatey for Business when they want to scale out their solution across thousands of nodes, deploy rapidly and reliably every time,
+            mitigate risks with a greatly-simplified patching workflow, and access a Support Team that will guide you on your automation journey.
+        </p>
+        <a href="https://chocolatey.org/resources/features" class="btn btn-primary btn-width mt-2">Watch the Series</a>
+        <hr />
+    </div>
+    <div class="text-center">
+        <a href="https://www.youtube.com/watch?v=cPcEmT1OWDs&list=PLGvGJzqY88slekBOxwDi865ydvRL8OEqF&index=9" rel="noreferrer" target="_blank">
+            <img class="img-fluid mb-3 border" src="https://chocolatey.org/assets/images/events/01-07.jpg" alt="Accelerate Automation of Windows with Ansible + Chocolatey" />
+        </a>
+        <p><strong>Webinar Replay from<br />Thursday, 10 December 2020</strong></p>
+        <p class="text-start">
+            Together, Ansible and Chocolatey bring faster and more secure deployments to your Windows environments. Use Chocolatey for software/package management and Ansible to automate and guarantee the desired state of your Windows infrastructure,
+            allowing your team to securely deploy applications faster than ever.
+        </p>
+        <a href="https://chocolatey.org/events/chocolatey-and-ansible" class="btn btn-outline-primary btn-width mt-2">Learn More</a>
+        <a href="https://www.youtube.com/watch?v=cPcEmT1OWDs&list=PLGvGJzqY88slekBOxwDi865ydvRL8OEqF&index=9" rel="noreferrer" target="_blank" class="btn btn-primary btn-width mt-2">Watch On-Demand</a>
+        <hr />
+    </div>
+    <div class="text-center">
+        <a href="https://chocolatey.zoom.us/webinar/register/1516184163516/WN_eqS2S6k2RgmE8Fh0HGbkOQ" rel="noreferrer" target="_blank">
+            <img class="img-fluid mb-3" src="https://chocolatey.org/assets/images/events/01-08.jpg" alt="Automate and 'Tune Up' Intune with Chocolatey" />
+        </a>
+        <p><strong>Webinar Replay from<br />Thursday, 6 May 2021</strong></p>
+        <p class="text-start">
+            Microsoft is leading with Intune as its one-stop solution for remote endpoint management. But there are still some gaps that need to be addressed. 
+            Chocolatey for Business allows you to quickly on-board any Windows software into Intune with two simple commands! Sounds too good to be true? Join our webinar and watch us do it live.
+        </p>
+        <a href="https://chocolatey.org/events/automate-and-tune-up-intune-with-chocolatey" class="btn btn-outline-primary btn-width mt-2">Learn More</a>
+        <a href="https://chocolatey.zoom.us/webinar/register/1516184163516/WN_eqS2S6k2RgmE8Fh0HGbkOQ" rel="noreferrer" target="_blank" class="btn btn-primary btn-width mt-2">Watch On-Demand</a>
+        <hr />
+    </div>
+    <div class="text-center">
+        <a href="https://www.twitch.tv/chocolateysoftware" rel="noreferrer" target="_blank">
+            <img class="img-fluid mb-3" src="https://chocolatey.org/assets/images/events/04-00.jpg" alt="Chocolatey Explained - Monthly Twitch Stream" />
+        </a>
+        <p class="convert-utc-to-local fw-bold" data-event-utc='06/03/2021 16:00:00' data-event-occurrence="1" data-event-include-break="true"></p>
+        <p class="text-start">Join us on the first Thursday of every month for "Chocolatey Explained" where we will cover different Chocolatey topics in detail.</p>
+        <a href="https://www.twitch.tv/chocolateysoftware" class="btn bg-twitch text-white btn-width mt-2" target="_blank" rel="nofollow"><i class="fab fa-twitch"></i> Follow on Twitch</a>
+        <hr />
+    </div>
+    <div class="text-center">
+        <a href="https://chocolatey.zoom.us/webinar/register/WN_U2jxz5LSRUaReaMGbHBHJw" rel="noreferrer" target="_blank">
+            <img class="img-fluid mb-3" src="https://chocolatey.org/assets/images/events/04-01.jpg" alt="Chocolatey for Business Overview and Demonstration" />
+        </a>
+        <p class="convert-utc-to-local fw-bold" data-event-utc='05/27/2021 18:00:00' data-event-occurrence="0" data-event-include-break="true"></p>
+        <p class="text-start">
+            This session is meant to provide attendees with a better understanding of how Chocolatey has helped in an organizational setting, 
+            and educate on the features included in Chocolatey for Business that can help your team more effectively manage its software.
+        </p>
+        <a href="https://chocolatey.org/events/chocolatey-for-business-overview-and-demonstration" class="btn btn-outline-primary btn-width mt-2">Learn More</a>
+        <a href="https://chocolatey.zoom.us/webinar/register/WN_U2jxz5LSRUaReaMGbHBHJw" rel="noreferrer" target="_blank" class="btn btn-primary btn-width mt-2">Register</a>
+        <hr />
+    </div>
+</div>
+</nav>
+<header class="mb-xl-0">
+    
+
+    <div class="d-none d-sm-flex">
+        
+<ul class="nav global-nav fw-bold flex-wrap flex-sm-fill justify-content-sm-end">
+    <li class="nav-item"><a class="nav-link" href="https://chocolatey.org" target="_blank" rel="noreferrer">chocolatey.org</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://chocolatey.org/community" target="_blank" rel="noreferrer">Community</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://docs.chocolatey.org/en-us/" target="_blank" rel="noreferrer">Docs</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://blog.chocolatey.org" target="_blank" rel="noreferrer">Blog</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://chocolatey.org/install" target="_blank" rel="noreferrer">Install</a></li>
+</ul>
+    </div>
+    <nav id="topNav" class="navbar navbar-expand-md align-items-md-start align-items-xl-center">
+        <a class="navbar-brand mx-0" href="/">
+            <img class="d-md-none" src="/content/images/global-shared/logo.svg" alt="Chocolatey" />
+            <img class="d-none d-md-block" src="/content/images/global-shared/logo-square.svg" alt="Chocolatey" />
+        </a>
+        <div class="d-flex flex-column flex-fill flex-xl-row">
+            <div class="d-flex flex-row order-1 align-items-center order-xl-2 ms-auto navbar-links mt-xl-0">
+                <label class="mb-0 me-2" for="themeToggle">
+                    <input id="themeToggle" class="toggle-checkbox" type="checkbox" aria-label="Toggle theme settings" />
+                    <div class="toggle-slot">
+                        <div class="sun-icon-wrapper">
+                            <div class="sun-icon fas fa-sun"></div>
+                        </div>
+                        <div class="toggle-button"></div>
+                        <div class="moon-icon-wrapper">
+                            <div class="moon-icon fas fa-moon"></div>
+                        </div>
+                    </div>
+                </label>
+                <button class="d-md-none btn btn-top-nav me-2 btn-announcements btn-announcement-notifications position-relative" type="button" data-bs-toggle="collapse" data-bs-target="#collapsing-right-sidebar" aria-expanded="false" aria-controls="collapsing right sidebar"><span class="notification-badge d-none" title="You have unread notifications"></span><i class="fas fa-bullhorn"></i></button>
+                    <button type="button" aria-label="Search packages" class="btn btn-top-nav btn-search me-2"><i class="fas fa-search" aria-hidden="true"></i></button>
+                <button type="button" class="navbar-toggler btn btn-top-nav me-3" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
+<form class="ms-3 ms-md-0 search-box search-d-submit " autocomplete="off" role="search" action="/packages" method="get">
+    <div class="flex-grow-1">
+        <input name="q" type="search" class="form-control search-input" id="searchQuery" placeholder="Search Packages" aria-label="Search Packages" value="" autofocus />
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <span class="d-none d-md-flex search-key-container">
+            <span class="badge badge-key bg-primary search-key"></span>
+            <span class="badge badge-key bg-primary">k</span>
+        </span>
+    </div>
+        <button type="submit" aria-label="Search Packages" class="btn btn-outline-primary ms-2" title="Search Packages" value="">Search</button>
+        <button type="button" aria-label="Close search" class="btn btn-search-close btn-outline-primary ms-2 me-3 me-md-0"><i class="fas fa-times" aria-hidden="true"></i></button>
+    <div class="search-help position-absolute w-100 top-100 start-0 end-0">
+        <div class="arrow-up position-absolute"><div class="arrow-up-inner position-relative"></div></div>
+        <div class="card card-body bg-theme mt-3 me-3 rounded d-md-flex flex-md-row justify-content-md-between border">
+            <p class="mb-md-0 small"><strong>id:searchValue</strong> search by id only</p>
+            <p class="mb-0 small"><strong>tag:searchValue</strong> search by tags</p>
+        </div>
+    </div>
+</form>            </div>
+            <div class="collapse navbar-collapse flex-grow-1 order-2 order-xl-1 mb-n2 mb-md-0 d-none d-md-flex w-auto py-2 py-xl-0 mt-xl-0" id="topNavCollapse">
+                <ul class="navbar-nav mx-auto me-xl-0">
+                    <li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navProducts" aria-expanded="false" aria-controls="navProducts">Product</button>
+</li>
+<li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navCommunity" aria-expanded="false" aria-controls="navCommunity">Community</button>
+</li>
+<li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navLearn" aria-expanded="false" aria-controls="navLearn">Learn</button>
+</li>
+<li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navPartners" aria-expanded="false" aria-controls="navPartners">Partners</button>
+</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="navbar-nested-collapse mt-xl-0">
+        <div class="collapse d-md-none" id="navLinks" data-bs-parent=".navbar-nested-collapse">
+    <div class="card card-body p-0">
+        <div class="d-sm-none">
+            
+<ul class="nav global-nav fw-bold flex-wrap flex-sm-fill justify-content-sm-end">
+    <li class="nav-item"><a class="nav-link" href="https://chocolatey.org" target="_blank" rel="noreferrer">chocolatey.org</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://chocolatey.org/community" target="_blank" rel="noreferrer">Community</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://docs.chocolatey.org/en-us/" target="_blank" rel="noreferrer">Docs</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://blog.chocolatey.org" target="_blank" rel="noreferrer">Blog</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://chocolatey.org/install" target="_blank" rel="noreferrer">Install</a></li>
+</ul>
+        </div>
+        <ul class="navbar-nav">
+            <li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navProducts" aria-expanded="false" aria-controls="navProducts">Product</button>
+</li>
+<li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navCommunity" aria-expanded="false" aria-controls="navCommunity">Community</button>
+</li>
+<li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navLearn" aria-expanded="false" aria-controls="navLearn">Learn</button>
+</li>
+<li class="nav-item me-md-4">
+    <button class="nav-link ps-3 ps-md-0 btn btn-link btn-collapse collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navPartners" aria-expanded="false" aria-controls="navPartners">Partners</button>
+</li>
+        </ul>
+    </div>
+</div>
+<div class="collapse" id="navProducts" data-bs-parent=".navbar-nested-collapse">
+    <div class="card card-body px-0 pt-0 pt-md-3">
+        <div class="container-fluid px-3 d-md-none">
+            <div class="row align-items-center border-bottom mb-3">
+                <div class="col"></div>
+                <div class="col text-end">
+                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-expanded="false" aria-controls="navLinks"><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row row-divider row-md-divider">
+                <div class="col-md-6 pb-3 pb-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3 mb-md-0">
+                            <a href="https://chocolatey.org/compare">Compare Editions</a>
+                            <p class="d-none d-md-block">
+                                Learn the difference between the Chocolatey Editions and what will fit your needs the best.
+                            </p>
+                        </li>
+                        <li><a href="https://chocolatey.org/pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 pt-3 pt-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3"><a href="https://chocolatey.org/contact/trial">Try Chocolatey for Business Free</a></li>
+                        <li class="mb-3 mb-md-0">
+                            <a href="https://chocolatey.org/pricing">Purchase</a>
+                            <p class="d-none d-md-block">
+                                I'm ready to get started now!
+                            </p>
+                        </li>
+                        <li><a href="https://chocolatey.org/support">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="collapse" id="navCommunity" data-bs-parent=".navbar-nested-collapse">
+    <div class="card card-body px-0 pt-0 pt-md-3">
+        <div class="container-fluid px-3 d-md-none">
+            <div class="row align-items-center border-bottom mb-3">
+                <div class="col"></div>
+                <div class="col text-center">
+                    <p class="mb-0">Community</p>
+                </div>
+                <div class="col text-end">
+                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-expanded="false" aria-controls="navLinks"><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row row-divider row-md-divider">
+                <div class="col-md-6 pb-3 pb-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="/packages">Community Packages</a>
+                            <p class="d-none d-md-block mb-0">
+                                Search the largest online registry of Windows packages. Chocolatey packages encapsulate everything required to manage a particular piece of software into one deployment artifact by wrapping installers, executables, zips, and scripts into a compiled package file.
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6 pt-3 pt-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3"><a href="/">Community Resources</a></li>
+                        <li class="mb-3"><a href="https://github.com/chocolatey" target="_blank" rel="noreferrer">Chocolatey on GitHub</a></li>
+                        <li><a href="https://blog.chocolatey.org/">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="collapse" id="navLearn" data-bs-parent=".navbar-nested-collapse">
+    <div class="card card-body px-0 pt-0 pt-md-3">
+        <div class="container-fluid px-3 d-md-none">
+            <div class="row align-items-center border-bottom mb-3">
+                <div class="col"></div>
+                <div class="col text-center">
+                    <p class="mb-0">Learn</p>
+                </div>
+                <div class="col text-end">
+                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-expanded="false" aria-controls="navLinks"><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row row-divider row-md-divider">
+                <div class="col-md-4 pb-3 pb-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="/courses">Getting Started Course</a>
+                            <p class="d-none d-md-block mb-0">
+                                New to Chocolatey? Learn the requirements and how to get Chocolatey up and running in no time!
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 py-3 py-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3"><a href="https://docs.chocolatey.org/en-us/">Docs</a></li>
+                        <li><a href="/courses">Courses</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 pt-3 pt-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3 mb-md-0">
+                            <a href="https://chocolatey.org/support">Support</a>
+                            <p class="d-none d-md-block">
+                                Need help? Read our Support FAQ to find out the next steps.
+                            </p>
+                        </li>
+                        <li class="mb-3"><a href="https://blog.chocolatey.org/">Blog</a></li>
+                        <li><a href="http://eepurl.com/4qUJH" target="_blank" rel="noreferrer">Newsletter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="collapse" id="navPartners" data-bs-parent=".navbar-nested-collapse">
+    <div class="card card-body px-0 pt-0 pt-md-3">
+        <div class="container-fluid px-3 d-md-none">
+            <div class="row align-items-center border-bottom mb-3">
+                <div class="col"></div>
+                <div class="col text-center">
+                    <p class="mb-0">Partners</p>
+                </div>
+                <div class="col text-end">
+                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-expanded="false" aria-controls="navLinks"><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row row-divider row-md-divider">
+                <div class="col-md-6 pb-3 pb-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3"><a href="https://chocolatey.org/partner">Overview</a></li>
+                        <li><a href="https://chocolatey.org/contact/partner">Become a Partner</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 pt-3 pt-md-0">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3"><a href="https://chocolatey.org/partner#technology">Technology Partners</a></li>
+                        <li><a href="https://chocolatey.org/partner#resellers">Resellers</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</header>
+    <main class="mb-auto">
+        
+<div class="video-story">
+    <div class="modal fade" id="qualcomm-story" tabindex="-1" role="dialog" aria-labelledby="Dwight Bragdon at Qualcomm" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close pt-0" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="fas fa-times"></span>
+                    </button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <iframe data-src="https://www.youtube.com/embed/R9OClPwBpdk?autoplay=1" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+
+<div id="loader">
+    <div>
+        <img src="https://community.chocolatey.org/content/images/global-shared/logo.svg" />
+        <div></div>
+    </div>
+</div>
+<div class="modal fade" id="package-disclaimer" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Welcome to the Chocolatey Community Package Repository! The packages found in this section of the site are provided, maintained, and moderated by the community.</p>
+                <h3>Moderation</h3>
+                <p>Every version of each package undergoes a rigorous moderation process before it goes live that typically includes:</p>
+                <ul>
+                    <li><a href="https://docs.chocolatey.org/en-us/information/security#chocolatey.org-packages" target="_blank">Security</a>, consistency, and <a href="https://docs.chocolatey.org/en-us/community-repository/moderation/package-validator/rules/" target="_blank">quality checking</a></li>
+                    <li><a href="https://docs.chocolatey.org/en-us/community-repository/moderation/package-verifier" target="_blank">Installation testing</a></li>
+                    <li><a href="https://docs.chocolatey.org/en-us/information/security#chocolatey.org-packages" target="_blank">Virus checking through VirusTotal</a></li>
+                    <li>Human moderators who give final review and sign off</li>
+                </ul>
+                <p>More detail at <a href="https://docs.chocolatey.org/en-us/information/security#chocolatey.org-packages" target="_blank">Security</a> and <a href="https://docs.chocolatey.org/en-us/community-repository/moderation" target="_blank">Moderation</a>.</p>
+                <h3>Organizational Use</h3>
+                <p>
+                    If you are an organization using Chocolatey, we want your experience to be fully reliable.
+                    Due to the nature of this publicly offered repository, <a href="https://docs.chocolatey.org/en-us/community-repository/community-packages-disclaimer#reliability" target="_blank">reliability</a> cannot be guaranteed.
+                    Packages offered here are subject to distribution rights, which means they may need to reach out further to the internet to the official locations to download files at runtime.
+                </p>
+                <p>
+                    Fortunately, distribution rights do not apply for internal use. With any edition of Chocolatey (including the free open source edition), you can <a href="https://docs.chocolatey.org/en-us/features/host-packages" rel="noreferrer" target="_blank">host your own packages</a> and cache or <a href="https://docs.chocolatey.org/en-us/guides/create/recompile-packages" target="_blank">internalize</a> existing community packages.
+                </p>
+                <h3>Disclaimer</h3>
+                <p>Your use of the packages on this site means you understand they are not supported or guaranteed in any way. <a href="https://docs.chocolatey.org/en-us/community-repository/community-packages-disclaimer" rel="noreferrer" target="_blank">Learn more...</a></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ul class="nav fw-bold justify-content-center align-items-center text-center border-bottom small lh-sm bg-theme">
+        <li class="nav-item">
+            <a class="nav-link" href="/packages">
+                <span class="fas fa-download" alt="Packages"></span>
+                <p class="mb-0">Packages</p>
+            </a>
+        </li>
+    <li class="nav-item user-unauthenticated">
+        <a class="nav-link" href="/account/Register">
+            <span class="fas fa-user-plus" alt="Signup"></span>
+            <p class="mb-0">Signup</p>
+        </a>
+    </li>
+    <li class="nav-item user-unauthenticated">
+        <a class="nav-link" href="/users/account/LogOn">
+            <span class="fas fa-sign-in-alt" alt="Login"></span>
+            <p class="mb-0">Login</p>
+        </a>
+    </li>
+    <li class="nav-item user-authenticated">
+        <a class="nav-link" href="/account">
+            <span class="fas fa-cogs" alt="Account"></span>
+            <p class="mb-0">Account</p>
+        </a>
+    </li>
+    <li class="nav-item user-authenticated">
+        <a class="nav-link" href="/account/Profiles">
+            <span class="fas fa-user-alt" alt="Profile"></span>
+            <p class="mb-0">Profile</p>
+        </a>
+    </li>
+    <li class="nav-item user-authenticated">
+<form action="/users/account/LogOff" method="post">            <fieldset class="form nav-link">
+                <input name="__RequestVerificationToken" type="hidden" value="+pLgQQi8UXbEsU5ZE4wygo6lI6UmpWXK4YhngxFrS9o+dZJm8H8q5Zhb+GbRoYEchyyjiHes6iXXQFIWHymMgAV1lopLQ0bk3tZTdYA1ob9FotoAa5Fl1OqNMAf0OdR8iZP6MI9Ie4lp7/Dn8dLe3KGBqyil1JfusjSUSuADWz6bhAkzkojFKjIVsA/kBCEp" />
+                <button class="btn btn-link align-items-center p-0 text-decoration-none fs-6" type="submit">
+                    <span class="fas fa-sign-out-alt lh-sm" alt="Log Off"></span>
+                    <p class="mb-0 fw-bold small lh-sm mt-n1">Log Off</p>
+                </button>
+            </fieldset>
+</form>    </li>
+</ul>
+<ul class="list-inline justify-content-center align-items-center text-center mb-0 border-bottom d-none d-sm-flex">
+    <li class="d-sm-flex align-items-center py-2 px-3">
+        <span class="status status-sm bg-success"></span>
+        <small>Passing</small>
+    </li>
+    <li class="d-sm-flex align-items-center py-2 px-3">
+        <span class="status status-sm bg-danger"></span>
+        <small>Failing</small>
+    </li>
+    <li class="d-sm-flex align-items-center py-2 px-3">
+        <span class="status status-sm bg-warning"></span>
+        <small>Pending</small>
+    </li>
+    <li class="d-sm-flex align-items-center py-2 px-3">
+        <span class="status status-sm bg-secondary"></span>
+        <small>Unknown / Exempted</small>
+    </li>
+</ul>
+<section class="container py-3 py-lg-5">
+    <div id="package-sidebar" class="row">
+        
+        <div class="col-md-3 col-xl-2 d-none d-md-block">
+            <div class="ratio ratio-1x1 package-logo">
+                <div class="d-flex flex-fill align-items-center justify-content-center package-icon">
+                    <img src="/content/packageimages/python3.3.9.0-a5.svg" alt="Icon for package python3" title="Icon for package python3 | Nuspec reference: &lt;iconUrl&gt;https://cdn.jsdelivr.net/gh/chocolatey-community/chocolatey-coreteampackages@edba4a5849ff756e767cba86641bea97ff5721fe/icons/python.svg&lt;/iconurl&gt;" onerror="this.src='/Content/Images/packageDefaultIcon.png';" />
+                </div>
+            </div>
+            <p class="mb-0 mt-3"><strong>Downloads:</strong></p>
+            <h3 class="mt-0 mb-3">7,319,198</h3>
+            <p class="mb-0"><strong>Downloads of v 3.9.0-a5:</strong></p>
+            <h3 class="mt-0 mb-3">1,098</h3>
+            <p class="mb-0"><strong>Last Update:</strong></p>
+            <h3 class="mt-0 mb-3">24 Mar 2020</h3>
+            <p class="mb-0" title="Nuspec reference: owners | nuspec value not used on community feed | Specified as comma-separated"><strong>Package Maintainer(s):</strong></p>
+                <ul class="list-unstyled mb-2 mb-md-0">
+        <li>
+                <a class="d-flex align-items-center mb-2" href="/profiles/chocolatey-community" title="chocolatey-community">
+<img src="https://secure.gravatar.com/avatar/89c247c45c6689b8bd4c91cb2b354975?s=32&amp;r=g&amp;d=retro" class="rounded-circle" height="32" title="chocolatey-community" width="32" alt="gravatar" />            <span class="ms-2">chocolatey-community</span>
+    </a>
+
+        </li>
+        <li>
+                <a class="d-flex align-items-center mb-2" href="/profiles/purity" title="purity">
+<img src="https://secure.gravatar.com/avatar/9a7294e99bda0f485125897f70d8aa14?s=32&amp;r=g&amp;d=retro" class="rounded-circle" height="32" title="purity" width="32" alt="gravatar" />            <span class="ms-2">purity</span>
+    </a>
+
+        </li>
+    </ul>
+
+            <p class="mb-0 mt-3" title="Software authors. Nuspec reference: authors | Specified as comma-separated"><strong>Software Author(s):</strong></p>
+            <ul class="list-unstyled">
+                    <li class="text-break">Python Software Foundation</li>
+            </ul>
+                <p class="mb-0" title="Nuspec reference: tags | Specified as space-separated"><strong>Tags:</strong></p>
+                    <a class="badge bg-primary" href="/packages?q=tag%3Apython" title="Search for python">python</a>
+                    <a class="badge bg-primary" href="/packages?q=tag%3Aprogramming" title="Search for programming">programming</a>
+                    <a class="badge bg-primary" href="/packages?q=tag%3Adevelopment" title="Search for development">development</a>
+                    <a class="badge bg-primary" href="/packages?q=tag%3Afoss" title="Search for foss">foss</a>
+                    <a class="badge bg-primary" href="/packages?q=tag%3Across-platform" title="Search for cross-platform">cross-platform</a>
+                    <a class="badge bg-primary" href="/packages?q=tag%3Aadmin" title="Search for admin">admin</a>
+            <ul class="list-unstyled">
+                <li class="mt-3"><strong>Software Specific:</strong></li>
+                    <li><a href="https://www.python.org/" title="Visit the software site to learn more about the software this package installs. Nuspec reference: &lt;projectUrl&gt;http://www.python.org/&lt;/projectUrl&gt;">Software Site</a></li>
+                    <li><a href="https://www.python.org/downloads/source" title="See the software source. Nuspec reference: &lt;projectSourceUrl&gt;https://www.python.org/downloads/source&lt;/projectSourceUrl&gt;">Software Source</a></li>
+                    <li><a href="https://www.python.org/download/releases/3.4.0/license" title="Make sure you agree with the software license. Nuspec reference: &lt;licenseUrl&gt;https://www.python.org/download/releases/3.4.0/license&lt;/licenseUrl&gt;">Software License</a></li>
+                <li class="mt-3"><strong>Package Specific:</strong></li>
+                    <li><a href="https://github.com/chocolatey-community/chocolatey-coreteampackages/tree/master/automatic/python3" title="See the package source. Nuspec reference: &lt;packageSourceUrl&gt;https://github.com/chocolatey-community/chocolatey-coreteampackages/tree/master/automatic/python3&lt;/packageSourceUrl&gt;">Package Source</a></li>
+                <li><a href="https://docs.chocolatey.org/en-us/community-repository/users/package-triage-process">Package outdated?</a></li>
+                <li><a href="https://docs.chocolatey.org/en-us/community-repository/users/package-triage-process">Package broken?</a></li>
+                <li><a href="/packages/python3/3.9.0-a5/ContactOwners">Contact Maintainers</a></li>
+                <li><a href="/packages/python3/3.9.0-a5/ContactAdmins" title="Contact Site Moderators">Contact Site Admins</a></li>
+                <li><a href="https://docs.chocolatey.org/en-us/community-repository/users/package-triage-process#are-you-a-software-vendor">Software Vendor?</a></li>
+                <li><a href="/packages/python3/3.9.0-a5/ReportAbuse" title="Report Abuse">Report Abuse</a></li>
+                <li>
+                    <a class="btn btn-secondary btn-sm mt-2" href="https://community.chocolatey.org/api/v2/package/python3/3.9.0-a5" title="Download the raw nupkg file." download><i class="fas fa-download" alt="Download"></i> Download</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-12 d-md-none">
+            <div class="justify-content-center align-items-center d-flex">
+                <div class="ratio ratio-1x1 package-logo">
+                    <div class="d-flex flex-fill align-items-center justify-content-center package-icon">
+                        <img src="/content/packageimages/python3.3.9.0-a5.svg" alt="Icon for package python3" title="Icon for package python3 | Nuspec reference: &lt;iconUrl&gt;https://cdn.jsdelivr.net/gh/chocolatey-community/chocolatey-coreteampackages@edba4a5849ff756e767cba86641bea97ff5721fe/icons/python.svg&lt;/iconurl&gt;" onerror="this.src='/Content/Images/packageDefaultIcon.png';" />
+                    </div>
+                </div>
+                <h4 class="mb-0 ms-2" title="Nuspec reference: &lt;title&gt;Python 3.x&lt;/title&gt;">Python 3.x</h4>
+            </div>
+                <p class="text-center text-warning"><strong>This is a prerelease version of Python 3.x.</strong></p>
+            <div class="justify-content-center align-items-center d-flex">
+                <a href="#status" title="Click to view test results">
+                    <ul class="status status-sm">
+                        <li><div class="status-passing">1</div></li>
+                        <li><div class="status-exempted">2</div></li>
+                        <li><div class="status-notflagged-unknown">3</div></li>
+                    </ul>
+                </a>
+                    <p title="Nuspec reference: &lt;version&gt;3.9.0-a5&lt;/version&gt;" class="mb-0">3.9.0-a5 | <strong>Updated: </strong>24 Mar 2020</p>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-sm btn-primary btn-collapse btn-show-hide collapsed mb-3 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#additional-links" aria-expanded="false" aria-controls="additional-links">
+                    Show Additional Links
+                </button>
+                <div class="collapse text-start" id="additional-links">
+                    <ul class="list-unstyled">
+                        <li class="mt-3"><strong>Software Specific:</strong></li>
+                            <li><a href="https://www.python.org/" title="Visit the software site to learn more about the software this package installs. Nuspec reference: &lt;projectUrl&gt;http://www.python.org/&lt;/projectUrl&gt;">Software Site</a></li>
+                            <li><a href="https://www.python.org/downloads/source" title="See the software source. Nuspec reference: &lt;projectSourceUrl&gt;https://www.python.org/downloads/source&lt;/projectSourceUrl&gt;">Software Source</a></li>
+                            <li><a href="https://www.python.org/download/releases/3.4.0/license" title="Make sure you agree with the software license. Nuspec reference: &lt;licenseUrl&gt;https://www.python.org/download/releases/3.4.0/license&lt;/licenseUrl&gt;">Software License</a></li>
+                        <li class="mt-3"><strong>Package Specific:</strong></li>
+                            <li><a href="https://github.com/chocolatey-community/chocolatey-coreteampackages/tree/master/automatic/python3" title="See the package source. Nuspec reference: &lt;packageSourceUrl&gt;https://github.com/chocolatey-community/chocolatey-coreteampackages/tree/master/automatic/python3&lt;/packageSourceUrl&gt;">Package Source</a></li>
+                        <li><a href="https://docs.chocolatey.org/en-us/community-repository/users/package-triage-process">Package outdated?</a></li>
+                        <li><a href="https://docs.chocolatey.org/en-us/community-repository/users/package-triage-process">Package broken?</a></li>
+                        <li><a href="/packages/python3/3.9.0-a5/ContactOwners">Contact Maintainers</a></li>
+                        <li><a href="/packages/python3/3.9.0-a5/ContactAdmins" title="Contact Site Moderators">Contact Site Admins</a></li>
+                        <li><a href="https://docs.chocolatey.org/en-us/community-repository/users/package-triage-process#are-you-a-software-vendor">Software Vendor?</a></li>
+                        <li><a href="/packages/python3/3.9.0-a5/ReportAbuse" title="Report Abuse">Report Abuse</a></li>
+                        <li>
+                            <a href="https://community.chocolatey.org/api/v2/package/python3/3.9.0-a5" title="Download the raw nupkg file.">Download</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col">
+                    <p class="mb-0"><small>Downloads:</small></p>
+                    <p class="mb-1">7,319,198</p>
+                </div>
+                <div class="col">
+                    <p class="mb-0"><small>Downloads of v 3.9.0-a5:</small></p>
+                    <p class="mb-1">1,098</p>
+                </div>
+            </div>
+            <div class="border-bottom">
+                <p class="mb-0" title="Nuspec reference: owners | nuspec value not used on community feed | Specified as comma-separated"><small>Maintainer(s):</small></p>
+                    <ul class="list-unstyled mb-2 mb-md-0">
+        <li>
+                <a class="d-flex align-items-center mb-2" href="/profiles/chocolatey-community" title="chocolatey-community">
+<img src="https://secure.gravatar.com/avatar/89c247c45c6689b8bd4c91cb2b354975?s=32&amp;r=g&amp;d=retro" class="rounded-circle" height="32" title="chocolatey-community" width="32" alt="gravatar" />            <span class="ms-2">chocolatey-community</span>
+    </a>
+
+        </li>
+        <li>
+                <a class="d-flex align-items-center mb-2" href="/profiles/purity" title="purity">
+<img src="https://secure.gravatar.com/avatar/9a7294e99bda0f485125897f70d8aa14?s=32&amp;r=g&amp;d=retro" class="rounded-circle" height="32" title="purity" width="32" alt="gravatar" />            <span class="ms-2">purity</span>
+    </a>
+
+        </li>
+    </ul>
+
+            </div>
+            <p class="mb-0" title="Software authors. Nuspec reference: authors | Specified as comma-separated"><small>Software Author(s):</small></p>
+            <ul class="list-unstyled mb-0 pb-1 border-bottom">
+                    <li class="text-break">Python Software Foundation</li>
+            </ul>
+                <div class="mb-3">
+                    <p class="mb-0" title="Nuspec reference: tags | Specified as space-separated"><small>Tags:</small></p>
+                        <a class="badge bg-primary" href="/packages?q=tag%3Apython" title="Search for python">python</a>
+                        <a class="badge bg-primary" href="/packages?q=tag%3Aprogramming" title="Search for programming">programming</a>
+                        <a class="badge bg-primary" href="/packages?q=tag%3Adevelopment" title="Search for development">development</a>
+                        <a class="badge bg-primary" href="/packages?q=tag%3Afoss" title="Search for foss">foss</a>
+                        <a class="badge bg-primary" href="/packages?q=tag%3Across-platform" title="Search for cross-platform">cross-platform</a>
+                        <a class="badge bg-primary" href="/packages?q=tag%3Aadmin" title="Search for admin">admin</a>
+                </div>
+        </div>
+        
+        <div class="modal fade" id="package-edit" tabindex="-1" role="dialog" aria-labelledby="package-edit" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h2 class="mb-0">Edit Package</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>To edit the metadata for a package, please upload an updated version of the package.</strong></p>
+                        <p>
+                            Chocolatey's Community Package Repository currently does not allow updating package metadata on the website. This helps ensure
+                            that the package itself (and the source used to build the package) remains the one true
+                            source of package metadata.
+                        </p>
+                        <p class="mb-0">This does require that you increment the package version.</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <a href="/packages/upload" class="btn btn-success"><i class="fas fa-upload" alt="Upload"></i> Upload Updated Package</a>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9 col-xl-10">
+            <div class="mb-3 d-none d-md-block">
+                <h1 class="justify-content-center align-items-center d-flex mb-0 text-transform-none" title="Nuspec reference: &lt;title&gt;Python 3.x&lt;/title&gt;">
+                    <a href="#status" title="Click to view test results">
+                        <ul class="status">
+                            <li><div class="status-passing">1</div></li>
+                            <li><div class="status-exempted">2</div></li>
+                            <li><div class="status-notflagged-unknown">3</div></li>
+                        </ul>
+                    </a>
+                    Python 3.x
+                        <span class="ms-2" title="Nuspec reference: &lt;version&gt;3.9.0-a5&lt;/version&gt;">3.9.0-a5</span>
+                </h1>
+                    <p class="text-center text-warning"><strong>This is a prerelease version of Python 3.x.</strong></p>
+            </div>
+            
+            <div id="status" class="callout p-0 callout-warning">
+                <div class="d-flex justify-content-between p-3">
+                    <div class="d-flex">
+                        <div>
+                            <ul class="status mt-0">
+                                <li><div class="status-passing">1</div></li>
+                                <li><div class="status-exempted">2</div></li>
+                                <li><div class="status-notflagged-unknown">3</div></li>
+                            </ul>
+                        </div>
+                        <div>
+                                        <h3>This Package Contains an Exempted Check</h3>
+                                <p>Not All Tests Have Passed</p>
+                        </div>
+                    </div>
+                    <div class="d-none d-xl-block">
+                        <a class="btn-collapse  btn btn-sm btn-secondary btn-show-hide" data-bs-toggle="collapse" href="#testingResults" role="button" aria-expanded="true" aria-controls="testing results" title="Testing Results">
+Hide Checks                    </a>
+                </div>
+            </div>
+            <div class="px-3 pb-3 d-xl-none">
+                <a class="btn-collapse  btn btn-sm btn-secondary btn-show-hide" data-bs-toggle="collapse" href="#testingResults" role="button" aria-expanded="true" aria-controls="testing results" title="Testing Results">
+Hide Checks            </a>
+        </div>
+        <div class="collapse show" id="testingResults">
+            <hr class="mt-0" />
+            
+            <div class="px-3">
+                    <p class="mb-0"><span class="fas fa-check text-success me-3"></span>Validation Testing Passed</p>
+            </div>
+            <hr />
+            
+            <div class="px-3">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            <span class="fas fa-ban text-secondary me-3 mt-1"></span>
+                            <div>
+                                <p class="mb-0">Verification Testing Exemption:</p>
+                                <p>Needs to install some Windows updates if they are missing, however it doesn't know how to do that. The exit code is 23, which is a CRC error, so it is technically probably not even correct - <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx" rel="nofollow">https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382(v=vs.85).aspx</a></p>
+
+                            </div>
+                        </div>
+                        <a class="text-break-none" href="" target="_blank" rel="noreferrer">Details</a>
+                    </div>
+            </div>
+            <hr />
+            
+            <div class="px-3 pb-3">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex">
+                                    <span class="fas fa-check text-success me-3 mt-1"></span>
+                                    <div>
+                                        <p class="mb-0">Scan Testing Successful:</p>
+                                        <p class="mb-0">No detections found in any package files</p>
+                                    </div>
+                    </div>
+                    <a class="btn-collapse-target text-break-none" href="#virus" data-collapse-target="#virus">Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="individual-tab" data-bs-toggle="tab" href="#individual" role="tab" aria-controls="individual" aria-selected="true">Individual</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="organization-tab" data-bs-toggle="tab" href="#organization" role="tab" aria-controls="organization" aria-selected="false">Organization</a>
+                </li>
+            </ul>
+            <div class="tab-content bg-theme-light p-3 shadow-sm mb-3 position-relative border-start border-end border-bottom">
+                
+                <div class="tab-pane fade show active" id="individual" role="tabpanel" aria-labelledby="individual-tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="install-tab" data-bs-toggle="tab" href="#install" role="tab" aria-controls="install" aria-selected="true">Install</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="upgrade-tab" data-bs-toggle="tab" href="#upgrade" role="tab" aria-controls="upgrade" aria-selected="false">Upgrade</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="uninstall-tab" data-bs-toggle="tab" href="#uninstall" role="tab" aria-controls="uninstall" aria-selected="false">Uninstall</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-3">
+                        <div class="tab-pane fade show active" id="install" role="tabpanel" aria-labelledby="install-tab">
+                            <p class="mb-3">To install Python 3.x, run the following command from the command line or from PowerShell:</p>
+                            <div class="input-group">
+                                <span class="input-group-text bg-theme-light text-theme pe-0">></span>
+                                <input type="text" id="id-python3-390-a5-install" class="form-control bg-theme-light user-select-all border-start-0 ps-1" aria-label="Install Python 3.x command" value="choco install python3 --version=3.9.0-a5 --pre " readonly>
+                                <button data-clipboard-target="#id-python3-390-a5-install" class="btn btn-primary btn-copy tt tt-top" type="button" data-bs-toggle="button" data-tooltip-text="Copy" data-tooltip-text-active="Copied!"><i class="fas fa-clipboard" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="upgrade" role="tabpanel" aria-labelledby="upgrade-tab">
+                            <p class="mb-3">To upgrade Python 3.x, run the following command from the command line or from PowerShell:</p>
+                            <div class="input-group">
+                                <span class="input-group-text bg-theme-light text-theme pe-0">></span>
+                                <input type="text" id="id-python3-390-a5-upgrade" class="form-control bg-theme-light user-select-all border-start-0 ps-1" aria-label="Upgrade Python 3.x command" value="choco upgrade python3 --version=3.9.0-a5 --pre " readonly>
+                                <button data-clipboard-target="#id-python3-390-a5-upgrade" class="btn btn-primary btn-copy tt tt-top" type="button" data-bs-toggle="button" data-tooltip-text="Copy" data-tooltip-text-active="Copied!"><i class="fas fa-clipboard" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="uninstall" role="tabpanel" aria-labelledby="uninstall-tab">
+                            <p class="mb-3">To uninstall Python 3.x, run the following command from the command line or from PowerShell:</p>
+                            <div class="input-group">
+                                <span class="input-group-text bg-theme-light text-theme pe-0">></span>
+                                <input type="text" id="id-python3-390-a5-uninstall" class="form-control bg-theme-light user-select-all border-start-0 ps-1" aria-label="Uninstall Python 3.x command" value="choco uninstall python3 --version=3.9.0-a5 --pre " readonly>
+                                <button data-clipboard-target="#id-python3-390-a5-uninstall" class="btn btn-primary btn-copy tt tt-top" type="button" data-bs-toggle="button" data-tooltip-text="Copy" data-tooltip-text-active="Copied!"><i class="fas fa-clipboard" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="organization" role="tabpanel" aria-labelledby="organization-tab">
+                    <p class="small fw-bold">NOTE: This applies to both open source and commercial editions of Chocolatey.</p>
+                    
+                    <h4>1. Ensure you are set for organizational deployment</h4>
+                    <p>Please see the <a href="https://docs.chocolatey.org/en-us/guides/organizations/organizational-deployment-guide">organizational deployment guide</a></p>
+                    
+                    <a class="h4 collapsed d-block" data-bs-toggle="collapse" href="#install-step2" role="button" aria-expanded="false" aria-controls="install-step2" title="Install Step 2">2. Get the package into your environment</a>
+                    <div class="collapse" id="install-step2">
+                        <div class="p-3">
+                            
+                            <a class="h5 collapsed d-block" data-bs-toggle="collapse" href="#install-step2-option1" role="button" aria-expanded="false" aria-controls="install-step2-option1" title="Install Step 2 Option 1">Option 1: Cached Package (Unreliable, Requires Internet - Same As Community)</a>
+                            <div class="collapse" id="install-step2-option1">
+                                <ul>
+                                    <li>
+                                        Open Source or Commercial:
+                                        <ul>
+                                            <li>Proxy Repository - Create a proxy nuget repository on Nexus, Artifactory Pro, or a proxy Chocolatey repository on ProGet. Point your upstream to <strong>https://community.chocolatey.org/api/v2</strong>. Packages cache on first access automatically. Make sure your choco clients are using your proxy repository as a source and NOT the default community repository. See <a href="https://docs.chocolatey.org/en-us/choco/commands/sources">source command</a> for more information.</li>
+                                            <li>You can also just download the package and push it to a repository <a class="btn btn-secondary btn-sm" href="https://community.chocolatey.org/api/v2/package/python3/3.9.0-a5" title="Download the raw nupkg file." download><i class="fas fa-download" alt="Download"></i> Download</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <a class="h5 mt-3 collapsed d-block" data-bs-toggle="collapse" href="#install-step2-option2" role="button" aria-expanded="false" aria-controls="install-step2-option1" title="Install Step 2 Option 2">Option 2: Internalized Package (Reliable, Scalable)</a>
+                            <div class="collapse" id="install-step2-option2">
+                                <ul>
+                                    <li>
+                                        Open Source
+                                        <ul>
+                                            <li>Download the Package <a class="btn btn-secondary btn-sm" href="https://community.chocolatey.org/api/v2/package/python3/3.9.0-a5" title="Download the raw nupkg file." download><i class="fas fa-download" alt="Download"></i> Download</a></li>
+                                            <li><a href="https://docs.chocolatey.org/en-us/guides/create/recompile-packages">Follow manual internalization instructions</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        Package Internalizer (C4B)
+                                        <ul>
+                                            <li>Run <code>choco download python3 --internalize  --version=3.9.0-a5 --source=https://community.chocolatey.org/api/v2</code> <a href="https://docs.chocolatey.org/en-us/choco/commands/download">(additional options)</a></li>
+                                            <li>Run <code>choco push --source=&quot;'http://internal/odata/repo'&quot;</code> for package and dependencies</li>
+                                            <li><a href="https://docs.chocolatey.org/en-us/guides/organizations/automate-package-internalization">Automate package internalization</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mt-4">3. Enter your internal repository url</h4>
+                    <input class="form-control w-50" id="stepThreeUrl" type="text" placeholder="http://internal/odata/repo" />
+                    <p><small>(this should look similar to <a href="https://community.chocolatey.org/api/v2">https://community.chocolatey.org/api/v2</a>)</small></p>
+                    
+                    <h4 class="mt-4">4. Choose your deployment method:</h4>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="generic-tab" data-bs-toggle="tab" href="#generic" role="tab" aria-controls="generic" aria-selected="false">Generic</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="ansible-tab" data-bs-toggle="tab" href="#ansible" role="tab" aria-controls="ansible" aria-selected="false">Ansible</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="chef-tab" data-bs-toggle="tab" href="#chef" role="tab" aria-controls="chef" aria-selected="false">Chef</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="otter-tab" data-bs-toggle="tab" href="#otter" role="tab" aria-controls="otter" aria-selected="false">Otter</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="psdsc-tab" data-bs-toggle="tab" href="#psdsc" role="tab" aria-controls="psdsc" aria-selected="false">PS DSC</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="puppet-tab" data-bs-toggle="tab" href="#puppet" role="tab" aria-controls="puppet" aria-selected="false">Puppet</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="salt-tab" data-bs-toggle="tab" href="#salt" role="tab" aria-controls="salt" aria-selected="false">Salt</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content stepThree p-3">
+                        <div class="tab-pane fade show active" id="generic" role="tabpanel" aria-labelledby="generic-tab">
+<pre class="language-powershell border py-3"><code>
+choco upgrade python3 -y --source=&quot;'STEP 3 URL'&quot; [other options]
+</code></pre>
+                            <p class="mt-3">See <a href="https://docs.chocolatey.org/en-us/choco/commands/upgrade#options-and-switches">options you can pass to upgrade.</a></p>
+                            <p>See <a href="https://docs.chocolatey.org/en-us/choco/commands/#scripting-integration-best-practices-style-guide">best practices for scripting.</a></p>
+                            <p>Add this to a PowerShell script or use a Batch script with tools and in places where you are calling directly to Chocolatey. If you are integrating, keep in mind enhanced exit codes.</p>
+                            <p>If you do use a PowerShell script, use the following to ensure bad exit codes are shown as failures:</p>
+<pre class="language-powershell line-numbers border py-3"><code>
+choco upgrade python3 -y --source="'STEP 3 URL'"
+$exitCode = $LASTEXITCODE
+
+Write-Verbose "Exit code was $exitCode"
+$validExitCodes = @(0, 1605, 1614, 1641, 3010)
+if ($validExitCodes -contains $exitCode) {
+  Exit 0
+}
+
+Exit $exitCode
+</code></pre>
+                        </div>
+                        <div class="tab-pane fade" id="ansible" role="tabpanel" aria-labelledby="ansible-tab">
+<pre class="language-yaml line-numbers border py-3"><code>
+- name: Ensure python3 installed
+  win_chocolatey:
+    name: python3
+    state: present
+    version: 3.9.0-a5
+    source: STEP 3 URL
+</code></pre>
+                            <p>See docs at <a href="https://docs.ansible.com/ansible/latest/modules/win_chocolatey_module.html" target="_blank" rel="noreferrer">https://docs.ansible.com/ansible/latest/modules/win_chocolatey_module.html</a>.</p>
+                        </div>
+                        <div class="tab-pane fade" id="chef" role="tabpanel" aria-labelledby="chef-tab">
+<pre class="language-ruby line-numbers border py-3"><code>
+chocolatey_package 'python3' do
+  action    :install
+  version  '3.9.0-a5'
+  source   'STEP 3 URL'
+end
+</code></pre>
+                            <p>See docs at <a href="https://docs.chef.io/resource_chocolatey_package.html" target="_blank" rel="noreferrer">https://docs.chef.io/resource_chocolatey_package.html</a>.</p>
+                        </div>
+                        <div class="tab-pane fade" id="otter" role="tabpanel" aria-labelledby="otter-tab">
+<pre class="language-powershell line-numbers border py-3"><code>
+Chocolatey::Ensure-Package
+(
+    Name: python3,
+    Version: 3.9.0-a5,
+    Source: STEP 3 URL
+);
+</code></pre>
+                            <p>Requires Otter Chocolatey Extension. See docs at <a href="https://inedo.com/den/otter/chocolatey" target="_blank" rel="noreferrer">https://inedo.com/den/otter/chocolatey</a>.</p>
+                        </div>
+                        <div class="tab-pane fade" id="psdsc" role="tabpanel" aria-labelledby="psdsc-tab">
+<pre class="language-powershell line-numbers border py-3"><code>
+cChocoPackageInstaller python3
+{
+   Name     = 'python3'
+   Ensure   = 'Present'
+   Version  = '3.9.0-a5'
+   Source   = 'STEP 3 URL'
+}
+</code></pre>
+                            <p>Requires cChoco DSC Resource. See docs at <a href="https://github.com/chocolatey/cChoco" target="_blank" rel="noreferrer">https://github.com/chocolatey/cChoco</a>.</p>
+                        </div>
+                        <div class="tab-pane fade" id="puppet" role="tabpanel" aria-labelledby="puppet-tab">
+<pre class="language-puppet line-numbers border py-3"><code>
+package { 'python3':
+  provider => 'chocolatey',
+  ensure   => '3.9.0-a5',
+  source   => 'STEP 3 URL',
+}
+</code></pre>
+                            <p>Requires Puppet Chocolatey Provider module. See docs at <a href="https://forge.puppet.com/puppetlabs/chocolatey" target="_blank" rel="noreferrer">https://forge.puppet.com/puppetlabs/chocolatey</a>.</p>
+                        </div>
+                        <div class="tab-pane fade" id="salt" role="tabpanel" aria-labelledby="salt-tab">
+<pre class="language-powershell line-numbers border py-3"><code>
+salt '*' chocolatey.install python3 version="3.9.0-a5" source="STEP 3 URL"
+</code></pre>
+                            <p>See docs at <a href="https://docs.saltstack.com/en/latest/ref/modules/all/salt.modules.chocolatey.html" target="_blank" rel="noreferrer">https://docs.saltstack.com/en/latest/ref/modules/all/salt.modules.chocolatey.html</a>.</p>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mt-4">5. If applicable - Chocolatey configuration/installation</h4>
+                    <p>See <a href="https://docs.chocolatey.org/en-us/features/integrations#chocolatey-integration-implementation-with-common-configuration-managers">infrastructure management matrix</a> for Chocolatey configuration elements and examples.</p>
+                </div>
+            </div>
+    
+        <div class="callout callout-success">
+            <p>This package was approved as <a href="https://docs.chocolatey.org/en-us/faqs#what-is-a-trusted-package">a trusted package</a> on 24 Mar 2020.</p>
+        </div>
+    <div class="mb-4 pb-4">
+        <a class="h2 btn-collapse d-block mb-n5" data-bs-toggle="collapse" href="#description" role="button" aria-expanded="true" aria-controls="description" title="Nuspec reference: description">Description</a>
+        <div class="collapse show mb-n4" id="description">
+            <span class="pt-5 d-block"></span>
+            <hr />
+            <p>Python 3.x is a programming language that lets you work more quickly and integrate your systems more effectively. You can learn to use Python 3.x and see almost immediate gains in productivity and lower maintenance costs.</p>
+<h2 id="package-parameters">Package Parameters</h2>
+<ul>
+<li><code>/InstallDir</code> - Installation directory. <strong>NOTE</strong>: If you have pre-existing python3 installation, this parameter is ignored and existing python install location will be used</li>
+</ul>
+<p>Example: <code>choco install python3 --params &quot;/InstallDir:C:\your\install\path&quot;</code></p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Python package manager <code>pip</code> is installed by default, but you can also invoke it using command <code>py -m pip</code> which will use <code>pip3</code> and adequate version of python if you also have python2 installed and/or pip2 on the <code>PATH</code>. For more details see <a href="https://docs.python.org/3/faq/windows.html" rel="nofollow">Python on Windows FAQ</a>.</li>
+<li>For complete list of silent install options see the <a href="https://docs.python.org/3/using/windows.html#installing-without-ui" rel="nofollow">Installing Without UI</a> page.</li>
+</ul>
+
+        </div>
+    </div>
+    
+    <div class="mb-4 pb-4">
+        <a class="h2 btn-collapse d-block mb-n5 collapsed" data-bs-toggle="collapse" href="#files" role="button" aria-expanded="false" aria-controls="files" title="Nuspec reference: files, optional - will default to all files next to nuspec">Files</a>
+        <div class="collapse mb-n4 " id="files">
+            <span class="pt-5 d-block"></span>
+            <hr />
+                    <div class="mb-1">
+                                <button type="button" class="btn btn-sm btn-secondary btn-show-hide me-2" data-bs-toggle="collapse" data-bs-target=".file-path-license-txt-2092472408" role="button" aria-expanded="false">Show</button>
+                        <span class="file-name">legal\LICENSE.txt</span>
+                        <div class="file-path-license-txt-2092472408 collapse ">
+                            <pre class="highlight-delay"><code class="">A. HISTORY OF THE SOFTWARE
+==========================
+
+Python was created in the early 1990s by Guido van Rossum at Stichting
+Mathematisch Centrum (CWI, see http://www.cwi.nl) in the Netherlands
+as a successor of a language called ABC.  Guido remains Python&#39;s
+principal author, although it includes many contributions from others.
+
+In 1995, Guido continued his work on Python at the Corporation for
+National Research Initiatives (CNRI, see http://www.cnri.reston.va.us)
+in Reston, Virginia where he released several versions of the
+software.
+
+In May 2000, Guido and the Python core development team moved to
+BeOpen.com to form the BeOpen PythonLabs team.  In October of the same
+year, the PythonLabs team moved to Digital Creations (now Zope
+Corporation, see http://www.zope.com).  In 2001, the Python Software
+Foundation (PSF, see http://www.python.org/psf/) was formed, a
+non-profit organization created specifically to own Python-related
+Intellectual Property.  Zope Corporation is a sponsoring member of
+the PSF.
+
+All Python releases are Open Source (see http://www.opensource.org for
+the Open Source Definition).  Historically, most, but not all, Python
+releases have also been GPL-compatible; the table below summarizes
+the various releases.
+
+    Release         Derived     Year        Owner       GPL-
+                    from                                compatible? (1)
+
+    0.9.0 thru 1.2              1991-1995   CWI         yes
+    1.3 thru 1.5.2  1.2         1995-1999   CNRI        yes
+    1.6             1.5.2       2000        CNRI        no
+    2.0             1.6         2000        BeOpen.com  no
+    1.6.1           1.6         2001        CNRI        yes (2)
+    2.1             2.0+1.6.1   2001        PSF         no
+    2.0.1           2.0+1.6.1   2001        PSF         yes
+    2.1.1           2.1+2.0.1   2001        PSF         yes
+    2.2             2.1.1       2001        PSF         yes
+    2.1.2           2.1.1       2002        PSF         yes
+    2.1.3           2.1.2       2002        PSF         yes
+    2.2.1           2.2         2002        PSF         yes
+    2.2.2           2.2.1       2002        PSF         yes
+    2.2.3           2.2.2       2003        PSF         yes
+    2.3             2.2.2       2002-2003   PSF         yes
+    2.3.1           2.3         2002-2003   PSF         yes
+    2.3.2           2.3.1       2002-2003   PSF         yes
+    2.3.3           2.3.2       2002-2003   PSF         yes
+    2.3.4           2.3.3       2004        PSF         yes
+    2.3.5           2.3.4       2005        PSF         yes
+    2.4             2.3         2004        PSF         yes
+    2.4.1           2.4         2005        PSF         yes
+    2.4.2           2.4.1       2005        PSF         yes
+    2.4.3           2.4.2       2006        PSF         yes
+    2.4.4           2.4.3       2006        PSF         yes
+    2.5             2.4         2006        PSF         yes
+    2.5.1           2.5         2007        PSF         yes
+    2.5.2           2.5.1       2008        PSF         yes
+    2.5.3           2.5.2       2008        PSF         yes
+    2.6             2.5         2008        PSF         yes
+    2.6.1           2.6         2008        PSF         yes
+    2.6.2           2.6.1       2009        PSF         yes
+    2.6.3           2.6.2       2009        PSF         yes
+    2.6.4           2.6.3       2009        PSF         yes
+    2.6.5           2.6.4       2010        PSF         yes
+    3.0             2.6         2008        PSF         yes
+    3.0.1           3.0         2009        PSF         yes
+    3.1             3.0.1       2009        PSF         yes
+    3.1.1           3.1         2009        PSF         yes
+    3.1.2           3.1.1       2010        PSF         yes
+    3.1.3           3.1.2       2010        PSF         yes
+    3.1.4           3.1.3       2011        PSF         yes
+    3.1.5           3.1.4       2012        PSF         yes
+    3.2             3.1         2011        PSF         yes
+    3.2.1           3.2         2011        PSF         yes
+    3.2.2           3.2.1       2011        PSF         yes
+    3.2.3           3.2.2       2012        PSF         yes
+    3.3.0           3.2         2012        PSF         yes
+    3.3.1           3.3.0       2013        PSF         yes
+    3.3.2           3.3.1       2013        PSF         yes
+    3.4.0           3.3         2013        PSF         yes
+
+Footnotes:
+
+(1) GPL-compatible doesn&#39;t mean that we&#39;re distributing Python under
+    the GPL.  All Python licenses, unlike the GPL, let you distribute
+    a modified version without making your changes open source.  The
+    GPL-compatible licenses make it possible to combine Python with
+    other software that is released under the GPL; the others don&#39;t.
+
+(2) According to Richard Stallman, 1.6.1 is not GPL-compatible,
+    because its license has a choice of law clause.  According to
+    CNRI, however, Stallman&#39;s lawyer has told CNRI&#39;s lawyer that 1.6.1
+    is &quot;not incompatible&quot; with the GPL.
+
+Thanks to the many outside volunteers who have worked under Guido&#39;s
+direction to make these releases possible.
+
+
+B. TERMS AND CONDITIONS FOR ACCESSING OR OTHERWISE USING PYTHON
+===============================================================
+
+PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
+--------------------------------------------
+
+1. This LICENSE AGREEMENT is between the Python Software Foundation
+(&quot;PSF&quot;), and the Individual or Organization (&quot;Licensee&quot;) accessing and
+otherwise using this software (&quot;Python&quot;) in source or binary form and
+its associated documentation.
+
+2. Subject to the terms and conditions of this License Agreement, PSF hereby
+grants Licensee a nonexclusive, royalty-free, world-wide license to reproduce,
+analyze, test, perform and/or display publicly, prepare derivative works,
+distribute, and otherwise use Python alone or in any derivative version,
+provided, however, that PSF&#39;s License Agreement and PSF&#39;s notice of copyright,
+i.e., &quot;Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
+2011, 2012 Python Software Foundation; All Rights Reserved&quot; are retained in
+Python alone or in any derivative version prepared by Licensee.
+
+3. In the event Licensee prepares a derivative work that is based on
+or incorporates Python or any part thereof, and wants to make
+the derivative work available to others as provided herein, then
+Licensee hereby agrees to include in any such work a brief summary of
+the changes made to Python.
+
+4. PSF is making Python available to Licensee on an &quot;AS IS&quot;
+basis.  PSF MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, PSF MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON WILL NOT
+INFRINGE ANY THIRD PARTY RIGHTS.
+
+5. PSF SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON
+FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS
+A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON,
+OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+
+6. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+7. Nothing in this License Agreement shall be deemed to create any
+relationship of agency, partnership, or joint venture between PSF and
+Licensee.  This License Agreement does not grant permission to use PSF
+trademarks or trade name in a trademark sense to endorse or promote
+products or services of Licensee, or any third party.
+
+8. By copying, installing or otherwise using Python, Licensee
+agrees to be bound by the terms and conditions of this License
+Agreement.
+
+
+BEOPEN.COM LICENSE AGREEMENT FOR PYTHON 2.0
+-------------------------------------------
+
+BEOPEN PYTHON OPEN SOURCE LICENSE AGREEMENT VERSION 1
+
+1. This LICENSE AGREEMENT is between BeOpen.com (&quot;BeOpen&quot;), having an
+office at 160 Saratoga Avenue, Santa Clara, CA 95051, and the
+Individual or Organization (&quot;Licensee&quot;) accessing and otherwise using
+this software in source or binary form and its associated
+documentation (&quot;the Software&quot;).
+
+2. Subject to the terms and conditions of this BeOpen Python License
+Agreement, BeOpen hereby grants Licensee a non-exclusive,
+royalty-free, world-wide license to reproduce, analyze, test, perform
+and/or display publicly, prepare derivative works, distribute, and
+otherwise use the Software alone or in any derivative version,
+provided, however, that the BeOpen Python License is retained in the
+Software, alone or in any derivative version prepared by Licensee.
+
+3. BeOpen is making the Software available to Licensee on an &quot;AS IS&quot;
+basis.  BEOPEN MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, BEOPEN MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF THE SOFTWARE WILL NOT
+INFRINGE ANY THIRD PARTY RIGHTS.
+
+4. BEOPEN SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF THE
+SOFTWARE FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS
+AS A RESULT OF USING, MODIFYING OR DISTRIBUTING THE SOFTWARE, OR ANY
+DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+
+5. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+6. This License Agreement shall be governed by and interpreted in all
+respects by the law of the State of California, excluding conflict of
+law provisions.  Nothing in this License Agreement shall be deemed to
+create any relationship of agency, partnership, or joint venture
+between BeOpen and Licensee.  This License Agreement does not grant
+permission to use BeOpen trademarks or trade names in a trademark
+sense to endorse or promote products or services of Licensee, or any
+third party.  As an exception, the &quot;BeOpen Python&quot; logos available at
+http://www.pythonlabs.com/logos.html may be used according to the
+permissions granted on that web page.
+
+7. By copying, installing or otherwise using the software, Licensee
+agrees to be bound by the terms and conditions of this License
+Agreement.
+
+
+CNRI LICENSE AGREEMENT FOR PYTHON 1.6.1
+---------------------------------------
+
+1. This LICENSE AGREEMENT is between the Corporation for National
+Research Initiatives, having an office at 1895 Preston White Drive,
+Reston, VA 20191 (&quot;CNRI&quot;), and the Individual or Organization
+(&quot;Licensee&quot;) accessing and otherwise using Python 1.6.1 software in
+source or binary form and its associated documentation.
+
+2. Subject to the terms and conditions of this License Agreement, CNRI
+hereby grants Licensee a nonexclusive, royalty-free, world-wide
+license to reproduce, analyze, test, perform and/or display publicly,
+prepare derivative works, distribute, and otherwise use Python 1.6.1
+alone or in any derivative version, provided, however, that CNRI&#39;s
+License Agreement and CNRI&#39;s notice of copyright, i.e., &quot;Copyright (c)
+1995-2001 Corporation for National Research Initiatives; All Rights
+Reserved&quot; are retained in Python 1.6.1 alone or in any derivative
+version prepared by Licensee.  Alternately, in lieu of CNRI&#39;s License
+Agreement, Licensee may substitute the following text (omitting the
+quotes): &quot;Python 1.6.1 is made available subject to the terms and
+conditions in CNRI&#39;s License Agreement.  This Agreement together with
+Python 1.6.1 may be located on the Internet using the following
+unique, persistent identifier (known as a handle): 1895.22/1013.  This
+Agreement may also be obtained from a proxy server on the Internet
+using the following URL: http://hdl.handle.net/1895.22/1013&quot;.
+
+3. In the event Licensee prepares a derivative work that is based on
+or incorporates Python 1.6.1 or any part thereof, and wants to make
+the derivative work available to others as provided herein, then
+Licensee hereby agrees to include in any such work a brief summary of
+the changes made to Python 1.6.1.
+
+4. CNRI is making Python 1.6.1 available to Licensee on an &quot;AS IS&quot;
+basis.  CNRI MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, CNRI MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON 1.6.1 WILL NOT
+INFRINGE ANY THIRD PARTY RIGHTS.
+
+5. CNRI SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON
+1.6.1 FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS
+A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON 1.6.1,
+OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+
+6. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+7. This License Agreement shall be governed by the federal
+intellectual property law of the United States, including without
+limitation the federal copyright law, and, to the extent such
+U.S. federal law does not apply, by the law of the Commonwealth of
+Virginia, excluding Virginia&#39;s conflict of law provisions.
+Notwithstanding the foregoing, with regard to derivative works based
+on Python 1.6.1 that incorporate non-separable material that was
+previously distributed under the GNU General Public License (GPL), the
+law of the Commonwealth of Virginia shall govern this License
+Agreement only as to issues arising under or with respect to
+Paragraphs 4, 5, and 7 of this License Agreement.  Nothing in this
+License Agreement shall be deemed to create any relationship of
+agency, partnership, or joint venture between CNRI and Licensee.  This
+License Agreement does not grant permission to use CNRI trademarks or
+trade name in a trademark sense to endorse or promote products or
+services of Licensee, or any third party.
+
+8. By clicking on the &quot;ACCEPT&quot; button where indicated, or by copying,
+installing or otherwise using Python 1.6.1, Licensee agrees to be
+bound by the terms and conditions of this License Agreement.
+
+        ACCEPT
+
+
+CWI LICENSE AGREEMENT FOR PYTHON 0.9.0 THROUGH 1.2
+--------------------------------------------------
+
+Copyright (c) 1991 - 1995, Stichting Mathematisch Centrum Amsterdam,
+The Netherlands.  All rights reserved.
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of Stichting Mathematisch
+Centrum or CWI not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.
+
+STICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE
+FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</code></pre>
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                                <button type="button" class="btn btn-sm btn-secondary btn-show-hide me-2" data-bs-toggle="collapse" data-bs-target=".file-path-verification-txt-1990737334" role="button" aria-expanded="false">Show</button>
+                        <span class="file-name">legal\VERIFICATION.txt</span>
+                        <div class="file-path-verification-txt-1990737334 collapse ">
+                            <pre class="highlight-delay"><code class="">VERIFICATION
+
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package&#39;s contents are trustworthy.
+
+Package can be verified like this:
+
+1. Go to
+
+   x32: https://www.python.org/ftp/python/3.9.0/python-3.9.0a5.exe
+   x64: https://www.python.org/ftp/python/3.9.0/python-3.9.0a5-amd64.exe
+
+   to download the installer.
+
+2. You can use one of the following methods to obtain the SHA256 checksum:
+   - Use powershell function &#39;Get-FileHash&#39;
+   - Use Chocolatey utility &#39;checksum.exe&#39;
+
+   checksum32: EED4972622CA17C158026CEC4262AD84C8737C90D64AA525D3935D2134DC1AB9
+   checksum64: 03C6AB5A4B087EFDF0FD73ACC055B0F68D9E7078E5FF9141D04ABB4EC2CE86E2
+
+File &#39;license.txt&#39; is obtained from:
+   https://www.python.org/download/releases/3.4.0/license/
+</code></pre>
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                                <button type="button" class="btn btn-sm btn-secondary btn-show-hide me-2" data-bs-toggle="collapse" data-bs-target=".file-path-chocolateyinstall-ps1-1824147181" role="button" aria-expanded="false">Show</button>
+                        <span class="file-name">tools\chocolateyInstall.ps1</span>
+                        <div class="file-path-chocolateyinstall-ps1-1824147181 collapse ">
+                            <pre class="highlight-delay"><code class="">$ErrorActionPreference = &#39;STOP&#39;
+
+$toolsPath = Split-Path $MyInvocation.MyCommand.Definition
+
+$pp = Get-PackageParameters
+$twoPartVersion = $Env:ChocolateyPackageVersion -replace &quot;^(\d+\.\d+).*&quot;, &quot;`$1&quot;
+$defaultFolder = &#39;{0}\Python{1}&#39; -f $Env:SystemDrive, ($twoPartVersion -replace &#39;\.&#39;)
+if ( $pp.InstallDir ) {
+  $installDir = $pp.InstallDir
+  if ($installDir.StartsWith(&quot;&#39;&quot;) -or $installDir.StartsWith(&#39;&quot;&#39;)) { $installDir = $installDir -replace &#39;^.|.$&#39; }
+  mkdir -force $installDir -ea 0 | out-null
+}
+else {
+  $installDir = $defaultFolder
+}
+
+$packageArgs = @{
+  packageName    = &#39;python3&#39;
+  fileType       = &#39;exe&#39;
+  file           = &quot;$toolsPath\python-3.9.0a5.exe&quot;
+  file64         = &quot;$toolsPath\python-3.9.0a5-amd64.exe&quot;
+  silentArgs     = &#39;/quiet InstallAllUsers=1 PrependPath=1 TargetDir=&quot;{0}&quot;&#39; -f $installDir
+  validExitCodes = @(0)
+  softwareName   = &#39;Python*&#39;
+}
+Install-ChocolateyInstallPackage @packageArgs
+Get-ChildItem $toolsPath\*.exe | ForEach-Object { Remove-Item $_ -ea 0; if (Test-Path $_) { Set-Content &quot;$_.ignore&quot; &#39;&#39; } }
+
+. &quot;$toolsPath/helpers.ps1&quot;
+$installLocation = Get-AppInstallLocation python | ForEach-Object { $_.TrimEnd(&#39;\&#39;) }
+
+if (!$installLocation) {
+  Update-SessionEnvironment
+  $installLocation = Get-RegistryKeyValue -key &quot;HKLM:\SOFTWARE\Python\PythonCore\$twoPartVersion\InstallPath&quot; -subKey &quot;(default)&quot; | ForEach-Object { $_.TrimEnd(&#39;\&#39;) }
+}
+if ($installLocation -ne $installDir) {
+  Write-Warning &quot;Provided python InstallDir was ignored by the python installer&quot;
+  Write-Warning &quot;Its probable that you had pre-existing python installation&quot;
+  Write-Warning &quot;Installed to: $installLocation&quot;
+}
+else { Write-Host &quot;Installed to: &#39;$installDir&#39;&quot; }
+
+if (($Env:PYTHONHOME -ne $null) -and ($Env:PYTHONHOME -ne $InstallDir)) {
+  Write-Warning &quot;Environment variable PYTHONHOME points to different version: $Env:PYTHONHOME&quot;
+}
+
+. &quot;$toolsPath/helpers.ps1&quot;
+Protect-InstallFolder `
+  -packageName $packageArgs[&quot;packageName&quot;] `
+  -defaultInstallPath $defaultFolder `
+  -folder $installLocation
+</code></pre>
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                                <button type="button" class="btn btn-sm btn-secondary btn-show-hide me-2" data-bs-toggle="collapse" data-bs-target=".file-path-helpers-ps1-223586286" role="button" aria-expanded="false">Show</button>
+                        <span class="file-name">tools\helpers.ps1</span>
+                        <div class="file-path-helpers-ps1-223586286 collapse ">
+                            <pre class="highlight-delay"><code class="">function Get-RegistryKeyValue {
+  param(
+    [string]$key,
+    [string]$subKey
+  )
+
+  Get-ItemProperty -Path $key | ForEach-Object { $_.&quot;$subKey&quot; }
+}
+
+function Get-LocalizedWellKnownPrincipalName {
+  param (
+    [Parameter(Mandatory = $true)]
+    [Security.Principal.WellKnownSidType] $WellKnownSidType
+  )
+  $sid = New-Object -TypeName &#39;System.Security.Principal.SecurityIdentifier&#39; -ArgumentList @($WellKnownSidType, $null)
+  $account = $sid.Translate([Security.Principal.NTAccount])
+
+  return $account.Value
+}
+
+function Protect-InstallFolder {
+  param(
+    [string]$packageName,
+    [string]$defaultInstallPath,
+    [string]$folder
+  )
+  Write-Debug &quot;Ensure-Permissions&quot;
+
+  if ($folder.ToLower() -ne $defaultInstallPath.ToLower()) {
+    Write-Warning &quot;Installation folder is not the default. Not changing permissions. Please ensure your installation is secure.&quot;
+    return
+  }
+
+  # Everything from here on out applies to the default installation folder
+
+  if (!(Test-ProcessAdminRights)) {
+    throw &quot;Installation of $packageName to default folder requires Administrative permissions. Please run from elevated prompt.&quot;
+  }
+
+  $currentEA = $ErrorActionPreference
+  $ErrorActionPreference = &#39;Stop&#39;
+  try {
+    # get current acl
+    $acl = (Get-Item $folder).GetAccessControl(&#39;Access,Owner&#39;)
+
+    Write-Debug &quot;Removing existing permissions.&quot;
+    $acl.Access | ForEach-Object { $acl.RemoveAccessRuleAll($_) }
+
+    $inheritanceFlags = ([Security.AccessControl.InheritanceFlags]::ContainerInherit -bor [Security.AccessControl.InheritanceFlags]::ObjectInherit)
+    $propagationFlags = [Security.AccessControl.PropagationFlags]::None
+
+    $rightsFullControl = [Security.AccessControl.FileSystemRights]::FullControl
+    $rightsModify = [Security.AccessControl.FileSystemRights]::Modify
+    $rightsReadExecute = [Security.AccessControl.FileSystemRights]::ReadAndExecute
+
+    Write-Output &quot;Restricting write permissions to Administrators&quot;
+    $builtinAdmins = Get-LocalizedWellKnownPrincipalName -WellKnownSidType ([Security.Principal.WellKnownSidType]::BuiltinAdministratorsSid)
+    $adminsAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($builtinAdmins, $rightsFullControl, $inheritanceFlags, $propagationFlags, &quot;Allow&quot;)
+    $acl.SetAccessRule($adminsAccessRule)
+    $localSystem = Get-LocalizedWellKnownPrincipalName -WellKnownSidType ([Security.Principal.WellKnownSidType]::LocalSystemSid)
+    $localSystemAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($localSystem, $rightsFullControl, $inheritanceFlags, $propagationFlags, &quot;Allow&quot;)
+    $acl.SetAccessRule($localSystemAccessRule)
+    $builtinUsers = Get-LocalizedWellKnownPrincipalName -WellKnownSidType ([Security.Principal.WellKnownSidType]::BuiltinUsersSid)
+    $usersAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($builtinUsers, $rightsReadExecute, $inheritanceFlags, $propagationFlags, &quot;Allow&quot;)
+    $acl.SetAccessRule($usersAccessRule)
+
+    $allowCurrentUser = $env:ChocolateyInstallAllowCurrentUser -eq &#39;true&#39;
+    if ($allowCurrentUser) {
+      # get current user
+      $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
+
+      if ($currentUser.Name -ne $localSystem) {
+        $userAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($currentUser.Name, $rightsModify, $inheritanceFlags, $propagationFlags, &quot;Allow&quot;)
+        Write-Warning &#39;Adding Modify permission for current user due to $env:ChocolateyInstallAllowCurrentUser. This could lead to escalation of privilege attacks. Consider not allowing this.&#39;
+        $acl.SetAccessRule($userAccessRule)
+      }
+    }
+    else {
+      Write-Debug &#39;Current user no longer set due to possible escalation of privileges - set $env:ChocolateyInstallAllowCurrentUser=&quot;true&quot; if you require this.&#39;
+    }
+
+    Write-Debug &quot;Set Owner to Administrators&quot;
+    $builtinAdminsSid = New-Object System.Security.Principal.SecurityIdentifier([Security.Principal.WellKnownSidType]::BuiltinAdministratorsSid, $null)
+    $acl.SetOwner($builtinAdminsSid)
+
+    Write-Debug &quot;Default Installation folder - removing inheritance with no copy&quot;
+    $acl.SetAccessRuleProtection($true, $false)
+
+    # enact the changes against the actual
+    (Get-Item $folder).SetAccessControl($acl)
+  }
+  catch {
+    Write-Warning &quot;Not able to set permissions for $folder.&quot;
+    Write-Warning $_
+  }
+  $ErrorActionPreference = $currentEA
+}
+</code></pre>
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                                <button type="button" class="btn btn-sm btn-secondary btn-show-hide me-2" data-bs-toggle="collapse" data-bs-target=".file-path-python-3-9-0a5-amd64-exe-342875662" role="button" aria-expanded="false">Show</button>
+                        <span class="file-name">tools\python-3.9.0a5-amd64.exe</span>
+                        <div class="file-path-python-3-9-0a5-amd64-exe-342875662 collapse ">
+                            <pre class="highlight-delay"><code class="">md5: 679AF81E8DFE7DF9C1BABE1CFBB227A1 | sha1: ADB7B4A4CAF59200AE57F4C9CBDFA1BB5DBED9D0 | sha256: 03C6AB5A4B087EFDF0FD73ACC055B0F68D9E7078E5FF9141D04ABB4EC2CE86E2 | sha512: 24DC9253E4D133C4AF4DC48CE9E367D6437985A2DEC532914D33F23DF7FA8D6E417497937CEAC694A51C9A2D9DC781D38F87AA17C58DEF7C60F63B2AAC760C56</code></pre>
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                                <button type="button" class="btn btn-sm btn-secondary btn-show-hide me-2" data-bs-toggle="collapse" data-bs-target=".file-path-python-3-9-0a5-exe-196323932" role="button" aria-expanded="false">Show</button>
+                        <span class="file-name">tools\python-3.9.0a5.exe</span>
+                        <div class="file-path-python-3-9-0a5-exe-196323932 collapse ">
+                            <pre class="highlight-delay"><code class="">md5: 0241C238EF998194A907313118D334F4 | sha1: 1A1E2B1BD968CF035AA30F3A4044AA8E505953F8 | sha256: EED4972622CA17C158026CEC4262AD84C8737C90D64AA525D3935D2134DC1AB9 | sha512: A3E67A10949A52F2DBD629EF9605413D32E352C6991E0050EF6A6854AAB9BA03B22C9D07EABB32FEE27C525B22D53F0D55D16B111E394C171044AB2E176884DD</code></pre>
+                        </div>
+                    </div>
+        </div>
+    </div>
+    
+    <div class="mb-4 pb-4">
+        <a class="h2 btn-collapse d-block mb-n5 collapsed" data-bs-toggle="collapse" href="#virus" role="button" aria-expanded="false" aria-controls="virus" title="Virus Scan Results">Virus Scan Results</a>
+        <div class="collapse mb-n4 " id="virus">
+            <span class="pt-5 d-block"></span>
+                <hr />
+                    <p class="fw-bold"><a href="/users/account/LogOn">Log in</a> or click on link to see number of positives.</p>
+                <ul class="list-unstyled">
+                        <li class="d-flex align-items-center">
+                            <a title="full sha256: 4e98a62830ac888e5507f00199716c6d3d3fa6be136b1c9a9fee5eea0a73f3f8" href="https://www.virustotal.com/file/4e98a62830ac888e5507f00199716c6d3d3fa6be136b1c9a9fee5eea0a73f3f8/analysis/">python3.3.9.0-a5.nupkg (4e98a62830ac)</a>
+                                - ## /  65                        </li>
+                        <li class="d-flex align-items-center">
+                            <a title="full sha256: 03c6ab5a4b087efdf0fd73acc055b0f68d9e7078e5ff9141d04abb4ec2ce86e2" href="https://www.virustotal.com/file/03c6ab5a4b087efdf0fd73acc055b0f68d9e7078e5ff9141d04abb4ec2ce86e2/analysis/">python-3.9.0a5-amd64.exe (03c6ab5a4b08)</a>
+                                - ## /  72                        </li>
+                        <li class="d-flex align-items-center">
+                            <a title="full sha256: eed4972622ca17c158026cec4262ad84c8737c90d64aa525d3935d2134dc1ab9" href="https://www.virustotal.com/file/eed4972622ca17c158026cec4262ad84c8737c90d64aa525d3935d2134dc1ab9/analysis/">python-3.9.0a5.exe (eed4972622ca)</a>
+                                - ## /  72                        </li>
+                </ul>
+                <div class="callout callout-warning">
+                    <p>In cases where actual malware is found, the packages are subject to removal. Software sometimes has false positives. Moderators do not necessarily validate the safety of the underlying software, only that a package retrieves software from the official distribution point and/or validate embedded software against official distribution point (where distribution rights allow redistribution).</p>
+                    <p>Chocolatey Pro provides <a href="https://docs.chocolatey.org/en-us/features/virus-check">runtime protection</a> from possible malware.</p>
+                </div>
+        </div>
+    </div>
+    
+    <div class="mb-4 pb-4">
+        <a class="h2 btn-collapse d-block mb-n5 collapsed" data-bs-toggle="collapse" href="#versionhistory" role="button" aria-expanded="false" aria-controls="versionhistory" title="Version History">Version History</a>
+        <div class="collapse mb-n4 " id="versionhistory">
+            <span class="pt-5 d-block"></span>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">Version</th>
+                            <th scope="col">Downloads</th>
+                            <th scope="col">Last Updated</th>
+                            <th scope="col" last>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-b1">Python 3.x 3.10.0-b1</a>
+        </td>
+        <td>572</td>
+        <td>Tuesday, May 4, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-a7">Python 3.x 3.10.0-a7</a>
+        </td>
+        <td>1156</td>
+        <td>Wednesday, April 7, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-a6">Python 3.x 3.10.0-a6</a>
+        </td>
+        <td>1652</td>
+        <td>Tuesday, March 2, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-a5">Python 3.x 3.10.0-a5</a>
+        </td>
+        <td>1148</td>
+        <td>Wednesday, February 3, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-a4">Python 3.x 3.10.0-a4</a>
+        </td>
+        <td>1408</td>
+        <td>Tuesday, January 5, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-a3">Python 3.x 3.10.0-a3</a>
+        </td>
+        <td>931</td>
+        <td>Tuesday, December 8, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-a2">Python 3.x 3.10.0-a2</a>
+        </td>
+        <td>1104</td>
+        <td>Tuesday, November 3, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.10.0-a1">Python 3.x 3.10.0-a1</a>
+        </td>
+        <td>1226</td>
+        <td>Tuesday, October 6, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle recommended " style="display: table-row">
+        <td class="version" title="Latest Version">
+                <a href="/packages/python3/3.9.5">Python 3.x 3.9.5</a>
+        </td>
+        <td>160338</td>
+        <td>Tuesday, May 4, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle " style="display: table-row">
+        <td class="version" >
+                <a href="/packages/python3/3.9.4">Python 3.x 3.9.4</a>
+        </td>
+        <td>368795</td>
+        <td>Monday, April 5, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.2">Python 3.x 3.9.2</a>
+        </td>
+        <td>548403</td>
+        <td>Friday, February 19, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.1">Python 3.x 3.9.1</a>
+        </td>
+        <td>834820</td>
+        <td>Tuesday, December 8, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0">Python 3.x 3.9.0</a>
+        </td>
+        <td>747564</td>
+        <td>Monday, October 5, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-rc2">Python 3.x 3.9.0-rc2</a>
+        </td>
+        <td>716</td>
+        <td>Thursday, September 17, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-rc1">Python 3.x 3.9.0-rc1</a>
+        </td>
+        <td>1183</td>
+        <td>Wednesday, August 12, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-b5">Python 3.x 3.9.0-b5</a>
+        </td>
+        <td>797</td>
+        <td>Tuesday, July 21, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-b4">Python 3.x 3.9.0-b4</a>
+        </td>
+        <td>1040</td>
+        <td>Friday, July 3, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-b3">Python 3.x 3.9.0-b3</a>
+        </td>
+        <td>788</td>
+        <td>Wednesday, June 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-b2">Python 3.x 3.9.0-b2</a>
+        </td>
+        <td>152</td>
+        <td>Tuesday, June 9, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-b1">Python 3.x 3.9.0-b1</a>
+        </td>
+        <td>721</td>
+        <td>Tuesday, May 19, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-a6">Python 3.x 3.9.0-a6</a>
+        </td>
+        <td>704</td>
+        <td>Wednesday, April 29, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <span>Python 3.x 3.9.0-a5</span>
+        </td>
+        <td>1098</td>
+        <td>Tuesday, March 24, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-a4">Python 3.x 3.9.0-a4</a>
+        </td>
+        <td>989</td>
+        <td>Wednesday, February 26, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-a3">Python 3.x 3.9.0-a3</a>
+        </td>
+        <td>1042</td>
+        <td>Saturday, January 25, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-a2-20200110">Python 3.x 3.9.0-a2-20200110</a>
+        </td>
+        <td>599</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-a2">Python 3.x 3.9.0-a2</a>
+        </td>
+        <td>593</td>
+        <td>Friday, December 20, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.9.0-a1">Python 3.x 3.9.0-a1</a>
+        </td>
+        <td>921</td>
+        <td>Wednesday, November 20, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.10">Python 3.x 3.8.10</a>
+        </td>
+        <td>171</td>
+        <td>Monday, May 3, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.9">Python 3.x 3.8.9</a>
+        </td>
+        <td>1665</td>
+        <td>Friday, April 2, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.8">Python 3.x 3.8.8</a>
+        </td>
+        <td>5404</td>
+        <td>Friday, February 19, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.7">Python 3.x 3.8.7</a>
+        </td>
+        <td>2961</td>
+        <td>Tuesday, December 22, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.6">Python 3.x 3.8.6</a>
+        </td>
+        <td>139950</td>
+        <td>Thursday, September 24, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.6-rc1">Python 3.x 3.8.6-rc1</a>
+        </td>
+        <td>96</td>
+        <td>Wednesday, September 9, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.5.20200721">Python 3.x 3.8.5.20200721</a>
+        </td>
+        <td>648676</td>
+        <td>Tuesday, July 21, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.5">Python 3.x 3.8.5</a>
+        </td>
+        <td>150490</td>
+        <td>Monday, July 20, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.4">Python 3.x 3.8.4</a>
+        </td>
+        <td>76268</td>
+        <td>Tuesday, July 14, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.4-rc1">Python 3.x 3.8.4-rc1</a>
+        </td>
+        <td>89</td>
+        <td>Friday, July 3, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.3">Python 3.x 3.8.3</a>
+        </td>
+        <td>591858</td>
+        <td>Thursday, May 14, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.3-rc1">Python 3.x 3.8.3-rc1</a>
+        </td>
+        <td>433</td>
+        <td>Thursday, April 30, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.2">Python 3.x 3.8.2</a>
+        </td>
+        <td>546332</td>
+        <td>Wednesday, February 26, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.1.20200110">Python 3.x 3.8.1.20200110</a>
+        </td>
+        <td>157852</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.1">Python 3.x 3.8.1</a>
+        </td>
+        <td>75879</td>
+        <td>Thursday, December 19, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0">Python 3.x 3.8.0</a>
+        </td>
+        <td>185875</td>
+        <td>Tuesday, October 15, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-rc1">Python 3.x 3.8.0-rc1</a>
+        </td>
+        <td>413</td>
+        <td>Friday, October 4, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-b4">Python 3.x 3.8.0-b4</a>
+        </td>
+        <td>986</td>
+        <td>Friday, August 30, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-b3">Python 3.x 3.8.0-b3</a>
+        </td>
+        <td>728</td>
+        <td>Tuesday, July 30, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-b2">Python 3.x 3.8.0-b2</a>
+        </td>
+        <td>530</td>
+        <td>Friday, July 5, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-b1">Python 3.x 3.8.0-b1</a>
+        </td>
+        <td>919</td>
+        <td>Wednesday, June 5, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-a4">Python 3.x 3.8.0-a4</a>
+        </td>
+        <td>741</td>
+        <td>Tuesday, May 7, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-a3">Python 3.x 3.8.0-a3</a>
+        </td>
+        <td>839</td>
+        <td>Tuesday, March 26, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-a2">Python 3.x 3.8.0-a2</a>
+        </td>
+        <td>720</td>
+        <td>Tuesday, February 26, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.8.0-a1">Python 3.x 3.8.0-a1</a>
+        </td>
+        <td>525</td>
+        <td>Friday, February 8, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.9">Python 3.x 3.7.9</a>
+        </td>
+        <td>28691</td>
+        <td>Tuesday, August 18, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.8">Python 3.x 3.7.8</a>
+        </td>
+        <td>5946</td>
+        <td>Monday, June 29, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.7">Python 3.x 3.7.7</a>
+        </td>
+        <td>14896</td>
+        <td>Tuesday, March 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.6.20200110">Python 3.x 3.7.6.20200110</a>
+        </td>
+        <td>8111</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.6">Python 3.x 3.7.6</a>
+        </td>
+        <td>78662</td>
+        <td>Friday, December 20, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.5">Python 3.x 3.7.5</a>
+        </td>
+        <td>54828</td>
+        <td>Thursday, October 17, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.4">Python 3.x 3.7.4</a>
+        </td>
+        <td>269708</td>
+        <td>Tuesday, July 9, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.3">Python 3.x 3.7.3</a>
+        </td>
+        <td>222051</td>
+        <td>Tuesday, March 26, 2019</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.2">Python 3.x 3.7.2</a>
+        </td>
+        <td>153795</td>
+        <td>Monday, December 24, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.2-rc1">Python 3.x 3.7.2-rc1</a>
+        </td>
+        <td>320</td>
+        <td>Wednesday, December 12, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.1">Python 3.x 3.7.1</a>
+        </td>
+        <td>179265</td>
+        <td>Saturday, October 20, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.1-rc2">Python 3.x 3.7.1-rc2</a>
+        </td>
+        <td>287</td>
+        <td>Sunday, October 14, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.1-rc1">Python 3.x 3.7.1-rc1</a>
+        </td>
+        <td>621</td>
+        <td>Thursday, September 27, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0">Python 3.x 3.7.0</a>
+        </td>
+        <td>217603</td>
+        <td>Thursday, June 28, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-rc1">Python 3.x 3.7.0-rc1</a>
+        </td>
+        <td>417</td>
+        <td>Wednesday, June 13, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-b5">Python 3.x 3.7.0-b5</a>
+        </td>
+        <td>447</td>
+        <td>Thursday, May 31, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-b4">Python 3.x 3.7.0-b4</a>
+        </td>
+        <td>609</td>
+        <td>Thursday, May 3, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-b3">Python 3.x 3.7.0-b3</a>
+        </td>
+        <td>620</td>
+        <td>Friday, March 30, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-b2">Python 3.x 3.7.0-b2</a>
+        </td>
+        <td>636</td>
+        <td>Wednesday, February 28, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-b1">Python 3.x 3.7.0-b1</a>
+        </td>
+        <td>627</td>
+        <td>Thursday, February 1, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-a4-20180116">Python 3.x 3.7.0-a4-20180116</a>
+        </td>
+        <td>506</td>
+        <td>Tuesday, January 16, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-a4">Python 3.x 3.7.0-a4</a>
+        </td>
+        <td>414</td>
+        <td>Tuesday, January 9, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-a3">Python 3.x 3.7.0-a3</a>
+        </td>
+        <td>614</td>
+        <td>Wednesday, December 6, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.7.0-a2">Python 3.x 3.7.0-a2</a>
+        </td>
+        <td>580</td>
+        <td>Thursday, November 9, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.8.20200110">Python 3.x 3.6.8.20200110</a>
+        </td>
+        <td>97</td>
+        <td>Saturday, April 3, 2021</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.8">Python 3.x 3.6.8</a>
+        </td>
+        <td>120438</td>
+        <td>Tuesday, December 25, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.8-rc1">Python 3.x 3.6.8-rc1</a>
+        </td>
+        <td>926</td>
+        <td>Wednesday, December 12, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.7">Python 3.x 3.6.7</a>
+        </td>
+        <td>37467</td>
+        <td>Saturday, October 20, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.7-rc2">Python 3.x 3.6.7-rc2</a>
+        </td>
+        <td>221</td>
+        <td>Sunday, October 14, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.7-rc1">Python 3.x 3.6.7-rc1</a>
+        </td>
+        <td>189</td>
+        <td>Thursday, September 27, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.6">Python 3.x 3.6.6</a>
+        </td>
+        <td>58196</td>
+        <td>Thursday, June 28, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.6-rc1">Python 3.x 3.6.6-rc1</a>
+        </td>
+        <td>263</td>
+        <td>Wednesday, June 13, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.5">Python 3.x 3.6.5</a>
+        </td>
+        <td>88192</td>
+        <td>Thursday, March 29, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.5-rc1">Python 3.x 3.6.5-rc1</a>
+        </td>
+        <td>357</td>
+        <td>Wednesday, March 14, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.4.20180116">Python 3.x 3.6.4.20180116</a>
+        </td>
+        <td>42412</td>
+        <td>Tuesday, January 16, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.4">Python 3.x 3.6.4</a>
+        </td>
+        <td>20724</td>
+        <td>Tuesday, December 19, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.4-rc1">Python 3.x 3.6.4-rc1</a>
+        </td>
+        <td>342</td>
+        <td>Wednesday, December 6, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.3">Python 3.x 3.6.3</a>
+        </td>
+        <td>195791</td>
+        <td>Wednesday, October 4, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.2">Python 3.x 3.6.2</a>
+        </td>
+        <td>33499</td>
+        <td>Monday, July 17, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.1">Python 3.x 3.6.1</a>
+        </td>
+        <td>33254</td>
+        <td>Wednesday, March 22, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.6.0">Python 3.x 3.6.0</a>
+        </td>
+        <td>33053</td>
+        <td>Friday, December 23, 2016</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.4.20200110">Python 3.x 3.5.4.20200110</a>
+        </td>
+        <td>2391</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.4">Python 3.x 3.5.4</a>
+        </td>
+        <td>23654</td>
+        <td>Thursday, November 9, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.2.20161029">Python 3.x 3.5.2.20161029</a>
+        </td>
+        <td>25303</td>
+        <td>Saturday, October 29, 2016</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.2">Python 3.x 3.5.2</a>
+        </td>
+        <td>6055</td>
+        <td>Tuesday, October 4, 2016</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.1.20161002">Python 3.x 3.5.1.20161002</a>
+        </td>
+        <td>13739</td>
+        <td>Sunday, October 2, 2016</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.1">Python 3.x 3.5.1</a>
+        </td>
+        <td>33053</td>
+        <td>Monday, December 7, 2015</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.0.20151010">Python 3.x 3.5.0.20151010</a>
+        </td>
+        <td>5844</td>
+        <td>Saturday, October 10, 2015</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.5.0">Python 3.x 3.5.0</a>
+        </td>
+        <td>984</td>
+        <td>Saturday, October 10, 2015</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.4.20200110">Python 3.x 3.4.4.20200110</a>
+        </td>
+        <td>1387</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.4.20180111">Python 3.x 3.4.4.20180111</a>
+        </td>
+        <td>7260</td>
+        <td>Thursday, January 11, 2018</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.4">Python 3.x 3.4.4</a>
+        </td>
+        <td>1918</td>
+        <td>Thursday, November 9, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.3.20150501">Python 3.x 3.4.3.20150501</a>
+        </td>
+        <td>5475</td>
+        <td>Friday, May 1, 2015</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.3">Python 3.x 3.4.3</a>
+        </td>
+        <td>1956</td>
+        <td>Wednesday, February 25, 2015</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.2">Python 3.x 3.4.2</a>
+        </td>
+        <td>2214</td>
+        <td>Wednesday, October 8, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.1.20141004">Python 3.x 3.4.1.20141004</a>
+        </td>
+        <td>476</td>
+        <td>Saturday, October 4, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.1.20140610">Python 3.x 3.4.1.20140610</a>
+        </td>
+        <td>1406</td>
+        <td>Tuesday, June 10, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.1.20140608">Python 3.x 3.4.1.20140608</a>
+        </td>
+        <td>501</td>
+        <td>Saturday, June 7, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.1.20140607">Python 3.x 3.4.1.20140607</a>
+        </td>
+        <td>425</td>
+        <td>Saturday, June 7, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.1">Python 3.x 3.4.1</a>
+        </td>
+        <td>1064</td>
+        <td>Tuesday, May 20, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.0.20140512">Python 3.x 3.4.0.20140512</a>
+        </td>
+        <td>532</td>
+        <td>Monday, May 12, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.4.0">Python 3.4.0</a>
+        </td>
+        <td>935</td>
+        <td>Monday, March 17, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.3.5">Python 3.3.5</a>
+        </td>
+        <td>1224</td>
+        <td>Sunday, March 9, 2014</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.3.4">Python 3.x 3.3.4</a>
+        </td>
+        <td>887</td>
+        <td>Thursday, November 9, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.3.3">Python 3 3.3.3</a>
+        </td>
+        <td>1222</td>
+        <td>Sunday, November 24, 2013</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.3.2">Python 3 3.3.2</a>
+        </td>
+        <td>998</td>
+        <td>Saturday, June 15, 2013</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.2.5.20200110">Python 3.x 3.2.5.20200110</a>
+        </td>
+        <td>167</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.2.5">Python 3.x 3.2.5</a>
+        </td>
+        <td>379</td>
+        <td>Thursday, November 9, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.1.4.20200110">Python 3.x 3.1.4.20200110</a>
+        </td>
+        <td>170</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.1.4">Python 3.x 3.1.4</a>
+        </td>
+        <td>349</td>
+        <td>Thursday, November 9, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.0.1.20200110">Python 3.x 3.0.1.20200110</a>
+        </td>
+        <td>175</td>
+        <td>Friday, January 10, 2020</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+
+    <tr class="versionTableRow align-middle versionTableRowMore" style="display: none">
+        <td class="version" >
+                <a href="/packages/python3/3.0.1">Python 3.x 3.0.1</a>
+        </td>
+        <td>520</td>
+        <td>Thursday, November 9, 2017</td>
+    
+                <td><span class="fas fa-check text-success"></span> Approved</td>
+    
+    </tr>
+                    </tbody>
+                </table>
+                    <button type="button" class="btn btn-sm btn-show-hide btn-secondary" onclick="if($(this).is(':contains(&quot;Hide&quot;)')){$('.versionTableRowMore').hide();}else{$('.versionTableRowMore').show();}">Show Additional Versions</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mb-4 pb-4">
+        <a class="h2 btn-collapse d-block mb-n5 collapsed" data-bs-toggle="collapse" href="#dependencies" role="button" aria-expanded="false" aria-controls="dependencies" title="Nuspec reference: dependencies">Dependencies</a>
+        <div class="collapse mb-n4 " id="dependencies">
+            <span class="pt-5 d-block"></span>
+            <hr />
+                <ul id="dependencySets" class="list-unstyled">
+            <li>
+                <ul class="dependencySet list-unstyled">
+                        <li>
+                            <span title='Nuspec reference: &lt;dependency id=&quot;chocolatey-core.extension&quot; version=&quot;1.3.5&quot; /&gt;'>
+                                <a href="/packages/chocolatey-core.extension">chocolatey-core.extension</a>
+                            <span>(≥ 1.3.5)</span>
+                            </span>
+                        </li>
+                        <li>
+                            <span title='Nuspec reference: &lt;dependency id=&quot;vcredist2015&quot; version=&quot;14.0.24215.20170201&quot; /&gt;'>
+                                <a href="/packages/vcredist2015">vcredist2015</a>
+                            <span>(≥ 14.0.24215.20170201)</span>
+                            </span>
+                        </li>
+                </ul>
+            </li>
+    </ul>
+
+        </div>
+    </div>
+    
+    <div class="mb-4 pb-4">
+        <a class="h2 btn-collapse d-block mb-n5" data-bs-toggle="collapse" href="#discussion" role="button" aria-expanded="true" aria-controls="discussion" title=">Discussion for the Python 3.x Package">Discussion for the Python 3.x Package</a>
+        <div class="collapse show" id="discussion">
+            <span class="pt-5 d-block"></span>
+            <hr />
+            <h3>Ground Rules:</h3>
+            <ul>
+                <li>This discussion is only about Python 3.x and the Python 3.x package. If you have feedback for Chocolatey, please contact the <a href="https://groups.google.com/group/chocolatey">Google Group</a>.</li>
+                <li>This discussion will carry over multiple versions. If you have a comment about a particular version, please note that in your comments.</li>
+                <li>
+                    The maintainers of this Chocolatey Package will be notified about new comments that are posted to this Disqus thread, however, it is NOT a guarantee that you
+                    will get a response. If you do not hear back from the maintainers after posting a message below, please follow up by using the link
+                    on the left side of this page or follow this link to <a href="/packages/python3/3.9.0-a5/ContactOwners">contact maintainers</a>.
+                    If you still hear nothing back, please follow the <a href="https://docs.chocolatey.org/en-us/community-repository/users/package-triage-process">package triage process</a>.
+                </li>
+                <li>Tell us what you love about the package or Python 3.x, or tell us what needs improvement.</li>
+                <li>Share your experiences with the package, or extra configuration or gotchas that you've found.</li>
+                <li>If you use a url, the comment will be flagged for moderation until you've been whitelisted. Disqus moderated comments are approved on a weekly schedule if not sooner. It could take between 1-5 days for your comment to show up.</li>
+            </ul>
+            <a name="disqus"></a>
+            <div id="disqus_thread"></div>
+            <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+</div>
+</section>
+
+
+    </main>
+    <footer class="flex-shrink-0">
+        <section id="mc_embed_signup" class="bg-theme-primary border-top py-3">
+    <div class="container-fluid">
+        <form action="//chocolatey.us8.list-manage.com/subscribe/post?u=86a6d80146a0da7f2223712e4&amp;id=73b018498d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-auto text-center text-md-start">
+                    <h3 class="mb-0">Signup for the Newsletter!</h3>
+                </div>
+                <div class="col-md-3">
+                    <input type="email" title="Email Address for Newsletter" class="form-control email mt-2 mt-md-0" id="mce-EMAIL" placeholder="Your e-mail address" value="" name="EMAIL" required>
+                </div>
+                <div style="position: absolute; left: -5000px;">
+                    <input title="Invisible Field" type="text" name="b_86a6d80146a0da7f2223712e4_73b018498d" tabindex="-1" value="">
+                </div>
+                <div class="col-md-auto">
+                    <button type="submit" class="btn btn-theme mt-2 mt-md-0 w-100" id="mc-embedded-subscribe"><strong>Subscribe</strong></button>
+                </div>
+            </div>
+            <p class="mb-0 mt-1 text-center"><i>Be the first to know about upcoming features, security releases, and news about Chocolatey.</i></p>
+        </form>
+    </div>
+</section>
+        <section class="bg-theme-primary-light fw-bold border-top py-5 text-center text-md-start">
+    <div class="container">
+        <div class="row row-divider row-md-divider-none ">
+            <div class="col-md-3 pb-3 pb-md-0">
+                <h4>Overview</h4>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="/courses">Getting Started Guide</a></li>
+                    <li><a href="https://docs.chocolatey.org/en-us/information/security">Security</a></li>
+                    <li><a href="https://chocolatey.org/privacy">Privacy Policy</a></li>
+                    <li><a href="https://chocolatey.org/partner">Partner</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 py-3 py-md-0">
+                <h4>Product</h4>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="https://chocolatey.org/contact/trial">C4B Trial</a></li>
+                    <li><a href="https://chocolatey.org/pricing">Pricing</a></li>
+                    <li><a href="https://chocolatey.org/support">Support</a></li>
+                    <li><a href="/packages">Community Packages</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 py-3 py-md-0">
+                <h4>Learn</h4>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="https://docs.chocolatey.org/en-us/">Docs</a></li>
+                    <li><a href="/courses">Courses</a></li>
+                    <li><a href="/sitemap">Sitemap</a></li>
+                    <li class="d-flex justify-content-center justify-content-md-start">
+                        <a class="me-2" href="https://blog.chocolatey.org/">Blog</a>
+                        <a href="https://feeds.feedburner.com/ChocolateyBlog" rel="alternate" type="application/rss+xml" target="_blank" aria-label="Connect with Chocolatey on pur Blog RSS feed">
+                            <div class="bg-rss circle circle-sm" aria-hidden="true">
+                                <i class="fas fa-rss"></i>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3 pt-3 pt-md-0">
+                <h4>Connect</h4>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="https://chocolatey.org/contact/">Contact Us</a></li>
+                    <li><a href="https://chocolatey.org/support">Support</a></li>
+                    <li><a href="http://eepurl.com/4qUJH">Newsletter</a></li>
+                    <li><a href="http://cafepress.com/chocolatey">Shop</a></li>
+                    <li><a href="https://chocolatey.org/bugs">Report a Bug</a></li>
+                    <li><a href="https://status.chocolatey.org">Status</a></li>
+                    <li class="pt-3">
+                        
+<ul class="list-unstyled list-inline mb-0">
+    <li class="list-inline-item">
+        <a href="https://twitter.com/chocolateynuget" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on Twitter">
+            <div class="bg-twitter circle" aria-hidden="true">
+                <i class="fab fa-twitter"></i>
+            </div>
+        </a>
+    </li>
+    <li class="list-inline-item">
+        <a href="https://www.linkedin.com/company/chocolatey-software/" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on LinkedIn">
+            <div class="bg-linkedin circle" aria-hidden="true">
+                <i class="fab fa-linkedin-in"></i>
+            </div>
+        </a>
+    </li>
+    <li class="list-inline-item">
+        <a href="https://github.com/chocolatey" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on GitHub">
+            <div class="bg-github circle" aria-hidden="true">
+                <i class="fab fa-github"></i>
+            </div>
+        </a>
+    </li>
+    <li class="list-inline-item">
+        <a href="https://www.youtube.com/chocolateysoftware" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on YouTube">
+            <div class="bg-youtube circle" aria-hidden="true">
+                <i class="fab fa-youtube"></i>
+            </div>
+        </a>
+    </li>
+    <li class="list-inline-item">
+        <a href="https://www.twitch.tv/chocolateysoftware" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on Twitch">
+            <div class="bg-twitch circle" aria-hidden="true">
+                <i class="fab fa-twitch"></i>
+            </div>
+        </a>
+    </li>
+    <li class="list-inline-item">
+        <a href="https://facebook.com/ChocolateySoftware" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on Facebook">
+            <div class="bg-facebook circle" aria-hidden="true">
+                <i class="fab fa-facebook-f"></i>
+            </div>
+        </a>
+    </li>
+    <li class="list-inline-item">
+        <a href="https://gitter.im/chocolatey/chocolatey.org" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on Gitter">
+            <div class="bg-gitter circle" aria-hidden="true">
+                <i class="fab fa-gitter"></i>
+            </div>
+        </a>
+    </li>
+    <li class="list-inline-item">
+        <a href="https://groups.google.com/forum/#!forum/chocolatey" target="_blank" rel="noreferrer" aria-label="Connect with Chocolatey on Google Groups">
+            <div class="bg-google circle" aria-hidden="true">
+                <i class="fab fa-google"></i>
+            </div>
+        </a>
+    </li>
+</ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+        <section class="bg-theme-light border-top text-center px-3 pt-3">
+    <span class="small">
+        <span>&copy; 2021 Chocolatey Software, Inc.</span><br />
+        <span class="text-bg-theme-light">Deployed from 300bc7603b. You are on web.1. Page generated 15 May 2021 08:21:30 +00:00.</span>
+    </span>
+</section>
+        <div id="cookieNoticeAlert" class="alert alert-primary alert-dismissible alert-dismissible-center alert-btn-center fade show d-none" role="alert">
+    <p class="mb-0"><strong>chocolatey.org uses cookies to enhance the user experience of the site.</strong></p>
+    <button type="button" class="btn btn-theme btn-sm d-none d-md-inline-block" data-bs-dismiss="alert" aria-label="Close">I accept</button>
+    <button type="button" class="btn btn-theme d-md-none" data-bs-dismiss="alert" aria-label="Close">I accept</button>
+</div>
+    </footer>
+    <div id="cookieNoticeAlert" class="alert alert-primary alert-dismissible alert-dismissible-center alert-btn-center fade show d-none" role="alert">
+    <p class="mb-0"><strong>chocolatey.org uses cookies to enhance the user experience of the site.</strong></p>
+    <button type="button" class="btn btn-theme btn-sm d-none d-md-inline-block" data-bs-dismiss="alert" aria-label="Close">I accept</button>
+    <button type="button" class="btn btn-theme d-md-none" data-bs-dismiss="alert" aria-label="Close">I accept</button>
+</div>
+
+    
+
+
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default,Array.prototype.includes,Array.prototype.find,Number.parseFloat%2CNumber.parse%2CNodeList.prototype.forEach%2CNumber.parseInt"></script>
+    
+<script src="/cassette.axd/script/accb62d4962f80442c85ed843f75f94a4911503d/Scripts/main" type="text/javascript"></script>
+<script src="/cassette.axd/script/b0ee098c1609244f4fefda2a8e50a8d01fc03b49/Scripts/packages" type="text/javascript"></script>
+
+
+    
+    <script language="javascript" type="text/javascript">
+        ((window.gitter = {}).chat = {}).options = {
+            room: 'chocolatey/chocolatey.org'
+        };
+    </script>
+    <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+    <script type="text/javascript" language="javascript">
+        var disqus_shortname = 'chocolatey';
+        var disqus_url = 'https://community.chocolatey.org/packages/python3';
+        var commentItem;
+        function disqus_config() {
+            this.callbacks.onNewComment = [function (comment) {
+            var commentViewModel = { Id: comment.id, Text: comment.text };
+
+            // take the data and post it via json
+            $.post('https://community.chocolatey.org/packages/python3/notify-comment', commentViewModel, function (data) {
+                // At the minute, it is fire and forget
+            });
+            } ];
+        }
+
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    <noscript><img src="https://ws.zoominfo.com/pixel/KPKpTJOFOv5SuV7X3eGx" width="1" height="1" style="display: none;" /></noscript>
+</body>
+</html>
