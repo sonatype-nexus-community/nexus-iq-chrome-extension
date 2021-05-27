@@ -19,12 +19,33 @@ import {FORMATS} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 
 const parseChocolatey = (url: string): PackageURL | undefined => {
-  //https://chocolatey.org/packages/python3/3.9.0-a5
-  const elements = url.split('/');
-  const name = elements[4];
-  const version = elements[5];
+  //   //https://chocolatey.org/packages/python3/3.9.0-a5
+  //   const elements = url.split('/');
+  //   const name = elements[4];
+  //   const version = elements[5];
+  //   return generatePackageURL('chocolatey', name, version);
 
-  return generatePackageURL('chocolatey', name, version);
+  // https://community.chocolatey.org/packages/CutePDF
+  const elements = url.split('/');
+
+  const name = elements[4];
+  if (elements.length > 5) {
+    return generatePackageURL(FORMATS.chocolatey, name, elements[5]);
+  }
+  //   const version = $(
+  //     '#package-sidebar > div.col-md-9.col-xl-10 > div.mb-3.d-none.d-md-block > h1 > span.ml-2'
+  //   )
+  //     .text()
+  //     .trim();
+  const version = $('h1 > span').text().trim();
+  return generatePackageURL(FORMATS.chocolatey, name, version);
+  //   if (typeof version !== 'undefined') {
+  //     const versionArray = version.split(' ');
+  //     if (versionArray.length > 0) {
+  //       return generatePackageURL(FORMATS.chocolatey, name, versionArray[1]);
+  //     }
+  //   }
+  //   return undefined;
 };
 
 export {parseChocolatey};

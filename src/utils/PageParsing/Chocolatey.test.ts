@@ -20,10 +20,6 @@ import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Chocolatey Page Parsing', () => {
   test('should parse a valid Chocolatey page', () => {
-    const html = readFileSync(join(__dirname, 'testdata/chocolatey.html'));
-
-    window.document.body.innerHTML = html.toString();
-
     const rt: RepoType = {
       url: '',
       repoFormat: FORMATS.chocolatey,
@@ -36,6 +32,29 @@ describe('Chocolatey Page Parsing', () => {
     const PackageURL = getArtifactDetailsFromDOM(
       rt,
       'https://community.chocolatey.org/packages/python3/3.9.0-a5'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe(FORMATS.chocolatey);
+    expect(PackageURL?.name).toBe('python3');
+    expect(PackageURL?.version).toBe('3.9.0-a5');
+  });
+
+  test('should parse valid Chocolatey page with the version', () => {
+    const html = readFileSync(join(__dirname, 'testdata/chocolatey.html'));
+
+    window.document.body.innerHTML = html.toString();
+    const rt: RepoType = {
+      url: '',
+      repoFormat: FORMATS.chocolatey,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.OSSINDEX,
+      appendVersionPath: ''
+    };
+    const PackageURL = getArtifactDetailsFromDOM(
+      rt,
+      'https://community.chocolatey.org/packages/python3'
     );
 
     expect(PackageURL).toBeDefined();
