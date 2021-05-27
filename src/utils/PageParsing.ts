@@ -25,6 +25,7 @@ import {parseCRAN} from './PageParsing/CRAN';
 import {parseConda} from './PageParsing/Anaconda';
 import {parsePackagist} from './PageParsing/Packagist';
 import {parseChocolatey} from './PageParsing/Chocolatey';
+import {parseCocoaPods} from './PageParsing/CocoaPods';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   if (repoFormat.repoFormat === FORMATS.npm) {
@@ -47,6 +48,8 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parsePackagist(url);
   } else if (repoFormat.repoFormat === FORMATS.chocolatey) {
     return parseChocolatey(url);
+  } else if (repoFormat.repoFormat === FORMATS.cocoapods) {
+    return parseCocoaPods(url);
   }
 
   return undefined;
