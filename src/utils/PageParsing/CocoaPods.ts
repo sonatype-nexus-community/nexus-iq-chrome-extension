@@ -20,13 +20,10 @@ import {generatePackageURL} from './PurlUtils';
 
 //https://cocoapods.org/pods/TestFairy
 const parseCocoaPods = (url: string): PackageURL | undefined => {
-  // console.log("parseCocoaPods. format, url:", format, url);
   const elements = url.split('/');
-  // let versionHTML = $("H1 span").first().text();
-  // console.log("versionHTML:", versionHTML);
-  // let version = versionHTML.trim();
   const version = $('H1 span').first().text().trim();
   const name = elements[4];
+
   return generatePackageURL(FORMATS.cocoapods, name, version);
 };
 export {parseCocoaPods};
