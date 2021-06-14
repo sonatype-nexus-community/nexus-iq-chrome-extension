@@ -40,7 +40,8 @@ describe('Clojars Page Parsing', () => {
 
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.type).toBe(FORMATS.clojars);
-    expect(PackageURL?.name).toBe('k2n/saml20-clj');
+    // expect(PackageURL?.name).toBe('k2n/saml20-clj');
+    expect(PackageURL?.name).toBe('saml20-clj');
     expect(PackageURL?.version).toBe('0.1.7');
   });
 });
