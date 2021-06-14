@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <link
+      href="/opensearch.xml"
+      rel="search"
+      title="Clojars"
+      type="application/opensearchdescription+xml"
+    />
+    <link href="/favicon.ico" rel="shortcut icon" />
+    <meta content='[k2n/saml20-clj "0.1.7"] Basic SAML 2.0 library for SSO.' name="description" />
+    <meta content="summary" name="twitter:card" />
+    <meta content="@clojars" name="twitter:site:id" />
+    <meta content="https://clojars.org" name="twitter:site" />
+    <meta content='[k2n/saml20-clj "0.1.7"]' name="twitter:title" />
+    <meta
+      content='[k2n/saml20-clj "0.1.7"] Basic SAML 2.0 library for SSO.'
+      name="twitter:description"
+    />
+    <meta content="https://clojars.org/images/clojars-logo@2x.png" name="twitter:image" />
+    <meta content="Total downloads / this version" name="twitter:label1" />
+    <meta content="5,515 / 298" name="twitter:data1" />
+    <meta content="Coordinates" name="twitter:label2" />
+    <meta content='[k2n/saml20-clj "0.1.7"]' name="twitter:data2" />
+    <meta content="website" property="og:type" />
+    <meta content="Clojars" property="og:site_name" />
+    <meta content='[k2n/saml20-clj "0.1.7"]' property="og:title" />
+    <meta
+      content='[k2n/saml20-clj "0.1.7"] Basic SAML 2.0 library for SSO.'
+      property="og:description"
+    />
+    <meta content="https://clojars.org/images/clojars-logo@2x.png" property="og:image" />
+    <title>[k2n/saml20-clj &quot;0.1.7&quot;] - Clojars</title>
+    <link href="/stylesheets/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/vendor/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/screen.css" rel="stylesheet" type="text/css" />
+    <script src="https://use.typekit.net/zhw0tse.js" type="text/javascript"></script>
+    <script>
+      try {
+        Typekit.load({async: true});
+      } catch (e) {}
+    </script>
+    <!--[if lt IE 9]><script src="/js/html5.js" type="text/javascript"></script><![endif]-->
+  </head>
+  <body class="container-fluid">
+    <div id="content-wrapper">
+      <header class="small-header row">
+        <div class="home col-xs-6 col-sm-3">
+          <a href="/"
+            ><img
+              alt="Clojars"
+              src="/images/clojars-logo-tiny.png"
+              srcset="/images/clojars-logo-tiny@2x.png 2x"
+          /></a>
+          <h1><a href="/">Clojars</a></h1>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+          <form action="/search">
+            <input
+              class="search"
+              id="search"
+              name="q"
+              placeholder="Search projects..."
+              required
+              type="search"
+            />
+          </form>
+        </div>
+        <nav class="main-navigation col-xs-12 col-sm-6">
+          <ul>
+            <li><a href="/login">login</a></li>
+            <li><a href="/register">register</a></li>
+          </ul>
+        </nav>
+      </header>
+      <div class="light-article row">
+        <script type="application/ld+json">
+          {
+            "@context": "http://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {"@id": "https://clojars.org/groups/k2n", "name": "k2n"}
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {"@id": "https://clojars.org/k2n/saml20-clj", "name": "saml20-clj"}
+              }
+            ]
+          }
+        </script>
+        <script>
+          function selectText(containerid) {
+            var node = document.getElementById(containerid);
+
+            if (window.getSelection) {
+              if (window.getSelection().type != 'Range') {
+                var range = document.createRange();
+                range.selectNodeContents(node);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+              }
+            }
+          }
+        </script>
+        <div class="col-xs-12 col-sm-9" id="jar-title">
+          <div>
+            <h1><a href="/k2n/saml20-clj">k2n/saml20-clj</a></h1>
+          </div>
+          <p class="description">Basic SAML 2.0 library for SSO.</p>
+          <ul class="row" id="jar-info-bar">
+            <li class="col-xs-12 col-sm-3">
+              <a href="https://github.com/k2n/saml20-clj"
+                ><img
+                  alt="GitHub"
+                  src="/images/github-mark.png"
+                  srcset="/images/github-mark@2x.png 2x, /images/github-mark@3x.png 3x"
+                />k2n/saml20-clj</a
+              >
+            </li>
+            <li class="col-xs-12 col-sm-3">
+              <a href="https://cljdoc.org/d/k2n/saml20-clj/0.1.7"
+                ><img
+                  alt="cljdoc documentation"
+                  height="16"
+                  src="/images/cljdoc-icon.svg"
+                />cljdoc</a
+              >
+            </li>
+            <li class="col-xs-12 col-sm-3">5,515 Downloads</li>
+            <li class="col-xs-12 col-sm-3">298 This Version</li>
+          </ul>
+          <h2>Leiningen/Boot</h2>
+          <div
+            class="package-config-example"
+            id="leiningen-coordinates"
+            onClick="selectText('leiningen-coordinates');"
+          >
+            <pre><span class="tag">[</span>k2n/saml20-clj<span class="string"> &quot;0.1.7&quot;</span><span class="tag">]</span></pre>
+          </div>
+          <h2>Clojure CLI/deps.edn</h2>
+          <div
+            class="package-config-example"
+            id="deps-coordinates"
+            onClick="selectText('deps-coordinates');"
+          >
+            <pre>k2n/saml20-clj <span class="tag">{</span>:mvn/version <span class="string">&quot;0.1.7&quot;</span><span class="tag">}</span></pre>
+          </div>
+          <h2>Gradle</h2>
+          <div
+            class="package-config-example"
+            id="gradle-coordinates"
+            onClick="selectText('gradle-coordinates');"
+          >
+            <pre>compile <span class="string">&apos;k2n:saml20-clj:0.1.7&apos;</span></pre>
+          </div>
+          <h2>Maven</h2>
+          <div
+            class="package-config-example"
+            id="maven-coordinates"
+            onClick="selectText('maven-coordinates');"
+          >
+            <pre><span class="tag">&lt;dependency&gt;
+</span><span class="tag">  &lt;groupId&gt;</span>k2n<span class="tag">&lt;/groupId&gt;
+</span><span class="tag">  &lt;artifactId&gt;</span>saml20-clj<span class="tag">&lt;/artifactId&gt;
+</span><span class="tag">  &lt;version&gt;</span>0.1.7<span class="tag">&lt;/version&gt;
+</span><span class="tag">&lt;/dependency&gt;</span></pre>
+          </div>
+        </div>
+        <ul class="col-xs-12 col-sm-3" id="jar-sidebar">
+          <li>
+            <h4>Pushed by</h4>
+            <a href="/users/k2n">k2n</a> on <span title="2017-03-25 04:32:19.465">Mar 25, 2017</span
+            ><span class="commit-url">
+              with
+              <a
+                href="https://github.com/k2n/saml20-clj/commit/396f1a669762f8770d8f735b44734acfed41b07e"
+                >this commit</a
+              ></span
+            >
+          </li>
+          <li>
+            <h4>Recent Versions</h4>
+            <ul id="versions">
+              <li><a href="/k2n/saml20-clj/versions/0.1.10-SNAPSHOT">0.1.10-SNAPSHOT</a></li>
+              <li><a href="/k2n/saml20-clj/versions/0.1.9">0.1.9</a></li>
+              <li><a href="/k2n/saml20-clj/versions/0.1.8">0.1.8</a></li>
+              <li><a href="/k2n/saml20-clj/versions/0.1.8-SNAPSHOT">0.1.8-SNAPSHOT</a></li>
+              <li><a href="/k2n/saml20-clj/versions/0.1.7">0.1.7</a></li>
+            </ul>
+            <p><a href="/k2n/saml20-clj/versions">Show All Versions (6 total)</a></p>
+          </li>
+          <li>
+            <h3>Dependencies</h3>
+            <ul id="dependencies">
+              <li>
+                <a
+                  href="http://search.maven.org/#artifactdetails%7Corg.clojure%7Cclojure%7C1.8.0%7Cjar"
+                  >org.clojure/clojure 1.8.0</a
+                >
+              </li>
+              <li><a href="/clj-time">clj-time 0.11.0</a></li>
+              <li><a href="/ring">ring 1.4.0</a></li>
+              <li>
+                <a
+                  href="http://search.maven.org/#artifactdetails%7Corg.apache.santuario%7Cxmlsec%7C2.0.4%7Cjar"
+                  >org.apache.santuario/xmlsec 2.0.4</a
+                >
+              </li>
+              <li><a href="/compojure">compojure 1.5.0</a></li>
+              <li>
+                <a
+                  href="http://search.maven.org/#artifactdetails%7Corg.opensaml%7Copensaml%7C2.6.4%7Cjar"
+                  >org.opensaml/opensaml 2.6.4</a
+                >
+              </li>
+              <li>
+                <a
+                  href="http://search.maven.org/#artifactdetails%7Corg.clojure%7Cdata.xml%7C0.0.7%7Cjar"
+                  >org.clojure/data.xml 0.0.7</a
+                >
+              </li>
+              <li>
+                <a
+                  href="http://search.maven.org/#artifactdetails%7Corg.clojure%7Cdata.codec%7C0.1.0%7Cjar"
+                  >org.clojure/data.codec 0.1.0</a
+                >
+              </li>
+              <li>
+                <a
+                  href="http://search.maven.org/#artifactdetails%7Corg.clojure%7Cdata.zip%7C0.1.1%7Cjar"
+                  >org.clojure/data.zip 0.1.1</a
+                >
+              </li>
+              <li><a href="/org.vlacs/helmsman">org.vlacs/helmsman 1.0.0-alpha5</a></li>
+            </ul>
+          </li>
+          <li class="homepage">
+            <h4>Homepage</h4>
+            <a href="https://github.com/vlacs/saml20-clj">https://github.com/vlacs/saml20-clj</a>
+          </li>
+          <li class="license">
+            <h4>License</h4>
+            <ul id="licenses">
+              <li>
+                <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h4>Version Badge</h4>
+            <p>
+              Want to display the
+              <a href="https://img.shields.io/clojars/v/k2n/saml20-clj.svg">latest version</a> of
+              your project on GitHub? Use the markdown code below!
+            </p>
+            <textarea
+              id="version-badge"
+              onClick="selectText('version-badge')"
+              readonly="readonly"
+              rows="6"
+            >
+[![Clojars Project](https://img.shields.io/clojars/v/k2n/saml20-clj.svg)](https://clojars.org/k2n/saml20-clj)</textarea
+            >
+          </li>
+        </ul>
+      </div>
+      <footer class="row">
+        <a href="https://github.com/clojars/clojars-web/wiki/About">about</a
+        ><a href="http://status.clojars.org">status</a><a href="/projects">projects</a
+        ><a href="https://github.com/clojars/clojars-web/wiki/Contributing">contribute</a
+        ><a
+          href="https://groups.google.com/forum/?fromgroups#!topicsearchin/clojars-maintainers/group:clojars-maintainers$20AND$20subject:ann"
+          >news</a
+        ><a href="https://github.com/clojars/clojars-web/wiki/Contact">contact</a
+        ><a href="https://github.com/clojars/clojars-web">code</a><a href="/security">security</a
+        ><a href="/dmca">DMCA</a><a href="https://github.com/clojars/clojars-web/wiki/">help</a>
+        <div class="sponsors">
+          <div class="sponsors-title">
+            sponsored by<a href="https://www.bountysource.com/teams/clojars/backers"
+              >individual contributors</a
+            >with hosting costs covered by:
+          </div>
+          <div class="sponsors-group">
+            <div class="sponsor">
+              <a href="https://clubhouse.io/"
+                ><img alt="Clubhouse Software" src="/images/clubhouse-logo.png"
+              /></a>
+            </div>
+          </div>
+          <div class="sponsors-title">and in-kind sponsorship from:</div>
+          <div class="sponsors-group">
+            <div class="sponsor">
+              <a href="https://www.deps.co"><img alt="Deps" src="/images/deps-logo.png" /></a>
+            </div>
+            <div class="sponsor">
+              <a href="https://dnsimple.link/resolving-clojars"
+                ><span>resolving with<br /></span
+                ><span
+                  ><img
+                    alt="DNSimple"
+                    src="https://cdn.dnsimple.com/assets/resolving-with-us/logo-light.png" /></span
+              ></a>
+            </div>
+            <div class="sponsor">
+              <a href="http://fastly.com/"><img alt="Fastly" src="/images/fastly-logo.png" /></a>
+            </div>
+          </div>
+          <div class="sponsors-group">
+            <div class="sponsor">
+              <a href="https://pingometer.com/"
+                ><img alt="Pingometer" src="/images/pingometer-logo.svg"
+              /></a>
+            </div>
+            <div class="sponsor">
+              <a href="http://sentry.io/"><img alt="Sentry" src="/images/sentry-logo.png" /></a>
+            </div>
+            <div class="sponsor">
+              <a href="https://www.statuspage.io"
+                ><img alt="StatusPage.io" src="/images/statuspage-io-logo.svg"
+              /></a>
+            </div>
+          </div>
+        </div>
+        <div class="sponsors">
+          <div class="sponsors-group">
+            <div class="sponsor">
+              <span>remixed by<br /></span
+              ><span
+                ><a href="http://www.bendyworks.com/"
+                  ><img alt="Bendyworks Inc." src="/images/bendyworks-logo.svg" width="150" /></a
+              ></span>
+            </div>
+            <div class="sponsor">
+              <span>member project of<br /></span
+              ><span
+                ><a href="https://clojuriststogether.org/"
+                  ><img
+                    alt="Clojurists Together Foundation"
+                    height="40"
+                    src="/images/clojurists-together-logo.png" /></a
+              ></span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

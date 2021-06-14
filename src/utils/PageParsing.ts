@@ -24,6 +24,7 @@ import {parsePyPIURL} from './PageParsing/PyPI';
 import {parseCRAN} from './PageParsing/CRAN';
 import {parseConda} from './PageParsing/Anaconda';
 import {parsePackagist} from './PageParsing/Packagist';
+import {parseClojars} from './PageParsing/Clojars';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   if (repoFormat.repoFormat === FORMATS.npm) {
@@ -44,6 +45,8 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseConda(url);
   } else if (repoFormat.repoFormat === FORMATS.composer) {
     return parsePackagist(url);
+  } else if (repoFormat.repoFormat === FORMATS.clojars) {
+    return parseClojars(url);
   }
 
   return undefined;
