@@ -20,17 +20,12 @@ import {generatePackageURL} from './PurlUtils';
 
 // https://clojars.org/k2n/saml20-clj/versions/0.1.7
 const parseClojars = (url: string): PackageURL | undefined => {
-  //   console.log("parseClojars -  format, url:", format, url);
-
   const elements = url.split('/');
-  //   console.log('ELEMENTS', elements);
-  //   const name = elements[3] + '/' + elements[4];
+
   const name = elements[4];
-  //[k2n/saml20-clj "0.1.9"] - Clojars
   const title = document.title;
-  console.log('title', title);
   const version = title.split(' ')[1].replace(/"/g, '').replace(']', '').trim();
-  //   console.log('NAME', name, 'VERSION', version)
+  
   return generatePackageURL(FORMATS.clojars, name, version);
 };
 
