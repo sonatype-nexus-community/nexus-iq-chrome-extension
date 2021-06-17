@@ -25,7 +25,7 @@ const parseClojars = (url: string): PackageURL | undefined => {
   const name = elements[4];
   const title = document.title;
   const version = title.split(' ')[1].replace(/"/g, '').replace(']', '').trim();
-  
+
   return generatePackageURL(FORMATS.clojars, name, version);
 };
 
