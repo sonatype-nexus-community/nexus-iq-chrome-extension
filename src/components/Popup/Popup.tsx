@@ -25,7 +25,11 @@ import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
 import {Puff} from '@agney/react-loading';
 import './Popup.css';
 
-const Popup = (): JSX.Element | null => {
+type PopupProps = {
+  getVulnDetails: (v: string) => Promise<void>;
+};
+
+const Popup = (props: PopupProps): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
 
   const nexusContext = useContext(NexusContext);
@@ -54,7 +58,7 @@ const Popup = (): JSX.Element | null => {
                 <ComponentInfoPage></ComponentInfoPage>
               </NxTabPanel>
               <NxTabPanel>
-                <SecurityPage></SecurityPage>
+                <SecurityPage getVulnDetails={props.getVulnDetails}></SecurityPage>
               </NxTabPanel>
               <NxTabPanel>
                 <LicensingPage></LicensingPage>

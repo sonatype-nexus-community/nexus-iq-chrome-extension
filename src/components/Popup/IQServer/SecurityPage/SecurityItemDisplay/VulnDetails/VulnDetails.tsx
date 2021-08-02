@@ -21,9 +21,9 @@ const VulnDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
-    // if (nexusContext && nexusContext.vulnDetails) {
-    //   return <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails} />
-    // }
+    if (nexusContext && nexusContext.vulnDetails) {
+      return <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails as any} />;
+    }
     return null;
   };
 

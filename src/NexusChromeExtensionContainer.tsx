@@ -27,6 +27,8 @@ import {
 } from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import localforage from 'localforage';
+import {VulnerabilityDetails} from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types';
+import {rejects} from 'assert';
 
 const _browser = chrome ? chrome : browser;
 
@@ -116,35 +118,60 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     });
   };
 
+  getCSRFTokenFromCookie = (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
+        if (cookies && cookies.length > 0) {
+          resolve(cookies[0].value);
+        } else {
+          reject('No valid cookie found');
+        }
+      });
+    });
+  };
+
+  getVulnDetails = async (vulnId: string): Promise<void> => {
+    const vulnDetails = await (this._requestService as IqRequestService).getVulnerabilityDetails(
+      vulnId
+    );
+
+    this.setState({vulnDetails: vulnDetails});
+  };
+
   handleResponse = async (purlString: string): Promise<void> => {
     const purl = PackageURL.fromString(purlString);
 
     if (this._requestService instanceof IqRequestService) {
       const loggedIn = await this._requestService.loginViaRest();
       console.log('Logged in to Nexus IQ Server: ' + loggedIn);
+
+      this.getCSRFTokenFromCookie()
+        .then((token) => {
+          console.log('CSRF Token: ' + token);
+          (this._requestService as IqRequestService).setXCSRFToken(token);
+          this.doRequestForComponentDetails(purl);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      this.doRequestForComponentDetails(purl);
     }
+  };
 
-    chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
-      if (cookies && cookies.length > 0) {
-        if (this._requestService instanceof IqRequestService) {
-          console.log('CSRF Token: ' + cookies[0].value);
-          this._requestService.setXCSRFToken(cookies[0].value);
-        }
-      }
-
-      if (this._requestService) {
-        this._requestService
-          .getComponentDetails([purl])
-          .then((res: ComponentDetails) => {
-            if (res) {
-              this.setState({componentDetails: res.componentDetails[0]});
-            }
-          })
-          .catch((err: any) => {
-            console.error(err);
-          });
-      }
-    });
+  doRequestForComponentDetails = (purl: PackageURL) => {
+    if (this._requestService) {
+      this._requestService
+        .getComponentDetails([purl])
+        .then((res: ComponentDetails) => {
+          if (res) {
+            this.setState({componentDetails: res.componentDetails[0]});
+          }
+        })
+        .catch((err: any) => {
+          console.error(err);
+        });
+    }
   };
 
   render(): JSX.Element {
@@ -152,7 +179,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       <NexusContext.Provider value={this.state}>
         <div className="nx-page-content">
           <main className="nx-page-main nx-viewport-sized">
-            <Popup />
+            <Popup getVulnDetails={this.getVulnDetails} />
           </main>
         </div>
       </NexusContext.Provider>

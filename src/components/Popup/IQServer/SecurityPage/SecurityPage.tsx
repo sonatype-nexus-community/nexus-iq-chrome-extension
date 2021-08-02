@@ -18,7 +18,11 @@ import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {SecurityIssue} from '../../../../types/ArtifactMessage';
 
-const SecurityPage = (): JSX.Element | null => {
+type SecurityProps = {
+  getVulnDetails: (v: string) => Promise<void>;
+};
+
+const SecurityPage = (props: SecurityProps): JSX.Element | null => {
   const [open, setOpen] = useState('');
 
   const nexusContext = useContext(NexusContext);
@@ -55,6 +59,7 @@ const SecurityPage = (): JSX.Element | null => {
                 packageUrl={purl}
                 securityIssue={issue}
                 remediationEvent={getRemediationAndOpen}
+                getVulnDetails={props.getVulnDetails}
               />
             );
           })}
