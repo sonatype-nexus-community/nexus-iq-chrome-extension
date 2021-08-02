@@ -78,6 +78,7 @@ const getSettings = async (): Promise<Settings> => {
 };
 
 const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
+  const manifestData = chrome.runtime.getManifest();
   return new Promise((resolve, reject) => {
     const requestService = new OSSIndexRequestService(
       {
@@ -86,8 +87,8 @@ const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
         user: settings.user,
         application: settings.application,
         logger: new TestLogger(),
-        product: 'nexus-iq-chrome-extension',
-        version: '1.0.0'
+        product: manifestData.name,
+        version: manifestData.version
       },
       localforage as any
     );
@@ -106,6 +107,7 @@ const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
 };
 
 const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
+  const manifestData = chrome.runtime.getManifest();
   return new Promise((resolve) => {
     const requestService = new IqRequestService({
       host: settings.host,
@@ -114,8 +116,8 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
       user: settings.user,
       application: settings.application,
       logger: new TestLogger(),
-      product: 'nexus-iq-chrome-extension',
-      version: '1.0.0'
+      product: manifestData.name,
+      version: manifestData.version
     });
 
     requestService
@@ -176,7 +178,8 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
     details.componentDetails &&
     details.componentDetails.length > 0 &&
     details.componentDetails[0].securityData &&
-    details.componentDetails[0].securityData.securityIssues
+    details.componentDetails[0].securityData.securityIssues &&
+    details.componentDetails[0].securityData.securityIssues.length > 0
   ) {
     getActiveTabId()
       .then((tabId) => {
@@ -271,32 +274,6 @@ const handleIQServerWrapper = (purl: string, settings: Settings) => {
     throw new Error('Unable to call Nexus IQ Server');
   }
 };
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-    chrome.declarativeContent.onPageChanged.addRules([
-      {
-        conditions: [
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: 'pkgs.alpinelinux.org',
-              schemes: ['https'],
-              pathContains: 'package'
-            }
-          }),
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {
-              hostEquals: 'www.npmjs.com',
-              schemes: ['https'],
-              pathContains: 'package'
-            }
-          })
-        ],
-        actions: [new chrome.declarativeContent.ShowPageAction()]
-      }
-    ]);
-  });
-});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.trace(request);

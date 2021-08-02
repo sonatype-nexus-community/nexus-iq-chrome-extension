@@ -44,7 +44,8 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
       if (
         data.componentDetails[0] &&
         data.componentDetails[0].securityData &&
-        data.componentDetails[0].securityData.securityIssues
+        data.componentDetails[0].securityData.securityIssues &&
+        data.componentDetails[0].securityData.securityIssues.length > 0
       ) {
         const maxSeverity = Math.max(
           ...data.componentDetails[0].securityData.securityIssues.map((issue) => {

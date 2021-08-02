@@ -68,6 +68,10 @@ const Popup = (): JSX.Element | null => {
       nexusContext.componentDetails &&
       nexusContext.scanType === DATA_SOURCES.OSSINDEX
     ) {
+      const hasVulns =
+        nexusContext.componentDetails.securityData &&
+        nexusContext.componentDetails.securityData.securityIssues &&
+        nexusContext.componentDetails.securityData.securityIssues.length > 0;
       console.info('Rendering OSS Index View');
       return (
         <section className="nx-tile nx-viewport-sized__container">
@@ -80,14 +84,16 @@ const Popup = (): JSX.Element | null => {
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
                 <NxTab>Component Info</NxTab>
-                <NxTab>Security</NxTab>
+                {hasVulns && <NxTab>Security</NxTab>}
               </NxTabList>
               <NxTabPanel>
                 <LiteComponentInfoPage></LiteComponentInfoPage>
               </NxTabPanel>
-              <NxTabPanel>
-                <LiteSecurityPage></LiteSecurityPage>
-              </NxTabPanel>
+              {hasVulns && (
+                <NxTabPanel>
+                  <LiteSecurityPage></LiteSecurityPage>
+                </NxTabPanel>
+              )}
             </NxTabs>
           </div>
         </section>
