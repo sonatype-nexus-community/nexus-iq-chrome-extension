@@ -1,10 +1,33 @@
+/*
+ * Copyright (c) 2019-present Sonatype, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 /// <reference lib="webworker" />
 
 import 'node-window-polyfill/register';
-import {IqRequestService, TestLogger} from '@sonatype/js-sona-types';
+import {IqRequestService, OSSIndexRequestService, TestLogger} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
+import localforage from 'localforage';
 
 const _browser: any = chrome ? chrome : browser;
+
+const NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME = 'nexusIqBrowserExtensionInstallTime';
+const SCAN_TYPE = 'scanType';
+const IQ_SERVER_URL = 'iqServerURL';
+const IQ_SERVER_APPLICATION = 'iqServerApplication';
+const IQ_SERVER_USER = 'iqServerUser';
+const IQ_SERVER_TOKEN = 'iqServerToken';
 
 interface Settings {
   scanType: string | undefined;
@@ -17,18 +40,21 @@ interface Settings {
 const installNotice = async () => {
   // TODO: figure out how to abstract this for Firefox (hopefully it just works)
   _browser.storage.local.get(
-    'nexusIqBrowserExtensionInstallTime',
+    NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME,
     (items: {[key: string]: any}) => {
-      console.log(items['nexusIqBrowserExtensionInstallTime']);
+      console.trace(items[NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME]);
 
-      if (items['nexusIqBrowserExtensionInstallTime']) return;
+      if (items[NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME]) return;
 
       const now = new Date().getTime();
-      _browser.storage.local.set({['nexusIqBrowserExtensionInstallTime']: now.toString()}, () => {
-        console.log('Set install time', now);
-        console.log('Attempting to open options');
-        _browser.tabs.create({url: 'options.html'});
-      });
+      _browser.storage.local.set(
+        {[NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME]: now.toString()},
+        () => {
+          console.debug('Set install time', now);
+          console.debug('Attempting to open options');
+          _browser.tabs.create({url: 'options.html'});
+        }
+      );
     }
   );
 };
@@ -36,14 +62,14 @@ const installNotice = async () => {
 const getSettings = async (): Promise<Settings> => {
   const promise = new Promise<Settings>((resolve) => {
     _browser.storage.local.get(
-      ['scanType', 'iqServerURL', 'iqServerUser', 'iqServerToken', `iqServerApplication`],
+      [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION],
       (items: {[key: string]: any}) => {
         resolve({
-          scanType: items['scanType'],
-          host: items['iqServerURL'],
-          user: items['iqServerUser'],
-          token: items['iqServerToken'],
-          application: items['iqServerApplication']
+          scanType: items[SCAN_TYPE],
+          host: items[IQ_SERVER_URL],
+          user: items[IQ_SERVER_USER],
+          token: items[IQ_SERVER_TOKEN],
+          application: items[IQ_SERVER_APPLICATION]
         });
       }
     );
@@ -51,12 +77,36 @@ const getSettings = async (): Promise<Settings> => {
   return await promise;
 };
 
-const handleURLOSSIndex = (url: string) => {
-  console.log('OSS Index');
+const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const requestService = new OSSIndexRequestService(
+      {
+        token: settings.token,
+        browser: true,
+        user: settings.user,
+        application: settings.application,
+        logger: new TestLogger(),
+        product: 'nexus-iq-chrome-extension',
+        version: '1.0.0'
+      },
+      localforage as any
+    );
+
+    const purlObj = PackageURL.fromString(purl);
+
+    requestService
+      .getComponentDetails([purlObj])
+      .then((componentDetails) => {
+        resolve(componentDetails);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 };
 
 const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const requestService = new IqRequestService({
       host: settings.host,
       token: settings.token,
@@ -72,26 +122,24 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
       .loginViaRest()
       .then((loggedIn) => {
         if (loggedIn) {
-          console.log('Logged in to Nexus IQ Server via service worker');
+          console.debug('Logged in to Nexus IQ Server via service worker');
           _doRequestToIQServer(requestService, purl)
             .then((res) => {
               resolve(res);
             })
             .catch((err) => {
-              console.error(err);
-              reject();
+              throw new Error(err);
             });
         }
       })
       .catch((err) => {
-        console.error(err);
-        reject();
+        throw new Error(err);
       });
   });
 };
 
 const _doRequestToIQServer = (requestService: IqRequestService, purl: string): Promise<any> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
       if (cookies && cookies.length > 0) {
         requestService.setXCSRFToken(cookies[0].value);
@@ -104,50 +152,66 @@ const _doRequestToIQServer = (requestService: IqRequestService, purl: string): P
           resolve(details);
         })
         .catch((err) => {
-          console.error(err);
-          reject();
+          throw new Error(err);
         });
     });
   });
 };
 
-const handleIQServerWrapper = async (purl: string, settings: Settings) => {
-  if (settings.host && settings.token && settings.application && settings.user) {
-    console.log('Attempting to call Nexus IQ Server');
+const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
+  handleURLOSSIndex(purl, settings)
+    .then((componentDetails) => {
+      console.debug('Got back response from OSS Index');
+      console.trace(componentDetails);
 
-    handleURLIQServer(purl, settings).then((details) => {
-      console.log('Got back response from Nexus IQ Server');
-      console.log(details);
+      sendNotificationAndMessage(purl, componentDetails);
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
 
-      if (
-        details.componentDetails &&
-        details.componentDetails.length > 0 &&
-        details.componentDetails[0].securityData &&
-        details.componentDetails[0].securityData.securityIssues
-      ) {
-        chrome.notifications.create({
-          title: 'Sonatype Scan Results',
-          iconUrl: '/images/SON_logo_favicon_Vulnerable.png',
-          type: 'basic',
-          message: 'Vulnerabilities have been found in this version',
-          priority: 1,
-          buttons: [
-            {
-              title: 'Close'
-            }
-          ],
-          isClickable: true
-        });
-      }
-
-      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        if (tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, {
-            type: 'artifactDetailsFromServiceWorker',
-            componentDetails: details
-          });
+const sendNotificationAndMessage = (purl: string, details: any) => {
+  if (
+    details.componentDetails &&
+    details.componentDetails.length > 0 &&
+    details.componentDetails[0].securityData &&
+    details.componentDetails[0].securityData.securityIssues
+  ) {
+    chrome.notifications.create({
+      title: `Sonatype Scan Results - ${purl}`,
+      iconUrl: '/images/SON_logo_favicon_Vulnerable.png',
+      type: 'basic',
+      message: 'Vulnerabilities have been found in this version',
+      priority: 1,
+      buttons: [
+        {
+          title: 'Close'
         }
+      ],
+      isClickable: true
+    });
+  }
+
+  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    if (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        type: 'artifactDetailsFromServiceWorker',
+        componentDetails: details
       });
+    }
+  });
+};
+
+const handleIQServerWrapper = (purl: string, settings: Settings) => {
+  if (settings.host && settings.token && settings.application && settings.user) {
+    console.debug('Attempting to call Nexus IQ Server');
+
+    handleURLIQServer(purl, settings).then((componentDetails) => {
+      console.debug('Got back response from Nexus IQ Server');
+      console.trace(componentDetails);
+
+      sendNotificationAndMessage(purl, componentDetails);
     });
   } else {
     throw new Error('Unable to call Nexus IQ Server');
@@ -181,7 +245,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(request);
+  console.trace(request);
 
   if (request && request.type && request.type === 'getArtifactDetailsFromPurl') {
     console.debug('Getting settings');
@@ -190,7 +254,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         try {
           if (settings.scanType === 'OSSINDEX') {
             console.debug('Attempting to call OSS Index');
-            handleURLOSSIndex(request.purl);
+            handleOSSIndexWrapper(request.purl, settings);
           } else {
             console.debug('Attempting to call Nexus IQ Server');
             handleIQServerWrapper(request.purl, settings);

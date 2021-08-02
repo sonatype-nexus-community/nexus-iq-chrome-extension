@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "outDir": "build",
     "composite": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/extension_service_worker.ts"
