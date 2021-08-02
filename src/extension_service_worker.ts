@@ -119,6 +119,27 @@ const handleIQServerWrapper = async (purl: string, settings: Settings) => {
       console.log('Got back response from Nexus IQ Server');
       console.log(details);
 
+      if (
+        details.componentDetails &&
+        details.componentDetails.length > 0 &&
+        details.componentDetails[0].securityData &&
+        details.componentDetails[0].securityData.securityIssues
+      ) {
+        chrome.notifications.create({
+          title: 'Sonatype Scan Results',
+          iconUrl: '/images/SON_logo_favicon_Vulnerable.png',
+          type: 'basic',
+          message: 'Vulnerabilities have been found in this version',
+          priority: 1,
+          buttons: [
+            {
+              title: 'Close'
+            }
+          ],
+          isClickable: true
+        });
+      }
+
       chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         if (tabs) {
           chrome.tabs.sendMessage(tabs[0].id, {

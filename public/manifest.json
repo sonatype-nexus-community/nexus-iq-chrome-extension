@@ -45,7 +45,7 @@
     "https://search.maven.org/",
     "https://pkg.go.dev/"
   ],
-  "permissions": ["activeTab", "declarativeContent", "cookies", "background", "storage", "tabs"],
+  "permissions": ["activeTab", "declarativeContent", "cookies", "background", "storage", "tabs", "notifications"],
   "content_scripts": [
     {
       "matches": [
@@ -75,14 +75,15 @@
         "https://search.maven.org/*",
         "https://pkg.go.dev/*"
       ],
+      "css": ["/css/pagestyle.css"],
       "js": ["/static/js/content.js"],
       "run_at": "document_end"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["images/*", "static/*"],
-      "matches": []
+      "resources": ["images/*", "static/*", "css/*"],
+      "matches": ["<all_urls>"]
     }
   ],
   "icons": {

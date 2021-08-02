@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
+import {ComponentDetails} from '@sonatype/js-sona-types';
 import {ArtifactMessage} from './types/ArtifactMessage';
 import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 import {findRepoType} from './utils/UrlParsing';
+import $ from 'cash-dom';
 
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Recieved a message on content.js', event);
 
   if (event.type === 'getArtifactDetailsFromWebpage') {
+    console.trace('Recieved getArtifactDetailsFromWebpage message on content.js');
     const data: ArtifactMessage = event;
     console.info('Message says to get some artifact details from the webpage, will do boss!');
 
@@ -34,7 +37,41 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
     }
   }
   if (event.type === 'artifactDetailsFromServiceWorker') {
-    console.log(event);
+    console.trace('Recieved artifactDetailsFromServiceWorker message on content.js');
+    if (event.componentDetails) {
+      const data: ComponentDetails = event.componentDetails;
+
+      if (
+        data.componentDetails[0] &&
+        data.componentDetails[0].securityData &&
+        data.componentDetails[0].securityData.securityIssues
+      ) {
+        const maxSeverity = Math.max(
+          ...data.componentDetails[0].securityData.securityIssues.map((issue) => {
+            return issue.severity;
+          })
+        );
+
+        let vulnClass = 'vuln-low';
+        if (maxSeverity >= 9) {
+          vulnClass = 'vuln-severe';
+        } else if (maxSeverity >= 7) {
+          vulnClass = 'vuln-high';
+        } else if (maxSeverity >= 5) {
+          vulnClass = 'vuln-med';
+        } else if (maxSeverity >= 2) {
+          vulnClass = 'vuln-low';
+        }
+        const repoType = findRepoType(window.location.href);
+        if (repoType) {
+          const selector = $(repoType.titleSelector);
+          if (selector && selector.length > 0) {
+            selector.addClass(vulnClass);
+            selector.addClass('vuln');
+          }
+        }
+      }
+    }
   }
 });
 
