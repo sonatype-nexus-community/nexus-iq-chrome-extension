@@ -16,6 +16,7 @@
 
 import {ArtifactMessage} from './types/ArtifactMessage';
 import {getArtifactDetailsFromDOM} from './utils/PageParsing';
+import {findRepoType} from './utils/UrlParsing';
 
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Recieved a message on content.js', event);
@@ -38,7 +39,17 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
 });
 
 const checkPage = () => {
-  chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: 'pkg:npm/jquery@3.1.1'});
+  const repoType = findRepoType(window.location.href);
+
+  if (repoType) {
+    console.debug('Found a valid repoType: ' + repoType);
+    const purl = getArtifactDetailsFromDOM(repoType, window.location.href);
+
+    if (purl) {
+      console.log('Obtained a valid purl: ' + purl);
+      chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: purl.toString()});
+    }
+  }
 };
 
 checkPage();

@@ -16,18 +16,21 @@ interface Settings {
 
 const installNotice = async () => {
   // TODO: figure out how to abstract this for Firefox (hopefully it just works)
-  _browser.storage.local.get('nexusIqBrowserExtensionInstallTime', (items: {[key: string]: any}) => {
-    console.log(items['nexusIqBrowserExtensionInstallTime']);
+  _browser.storage.local.get(
+    'nexusIqBrowserExtensionInstallTime',
+    (items: {[key: string]: any}) => {
+      console.log(items['nexusIqBrowserExtensionInstallTime']);
 
-    if (items['nexusIqBrowserExtensionInstallTime']) return;
+      if (items['nexusIqBrowserExtensionInstallTime']) return;
 
-    const now = new Date().getTime();
-    _browser.storage.local.set({['nexusIqBrowserExtensionInstallTime']: now.toString()}, () => {
-      console.log('Set install time', now);
-      console.log('Attempting to open options');
-      _browser.tabs.create({url: 'options.html'});
-    });
-  });
+      const now = new Date().getTime();
+      _browser.storage.local.set({['nexusIqBrowserExtensionInstallTime']: now.toString()}, () => {
+        console.log('Set install time', now);
+        console.log('Attempting to open options');
+        _browser.tabs.create({url: 'options.html'});
+      });
+    }
+  );
 };
 
 const getSettings = async (): Promise<Settings> => {
