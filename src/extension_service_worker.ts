@@ -178,6 +178,14 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
     details.componentDetails[0].securityData &&
     details.componentDetails[0].securityData.securityIssues
   ) {
+    getActiveTabId()
+      .then((tabId) => {
+        chrome.action.setIcon({tabId: tabId, path: '/images/SON_logo_favicon_Vulnerable.png'});
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
     console.debug('Sending notification that component is vulnerable');
     chrome.notifications.create(
       {
@@ -197,29 +205,53 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
         console.trace('Notification sent: ' + notificationId);
       }
     );
+  } else {
+    getActiveTabId()
+      .then((tabId) => {
+        chrome.action.setIcon({tabId: tabId, path: '/images/SON_logo_favicon_not_vuln.png'});
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
-  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-    if (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {
+  getActiveTabId()
+    .then((tabId) => {
+      chrome.tabs.sendMessage(tabId, {
         type: 'artifactDetailsFromServiceWorker',
         componentDetails: details
       });
-    }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+const getActiveTabId = (): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+      if (tabs && tabs.length > 0 && tabs[0].id) {
+        resolve(tabs[0].id);
+      } else {
+        reject('No valid tab');
+      }
+    });
   });
 };
 
 const toggleIcon = (show: boolean) => {
   try {
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      if (tabs && tabs.length > 0 && tabs[0].id) {
+    getActiveTabId()
+      .then((tabId) => {
         if (show) {
-          chrome.action.enable(tabs[0].id);
+          chrome.action.enable(tabId);
         } else {
-          chrome.action.disable(tabs[0].id);
+          chrome.action.disable(tabId);
         }
-      }
-    });
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
   } catch (err) {
     console.error(err);
   }
