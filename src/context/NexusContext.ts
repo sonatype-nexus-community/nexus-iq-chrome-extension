@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 import React from 'react';
-import {ComponentContainer} from '../types/ArtifactMessage';
+import {ComponentContainer} from '@sonatype/js-sona-types';
+import {DATA_SOURCES} from '../utils/Constants';
 
 export interface NexusContextInterface {
-  scanType?: string;
+  scanType: string;
   componentDetails?: ComponentContainer;
 }
 
-const initialContext: NexusContextInterface = {};
+const initialContext: NexusContextInterface = {scanType: DATA_SOURCES.OSSINDEX};
 
 export const NexusContext = React.createContext(initialContext);

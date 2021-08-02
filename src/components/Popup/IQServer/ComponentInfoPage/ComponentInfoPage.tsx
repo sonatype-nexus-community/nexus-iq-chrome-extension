@@ -38,7 +38,8 @@ const ComponentInfoPage = (): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.componentDetails &&
-      nexusContext.componentDetails.component.componentIdentifier
+      nexusContext.componentDetails.component.componentIdentifier &&
+      nexusContext.componentDetails.component.componentIdentifier.coordinates
     ) {
       return (
         <NxTable>

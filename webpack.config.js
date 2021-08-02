@@ -4,6 +4,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CspHtmlWebpackPlugin = require('csp-html-webpack-plugin');
+const webpack = require('webpack');
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+
+const del = require('del');
+
+const outputPath = path.resolve(process.cwd(), "build");
+
+del.sync([path.resolve(outputPath, "**/*")]);
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -75,6 +83,7 @@ const optionsHtmlPlugin = new HtmlWebpackPlugin({
   },
 });
 
+
 const appConfig = {
   entry: {
     main: './src/index.tsx',
@@ -130,15 +139,18 @@ const appConfig = {
   },
 
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.json'],
+    fallback: {
+      "net": false,
+      "tls": false,
+    }
   },
 
   output: {
     pathinfo: false,
     filename: 'static/js/[name].js',
     chunkFilename: 'static/js/[name].js',
-    path: path.resolve(__dirname, "build"),
-    clean: true,
+    path: path.resolve(__dirname, "build")
   },
   
   optimization: {
@@ -152,6 +164,8 @@ const appConfig = {
     miniCssExtractPlugin, 
     forkTsCheckerWebpackPlugin, 
     copyWebpackPlugin,
+    new webpack.ProvidePlugin({process: "process/browser"}),
+    new NodePolyfillPlugin()
   ],
 };
 
@@ -209,7 +223,16 @@ const optionsConfig = {
   },
 
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.json'],
+    fallback: { 
+      "net": false,
+      "tls": false,
+    }
+  },
+
+  optimization: {
+    minimize: false,
+    runtimeChunk: false,
   },
 
   output: {
@@ -224,8 +247,53 @@ const optionsConfig = {
     cspHtmlWebpackPlugin,
     miniCssExtractPlugin, 
     forkTsCheckerWebpackPlugin,
+    new webpack.ProvidePlugin({process: "process/browser"}),
+    new NodePolyfillPlugin()
   ],
 
 };
 
-module.exports = [ appConfig, optionsConfig ]
+const serviceWorkerConfig = {
+  target: "web",
+
+  devtool: "source-map",
+
+  entry: {
+    extension_service_worker: path.join(__dirname, "src", "extension_service_worker.ts"),
+  },
+
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.json'],
+    fallback: { 
+      "net": false,
+      "tls": false,
+    }
+  },
+
+  output: {
+    path: path.join(__dirname, "build"),
+    filename: "extension_service_worker.js",
+    globalObject: 'this'
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          configFile: 'tsconfig.service-worker.json'
+        }
+      }
+    ]
+  },
+
+  optimization: {
+    minimize: false,
+    runtimeChunk: false,
+  },
+
+  plugins: [new webpack.ProvidePlugin({process: "process/browser"}), new NodePolyfillPlugin()],
+};
+
+module.exports = [ appConfig, optionsConfig, serviceWorkerConfig ]

@@ -16,66 +16,83 @@
 import React from 'react';
 import Popup from './components/Popup/Popup';
 import {NexusContext, NexusContextInterface} from './context/NexusContext';
-import {DATA_SOURCES, DEFAULT_OSSINDEX_URL, RepoType} from './utils/Constants';
+import {DATA_SOURCES, RepoType} from './utils/Constants';
 import {findRepoType} from './utils/UrlParsing';
-import {IqRequestService} from './services/IqRequestService';
-import {RequestService} from './services/RequestService';
-import {OSSIndexRequestService} from './services/OSSIndexRequestService';
+import {
+  OSSIndexRequestService,
+  TestLogger,
+  IqRequestService,
+  RequestService,
+  ComponentDetails,
+  ComponentContainer
+} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
+
+const _browser = chrome ? chrome : browser;
 
 type AppProps = {};
 
 class NexusChromeExtensionContainer extends React.Component<AppProps, NexusContextInterface> {
-  private _requestService: RequestService;
+  private _requestService: RequestService | undefined;
 
   constructor(props: AppProps) {
     super(props);
 
-    const scanType = this.getValueFromLocalStore('scanType');
-    if (scanType) {
-      if (scanType === DATA_SOURCES.NEXUSIQ) {
-        const iqServerURL = this.getValueFromLocalStore('iqServerURL');
-        const iqServerUser = this.getValueFromLocalStore('iqServerUser');
-        const iqServerToken = this.getValueFromLocalStore('iqServerToken');
+    _browser.storage.local.get((items: {[key: string]: any}) => {
+      if (items['scanType']) {
+        const scanType = items['scanType'];
 
-        this._requestService = new IqRequestService(iqServerURL!, iqServerUser!, iqServerToken!);
+        if (scanType === DATA_SOURCES.NEXUSIQ) {
+          this._requestService = new IqRequestService({
+            host: items['iqServerURL'],
+            user: items['iqServerUser'],
+            token: items['iqServerToken'],
+            application: items['iqServerApplication'],
+            browser: true,
+            logger: new TestLogger(),
+            product: 'chrome-extension',
+            version: '1.0.0'
+          });
 
-        this.state = {
-          scanType: scanType,
+          this.setState({scanType: scanType, componentDetails: undefined});
+
+          return;
+        } else {
+          const ossIndexUser = items['ossIndexUser'];
+          const ossIndexToken = items['ossIndexToken'];
+
+          if (ossIndexUser && ossIndexToken) {
+            this._requestService = new OSSIndexRequestService(
+              {
+                user: ossIndexUser,
+                token: ossIndexToken,
+                browser: true,
+                product: 'chrome-extension',
+                version: '1.0.0',
+                logger: new TestLogger()
+              },
+              localStorage
+            );
+          } else {
+            this._requestService = new OSSIndexRequestService(
+              {
+                browser: true,
+                product: 'chrome-extension',
+                version: '1.0.0',
+                logger: new TestLogger()
+              },
+              localStorage
+            );
+          }
+        }
+
+        this.setState({
+          scanType: scanType ? scanType : DATA_SOURCES.OSSINDEX,
           componentDetails: undefined
-        };
-
-        return;
+        });
       }
-    }
-
-    const ossIndexUser = this.getValueFromLocalStore('ossIndexUser');
-    const ossIndexToken = this.getValueFromLocalStore('ossIndexToken');
-
-    if (ossIndexUser && ossIndexToken) {
-      this._requestService = new OSSIndexRequestService(
-        DEFAULT_OSSINDEX_URL,
-        ossIndexUser,
-        ossIndexToken
-      );
-    } else {
-      this._requestService = new OSSIndexRequestService();
-    }
-
-    this.state = {
-      scanType: scanType ? scanType : DATA_SOURCES.OSSINDEX,
-      componentDetails: undefined
-    };
+    });
   }
-
-  getValueFromLocalStore = (key: string): string | undefined => {
-    const val = window.localStorage.getItem(key);
-
-    if (val) {
-      return JSON.parse(val);
-    }
-    return undefined;
-  };
 
   componentDidMount = (): void => {
     chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
@@ -99,19 +116,35 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     });
   };
 
-  handleResponse = (purlString: string): void => {
+  handleResponse = async (purlString: string): Promise<void> => {
     const purl = PackageURL.fromString(purlString);
 
-    this._requestService
-      .getComponentDetails(purl)
-      .then((res) => {
-        if (res) {
-          this.setState({componentDetails: res});
+    if (this._requestService instanceof IqRequestService) {
+      const loggedIn = await this._requestService.loginViaRest();
+      console.log('Logged in to Nexus IQ Server: ' + loggedIn);
+    }
+
+    chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
+      if (cookies && cookies.length > 0) {
+        if (this._requestService instanceof IqRequestService) {
+          console.log('CSRF Token: ' + cookies[0].value);
+          this._requestService.setXCSRFToken(cookies[0].value);
         }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      }
+
+      if (this._requestService) {
+        this._requestService
+          .getComponentDetails([purl])
+          .then((res: ComponentDetails) => {
+            if (res) {
+              this.setState({componentDetails: res.componentDetails[0]});
+            }
+          })
+          .catch((err: any) => {
+            console.error(err);
+          });
+      }
+    });
   };
 
   render(): JSX.Element {

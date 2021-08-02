@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es6",
+    "lib": ["es5", "webworker"],
+    "moduleResolution": "node",
+    "outDir": "build",
+    "composite": true,
+    "sourceMap": true
+  },
+  "include": [
+    "src/extension_service_worker.ts"
+  ]
+}

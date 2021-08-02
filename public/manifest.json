@@ -12,7 +12,10 @@
     "default_popup": "popup.html",
     "default_title": "Open the popup"
   },
-  "optional_permissions": ["tabs", "notifications"],  
+  "background": {
+    "service_worker": "extension_service_worker.js"
+  },
+  "optional_permissions": ["notifications"],  
   "host_permissions": [
     "http://*/",
     "https://*/",
@@ -42,7 +45,7 @@
     "https://search.maven.org/",
     "https://pkg.go.dev/"
   ],
-  "permissions": ["activeTab", "declarativeContent", "cookies", "background", "storage"],
+  "permissions": ["activeTab", "declarativeContent", "cookies", "background", "storage", "tabs"],
   "content_scripts": [
     {
       "matches": [

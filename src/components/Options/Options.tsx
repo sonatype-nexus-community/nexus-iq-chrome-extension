@@ -21,19 +21,33 @@ import {
   NxTabPanel,
   NxTabs
 } from '@sonatype/react-shared-components';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import {DATA_SOURCES} from '../../utils/Constants';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
 
+const SCAN_TYPE = 'scanType';
+
 const Options = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
 
-  const [scanType, setScanType] = useLocalStorage('scanType', DATA_SOURCES.OSSINDEX);
+  const [scanType, setScanType] = useState<string | null>('');
 
   const nexusContext = useContext(NexusContext);
+
+  useEffect(() => {
+    chrome.storage.local.get((items: {[key: string]: any}) => {
+      if (items[SCAN_TYPE]) {
+        setScanType(items[SCAN_TYPE]);
+      }
+    });
+  }, []);
+
+  const setItem = (func: any, value: any, key: string) => {
+    func(value);
+    chrome.storage.local.set({[key]: value});
+  };
 
   const renderOptions = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext) {
@@ -47,18 +61,18 @@ const Options = (): JSX.Element | null => {
           <div className="nx-tile-content nx-viewport-sized__container">
             <NxFieldset label={`Selected Scan Type: ${scanType}`}>
               <NxRadio
-                name="scanType"
+                name={SCAN_TYPE}
                 value={DATA_SOURCES.OSSINDEX}
-                onChange={setScanType}
+                onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
                 isChecked={scanType === DATA_SOURCES.OSSINDEX}
                 radioId="scanType-OSS-Index"
               >
                 OSS Index
               </NxRadio>
               <NxRadio
-                name="scanType"
+                name={SCAN_TYPE}
                 value={DATA_SOURCES.NEXUSIQ}
-                onChange={setScanType}
+                onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
                 isChecked={scanType === DATA_SOURCES.NEXUSIQ}
                 radioId="scanType-IQ-Server"
               >

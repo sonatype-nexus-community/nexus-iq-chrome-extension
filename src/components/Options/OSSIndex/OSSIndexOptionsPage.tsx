@@ -13,42 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {NxFormGroup, NxStatefulTextInput} from '@sonatype/react-shared-components';
-import useLocalStorage from '../../../hooks/useLocalStorage';
 
-const OSSIndexOptionsPage = (): JSX.Element => {
-  const [ossIndexUser, setOSSIndexUser] = useLocalStorage('ossIndexUser', '');
-  const [ossIndexToken, setOSSIndexToken] = useLocalStorage('ossIndexToken', '');
+const OSS_INDEX_USER = 'ossIndexUser';
+const OSS_INDEX_TOKEN = 'ossIndexToken';
 
-  console.info('Loading OSS Index Options Page');
+const OSSIndexOptionsPage = (): JSX.Element | null => {
+  const [ossIndexUser, setOSSIndexUser] = useState('');
+  const [ossIndexToken, setOSSIndexToken] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    chrome.storage.local.get((items: {[key: string]: any}) => {
+      if (items[OSS_INDEX_USER]) {
+        setOSSIndexUser(items[OSS_INDEX_USER]);
+      }
+      if (items[OSS_INDEX_TOKEN]) {
+        setOSSIndexToken(items[OSS_INDEX_TOKEN]);
+      }
+      setLoading(false);
+    });
+  }, [ossIndexUser, ossIndexToken]);
+
+  const setItem = (func: any, value: any, key: string) => {
+    func(value);
+    chrome.storage.local.set({[key]: value});
+  };
 
   const validator = (val: string) => {
     return val.length ? null : 'Must be non-empty';
   };
 
   const renderOptions = () => {
-    return (
-      <form className="nx-form">
-        <NxFormGroup label={`OSS Index Username`} isRequired>
-          <NxStatefulTextInput
-            defaultValue={ossIndexUser}
-            aria-required={true}
-            validator={validator}
-            onChange={setOSSIndexUser}
-          />
-        </NxFormGroup>
-        <NxFormGroup label={`OSS Index Token`} isRequired>
-          <NxStatefulTextInput
-            defaultValue={ossIndexToken}
-            aria-required={true}
-            validator={validator}
-            type="password"
-            onChange={setOSSIndexToken}
-          />
-        </NxFormGroup>
-      </form>
-    );
+    if (!loading) {
+      return (
+        <form className="nx-form">
+          <NxFormGroup label={`OSS Index Username`} isRequired>
+            <NxStatefulTextInput
+              defaultValue={ossIndexUser}
+              aria-required={true}
+              validator={validator}
+              onChange={(event) => setItem(setOSSIndexUser, event, OSS_INDEX_USER)}
+            />
+          </NxFormGroup>
+          <NxFormGroup label={`OSS Index Token`} isRequired>
+            <NxStatefulTextInput
+              defaultValue={ossIndexToken}
+              aria-required={true}
+              validator={validator}
+              type="password"
+              onChange={(event) => setItem(setOSSIndexToken, event, OSS_INDEX_TOKEN)}
+            />
+          </NxFormGroup>
+        </form>
+      );
+    }
+    return null;
   };
 
   return renderOptions();

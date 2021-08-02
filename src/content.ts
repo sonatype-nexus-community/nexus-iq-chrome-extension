@@ -17,13 +17,14 @@
 import {ArtifactMessage} from './types/ArtifactMessage';
 import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 
-chrome.runtime.onMessage.addListener((event: ArtifactMessage, sender, respCallback) => {
+chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Recieved a message on content.js', event);
 
   if (event.type === 'getArtifactDetailsFromWebpage') {
+    const data: ArtifactMessage = event;
     console.info('Message says to get some artifact details from the webpage, will do boss!');
 
-    const purl = getArtifactDetailsFromDOM(event.repoTypeInfo, event.url);
+    const purl = getArtifactDetailsFromDOM(data.repoTypeInfo, data.url);
 
     if (purl) {
       console.info('Got a purl back from scraping url or webpage', purl);
@@ -31,4 +32,13 @@ chrome.runtime.onMessage.addListener((event: ArtifactMessage, sender, respCallba
       respCallback(purl.toString());
     }
   }
+  if (event.type === 'artifactDetailsFromServiceWorker') {
+    console.log(event);
+  }
 });
+
+const checkPage = () => {
+  chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: 'pkg:npm/jquery@3.1.1'});
+};
+
+checkPage();

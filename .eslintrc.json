@@ -17,7 +17,8 @@
   ],
   "parserOptions": {
     "project": [
-      "tsconfig.json"
+      "tsconfig.json",
+      "tsconfig.service-worker.json"
     ],
     "ecmaVersion": 2020,
     "sourceType": "module",
