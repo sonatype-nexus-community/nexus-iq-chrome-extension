@@ -3,7 +3,6 @@
 import 'node-window-polyfill/register';
 import {IqRequestService, TestLogger} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
-import {send} from 'node:process';
 
 const _browser: any = chrome ? chrome : browser;
 
@@ -16,9 +15,8 @@ interface Settings {
 }
 
 const installNotice = async () => {
-  // TODO: figure out how to do localStorage correctly, this is tied to Chrome which is unfortunate
-  // Service Workers do not have access to localStorage, hence using the chrome.storage API
-  chrome.storage.local.get('nexusIqBrowserExtensionInstallTime', (items: {[key: string]: any}) => {
+  // TODO: figure out how to abstract this for Firefox (hopefully it just works)
+  _browser.storage.local.get('nexusIqBrowserExtensionInstallTime', (items: {[key: string]: any}) => {
     console.log(items['nexusIqBrowserExtensionInstallTime']);
 
     if (items['nexusIqBrowserExtensionInstallTime']) return;
@@ -48,16 +46,6 @@ const getSettings = async (): Promise<Settings> => {
     );
   });
   return await promise;
-};
-
-const tabListener = async (
-  tabId: number,
-  changeInfo: chrome.tabs.TabChangeInfo | browser.tabs._OnUpdatedChangeInfo,
-  tab: browser.tabs.Tab | chrome.tabs.Tab
-) => {
-  if (changeInfo.status === 'complete') {
-    console.log(tabId);
-  }
 };
 
 const handleURLOSSIndex = (url: string) => {
@@ -192,7 +180,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
   }
 });
-
-_browser.tabs.onUpdated.addListener(tabListener);
 
 installNotice();
