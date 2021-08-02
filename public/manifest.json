@@ -10,12 +10,17 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Open the popup"
+    "default_title": "Open the popup",
+    "default_icon": {
+      "16": "images/SON_logo_favicon.png",
+      "32": "images/SON_logo_favicon.png",
+      "48": "images/SON_logo_favicon.png",
+      "128": "images/SON_logo_favicon.png"
+    }
   },
   "background": {
     "service_worker": "extension_service_worker.js"
   },
-  "optional_permissions": ["notifications"],  
   "host_permissions": [
     "http://*/",
     "https://*/",
@@ -45,7 +50,15 @@
     "https://search.maven.org/",
     "https://pkg.go.dev/"
   ],
-  "permissions": ["activeTab", "declarativeContent", "cookies", "background", "storage", "tabs", "notifications"],
+  "permissions": [
+    "activeTab", 
+    "declarativeContent", 
+    "cookies", 
+    "background", 
+    "storage", 
+    "tabs", 
+    "notifications"
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -86,11 +99,5 @@
       "matches": ["<all_urls>"]
     }
   ],
-  "icons": {
-    "16": "images/SON_logo_favicon.png",
-    "32": "images/SON_logo_favicon.png",
-    "48": "images/SON_logo_favicon.png",
-    "128": "images/SON_logo_favicon.png"
-  },
   "options_page": "options.html"
 }

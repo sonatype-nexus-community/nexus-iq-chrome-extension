@@ -22,7 +22,7 @@ import {
 } from '@sonatype/react-shared-components';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {useContext} from 'react';
-import {SecurityIssue} from '../../../../types/ArtifactMessage';
+import {SecurityIssue} from '@sonatype/js-sona-types';
 
 const LiteSecurityPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -62,7 +62,18 @@ const LiteSecurityPage = (): JSX.Element | null => {
                         OSS Index
                       </a>
                     </h3>
+                    <h4>Description</h4>
                     <p className="nx-p">{issue.description}</p>
+                    <h4>Severity</h4>
+                    <p className="nx-p">
+                      <NxPolicyViolationIndicator
+                        policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
+                      />
+                    </p>
+                    <h4>Vector</h4>
+                    <p className="nx-p">{issue.vector}</p>
+                    <h4>Source</h4>
+                    <p className="nx-p">{issue.source}</p>
                   </NxStatefulAccordion>
                 );
               }

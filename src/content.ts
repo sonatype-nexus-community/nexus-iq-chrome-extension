@@ -79,13 +79,18 @@ const checkPage = () => {
   const repoType = findRepoType(window.location.href);
 
   if (repoType) {
+    chrome.runtime.sendMessage({type: 'togglePage', show: true});
     console.debug('Found a valid repoType: ' + repoType);
     const purl = getArtifactDetailsFromDOM(repoType, window.location.href);
 
     if (purl) {
-      console.log('Obtained a valid purl: ' + purl);
+      console.debug('Obtained a valid purl: ' + purl);
+      console.trace('Attempting to send message to service worker');
       chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: purl.toString()});
+      console.trace('Message sent to service worker');
     }
+  } else {
+    chrome.runtime.sendMessage({type: 'togglePage', show: false});
   }
 };
 

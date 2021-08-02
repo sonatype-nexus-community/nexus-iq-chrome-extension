@@ -22,12 +22,14 @@ import {
   NxTableCell,
   NxTableBody
 } from '@sonatype/react-shared-components';
+import {PackageURL} from 'packageurl-js';
 
 const LiteComponentInfoPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined): JSX.Element | null => {
     if (nexusContext && nexusContext.componentDetails) {
+      const purlObj = PackageURL.fromString(nexusContext.componentDetails.component.packageUrl);
       return (
         <NxTable>
           <NxTableHead>
@@ -41,6 +43,28 @@ const LiteComponentInfoPage = (): JSX.Element | null => {
             <NxTableRow>
               <NxTableCell>Package URL</NxTableCell>
               <NxTableCell>{nexusContext.componentDetails.component.packageUrl}</NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Ecosystem</NxTableCell>
+              <NxTableCell>{purlObj.type}</NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Name</NxTableCell>
+              <NxTableCell>{purlObj.name}</NxTableCell>
+            </NxTableRow>
+            <NxTableRow>
+              <NxTableCell>Version</NxTableCell>
+              <NxTableCell>{purlObj.version}</NxTableCell>
+            </NxTableRow>
+            {purlObj.namespace && (
+              <NxTableRow>
+                <NxTableCell>Namespace</NxTableCell>
+                <NxTableCell>{purlObj.namespace}</NxTableCell>
+              </NxTableRow>
+            )}
+            <NxTableRow>
+              <NxTableCell>Description</NxTableCell>
+              <NxTableCell>{nexusContext.componentDetails.component.description}</NxTableCell>
             </NxTableRow>
           </NxTableBody>
         </NxTable>

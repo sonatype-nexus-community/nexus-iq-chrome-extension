@@ -69,6 +69,7 @@ export interface SecurityIssue {
   severity: number;
   url: string;
   description: string | null | undefined;
+  vector: string;
 }
 
 export interface LicenseData {

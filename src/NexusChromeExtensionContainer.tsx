@@ -23,10 +23,10 @@ import {
   TestLogger,
   IqRequestService,
   RequestService,
-  ComponentDetails,
-  ComponentContainer
+  ComponentDetails
 } from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
+import localforage from 'localforage';
 
 const _browser = chrome ? chrome : browser;
 
@@ -71,7 +71,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
                 version: '1.0.0',
                 logger: new TestLogger()
               },
-              localStorage
+              localforage as any
             );
           } else {
             this._requestService = new OSSIndexRequestService(
@@ -81,7 +81,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
                 version: '1.0.0',
                 logger: new TestLogger()
               },
-              localStorage
+              localforage as any
             );
           }
         }

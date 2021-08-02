@@ -178,19 +178,25 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
     details.componentDetails[0].securityData &&
     details.componentDetails[0].securityData.securityIssues
   ) {
-    chrome.notifications.create({
-      title: `Sonatype Scan Results - ${purl}`,
-      iconUrl: '/images/SON_logo_favicon_Vulnerable.png',
-      type: 'basic',
-      message: 'Vulnerabilities have been found in this version',
-      priority: 1,
-      buttons: [
-        {
-          title: 'Close'
-        }
-      ],
-      isClickable: true
-    });
+    console.debug('Sending notification that component is vulnerable');
+    chrome.notifications.create(
+      {
+        title: `Sonatype Scan Results - ${purl}`,
+        iconUrl: '/images/SON_logo_favicon_Vulnerable.png',
+        type: 'basic',
+        message: 'Vulnerabilities have been found in this version',
+        priority: 1,
+        buttons: [
+          {
+            title: 'Close'
+          }
+        ],
+        isClickable: true
+      },
+      (notificationId) => {
+        console.trace('Notification sent: ' + notificationId);
+      }
+    );
   }
 
   chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
@@ -201,6 +207,22 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
       });
     }
   });
+};
+
+const toggleIcon = (show: boolean) => {
+  try {
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+      if (tabs && tabs.length > 0 && tabs[0].id) {
+        if (show) {
+          chrome.action.enable(tabs[0].id);
+        } else {
+          chrome.action.disable(tabs[0].id);
+        }
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const handleIQServerWrapper = (purl: string, settings: Settings) => {
@@ -247,25 +269,30 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.trace(request);
 
-  if (request && request.type && request.type === 'getArtifactDetailsFromPurl') {
-    console.debug('Getting settings');
-    getSettings()
-      .then((settings: Settings) => {
-        try {
-          if (settings.scanType === 'OSSINDEX') {
-            console.debug('Attempting to call OSS Index');
-            handleOSSIndexWrapper(request.purl, settings);
-          } else {
-            console.debug('Attempting to call Nexus IQ Server');
-            handleIQServerWrapper(request.purl, settings);
+  if (request && request.type) {
+    if (request.type === 'getArtifactDetailsFromPurl') {
+      console.debug('Getting settings');
+      getSettings()
+        .then((settings: Settings) => {
+          try {
+            if (settings.scanType === 'OSSINDEX') {
+              console.debug('Attempting to call OSS Index');
+              handleOSSIndexWrapper(request.purl, settings);
+            } else {
+              console.debug('Attempting to call Nexus IQ Server');
+              handleIQServerWrapper(request.purl, settings);
+            }
+          } catch (err) {
+            console.error(err);
           }
-        } catch (err) {
+        })
+        .catch((err) => {
           console.error(err);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+        });
+    }
+    if (request.type === 'togglePage') {
+      toggleIcon(request.show);
+    }
   }
 });
 
