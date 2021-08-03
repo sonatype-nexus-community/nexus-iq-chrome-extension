@@ -24,6 +24,7 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
 import {Puff} from '@agney/react-loading';
 import './Popup.css';
+import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 
 type PopupProps = {
   getVulnDetails: (v: string) => Promise<void>;
@@ -37,7 +38,7 @@ const Popup = (props: PopupProps): JSX.Element | null => {
   const renderPopup = (nexusContext: NexusContextInterface | undefined) => {
     if (
       nexusContext &&
-      nexusContext.componentDetails &&
+      nexusContext.policyDetails &&
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
       return (
@@ -52,6 +53,7 @@ const Popup = (props: PopupProps): JSX.Element | null => {
               <NxTabList>
                 <NxTab>Component Info</NxTab>
                 <NxTab>Security</NxTab>
+                <NxTab>Policy</NxTab>
                 <NxTab>Licensing</NxTab>
               </NxTabList>
               <NxTabPanel>
@@ -59,6 +61,9 @@ const Popup = (props: PopupProps): JSX.Element | null => {
               </NxTabPanel>
               <NxTabPanel>
                 <SecurityPage getVulnDetails={props.getVulnDetails}></SecurityPage>
+              </NxTabPanel>
+              <NxTabPanel>
+                <PolicyPage></PolicyPage>
               </NxTabPanel>
               <NxTabPanel>
                 <LicensingPage></LicensingPage>

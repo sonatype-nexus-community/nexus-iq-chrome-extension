@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 import React from 'react';
-import {ComponentContainer, IqServerVulnerabilityDetails} from '@sonatype/js-sona-types';
+import {
+  ComponentContainer,
+  IqServerComponentPolicyEvaluationResult,
+  IqServerVulnerabilityDetails
+} from '@sonatype/js-sona-types';
 import {DATA_SOURCES} from '../utils/Constants';
 
 export interface NexusContextInterface {
   scanType: string;
   componentDetails?: ComponentContainer;
+  policyDetails?: IqServerComponentPolicyEvaluationResult;
   vulnDetails?: IqServerVulnerabilityDetails;
 }
 

@@ -145,9 +145,23 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       console.log('Logged in to Nexus IQ Server: ' + loggedIn);
 
       this.getCSRFTokenFromCookie()
-        .then((token) => {
+        .then(async (token) => {
           (this._requestService as IqRequestService).setXCSRFToken(token);
-          this.doRequestForComponentDetails(purl);
+          const status = await (this
+            ._requestService as IqRequestService).getComponentEvaluatedAgainstPolicy([purl]);
+
+          (this._requestService as IqRequestService).asyncPollForResults(
+            `/${status.resultsUrl}`,
+            (e) => {
+              throw new Error(e);
+            },
+            (results) => {
+              console.trace('Got results from Nexus IQ Server for Component Policy Eval', {
+                results: results
+              });
+              this.setState({policyDetails: results});
+            }
+          );
         })
         .catch((err) => {
           console.error(err);

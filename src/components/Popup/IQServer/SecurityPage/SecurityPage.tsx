@@ -42,16 +42,18 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
   const renderAccordion = (nexusContext: NexusContextInterface | undefined) => {
     if (
       nexusContext &&
-      nexusContext.componentDetails &&
-      nexusContext.componentDetails.securityData &&
-      nexusContext.componentDetails.securityData.securityIssues
+      nexusContext.policyDetails &&
+      nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0 &&
+      nexusContext.policyDetails.results[0].securityData
     ) {
-      const purl = nexusContext.componentDetails.component.packageUrl;
+      const purl = nexusContext.policyDetails.results[0].component.packageUrl;
+      const securityData = nexusContext.policyDetails.results[0].securityData;
 
       return (
         <React.Fragment>
           {' '}
-          {nexusContext.componentDetails.securityData.securityIssues.map((issue: SecurityIssue) => {
+          {securityData.securityIssues.map((issue: SecurityIssue) => {
             return (
               <SecurityItemDisplay
                 key={issue.reference}

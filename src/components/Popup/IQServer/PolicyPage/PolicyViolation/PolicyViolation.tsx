@@ -15,34 +15,42 @@
  */
 import React, {useState} from 'react';
 import {NxAccordion, NxPolicyViolationIndicator} from '@sonatype/react-shared-components';
+import {ConstraintViolation, PolicyViolation, Reason} from '@sonatype/js-sona-types';
 
-const PolicyViolation = (props: any): JSX.Element | null => {
+type PolicyViolationProps = {
+  policyViolation: PolicyViolation;
+};
+
+const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
   const [open, setOpen] = useState(false);
 
-  const printPolicyViolation = (policyViolation: any) => {
+  const printPolicyViolation = (policyViolation: PolicyViolation) => {
     if (policyViolation) {
       return (
         <NxAccordion open={open} onToggle={setOpen}>
           <NxAccordion.Header>
             <h2 className="nx-accordion__header-title">{policyViolation.policyName}</h2>
             <div className="nx-btn-bar">
-              <NxPolicyViolationIndicator policyThreatLevel={policyViolation.policyThreatLevel} />
+              <NxPolicyViolationIndicator
+                policyThreatLevel={Math.round(policyViolation.threatLevel) as any}
+              />
             </div>
           </NxAccordion.Header>
-          <h2 className="nx-h2">Threat Level: {policyViolation.policyThreatLevel}</h2>
-          {policyViolation.constraints.map((x: any) => (
-            <React.Fragment key={x.constraintName}>
-              <h3 className="nx-h3">Constraint: {x.constraintName}</h3>
-              <h3 className="nx-h3">Reasons</h3>
-              <ul className="nx-list">
-                {x.conditions.map((y: any) => (
-                  <li key={y.conditionReason} className="nx-list__item">
-                    <span className="nx-list__text">{y.conditionReason}</span>
-                  </li>
-                ))}
-              </ul>
-            </React.Fragment>
-          ))}
+          <h2 className="nx-h2">Threat Level: {policyViolation.threatLevel}</h2>
+          {policyViolation.constraintViolations &&
+            policyViolation.constraintViolations.map((constraint: ConstraintViolation) => (
+              <React.Fragment key={constraint.constraintName}>
+                <h3 className="nx-h3">Constraint: {constraint.constraintName}</h3>
+                <h3 className="nx-h3">Reasons</h3>
+                <ul className="nx-list">
+                  {constraint.reasons.map((reason: Reason) => (
+                    <li key={reason.reason} className="nx-list__item">
+                      <span className="nx-list__text">{reason.reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              </React.Fragment>
+            ))}
         </NxAccordion>
       );
     }

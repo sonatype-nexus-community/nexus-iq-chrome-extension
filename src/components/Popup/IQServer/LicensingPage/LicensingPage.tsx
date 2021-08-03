@@ -31,9 +31,11 @@ const LicensingPage = (): JSX.Element | null => {
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
     if (
       nexusContext &&
-      nexusContext.componentDetails &&
-      nexusContext.componentDetails.licenseData
+      nexusContext.policyDetails &&
+      nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0
     ) {
+      const licenseData = nexusContext.policyDetails.results[0].licenseData;
       return (
         <React.Fragment>
           <NxTable>
@@ -43,9 +45,7 @@ const LicensingPage = (): JSX.Element | null => {
               </NxTableRow>
             </NxTableHead>
             <NxTableBody>
-              {nexusContext.componentDetails.licenseData.declaredLicenses.map(function (
-                license: LicenseDetail
-              ) {
+              {licenseData.declaredLicenses.map((license: LicenseDetail) => {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
               })}
             </NxTableBody>
@@ -57,9 +57,7 @@ const LicensingPage = (): JSX.Element | null => {
               </NxTableRow>
             </NxTableHead>
             <NxTableBody>
-              {nexusContext.componentDetails.licenseData.observedLicenses.map(function (
-                license: LicenseDetail
-              ) {
+              {licenseData.observedLicenses.map((license: LicenseDetail) => {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
               })}
             </NxTableBody>

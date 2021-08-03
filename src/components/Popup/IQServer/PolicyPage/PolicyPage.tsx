@@ -15,13 +15,33 @@
  */
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import PolicyViolation from './PolicyViolation/PolicyViolation';
 
 const PolicyPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderPolicyViolation = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.componentDetails) {
-      return <React.Fragment></React.Fragment>;
+    if (
+      nexusContext &&
+      nexusContext.policyDetails &&
+      nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0 &&
+      nexusContext.policyDetails.results[0].policyData &&
+      nexusContext.policyDetails.results[0].policyData.policyViolations
+    ) {
+      return (
+        <React.Fragment>
+          {' '}
+          {nexusContext.policyDetails.results[0].policyData.policyViolations.map((violation) => {
+            return (
+              <PolicyViolation
+                key={violation.policyId}
+                policyViolation={violation}
+              ></PolicyViolation>
+            );
+          })}
+        </React.Fragment>
+      );
     }
     return null;
   };

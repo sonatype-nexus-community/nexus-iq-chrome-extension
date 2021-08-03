@@ -37,54 +37,45 @@ const ComponentInfoPage = (): JSX.Element | null => {
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
     if (
       nexusContext &&
-      nexusContext.componentDetails &&
-      nexusContext.componentDetails.component.componentIdentifier &&
-      nexusContext.componentDetails.component.componentIdentifier.coordinates
+      nexusContext.policyDetails &&
+      nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0
     ) {
+      const results = nexusContext.policyDetails.results[0];
       return (
         <NxTable>
           <NxTableHead>
             <NxTableRow>
               <NxTableCell colSpan={2}>
-                <h2>{nexusContext.componentDetails.component.name}</h2>
+                <h2>{results.component.displayName}</h2>
               </NxTableCell>
             </NxTableRow>
           </NxTableHead>
           <NxTableBody>
             <NxTableRow>
               <NxTableCell>Package URL</NxTableCell>
-              <NxTableCell>{nexusContext.componentDetails.component.packageUrl}</NxTableCell>
+              <NxTableCell>{results.component.packageUrl}</NxTableCell>
             </NxTableRow>
             <NxTableRow>
               <NxTableCell>Hash</NxTableCell>
-              <NxTableCell>{nexusContext.componentDetails.component.hash}</NxTableCell>
+              <NxTableCell>{results.component.hash}</NxTableCell>
             </NxTableRow>
             <NxTableRow>
               <NxTableCell>Version</NxTableCell>
               <NxTableCell>
                 <span id="version">
-                  {nexusContext.componentDetails.component.componentIdentifier.coordinates.version}
+                  {results.component.componentIdentifier.coordinates.version}
                 </span>
               </NxTableCell>
             </NxTableRow>
             <NxTableRow>
               <NxTableCell>Match State</NxTableCell>
-              <NxTableCell>{nexusContext.componentDetails.matchState}</NxTableCell>
+              <NxTableCell>{results.matchState}</NxTableCell>
             </NxTableRow>
             <NxTableRow>
               <NxTableCell>Catalog Date</NxTableCell>
               <NxTableCell>
-                <span id="catalogdate">
-                  {formatDate(nexusContext.componentDetails.catalogDate)}
-                </span>
-              </NxTableCell>
-            </NxTableRow>
-            <NxTableRow>
-              <NxTableCell>Relative Popularity</NxTableCell>
-              <NxTableCell>
-                <span id="relativepopularity">
-                  {nexusContext.componentDetails.relativePopularity}
-                </span>
+                <span id="catalogdate">{/* {formatDate(results.catalogDate)} */}</span>
               </NxTableCell>
             </NxTableRow>
           </NxTableBody>

@@ -2051,9 +2051,9 @@
     xss-filters "^1.2.6"
 
 "@sonatype/js-sona-types@^1.0.31":
-  version "1.0.42"
-  resolved "https://registry.yarnpkg.com/@sonatype/js-sona-types/-/js-sona-types-1.0.42.tgz#e9d559862dc4cd6725406ddb5f80f849916e1309"
-  integrity sha512-4deXb7uQdgrsVuRa7VC2twVVIc84f9MVqKKUHNmBFlI7baQudVd6Ki4PzPYkKsy7MKyzmhQckwoH3nk6+aaPeA==
+  version "1.0.49"
+  resolved "https://registry.yarnpkg.com/@sonatype/js-sona-types/-/js-sona-types-1.0.49.tgz#d7c293187cc296ca63442ff2acfaa75bb40a7868"
+  integrity sha512-O1/k2tUSt3A6vFebOSSZ72Pr8YgCfvhPLGpOyNmDSbip6iVg5/8rs8vdmCHhxuXqqBazk5uO9a5XPjQ0WM6klA==
   dependencies:
     browser-cookies "^1.2.0"
     cross-fetch "^3.1.4"
