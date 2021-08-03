@@ -27,8 +27,6 @@ import {
 } from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import localforage from 'localforage';
-import {VulnerabilityDetails} from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types';
-import {rejects} from 'assert';
 
 const _browser = chrome ? chrome : browser;
 
@@ -131,6 +129,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   };
 
   getVulnDetails = async (vulnId: string): Promise<void> => {
+    // Likely ok to skip setting the CSRF etc... because if this is getting requested, we know it's been set
     const vulnDetails = await (this._requestService as IqRequestService).getVulnerabilityDetails(
       vulnId
     );
@@ -147,7 +146,6 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
       this.getCSRFTokenFromCookie()
         .then((token) => {
-          console.log('CSRF Token: ' + token);
           (this._requestService as IqRequestService).setXCSRFToken(token);
           this.doRequestForComponentDetails(purl);
         })
