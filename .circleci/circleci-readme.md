@@ -29,7 +29,8 @@ The local build runs in a docker container.
 
 # Plugin Publishing notes
 
-Thanks to Ops, we have a shiny new group publisher (`community-group-chrome-store`)to use when publishing this plugin. 
-New developers who want to work on the publishing side, need to be added to the google group `community-group-chrome-store`
-(of the same name). See 
+Thanks to Ops, we have a shiny new group publisher (`community-group-chrome-store`)to use when publishing this plugin.
+Every developer that needs to sign in and publish an app needs to 
+[register for a CWS developer account](https://developer.chrome.com/docs/webstore/register/). 5$ dollars please. ;) 
+New publishing developers also need to be added to the google group `community-group-chrome-store`. See 
 [Group Publishers and such](https://developer.chrome.com/docs/webstore/group-publishers/#publishing-using-a-group-publisher).
