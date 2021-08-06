@@ -15,7 +15,7 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('PyPI Page Parsing', () => {
@@ -25,6 +25,7 @@ describe('PyPI Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
+      repoID: REPOS.pypi,
       url: '',
       repoFormat: FORMATS.pypi,
       titleSelector: '',
@@ -43,6 +44,7 @@ describe('PyPI Page Parsing', () => {
 
   test('should parse valid PyPI page with the version', () => {
     const rt: RepoType = {
+      repoID: REPOS.pypi,
       url: '',
       repoFormat: FORMATS.pypi,
       titleSelector: '',

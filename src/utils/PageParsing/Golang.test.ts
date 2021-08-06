@@ -15,11 +15,12 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Golang Page Parsing', () => {
   const rt: RepoType = {
+    repoID: REPOS.godev,
     url: '',
     repoFormat: FORMATS.golang,
     titleSelector: '',
@@ -28,15 +29,15 @@ describe('Golang Page Parsing', () => {
     appendVersionPath: ''
   };
   test('Parse golang page etcd version in url', () => {
-    const PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL = getArtifactDetailsFromDOM(
       rt,
       'https://pkg.go.dev/github.com/etcd-io/etcd@v0.3.0'
     );
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.version).toBe('v0.3.0');
-    expect(PackageURL?.namespace).toBe('github.com/etcd-io');
-    expect(PackageURL?.name).toBe('etcd');
+    expect(packageURL).toBeDefined();
+    expect(packageURL?.version).toBe('v0.3.0');
+    expect(packageURL?.namespace).toBe('github.com/etcd-io');
+    expect(packageURL?.name).toBe('etcd');
   });
 
   test('Parse golang page protobuf version in url', () => {

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Ruby Gems Page Parsing', () => {
   test('should parse a valid rubygems page', () => {
     const rt: RepoType = {
+      repoID: REPOS.rubygems,
       url: '',
       repoFormat: FORMATS.gem,
       titleSelector: '',

@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3
+//https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/
 //"purl": "pkg:maven/com.mycompany.myproduct/artifact-name@2.1.7",
 import {PackageURL} from 'packageurl-js';
 import {FORMATS} from '../Constants';
-import {generatePackageURLComplete} from './PurlUtils';
+import {
+  generatePackageURL,
+  generatePackageURLWithNamespace,
+  generatePackageURLComplete
+} from './PurlUtils';
 
 //pkg:type/namespace/name@version?qualifiers#subpath
 //Sonatype expects: "packageUrl": "pkg:maven/org.yaml/snakeyaml@1.17?type=jar"
-const parseMVNRepository = (url: string): PackageURL | undefined => {
+const parseMavenApache = (url: string): PackageURL | undefined => {
+  // console.trace("parseMavenApache", url)
   const elements = url.split('/');
-  if (elements.length == 7) {
+  if (elements.length == 8) {
     const group = encodeURIComponent(elements[4]);
     const artifact = encodeURIComponent(elements[5]);
     const version = encodeURIComponent(elements[6]);
@@ -36,4 +41,4 @@ const parseMVNRepository = (url: string): PackageURL | undefined => {
   return undefined;
 };
 
-export {parseMVNRepository};
+export {parseMavenApache};

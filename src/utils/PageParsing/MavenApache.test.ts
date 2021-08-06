@@ -14,31 +14,36 @@
  * limitations under the License.
  */
 import {readFileSync} from 'fs';
+import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
 import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
-describe('Anaconda Page Parsing', () => {
-  test('should parse a valid Anaconda page', () => {
-    const html = readFileSync(join(__dirname, 'testdata/anaconda.html'));
+describe('mavenapache Page Parsing', () => {
+  test('should parse a valid mavenapache page', () => {
+    const html = readFileSync(join(__dirname, 'testdata/mavenapache.html'));
 
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.anaconda,
+      repoID: REPOS.mavenapache,
       url: '',
-      repoFormat: FORMATS.conda,
+      repoFormat: FORMATS.maven,
       titleSelector: '',
       versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
+      dataSource: DATA_SOURCES.NEXUSIQ,
       appendVersionPath: ''
     };
 
-    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://anaconda.org/conda-forge/numpy');
-
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe(FORMATS.conda);
-    expect(PackageURL?.name).toBe('numpy');
-    expect(PackageURL?.version).toBe('1.20.2');
+    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+      rt,
+      'https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/'
+    );
+    // console.trace("packageURL", packageURL);
+    expect(packageURL).toBeDefined();
+    expect(packageURL?.type).toBe('maven');
+    expect(packageURL?.namespace).toBe('commons-collections');
+    expect(packageURL?.name).toBe('commons-collections');
+    expect(packageURL?.version).toBe('3.2.1');
   });
 });

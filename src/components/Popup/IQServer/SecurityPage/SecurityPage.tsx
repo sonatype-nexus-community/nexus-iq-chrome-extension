@@ -16,7 +16,7 @@
 import React, {useContext, useState} from 'react';
 import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {SecurityIssue} from '../../../../types/ArtifactMessage';
+import {SecurityIssue, sortIssues} from '../../../../types/ArtifactMessage';
 
 type SecurityProps = {
   getVulnDetails: (v: string) => Promise<void>;
@@ -49,14 +49,7 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
     ) {
       const purl = nexusContext.policyDetails.results[0].component.packageUrl;
       const securityData = nexusContext.policyDetails.results[0].securityData;
-      const sortedIssues = securityData.securityIssues
-        .sort((a: SecurityIssue, b: SecurityIssue) => {
-          return b.reference > a.reference ? 1 : -1;
-        })
-        .sort((a: SecurityIssue, b: SecurityIssue) => {
-          return b.severity - a.severity;
-        });
-      console.log('sortedIssues', sortedIssues);
+      const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
       return (
         <React.Fragment>
           {' '}
@@ -82,3 +75,4 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
 };
 
 export default SecurityPage;
+

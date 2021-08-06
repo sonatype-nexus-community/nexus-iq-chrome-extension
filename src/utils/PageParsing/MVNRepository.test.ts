@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import {readFileSync} from 'fs';
+import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('MVNRepository Page Parsing', () => {
@@ -25,6 +26,7 @@ describe('MVNRepository Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
+      repoID: REPOS.mvnrepository,
       url: '',
       repoFormat: FORMATS.maven,
       titleSelector: '',
@@ -33,14 +35,15 @@ describe('MVNRepository Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL = getArtifactDetailsFromDOM(
       rt,
       'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3'
     );
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe('mvn');
-    expect(PackageURL?.name).toBe('struts2-core');
-    expect(PackageURL?.version).toBe('2.2.3');
+    expect(packageURL).toBeDefined();
+    expect(packageURL?.type).toBe('maven');
+    expect(packageURL?.namespace).toBe('org.apache.struts');
+    expect(packageURL?.name).toBe('struts2-core');
+    expect(packageURL?.version).toBe('2.2.3');
   });
 });

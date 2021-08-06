@@ -15,7 +15,7 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('CRAN Page Parsing', () => {
@@ -25,6 +25,7 @@ describe('CRAN Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
+      repoID: REPOS.cran,
       url: '',
       repoFormat: FORMATS.cran,
       titleSelector: '',
