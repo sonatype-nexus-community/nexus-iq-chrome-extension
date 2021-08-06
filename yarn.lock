@@ -2076,10 +2076,10 @@
     in-publish "^2.0.0"
     prop-types "^15.5.10"
 
-"@sonatype/react-shared-components@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@sonatype/react-shared-components/-/react-shared-components-6.0.1.tgz#c823f7746003e232fe2ea54e2098326f02d4d60f"
-  integrity sha512-wL4oYwrtCLNm0O9cXYk4yGHvd+GzseqU4UJGDJypyddWmz8u+oVvqH5pRlVLCw5Pv9qS3P4TM1wDnOSxQ/gzIg==
+"@sonatype/react-shared-components@^7.7.0":
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/@sonatype/react-shared-components/-/react-shared-components-7.7.0.tgz#a25b1a7634e978436bb5b4c456c14d057fe9efc6"
+  integrity sha512-W+oY84MQDndLYwDIO73Xu1M9KgGswaMO1U9BUd1e+GgO6UQVfwS/s4+AwfQ5Pq5IEXqRHN6QPcRTEmp9Q0dAdg==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.32"
     "@fortawesome/free-solid-svg-icons" "^5.15.1"
@@ -3490,7 +3490,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@*, classnames@^2.2.6:
+classnames@*, classnames@^2.2.6, classnames@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==

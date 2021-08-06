@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxTab, NxTabList, NxTabPanel, NxTabs} from '@sonatype/react-shared-components';
+import {
+  NxStatefulErrorAlert,
+  NxTab,
+  NxTabList,
+  NxTabPanel,
+  NxTabs
+} from '@sonatype/react-shared-components';
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
 import LicensingPage from './IQServer/LicensingPage/LicensingPage';
 import SecurityPage from './IQServer/SecurityPage/SecurityPage';
@@ -107,6 +113,9 @@ const Popup = (props: PopupProps): JSX.Element | null => {
           </div>
         </section>
       );
+    }
+    if (nexusContext && nexusContext.errorMessage) {
+      return <NxStatefulErrorAlert>{nexusContext.errorMessage}</NxStatefulErrorAlert>;
     }
     return <Puff />;
   };

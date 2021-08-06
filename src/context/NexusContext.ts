@@ -26,8 +26,15 @@ export interface NexusContextInterface {
   componentDetails?: ComponentContainer;
   policyDetails?: IqServerComponentPolicyEvaluationResult;
   vulnDetails?: IqServerVulnerabilityDetails;
+  errorMessage?: string;
 }
 
-const initialContext: NexusContextInterface = {scanType: DATA_SOURCES.OSSINDEX};
+const initialContext: NexusContextInterface = {
+  scanType: DATA_SOURCES.OSSINDEX,
+  componentDetails: undefined,
+  policyDetails: undefined,
+  vulnDetails: undefined,
+  errorMessage: undefined
+};
 
 export const NexusContext = React.createContext(initialContext);

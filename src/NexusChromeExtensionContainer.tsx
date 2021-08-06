@@ -38,61 +38,82 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   constructor(props: AppProps) {
     super(props);
 
-    _browser.storage.local.get((items: {[key: string]: any}) => {
-      if (items['scanType']) {
-        const scanType = items['scanType'];
+    this.state = {
+      errorMessage: undefined,
+      scanType: DATA_SOURCES.OSSINDEX
+    };
+  }
 
+  getStorageValue = (
+    key: string,
+    defaultValue: string | undefined
+  ): Promise<string | undefined> => {
+    return new Promise((resolve) => {
+      _browser.storage.local.get((items: {[key: string]: any}) => {
+        if (items[key]) {
+          resolve(items[key]);
+        } else {
+          resolve(defaultValue);
+        }
+      });
+    });
+  };
+
+  _setupRequestService = async (): Promise<void> => {
+    if (!this._requestService) {
+      const scanType = await this.getStorageValue('scanType', DATA_SOURCES.OSSINDEX);
+
+      this.setState({scanType: scanType});
+
+      console.trace('Scantype found', scanType);
+
+      try {
         if (scanType === DATA_SOURCES.NEXUSIQ) {
+          console.info('Fetching IQ Server settings');
+          const host = await this.getStorageValue('iqServerURL', undefined);
+          const user = await this.getStorageValue('iqServerUser', undefined);
+          const token = await this.getStorageValue('iqServerToken', undefined);
+          const application = await this.getStorageValue('iqServerApplication', undefined);
+          console.info('IQ Server Settings fetched');
+
+          console.trace('Setting up IQ Request Service');
           this._requestService = new IqRequestService({
-            host: items['iqServerURL'],
-            user: items['iqServerUser'],
-            token: items['iqServerToken'],
-            application: items['iqServerApplication'],
+            host: host,
+            user: user,
+            token: token,
+            application: application,
             browser: true,
             logger: new TestLogger(),
             product: 'chrome-extension',
             version: '1.0.0'
           });
 
-          this.setState({scanType: scanType, componentDetails: undefined});
-
           return;
         } else {
-          const ossIndexUser = items['ossIndexUser'];
-          const ossIndexToken = items['ossIndexToken'];
+          console.trace('Setting up OSS Index request service');
+          const ossIndexUser = await this.getStorageValue('ossIndexUser', undefined);
+          const ossIndexToken = await this.getStorageValue('ossIndexToken', undefined);
 
-          if (ossIndexUser && ossIndexToken) {
-            this._requestService = new OSSIndexRequestService(
-              {
-                user: ossIndexUser,
-                token: ossIndexToken,
-                browser: true,
-                product: 'chrome-extension',
-                version: '1.0.0',
-                logger: new TestLogger()
-              },
-              localforage as any
-            );
-          } else {
-            this._requestService = new OSSIndexRequestService(
-              {
-                browser: true,
-                product: 'chrome-extension',
-                version: '1.0.0',
-                logger: new TestLogger()
-              },
-              localforage as any
-            );
-          }
+          this._requestService = new OSSIndexRequestService(
+            {
+              user: ossIndexUser,
+              token: ossIndexToken,
+              browser: true,
+              product: 'chrome-extension',
+              version: '1.0.0',
+              logger: new TestLogger()
+            },
+            localforage as any
+          );
+
+          return;
         }
-
-        this.setState({
-          scanType: scanType ? scanType : DATA_SOURCES.OSSINDEX,
-          componentDetails: undefined
-        });
+      } catch (err: any) {
+        this.setState({errorMessage: err.message});
+        return;
       }
-    });
-  }
+    }
+  };
 
   componentDidMount = (): void => {
     chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
@@ -138,37 +159,49 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   };
 
   handleResponse = async (purlString: string): Promise<void> => {
-    const purl = PackageURL.fromString(purlString);
+    console.info('Setting up request service');
+    this._setupRequestService()
+      .then(async () => {
+        console.info('Finished setting up request service');
 
-    if (this._requestService instanceof IqRequestService) {
-      const loggedIn = await this._requestService.loginViaRest();
-      console.log('Logged in to Nexus IQ Server: ' + loggedIn);
+        const purl = PackageURL.fromString(purlString);
+        console.trace('Parsed purl into object', purl);
 
-      this.getCSRFTokenFromCookie()
-        .then(async (token) => {
-          (this._requestService as IqRequestService).setXCSRFToken(token);
-          const status = await (this
-            ._requestService as IqRequestService).getComponentEvaluatedAgainstPolicy([purl]);
+        if (this._requestService instanceof IqRequestService) {
+          console.info('Attempting to login to Nexus IQ Server');
+          const loggedIn = await this._requestService.loginViaRest();
+          console.info('Logged in to Nexus IQ Server: ' + loggedIn);
 
-          (this._requestService as IqRequestService).asyncPollForResults(
-            `/${status.resultsUrl}`,
-            (e) => {
-              throw new Error(e);
-            },
-            (results) => {
-              console.trace('Got results from Nexus IQ Server for Component Policy Eval', {
-                results: results
-              });
-              this.setState({policyDetails: results});
-            }
-          );
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } else {
-      this.doRequestForComponentDetails(purl);
-    }
+          this.getCSRFTokenFromCookie()
+            .then(async (token) => {
+              (this._requestService as IqRequestService).setXCSRFToken(token);
+              const status = await (this
+                ._requestService as IqRequestService).getComponentEvaluatedAgainstPolicy([purl]);
+
+              (this._requestService as IqRequestService).asyncPollForResults(
+                `/${status.resultsUrl}`,
+                (e) => {
+                  throw new Error(e);
+                },
+                (results) => {
+                  console.trace('Got results from Nexus IQ Server for Component Policy Eval', {
+                    results: results
+                  });
+                  this.setState({policyDetails: results});
+                }
+              );
+            })
+            .catch((err: any) => {
+              console.error(err);
+              this.setState({errorMessage: err.message});
+            });
+        } else {
+          this.doRequestForComponentDetails(purl);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   doRequestForComponentDetails = (purl: PackageURL) => {
@@ -182,6 +215,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
         })
         .catch((err: any) => {
           console.error(err);
+          this.setState({errorMessage: err.message});
         });
     }
   };

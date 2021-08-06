@@ -49,7 +49,26 @@ export const FORMATS = {
 export const REPOS = {
   alpineLinux: 'alpineLinux',
   cratesIo: 'cratesIo',
-}
+  npmJs: 'npmJs',
+  anacondaCom: 'anacondaCom',
+  chocolateyOrg: 'chocolateyOrg',
+  clojarsOrg: 'clojarsOrg',
+  cocoaPodsOrg: 'cocoaPodsOrg',
+  conanIo: 'conanIo',
+  cranRProject: 'cranRProject',
+  packagesDebianOrg: 'packagesDebianOrg',
+  trackerDebianOrg: 'trackerDebianOrg',
+  pkgGoDev: 'pkgGoDev',
+  nugetOrg: 'nugetOrg',
+  packagistOrg: 'packagistOrg',
+  pypiOrg: 'pypiOrg',
+  rubyGemsOrg: 'rubyGemsOrg',
+  nexusRepository: 'nexusRepository',
+  mvnRepositoryCom: 'mvnRepositoryCom',
+  repoMavenApacheOrg: 'repoMavenApacheOrg',
+  searchMavenOrg: 'searchMavenOrg',
+  repo1MavenOrg: 'repo1MavenOrg'
+};
 
 export interface RepoType {
   url: string;
@@ -74,6 +93,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://anaconda.org/',
     repoFormat: FORMATS.conda,
+    repoID: REPOS.anacondaCom,
     titleSelector: 'span.long-breadcrumb',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -82,6 +102,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://chocolatey.org/packages/',
     repoFormat: FORMATS.chocolatey,
+    repoID: REPOS.chocolateyOrg,
     titleSelector: 'h1',
     versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.OSSINDEX
@@ -89,6 +110,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://clojars.org/',
     repoFormat: FORMATS.clojars,
+    repoID: REPOS.clojarsOrg,
     titleSelector: '#jar-title > h1 > a',
     versionPath: '',
     dataSource: DATA_SOURCES.OSSINDEX,
@@ -97,6 +119,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://cocoapods.org/pods/',
     repoFormat: FORMATS.cocoapods,
+    repoID: REPOS.cocoaPodsOrg,
     titleSelector: 'h1',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -105,6 +128,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://conan.io/center/',
     repoFormat: FORMATS.conan,
+    repoID: REPOS.conanIo,
     titleSelector: '.package-name',
     versionPath: '',
     appendVersionPath: '',
@@ -113,6 +137,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://cran.r-project.org/',
     repoFormat: FORMATS.cran,
+    repoID: REPOS.cranRProject,
     titleSelector: 'h2', //"h2.title",?
     versionPath: '',
     appendVersionPath: '',
@@ -130,6 +155,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://packages.debian.org',
     repoFormat: FORMATS.debian,
+    repoID: REPOS.packagesDebianOrg,
     titleSelector: '',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ
@@ -137,6 +163,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://tracker.debian.org/pkg',
     repoFormat: FORMATS.debian,
+    repoID: REPOS.trackerDebianOrg,
     titleSelector: 'li.list-group-item',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ
@@ -147,6 +174,7 @@ export const REPO_TYPES: RepoType[] = [
     //https://pkg.go.dev/github.com/etcd-io/etcd
     //https://pkg.go.dev/github.com/etcd-io/etcd@v3.3.25+incompatible
     repoFormat: FORMATS.golang,
+    repoID: REPOS.pkgGoDev,
     titleSelector:
       'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a',
     versionPath: '{url}/{packagename}/@{versionNumber}',
@@ -156,6 +184,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://repo1.maven.org/maven2/',
     repoFormat: FORMATS.maven,
+    repoID: REPOS.repo1MavenOrg,
     titleSelector: 'h1',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -164,6 +193,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://repo.maven.apache.org/maven2/',
     repoFormat: FORMATS.maven,
+    repoID: REPOS.repoMavenApacheOrg,
     titleSelector: 'h1',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -172,6 +202,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://search.maven.org/artifact/',
     repoFormat: FORMATS.maven,
+    repoID: REPOS.searchMavenOrg,
     titleSelector: '.artifact-title',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -180,6 +211,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://mvnrepository.com/artifact/',
     repoFormat: FORMATS.maven,
+    repoID: REPOS.mvnRepositoryCom,
     titleSelector: 'h2.im-title',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -188,6 +220,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://www.npmjs.com/package/',
     repoFormat: FORMATS.npm,
+    repoID: REPOS.npmJs,
     titleSelector: '#top > div > h2 > span', //".package-name-redundant",
     // titleSelector: ".package-name-redundant",
     versionPath: '{url}/{packagename}/v/{versionNumber}',
@@ -198,6 +231,7 @@ export const REPO_TYPES: RepoType[] = [
     // https://www.nuget.org/packages/LibGit2Sharp/0.20.1
     url: 'https://www.nuget.org/packages/',
     repoFormat: FORMATS.nuget,
+    repoID: REPOS.nugetOrg,
     titleSelector: '.package-title > h1',
     versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -207,6 +241,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://packagist.org/packages/',
     repoFormat: FORMATS.composer,
+    repoID: REPOS.packagistOrg,
     titleSelector: 'h2.title',
     versionPath: '{url}/{packagename}#{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -215,6 +250,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://pypi.org/project/',
     repoFormat: FORMATS.pypi,
+    repoID: REPOS.pypiOrg,
     titleSelector: 'h1.package-header__name',
     versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -223,6 +259,7 @@ export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://rubygems.org/gems/',
     repoFormat: FORMATS.gem,
+    repoID: REPOS.rubyGemsOrg,
     titleSelector: 'h1.t-display',
     versionPath: '{url}/{packagename}/versions/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -230,6 +267,7 @@ export const REPO_TYPES: RepoType[] = [
   },
   {
     url: '/#browse/browse:',
+    repoID: REPOS.nexusRepository,
     titleSelector: "div[id*='-coreui-component-componentinfo-'",
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,

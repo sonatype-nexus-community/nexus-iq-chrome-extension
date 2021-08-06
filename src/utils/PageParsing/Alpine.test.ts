@@ -15,7 +15,7 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Alpine Page Parsing', () => {
@@ -27,6 +27,7 @@ describe('Alpine Page Parsing', () => {
     const rt: RepoType = {
       url: '',
       repoFormat: FORMATS.alpine,
+      repoID: REPOS.alpineLinux,
       titleSelector: '',
       versionPath: '',
       dataSource: DATA_SOURCES.OSSINDEX,

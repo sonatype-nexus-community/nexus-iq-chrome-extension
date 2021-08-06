@@ -15,13 +15,14 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Golang Page Parsing', () => {
   const rt: RepoType = {
     url: '',
     repoFormat: FORMATS.golang,
+    repoID: REPOS.pkgGoDev,
     titleSelector: '',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,

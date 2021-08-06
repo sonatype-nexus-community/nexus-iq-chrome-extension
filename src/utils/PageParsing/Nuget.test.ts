@@ -15,7 +15,7 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Nuget Page Parsing', () => {
@@ -27,6 +27,7 @@ describe('Nuget Page Parsing', () => {
     const rt: RepoType = {
       url: '',
       repoFormat: FORMATS.nuget,
+      repoID: REPOS.nugetOrg,
       titleSelector: '',
       versionPath: '',
       dataSource: DATA_SOURCES.OSSINDEX,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {PackageURL} from 'packageurl-js';
-import {FORMATS, REPOS, RepoType} from './Constants';
+import {REPOS, RepoType} from './Constants';
 import {parseAlpine} from './PageParsing/Alpine';
 import {parseNPM} from './PageParsing/NPM';
 import {parseNuget} from './PageParsing/Nuget';
@@ -26,23 +26,23 @@ import {parseConda} from './PageParsing/Anaconda';
 import {parsePackagist} from './PageParsing/Packagist';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  if (repoFormat.repoID === REPOS.npmJS) {
+  if (repoFormat.repoID === REPOS.npmJs) {
     return parseNPM(url);
-  } else if (repoFormat.repoFormat === REPOS.alpineLinux) {
+  } else if (repoFormat.repoID === REPOS.alpineLinux) {
     return parseAlpine(url);
-  } else if (repoFormat.repoFormat === FORMATS.nuget) {
+  } else if (repoFormat.repoID === REPOS.nugetOrg) {
     return parseNuget(url);
-  } else if (repoFormat.repoFormat === FORMATS.gem) {
+  } else if (repoFormat.repoID === REPOS.rubyGemsOrg) {
     return parseRuby(url);
-  } else if (repoFormat.repoFormat === FORMATS.golang) {
+  } else if (repoFormat.repoID === REPOS.pkgGoDev) {
     return parseGolang(url);
-  } else if (repoFormat.repoFormat === FORMATS.pypi) {
+  } else if (repoFormat.repoID === REPOS.pypiOrg) {
     return parsePyPIURL(url);
-  } else if (repoFormat.repoFormat === FORMATS.cran) {
+  } else if (repoFormat.repoID === REPOS.cranRProject) {
     return parseCRAN(url);
-  } else if (repoFormat.repoFormat === FORMATS.conda) {
+  } else if (repoFormat.repoID === REPOS.anacondaCom) {
     return parseConda(url);
-  } else if (repoFormat.repoFormat === FORMATS.composer) {
+  } else if (repoFormat.repoID === REPOS.packagistOrg) {
     return parsePackagist(url);
   }
 
