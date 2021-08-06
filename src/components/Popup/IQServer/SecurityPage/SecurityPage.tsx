@@ -49,7 +49,8 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
     ) {
       const purl = nexusContext.policyDetails.results[0].component.packageUrl;
       const securityData = nexusContext.policyDetails.results[0].securityData;
-      const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
+      const si: SecurityIssue[] = securityData.securityIssues;
+      const sortedIssues: SecurityIssue[] = sortIssues(si);
       return (
         <React.Fragment>
           {' '}
@@ -75,4 +76,3 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
 };
 
 export default SecurityPage;
-

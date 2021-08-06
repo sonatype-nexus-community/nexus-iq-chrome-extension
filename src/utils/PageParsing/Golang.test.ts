@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {readFileSync} from 'fs';
+import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
 import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';

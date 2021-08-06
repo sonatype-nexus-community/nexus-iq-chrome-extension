@@ -63,13 +63,14 @@ export interface SecurityData {
   securityIssues: SecurityIssue[];
 }
 
+//TODO: these are duplicated because of @sonatype/js-sona-types/ComponentDetails.ts
 export interface SecurityIssue {
   source: string;
   reference: string;
   severity: number;
   url: string;
   description: string | null | undefined;
-  vector: string;
+  vector?: string | null | undefined;
 }
 
 export interface LicenseData {

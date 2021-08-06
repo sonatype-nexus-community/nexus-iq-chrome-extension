@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {readFileSync} from 'fs';
-import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
-import {sortIssues, SecurityData, SecurityIssues, SecurityIssue} from './ArtifactMessage';
+import {sortIssues, SecurityData, SecurityIssue} from './ArtifactMessage';
 const securityDataRaw = `{
     "securityData": {
         "securityIssues": [
@@ -63,7 +60,7 @@ describe('Artifact Message Test', () => {
   test('should sort security issues', () => {
     const securityData: SecurityData = JSON.parse(securityDataRaw).securityData;
     // console.trace("securityData",  securityData.securityIssues);
-    const sortedIssues: SecurityIssues = sortIssues(securityData.securityIssues);
+    const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
     expect(sortedIssues).toBeDefined();
     expect(sortedIssues[0].severity).toBeGreaterThanOrEqual(
       sortedIssues[sortedIssues.length - 1].severity
