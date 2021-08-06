@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {PackageURL} from 'packageurl-js';
-import {FORMATS, RepoType} from './Constants';
+import {FORMATS, REPOS, RepoType} from './Constants';
 import {parseAlpine} from './PageParsing/Alpine';
 import {parseNPM} from './PageParsing/NPM';
 import {parseNuget} from './PageParsing/Nuget';
@@ -26,9 +26,9 @@ import {parseConda} from './PageParsing/Anaconda';
 import {parsePackagist} from './PageParsing/Packagist';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  if (repoFormat.repoFormat === FORMATS.npm) {
+  if (repoFormat.repoID === REPOS.npmJS) {
     return parseNPM(url);
-  } else if (repoFormat.repoFormat === FORMATS.alpine) {
+  } else if (repoFormat.repoFormat === REPOS.alpineLinux) {
     return parseAlpine(url);
   } else if (repoFormat.repoFormat === FORMATS.nuget) {
     return parseNuget(url);

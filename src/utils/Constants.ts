@@ -46,19 +46,26 @@ export const FORMATS = {
   rpm: 'rpm'
 };
 
+export const REPOS = {
+  alpineLinux: 'alpineLinux',
+  cratesIo: 'cratesIo',
+}
+
 export interface RepoType {
   url: string;
   repoFormat?: string;
+  repoID: string;
   titleSelector?: string;
   versionPath?: string;
   dataSource: string;
   appendVersionPath?: string;
 }
 
-export const REPO_TYPES = [
+export const REPO_TYPES: RepoType[] = [
   {
     url: 'https://pkgs.alpinelinux.org/package/',
     repoFormat: FORMATS.alpine,
+    repoID: REPOS.alpineLinux,
     titleSelector: 'th.header ~ td',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -114,6 +121,7 @@ export const REPO_TYPES = [
   {
     url: 'https://crates.io/crates/',
     repoFormat: FORMATS.cargo,
+    repoID: REPOS.cratesIo,
     titleSelector: "div[class*='heading'] h1",
     versionPath: '{url}/{packagename}/{versionNumber}', // https://crates.io/crates/claxon/0.4.0
     dataSource: DATA_SOURCES.NEXUSIQ,
