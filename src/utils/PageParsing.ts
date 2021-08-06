@@ -23,9 +23,7 @@ import {parseGolang} from './PageParsing/Golang';
 import {parsePyPIURL} from './PageParsing/PyPI';
 import {parseCRAN} from './PageParsing/CRAN';
 import {parseConda} from './PageParsing/Anaconda';
-import { parsePackagist } from './PageParsing/Packagist';
-import { parseMVNRepository } from './PageParsing/MVNRepository';
-
+import {parsePackagist} from './PageParsing/Packagist';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   if (repoFormat.repoID === REPOS.npmJS) {
@@ -46,8 +44,6 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     return parseConda(url);
   } else if (repoFormat.repoFormat === FORMATS.composer) {
     return parsePackagist(url);
-  } else if (repoFormat.repoFormat === FORMATS.maven) {
-    return parseMVNRepository(url);
   }
 
   return undefined;
