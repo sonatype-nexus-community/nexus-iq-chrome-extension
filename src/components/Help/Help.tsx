@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import NexusOptionsContainer from './NexusOptionsContainer';
 
-const renderOptions = () => {
-  const search = window.location.search;
-  const params = new URLSearchParams(search);
-  const install = params.has('install');
-  const help = params.has('help');
+const Help = (): JSX.Element => {
+  const renderHelp = () => {
+    return (
+      <React.Fragment>
+        <h1>Hello I am the Help Page</h1>
+        <h2>I am not very helpful...YET</h2>
+      </React.Fragment>
+    );
+  };
 
-  ReactDOM.render(
-    <React.StrictMode>
-      <div className="nx-page-content">
-        <main className="nx-page-main nx-viewport-sized">
-          <NexusOptionsContainer install={install} help={help} />
-        </main>
-      </div>
-    </React.StrictMode>,
-    document.getElementById('ui')
-  );
+  return renderHelp();
 };
 
-renderOptions();
+export default Help;

@@ -3,6 +3,7 @@
   "description": "Sonatype Nexus IQ Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
   "author": "Cameron Townshend - ctownshend@sonatype.com",
   "version": "2.0.0",
+  "minimum_chrome_version": "93",
   "manifest_version": 3,
   "content_security_policy": {
     "script-src": "self",

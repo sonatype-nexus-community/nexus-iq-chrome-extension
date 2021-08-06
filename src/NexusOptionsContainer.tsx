@@ -14,25 +14,29 @@
  * limitations under the License.
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import NexusOptionsContainer from './NexusOptionsContainer';
+import Options from './components/Options/Options';
+import Install from './components/Install/Install';
+import Help from './components/Help/Help';
 
-const renderOptions = () => {
-  const search = window.location.search;
-  const params = new URLSearchParams(search);
-  const install = params.has('install');
-  const help = params.has('help');
-
-  ReactDOM.render(
-    <React.StrictMode>
-      <div className="nx-page-content">
-        <main className="nx-page-main nx-viewport-sized">
-          <NexusOptionsContainer install={install} help={help} />
-        </main>
-      </div>
-    </React.StrictMode>,
-    document.getElementById('ui')
-  );
+type OptionsProps = {
+  install: boolean;
+  help: boolean;
 };
 
-renderOptions();
+class NexusOptionsContainer extends React.Component<OptionsProps> {
+  constructor(props: OptionsProps) {
+    super(props);
+  }
+
+  render(): JSX.Element {
+    return (
+      <React.Fragment>
+        {this.props.help && <Help />}
+        {this.props.install && <Install />}
+        {!this.props.help && !this.props.install && <Options />}
+      </React.Fragment>
+    );
+  }
+}
+
+export default NexusOptionsContainer;

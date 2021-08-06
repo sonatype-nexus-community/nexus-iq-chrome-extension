@@ -22,7 +22,6 @@ import localforage from 'localforage';
 
 const _browser: any = chrome ? chrome : browser;
 
-const NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME = 'nexusIqBrowserExtensionInstallTime';
 const SCAN_TYPE = 'scanType';
 const IQ_SERVER_URL = 'iqServerURL';
 const IQ_SERVER_APPLICATION = 'iqServerApplication';
@@ -36,28 +35,6 @@ interface Settings {
   token: string | undefined;
   application: string | undefined;
 }
-
-const installNotice = async () => {
-  // TODO: figure out how to abstract this for Firefox (hopefully it just works)
-  _browser.storage.local.get(
-    NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME,
-    (items: {[key: string]: any}) => {
-      console.trace(items[NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME]);
-
-      if (items[NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME]) return;
-
-      const now = new Date().getTime();
-      _browser.storage.local.set(
-        {[NEXUS_IQ_BROWSER_EXTENSION_INSTALL_TIME]: now.toString()},
-        () => {
-          console.debug('Set install time', now);
-          console.debug('Attempting to open options');
-          _browser.tabs.create({url: 'options.html'});
-        }
-      );
-    }
-  );
-};
 
 const getSettings = async (): Promise<Settings> => {
   const promise = new Promise<Settings>((resolve) => {
@@ -305,4 +282,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-installNotice();
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    chrome.tabs.create({url: 'options.html?install'});
+  } else if (details.reason === 'update') {
+  } else if (details.reason === 'chrome_update') {
+  } else if (details.reason === 'shared_module_update') {
+  }
+});
