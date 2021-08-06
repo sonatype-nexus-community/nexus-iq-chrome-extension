@@ -49,11 +49,18 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
     ) {
       const purl = nexusContext.policyDetails.results[0].component.packageUrl;
       const securityData = nexusContext.policyDetails.results[0].securityData;
-
+      const sortedIssues = securityData.securityIssues
+        .sort((a: SecurityIssue, b: SecurityIssue) => {
+          return b.reference > a.reference ? 1 : -1;
+        })
+        .sort((a: SecurityIssue, b: SecurityIssue) => {
+          return b.severity - a.severity;
+        });
+      console.log('sortedIssues', sortedIssues);
       return (
         <React.Fragment>
           {' '}
-          {securityData.securityIssues.map((issue: SecurityIssue) => {
+          {sortedIssues.map((issue: SecurityIssue) => {
             return (
               <SecurityItemDisplay
                 key={issue.reference}
