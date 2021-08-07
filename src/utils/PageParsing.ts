@@ -26,6 +26,7 @@ import {parseConda} from './PageParsing/Anaconda';
 import {parsePackagist} from './PageParsing/Packagist';
 import {parseMVNRepository} from './PageParsing/MVNRepository';
 import {parseMavenApache} from './PageParsing/MavenApache';
+import {parseSearchMavenOrg} from './PageParsing/SearchMavenOrg';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   // console.trace("getArtifactDetailsFromDOM: repoFormat, url", repoFormat, url);
@@ -38,7 +39,7 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       return parseAlpine(url);
       break;
     }
-    case REPOS.nugetOrgt: {
+    case REPOS.nugetOrg: {
       return parseNuget(url);
       break;
     }
@@ -46,7 +47,7 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       return parseRuby(url);
       break;
     }
-    case REPOS.pkgGoDevv: {
+    case REPOS.pkgGoDev: {
       return parseGolang(url);
       break;
     }
@@ -54,7 +55,7 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       return parsePyPIURL(url);
       break;
     }
-    case REPOS.cranRProjectn: {
+    case REPOS.cranRProject: {
       return parseCRAN(url);
       break;
     }
@@ -74,12 +75,16 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       return parseMavenApache(url);
       break;
     }
+    case REPOS.searchMavenOrg: {
+      return parseSearchMavenOrg(url);
+      break;
+    }
+
     default: {
-      //throw undefined error
-      throw new Error(`Unhandled Repotype and URL ${repoFormat} ${url}`);
+      throw new Error(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`);
     }
   }
-  // console.trace("got here by mistake")
+  console.trace('got here by mistake');
   return undefined;
 };
 

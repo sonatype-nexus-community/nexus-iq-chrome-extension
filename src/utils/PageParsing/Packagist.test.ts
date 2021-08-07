@@ -25,7 +25,6 @@ describe('Packagist Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.packagist,
       url: '',
       repoFormat: FORMATS.composer,
       repoID: REPOS.packagistOrg,

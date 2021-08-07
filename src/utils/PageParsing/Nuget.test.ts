@@ -25,7 +25,6 @@ describe('Nuget Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.nuget,
       url: '',
       repoFormat: FORMATS.nuget,
       repoID: REPOS.nugetOrg,

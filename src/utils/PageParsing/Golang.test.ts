@@ -21,7 +21,6 @@ import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Golang Page Parsing', () => {
   const rt: RepoType = {
-    repoID: REPOS.godev,
     url: '',
     repoFormat: FORMATS.golang,
     repoID: REPOS.pkgGoDev,

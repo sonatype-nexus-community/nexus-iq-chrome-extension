@@ -14,31 +14,36 @@
  * limitations under the License.
  */
 import {readFileSync} from 'fs';
+import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
-describe('Anaconda Page Parsing', () => {
-  test('should parse a valid Anaconda page', () => {
-    const html = readFileSync(join(__dirname, 'testdata/anaconda.html'));
+describe('SearchMavenOrg Page Parsing', () => {
+  test('should parse a valid SearchMavenOrg page', () => {
+    const html = readFileSync(join(__dirname, 'testdata/SearchMavenOrg.html'));
 
     window.document.body.innerHTML = html.toString();
-
+    //https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar
     const rt: RepoType = {
+      repoID: REPOS.searchMavenOrg,
       url: '',
-      repoFormat: FORMATS.conda,
-      repoID: REPOS.anacondaCom,
+      repoFormat: FORMATS.maven,
       titleSelector: '',
       versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
+      dataSource: DATA_SOURCES.NEXUSIQ,
       appendVersionPath: ''
     };
 
-    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://anaconda.org/conda-forge/numpy');
+    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+      rt,
+      'https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar'
+    );
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe(FORMATS.conda);
-    expect(PackageURL?.name).toBe('numpy');
-    expect(PackageURL?.version).toBe('1.20.2');
+    expect(packageURL).toBeDefined();
+    expect(packageURL?.type).toBe('maven');
+    expect(packageURL?.namespace).toBe('org.apache.struts');
+    expect(packageURL?.name).toBe('struts2-core');
+    expect(packageURL?.version).toBe('2.3.30');
   });
 });

@@ -26,7 +26,7 @@ describe('mavenapache Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.mavenapache,
+      repoID: REPOS.repoMavenApacheOrg,
       url: '',
       repoFormat: FORMATS.maven,
       titleSelector: '',

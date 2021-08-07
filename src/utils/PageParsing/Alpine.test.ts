@@ -25,7 +25,6 @@ describe('Alpine Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.alpineLinux,
       url: '',
       repoFormat: FORMATS.alpine,
       repoID: REPOS.alpineLinux,

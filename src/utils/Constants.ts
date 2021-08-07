@@ -46,7 +46,6 @@ export const FORMATS = {
   rpm: 'rpm'
 };
 
-
 export const REPOS = {
   alpineLinux: 'alpineLinux',
   cratesIo: 'cratesIo',

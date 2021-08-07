@@ -25,7 +25,6 @@ describe('CRAN Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.cran,
       url: '',
       repoFormat: FORMATS.cran,
       repoID: REPOS.cranRProject,

@@ -25,7 +25,6 @@ describe('PyPI Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.pypi,
       url: '',
       repoFormat: FORMATS.pypi,
       repoID: REPOS.pypiOrg,
@@ -45,7 +44,6 @@ describe('PyPI Page Parsing', () => {
 
   test('should parse valid PyPI page with the version', () => {
     const rt: RepoType = {
-      repoID: REPOS.pypi,
       url: '',
       repoFormat: FORMATS.pypi,
       repoID: REPOS.pypiOrg,

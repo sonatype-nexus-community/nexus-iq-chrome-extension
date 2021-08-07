@@ -25,7 +25,6 @@ describe('NPM Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.npmJS,
       url: '',
       repoFormat: FORMATS.npm,
       repoID: REPOS.npmJs,

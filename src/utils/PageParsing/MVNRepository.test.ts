@@ -26,7 +26,7 @@ describe('MVNRepository Page Parsing', () => {
     window.document.body.innerHTML = html.toString();
 
     const rt: RepoType = {
-      repoID: REPOS.mvnrepository,
+      repoID: REPOS.mvnRepositoryCom,
       url: '',
       repoFormat: FORMATS.maven,
       titleSelector: '',
