@@ -158,6 +158,15 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.setState({vulnDetails: vulnDetails});
   };
 
+  getLicenseDetails = async (purl: string): Promise<void> => {
+    // Likely ok to skip setting the CSRF etc... because if this is getting requested, we know it's been set
+    const packageUrl = PackageURL.fromString(purl);
+    const licenseDetails = await (this
+      ._requestService as IqRequestService).getLicenseLegalComponentReport(packageUrl);
+
+    this.setState({licenseDetails: licenseDetails});
+  };
+
   handleResponse = async (purlString: string): Promise<void> => {
     console.info('Setting up request service');
     this._setupRequestService()
@@ -225,7 +234,10 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       <NexusContext.Provider value={this.state}>
         <div className="nx-page-content">
           <main className="nx-page-main nx-viewport-sized">
-            <Popup getVulnDetails={this.getVulnDetails} />
+            <Popup
+              getVulnDetails={this.getVulnDetails}
+              getLicenseDetails={this.getLicenseDetails}
+            />
           </main>
         </div>
       </NexusContext.Provider>

@@ -17,6 +17,7 @@ import React from 'react';
 import {
   ComponentContainer,
   IqServerComponentPolicyEvaluationResult,
+  IqServerLicenseLegalMetadataResult,
   IqServerVulnerabilityDetails
 } from '@sonatype/js-sona-types';
 import {DATA_SOURCES} from '../utils/Constants';
@@ -26,6 +27,7 @@ export interface NexusContextInterface {
   componentDetails?: ComponentContainer;
   policyDetails?: IqServerComponentPolicyEvaluationResult;
   vulnDetails?: IqServerVulnerabilityDetails;
+  licenseDetails?: IqServerLicenseLegalMetadataResult;
   errorMessage?: string;
 }
 
@@ -34,6 +36,7 @@ const initialContext: NexusContextInterface = {
   componentDetails: undefined,
   policyDetails: undefined,
   vulnDetails: undefined,
+  licenseDetails: undefined,
   errorMessage: undefined
 };
 

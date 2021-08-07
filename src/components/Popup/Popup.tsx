@@ -34,6 +34,7 @@ import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 
 type PopupProps = {
   getVulnDetails: (v: string) => Promise<void>;
+  getLicenseDetails: (v: string) => Promise<void>;
 };
 
 const Popup = (props: PopupProps): JSX.Element | null => {
@@ -72,7 +73,7 @@ const Popup = (props: PopupProps): JSX.Element | null => {
                 <PolicyPage></PolicyPage>
               </NxTabPanel>
               <NxTabPanel>
-                <LicensingPage></LicensingPage>
+                <LicensingPage getLicenseDetails={props.getLicenseDetails}></LicensingPage>
               </NxTabPanel>
             </NxTabs>
           </div>
