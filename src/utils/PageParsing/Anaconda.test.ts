@@ -15,7 +15,7 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Anaconda Page Parsing', () => {
@@ -28,6 +28,7 @@ describe('Anaconda Page Parsing', () => {
       repoID: REPOS.anaconda,
       url: '',
       repoFormat: FORMATS.conda,
+      repoID: REPOS.anacondaCom,
       titleSelector: '',
       versionPath: '',
       dataSource: DATA_SOURCES.OSSINDEX,

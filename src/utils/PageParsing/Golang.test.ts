@@ -16,7 +16,7 @@
 import {readFileSync} from 'fs';
 import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Golang Page Parsing', () => {
@@ -24,6 +24,7 @@ describe('Golang Page Parsing', () => {
     repoID: REPOS.godev,
     url: '',
     repoFormat: FORMATS.golang,
+    repoID: REPOS.pkgGoDev,
     titleSelector: '',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,

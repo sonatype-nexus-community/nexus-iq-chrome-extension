@@ -28,6 +28,7 @@ describe('Alpine Page Parsing', () => {
       repoID: REPOS.alpineLinux,
       url: '',
       repoFormat: FORMATS.alpine,
+      repoID: REPOS.alpineLinux,
       titleSelector: '',
       versionPath: '',
       dataSource: DATA_SOURCES.OSSINDEX,

@@ -15,7 +15,7 @@
  */
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('NPM Page Parsing', () => {
@@ -28,6 +28,7 @@ describe('NPM Page Parsing', () => {
       repoID: REPOS.npmJS,
       url: '',
       repoFormat: FORMATS.npm,
+      repoID: REPOS.npmJs,
       titleSelector: '',
       versionPath: '',
       dataSource: DATA_SOURCES.NEXUSIQ,

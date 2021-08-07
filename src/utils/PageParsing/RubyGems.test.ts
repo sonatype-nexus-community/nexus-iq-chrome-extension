@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Ruby Gems Page Parsing', () => {
@@ -23,6 +23,7 @@ describe('Ruby Gems Page Parsing', () => {
       repoID: REPOS.rubygems,
       url: '',
       repoFormat: FORMATS.gem,
+      repoID: REPOS.rubyGemsOrg,
       titleSelector: '',
       versionPath: '',
       dataSource: DATA_SOURCES.NEXUSIQ,

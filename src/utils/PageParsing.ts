@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {PackageURL} from 'packageurl-js';
-import {FORMATS, REPOS, RepoType} from './Constants';
+import {REPOS, RepoType} from './Constants';
 import {parseAlpine} from './PageParsing/Alpine';
 import {parseNPM} from './PageParsing/NPM';
 import {parseNuget} from './PageParsing/Nuget';
@@ -30,7 +30,7 @@ import {parseMavenApache} from './PageParsing/MavenApache';
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   // console.trace("getArtifactDetailsFromDOM: repoFormat, url", repoFormat, url);
   switch (repoFormat.repoID) {
-    case REPOS.npmJS: {
+    case REPOS.npmJs: {
       return parseNPM(url);
       break;
     }
@@ -38,39 +38,39 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       return parseAlpine(url);
       break;
     }
-    case REPOS.nuget: {
+    case REPOS.nugetOrgt: {
       return parseNuget(url);
       break;
     }
-    case REPOS.rubygems: {
+    case REPOS.rubyGemsOrg: {
       return parseRuby(url);
       break;
     }
-    case REPOS.godev: {
+    case REPOS.pkgGoDevv: {
       return parseGolang(url);
       break;
     }
-    case REPOS.pypi: {
+    case REPOS.pypiOrg: {
       return parsePyPIURL(url);
       break;
     }
-    case REPOS.cran: {
+    case REPOS.cranRProjectn: {
       return parseCRAN(url);
       break;
     }
-    case REPOS.anaconda: {
+    case REPOS.anacondaCom: {
       return parseConda(url);
       break;
     }
-    case REPOS.packagist: {
+    case REPOS.packagistOrg: {
       return parsePackagist(url);
       break;
     }
-    case REPOS.mvnrepository: {
+    case REPOS.mvnRepositoryCom: {
       return parseMVNRepository(url);
       break;
     }
-    case REPOS.mavenapache: {
+    case REPOS.repoMavenApacheOrg: {
       return parseMavenApache(url);
       break;
     }
