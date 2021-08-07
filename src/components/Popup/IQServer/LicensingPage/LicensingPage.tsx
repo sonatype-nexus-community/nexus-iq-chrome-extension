@@ -15,6 +15,7 @@
  */
 import React, {useContext} from 'react';
 import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
+import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {
   NxTable,
@@ -25,7 +26,11 @@ import {
 } from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
-const LicensingPage = (): JSX.Element | null => {
+type LicensingPageProps = {
+  getLicenseDetails: (p: string) => Promise<void>;
+};
+
+const LicensingPage = (props: LicensingPageProps): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
@@ -35,6 +40,8 @@ const LicensingPage = (): JSX.Element | null => {
       nexusContext.policyDetails.results &&
       nexusContext.policyDetails.results.length > 0
     ) {
+      props.getLicenseDetails(nexusContext.policyDetails.results[0].component.packageUrl);
+
       const licenseData = nexusContext.policyDetails.results[0].licenseData;
       return (
         <React.Fragment>
@@ -62,6 +69,7 @@ const LicensingPage = (): JSX.Element | null => {
               })}
             </NxTableBody>
           </NxTable>
+          <AdvancedLegalDisplay />
         </React.Fragment>
       );
     }
