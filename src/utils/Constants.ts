@@ -76,15 +76,15 @@ export interface RepoType {
   repoID: string;
   titleSelector?: string;
   versionPath?: string;
-  dataSource: string;
+  dataSource: string; //TODO: remove this as unnecessary now as we no longer switch datasources on RepoType
   appendVersionPath?: string;
 }
 
 export const REPO_TYPES: RepoType[] = [
   {
+    repoID: REPOS.alpineLinux,
     url: 'https://pkgs.alpinelinux.org/package/',
     repoFormat: FORMATS.alpine,
-    repoID: REPOS.alpineLinux,
     titleSelector: 'th.header ~ td',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
@@ -144,9 +144,9 @@ export const REPO_TYPES: RepoType[] = [
     dataSource: DATA_SOURCES.NEXUSIQ
   },
   {
+    repoID: REPOS.cratesIo,
     url: 'https://crates.io/crates/',
     repoFormat: FORMATS.cargo,
-    repoID: REPOS.cratesIo,
     titleSelector: "div[class*='heading'] h1",
     versionPath: '{url}/{packagename}/{versionNumber}', // https://crates.io/crates/claxon/0.4.0
     dataSource: DATA_SOURCES.NEXUSIQ,

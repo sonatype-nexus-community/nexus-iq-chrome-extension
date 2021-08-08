@@ -63,13 +63,14 @@ export interface SecurityData {
   securityIssues: SecurityIssue[];
 }
 
+//TODO: these are duplicated because of @sonatype/js-sona-types/ComponentDetails.ts
 export interface SecurityIssue {
   source: string;
   reference: string;
   severity: number;
   url: string;
   description: string | null | undefined;
-  vector: string;
+  vector?: string | null | undefined;
 }
 
 export interface LicenseData {
@@ -81,4 +82,14 @@ export interface LicenseData {
 export interface LicenseDetail {
   licenseId: string;
   licenseName: string;
+}
+
+export function sortIssues(securityIssues: SecurityIssue[]): SecurityIssue[] {
+  return securityIssues
+    .sort((a: SecurityIssue, b: SecurityIssue) => {
+      return b.reference > a.reference ? 1 : -1;
+    })
+    .sort((a: SecurityIssue, b: SecurityIssue) => {
+      return b.severity - a.severity;
+    });
 }

@@ -24,28 +24,67 @@ import {parsePyPIURL} from './PageParsing/PyPI';
 import {parseCRAN} from './PageParsing/CRAN';
 import {parseConda} from './PageParsing/Anaconda';
 import {parsePackagist} from './PageParsing/Packagist';
+import {parseMVNRepository} from './PageParsing/MVNRepository';
+import {parseMavenApache} from './PageParsing/MavenApache';
+import {parseSearchMavenOrg} from './PageParsing/SearchMavenOrg';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  if (repoFormat.repoID === REPOS.npmJs) {
-    return parseNPM(url);
-  } else if (repoFormat.repoID === REPOS.alpineLinux) {
-    return parseAlpine(url);
-  } else if (repoFormat.repoID === REPOS.nugetOrg) {
-    return parseNuget(url);
-  } else if (repoFormat.repoID === REPOS.rubyGemsOrg) {
-    return parseRuby(url);
-  } else if (repoFormat.repoID === REPOS.pkgGoDev) {
-    return parseGolang(url);
-  } else if (repoFormat.repoID === REPOS.pypiOrg) {
-    return parsePyPIURL(url);
-  } else if (repoFormat.repoID === REPOS.cranRProject) {
-    return parseCRAN(url);
-  } else if (repoFormat.repoID === REPOS.anacondaCom) {
-    return parseConda(url);
-  } else if (repoFormat.repoID === REPOS.packagistOrg) {
-    return parsePackagist(url);
-  }
+  // console.trace("getArtifactDetailsFromDOM: repoFormat, url", repoFormat, url);
+  switch (repoFormat.repoID) {
+    case REPOS.npmJs: {
+      return parseNPM(url);
+      break;
+    }
+    case REPOS.alpineLinux: {
+      return parseAlpine(url);
+      break;
+    }
+    case REPOS.nugetOrg: {
+      return parseNuget(url);
+      break;
+    }
+    case REPOS.rubyGemsOrg: {
+      return parseRuby(url);
+      break;
+    }
+    case REPOS.pkgGoDev: {
+      return parseGolang(url);
+      break;
+    }
+    case REPOS.pypiOrg: {
+      return parsePyPIURL(url);
+      break;
+    }
+    case REPOS.cranRProject: {
+      return parseCRAN(url);
+      break;
+    }
+    case REPOS.anacondaCom: {
+      return parseConda(url);
+      break;
+    }
+    case REPOS.packagistOrg: {
+      return parsePackagist(url);
+      break;
+    }
+    case REPOS.mvnRepositoryCom: {
+      return parseMVNRepository(url);
+      break;
+    }
+    case REPOS.repoMavenApacheOrg: {
+      return parseMavenApache(url);
+      break;
+    }
+    case REPOS.searchMavenOrg: {
+      return parseSearchMavenOrg(url);
+      break;
+    }
 
+    default: {
+      throw new Error(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`);
+    }
+  }
+  console.trace('got here by mistake');
   return undefined;
 };
 

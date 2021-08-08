@@ -239,7 +239,7 @@ const toggleIcon = (show: boolean) => {
 
 const handleIQServerWrapper = (purl: string, settings: Settings) => {
   if (settings.host && settings.token && settings.application && settings.user) {
-    console.debug('Attempting to call Nexus IQ Server');
+    console.debug('Attempting to call Nexus IQ Server', purl, settings);
 
     handleURLIQServer(purl, settings).then((componentDetails) => {
       console.debug('Got back response from Nexus IQ Server');

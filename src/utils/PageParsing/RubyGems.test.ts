@@ -20,9 +20,9 @@ import {getArtifactDetailsFromDOM} from '../PageParsing';
 describe('Ruby Gems Page Parsing', () => {
   test('should parse a valid rubygems page', () => {
     const rt: RepoType = {
+      repoID: REPOS.rubyGemsOrg,
       url: '',
       repoFormat: FORMATS.gem,
-      repoID: REPOS.rubyGemsOrg,
       titleSelector: '',
       versionPath: '',
       dataSource: DATA_SOURCES.NEXUSIQ,

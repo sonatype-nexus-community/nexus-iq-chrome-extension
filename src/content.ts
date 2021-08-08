@@ -24,9 +24,9 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Recieved a message on content.js', event);
 
   if (event.type === 'getArtifactDetailsFromWebpage') {
-    console.trace('Recieved getArtifactDetailsFromWebpage message on content.js');
+    console.trace('Received getArtifactDetailsFromWebpage message on content.js');
     const data: ArtifactMessage = event;
-    console.info('Message says to get some artifact details from the webpage, will do boss!');
+    console.info('Message says to get some artifact details from the webpage, will do boss!', data);
 
     const purl = getArtifactDetailsFromDOM(data.repoTypeInfo, data.url);
 

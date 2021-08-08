@@ -17,7 +17,7 @@
 import {PackageURL} from 'packageurl-js';
 
 const generatePackageURL = (format: string, name: string, version: string): PackageURL => {
-  return generatePackageURLWithNamespace(format, name, version, undefined);
+  return generatePackageURLComplete(format, name, version, undefined, undefined, undefined);
 };
 
 const generatePackageURLWithNamespace = (
@@ -26,7 +26,23 @@ const generatePackageURLWithNamespace = (
   version: string,
   namespace: string | undefined
 ): PackageURL => {
-  return new PackageURL(format, namespace, name, version, undefined, undefined);
+  return generatePackageURLComplete(format, name, version, namespace, undefined, undefined);
 };
 
-export {generatePackageURL, generatePackageURLWithNamespace};
+const generatePackageURLComplete = (
+  format: string,
+  name: string,
+  version: string,
+  namespace: string | undefined,
+  qualifiers:
+    | {
+        [key: string]: string;
+      }
+    | undefined
+    | null,
+  subpath: string | undefined | null
+): PackageURL => {
+  return new PackageURL(format, namespace, name, version, qualifiers, subpath);
+};
+
+export {generatePackageURL, generatePackageURLWithNamespace, generatePackageURLComplete};
