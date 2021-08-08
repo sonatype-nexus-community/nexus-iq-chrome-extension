@@ -22,7 +22,19 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
   chunkFilename: 'static/css/[name].css',
 });
 
-const cspHtmlWebpackPlugin = new CspHtmlWebpackPlugin();
+const cspHtmlWebpackPlugin = new CspHtmlWebpackPlugin({
+  'script-src': '',
+  'style-src': ["'unsafe-inline'"]},
+  {
+  hashingMethod: 'sha256',
+  hashEnabled: {
+    'script-src': true,
+    'style-src': true
+  },
+  nonceEnabled: {
+    'script-src': true,
+    'style-src': false
+}});
 
 const copyWebpackPlugin = new CopyWebpackPlugin({
   patterns: [
