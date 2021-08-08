@@ -49,8 +49,7 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
     ) {
       const purl = nexusContext.policyDetails.results[0].component.packageUrl;
       const securityData = nexusContext.policyDetails.results[0].securityData;
-      const si: SecurityIssue[] = securityData.securityIssues;
-      const sortedIssues: SecurityIssue[] = sortIssues(si);
+      const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
       return (
         <React.Fragment>
           {' '}

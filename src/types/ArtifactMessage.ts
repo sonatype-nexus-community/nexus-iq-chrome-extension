@@ -85,13 +85,11 @@ export interface LicenseDetail {
 }
 
 export function sortIssues(securityIssues: SecurityIssue[]): SecurityIssue[] {
-  const sortedIssues = securityIssues
+  return securityIssues
     .sort((a: SecurityIssue, b: SecurityIssue) => {
       return b.reference > a.reference ? 1 : -1;
     })
     .sort((a: SecurityIssue, b: SecurityIssue) => {
       return b.severity - a.severity;
     });
-  // console.trace('sortedIssues', sortedIssues);
-  return sortedIssues;
 }

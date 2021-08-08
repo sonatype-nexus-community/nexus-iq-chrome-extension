@@ -28,3 +28,6 @@ packages
 
 .circleci/local-config.yml
 SAVETEXT.txt
+
+.yarn
+.yarnrc
