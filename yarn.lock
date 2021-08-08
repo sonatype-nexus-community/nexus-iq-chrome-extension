@@ -1641,8 +1641,7 @@
     pascalcase "^0.1.1"
     xss-filters "^1.2.6"
 
-
-"@sonatype/js-sona-types@^1.0.31":
+"@sonatype/js-sona-types@^1.0.51":
   version "1.0.51"
   resolved "https://registry.yarnpkg.com/@sonatype/js-sona-types/-/js-sona-types-1.0.51.tgz#eb33590489c15be9ac65b56916da14b9687128b0"
   integrity sha512-4smptSOj0aMlwQzJWNxNeumwEkV8u3GSnxfDN09QRlVxvnDeNirxR1cvO4ZfR7B22zSjxPB3Jj04hRMrBNJeTA==
