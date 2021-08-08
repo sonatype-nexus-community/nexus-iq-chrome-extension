@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: "off" */
 /*
  * Copyright (c) 2019-present Sonatype, Inc.
  *
@@ -13,9 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {faArrowLeft, faArrowRight, faLink} from '@fortawesome/free-solid-svg-icons';
+import {
+  NxGlobalSidebarNavigation,
+  NxGlobalSidebarNavigationLink,
+  NxPageMain,
+  NxStatefulGlobalSidebar
+} from '@sonatype/react-shared-components';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import NexusOptionsContainer from './NexusOptionsContainer';
+
+const logoImg = require('../public/images/SON_logo_favicon.png');
 
 const renderOptions = () => {
   const search = window.location.search;
@@ -25,11 +35,27 @@ const renderOptions = () => {
 
   ReactDOM.render(
     <React.StrictMode>
-      <div className="nx-page-content">
-        <main className="nx-page-main nx-viewport-sized">
-          <NexusOptionsContainer install={install} help={help} />
-        </main>
-      </div>
+      <NxStatefulGlobalSidebar
+        isDefaultOpen={true}
+        toggleCloseIcon={faArrowRight}
+        toggleOpenIcon={faArrowLeft}
+        logoImg={logoImg}
+        logoAltText="Nexus Chrome Extension"
+        logoLink="#"
+      >
+        <NxGlobalSidebarNavigation>
+          <NxGlobalSidebarNavigationLink icon={faLink} text="Help" href="options.html?help" />
+          <NxGlobalSidebarNavigationLink
+            icon={faLink}
+            text="First Install"
+            href="options.html?install"
+          />
+          <NxGlobalSidebarNavigationLink icon={faLink} text="Options" href="options.html" />
+        </NxGlobalSidebarNavigation>
+      </NxStatefulGlobalSidebar>
+      <NxPageMain>
+        <NexusOptionsContainer install={install} help={help} />
+      </NxPageMain>
     </React.StrictMode>,
     document.getElementById('ui')
   );

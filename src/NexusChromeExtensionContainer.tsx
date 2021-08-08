@@ -161,8 +161,9 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   getLicenseDetails = async (purl: string): Promise<void> => {
     // Likely ok to skip setting the CSRF etc... because if this is getting requested, we know it's been set
     const packageUrl = PackageURL.fromString(purl);
-    const licenseDetails = await (this
-      ._requestService as IqRequestService).getLicenseLegalComponentReport(packageUrl);
+    const licenseDetails = await (
+      this._requestService as IqRequestService
+    ).getLicenseLegalComponentReport(packageUrl);
 
     this.setState({licenseDetails: licenseDetails});
   };
@@ -184,8 +185,9 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
           this.getCSRFTokenFromCookie()
             .then(async (token) => {
               (this._requestService as IqRequestService).setXCSRFToken(token);
-              const status = await (this
-                ._requestService as IqRequestService).getComponentEvaluatedAgainstPolicy([purl]);
+              const status = await (
+                this._requestService as IqRequestService
+              ).getComponentEvaluatedAgainstPolicy([purl]);
 
               (this._requestService as IqRequestService).asyncPollForResults(
                 `/${status.resultsUrl}`,

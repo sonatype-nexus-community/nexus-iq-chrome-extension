@@ -5,6 +5,7 @@
   "module": "es6",
   "dependencies": {
     "@agney/react-loading": "^0.1.2",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@sonatype/js-sona-types": "^1.0.51",
     "cash-dom": "^8.1.0",
     "classnames": "^2.3.1",
