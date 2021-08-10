@@ -23,7 +23,7 @@ import {
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
 import LicensingPage from './IQServer/LicensingPage/LicensingPage';
 import SecurityPage from './IQServer/SecurityPage/SecurityPage';
-import RemediationDetails from './IQServer/RemediationDetails/RemediationDetails';
+import RemediationPage from './IQServer/RemediationPage/RemediationPage';
 import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import LiteComponentInfoPage from './OSSIndex/LiteComponentInfoPage/LiteComponentInfoPage';
@@ -70,7 +70,7 @@ const Popup = (props: PopupProps): JSX.Element | null => {
                 <ComponentInfoPage></ComponentInfoPage>
               </NxTabPanel>
               <NxTabPanel>
-                <RemediationDetails getRemediationDetails={props.getRemediationDetails} />
+                <RemediationPage getRemediationDetails={props.getRemediationDetails} />
               </NxTabPanel>
               <NxTabPanel>
                 <SecurityPage getVulnDetails={props.getVulnDetails}></SecurityPage>

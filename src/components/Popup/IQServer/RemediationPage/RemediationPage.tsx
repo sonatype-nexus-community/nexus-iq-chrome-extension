@@ -13,49 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {VersionChange} from '@sonatype/js-sona-types';
-import React, {useContext} from 'react';
+import React from 'react';
+import {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import RemediationDetails from './RemediationDetails/RemediationDetails';
 
-type RemediationProps = {
+type RemediationPageProps = {
   getRemediationDetails: (p: string) => Promise<void>;
 };
 
-const RemediationDetails = (props: RemediationProps): JSX.Element | null => {
+const RemediationPage = (props: RemediationPageProps): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
-  const renderRemediationDetails = (nexusContext: NexusContextInterface | undefined) => {
+  const renderRemediationPage = (nexusContext: NexusContextInterface | undefined) => {
     if (
       nexusContext &&
-      nexusContext.remediationDetails &&
-      nexusContext.remediationDetails.remediation &&
-      nexusContext.remediationDetails.remediation.versionChanges &&
-      nexusContext.remediationDetails.remediation.versionChanges.length > 0
+      nexusContext.policyDetails &&
+      nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0
     ) {
       props.getRemediationDetails(nexusContext.policyDetails.results[0].component.packageUrl);
-
-      const versionChanges: VersionChange[] =
-        nexusContext.remediationDetails.remediation.versionChanges;
 
       return (
         <React.Fragment>
           <h2>Suggested Remediations</h2>
-          {versionChanges &&
-            versionChanges.map((change) => {
-              return (
-                <React.Fragment key={change.type}>
-                  <h2>Remediation type: {change.type}</h2>
-                  <h3>Switch to: {change.data.component.packageUrl}</h3>
-                </React.Fragment>
-              );
-            })}
+          <RemediationDetails />
         </React.Fragment>
       );
     }
+
     return null;
   };
 
-  return renderRemediationDetails(nexusContext);
+  return renderRemediationPage(nexusContext);
 };
 
-export default RemediationDetails;
+export default RemediationPage;

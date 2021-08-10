@@ -229,7 +229,6 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
                   this.setState({policyDetails: results});
 
                   this.getAllVersions(purlString);
-                  this.getRemediationDetails(purlString);
                 }
               );
             })
