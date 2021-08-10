@@ -168,6 +168,34 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.setState({licenseDetails: licenseDetails});
   };
 
+  getAllVersions = async (purl: string): Promise<void> => {
+    const packageUrl = PackageURL.fromString(purl);
+
+    console.trace('Attempting to get all Versions for Component', packageUrl);
+
+    const allVersions = await (this._requestService as IqRequestService).getVersionsForComponent(
+      packageUrl
+    );
+
+    console.trace('Obtained all versions for component', allVersions);
+
+    this.setState({componentVersions: allVersions});
+  };
+
+  getRemediationDetails = async (purl: string): Promise<void> => {
+    const packageUrl = PackageURL.fromString(purl);
+
+    console.trace('Attempting to get remediation details', packageUrl);
+
+    const remediationDetails = await (
+      this._requestService as IqRequestService
+    ).getComponentRemediation(packageUrl);
+
+    console.trace('Obtained remediation details', remediationDetails);
+
+    this.setState({remediationDetails: remediationDetails});
+  };
+
   handleResponse = async (purlString: string): Promise<void> => {
     console.info('Setting up request service');
     this._setupRequestService()
@@ -199,6 +227,9 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
                     results: results
                   });
                   this.setState({policyDetails: results});
+
+                  this.getAllVersions(purlString);
+                  this.getRemediationDetails(purlString);
                 }
               );
             })
@@ -239,6 +270,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
             <Popup
               getVulnDetails={this.getVulnDetails}
               getLicenseDetails={this.getLicenseDetails}
+              getRemediationDetails={this.getRemediationDetails}
             />
           </main>
         </div>

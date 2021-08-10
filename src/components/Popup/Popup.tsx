@@ -23,6 +23,7 @@ import {
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
 import LicensingPage from './IQServer/LicensingPage/LicensingPage';
 import SecurityPage from './IQServer/SecurityPage/SecurityPage';
+import RemediationDetails from './IQServer/RemediationDetails/RemediationDetails';
 import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import LiteComponentInfoPage from './OSSIndex/LiteComponentInfoPage/LiteComponentInfoPage';
@@ -35,6 +36,7 @@ import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 type PopupProps = {
   getVulnDetails: (v: string) => Promise<void>;
   getLicenseDetails: (v: string) => Promise<void>;
+  getRemediationDetails: (p: string) => Promise<void>;
 };
 
 const Popup = (props: PopupProps): JSX.Element | null => {
@@ -58,13 +60,17 @@ const Popup = (props: PopupProps): JSX.Element | null => {
           <div className="nx-tile-content nx-viewport-sized__container">
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
-                <NxTab>Component Info</NxTab>
+                <NxTab>Info</NxTab>
+                <NxTab>Remediation</NxTab>
                 <NxTab>Security</NxTab>
                 <NxTab>Policy</NxTab>
                 <NxTab>Licensing</NxTab>
               </NxTabList>
               <NxTabPanel>
                 <ComponentInfoPage></ComponentInfoPage>
+              </NxTabPanel>
+              <NxTabPanel>
+                <RemediationDetails getRemediationDetails={props.getRemediationDetails} />
               </NxTabPanel>
               <NxTabPanel>
                 <SecurityPage getVulnDetails={props.getVulnDetails}></SecurityPage>

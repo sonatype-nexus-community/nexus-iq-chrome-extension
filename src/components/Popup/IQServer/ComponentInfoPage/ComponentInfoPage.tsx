@@ -43,43 +43,45 @@ const ComponentInfoPage = (): JSX.Element | null => {
     ) {
       const results = nexusContext.policyDetails.results[0];
       return (
-        <NxTable>
-          <NxTableHead>
-            <NxTableRow>
-              <NxTableCell colSpan={2}>
-                <h2>{results.component.displayName}</h2>
-              </NxTableCell>
-            </NxTableRow>
-          </NxTableHead>
-          <NxTableBody>
-            <NxTableRow>
-              <NxTableCell>Package URL</NxTableCell>
-              <NxTableCell>{results.component.packageUrl}</NxTableCell>
-            </NxTableRow>
-            <NxTableRow>
-              <NxTableCell>Hash</NxTableCell>
-              <NxTableCell>{results.component.hash}</NxTableCell>
-            </NxTableRow>
-            <NxTableRow>
-              <NxTableCell>Version</NxTableCell>
-              <NxTableCell>
-                <span id="version">
-                  {results.component.componentIdentifier.coordinates.version}
-                </span>
-              </NxTableCell>
-            </NxTableRow>
-            <NxTableRow>
-              <NxTableCell>Match State</NxTableCell>
-              <NxTableCell>{results.matchState}</NxTableCell>
-            </NxTableRow>
-            <NxTableRow>
-              <NxTableCell>Catalog Date</NxTableCell>
-              <NxTableCell>
-                <span id="catalogdate">{/* {formatDate(results.catalogDate)} */}</span>
-              </NxTableCell>
-            </NxTableRow>
-          </NxTableBody>
-        </NxTable>
+        <React.Fragment>
+          <NxTable>
+            <NxTableHead>
+              <NxTableRow>
+                <NxTableCell colSpan={2}>
+                  <h2>{results.component.displayName}</h2>
+                </NxTableCell>
+              </NxTableRow>
+            </NxTableHead>
+            <NxTableBody>
+              <NxTableRow>
+                <NxTableCell>Package URL</NxTableCell>
+                <NxTableCell>{results.component.packageUrl}</NxTableCell>
+              </NxTableRow>
+              <NxTableRow>
+                <NxTableCell>Hash</NxTableCell>
+                <NxTableCell>{results.component.hash}</NxTableCell>
+              </NxTableRow>
+              <NxTableRow>
+                <NxTableCell>Version</NxTableCell>
+                <NxTableCell>
+                  <span id="version">
+                    {results.component.componentIdentifier.coordinates.version}
+                  </span>
+                </NxTableCell>
+              </NxTableRow>
+              <NxTableRow>
+                <NxTableCell>Match State</NxTableCell>
+                <NxTableCell>{results.matchState}</NxTableCell>
+              </NxTableRow>
+              <NxTableRow>
+                <NxTableCell>Catalog Date</NxTableCell>
+                <NxTableCell>
+                  <span id="catalogdate">{/* {formatDate(results.catalogDate)} */}</span>
+                </NxTableCell>
+              </NxTableRow>
+            </NxTableBody>
+          </NxTable>
+        </React.Fragment>
       );
     }
     return null;

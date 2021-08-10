@@ -1642,9 +1642,9 @@
     xss-filters "^1.2.6"
 
 "@sonatype/js-sona-types@^1.0.51":
-  version "1.0.51"
-  resolved "https://registry.yarnpkg.com/@sonatype/js-sona-types/-/js-sona-types-1.0.51.tgz#eb33590489c15be9ac65b56916da14b9687128b0"
-  integrity sha512-4smptSOj0aMlwQzJWNxNeumwEkV8u3GSnxfDN09QRlVxvnDeNirxR1cvO4ZfR7B22zSjxPB3Jj04hRMrBNJeTA==
+  version "1.0.54"
+  resolved "https://registry.yarnpkg.com/@sonatype/js-sona-types/-/js-sona-types-1.0.54.tgz#3d175c418d17d4f98286a5c3a6b4233d25954845"
+  integrity sha512-HRSGtuIMvot7gHbKTofZVzDXkg3AUx63pWDZ61oeMHNXlWkBo4jOMDY9GgB7VvGo8tc1oO5fXBQJ/pVtDUSE+w==
   dependencies:
     browser-cookies "^1.2.0"
     cross-fetch "^3.1.4"
@@ -8051,10 +8051,15 @@ spdx-expression-parse@^3.0.0:
     spdx-exceptions "^2.1.0"
     spdx-license-ids "^3.0.0"
 
-spdx-license-ids@^3.0.0, spdx-license-ids@^3.0.9:
+spdx-license-ids@^3.0.0:
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.9.tgz#8a595135def9592bda69709474f1cbeea7c2467f"
   integrity sha512-Ki212dKK4ogX+xDo4CtOZBVIwhsKBEfsEEcwmJfLQzirgc2jIWdzg40Unxz/HzEUqM1WFzVlQSMF9kZZ2HboLQ==
+
+spdx-license-ids@^3.0.9:
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.10.tgz#0d9becccde7003d6c658d487dd48a32f0bf3014b"
+  integrity sha512-oie3/+gKf7QtpitB0LYLETe+k8SifzsX4KixvpOsbI6S0kRiRQ5MKOio8eMSAKQ17N06+wdEOXRiId+zOxo0hA==
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
