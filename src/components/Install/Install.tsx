@@ -35,9 +35,7 @@ const Install = (): JSX.Element => {
               If you are using OSS Index, you are good to go and can skip this. If you want to use
               this extension with Nexus IQ Server, follow the quick setup below!
             </NxP>
-            <NxTile.Subsection>
-              <IQServerOptionsPage />
-            </NxTile.Subsection>
+            <IQServerOptionsPage />
           </NxTile.Content>
         </NxTile>
       </React.Fragment>

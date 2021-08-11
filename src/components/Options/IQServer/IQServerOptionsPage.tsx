@@ -136,18 +136,18 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const renderOptions = () => {
     if (!loading) {
       return (
-        <NxGrid.Row>
-          <NxGrid.Column>
-            <NxTile>
-              <NxForm
-                onSubmit={onSubmit}
-                submitBtnText={`Test Connectivity`}
-                submitBtnClasses={submitBtnClasses}
-              >
-                <NxTile.Header>
-                  <NxH3>IQ Server Quick Setup</NxH3>
-                </NxTile.Header>
-                <NxTile.Content>
+        <React.Fragment>
+          <NxTile.SubsectionHeader>
+            <NxH3>IQ Server Quick Setup</NxH3>
+          </NxTile.SubsectionHeader>
+          <NxTile.Subsection>
+            <NxGrid.Row>
+              <NxGrid.Column>
+                <NxForm
+                  onSubmit={onSubmit}
+                  submitBtnText={`Test Connectivity`}
+                  submitBtnClasses={submitBtnClasses}
+                >
                   <p className="nx-p">
                     <strong>1)</strong> Enter the URL for Nexus IQ Server
                   </p>
@@ -207,17 +207,17 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                       There was an error logging in, it looks like: {errorLoggingIn}
                     </NxStatefulErrorAlert>
                   )}
-                </NxTile.Content>
-              </NxForm>
-            </NxTile>
-          </NxGrid.Column>
-          <NxGrid.Column>
-            <img src="images/billymays.png" width={420} height={420} />
-            <blockquote className="nx-blockquote">
-              <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>
-            </blockquote>
-          </NxGrid.Column>
-        </NxGrid.Row>
+                </NxForm>
+              </NxGrid.Column>
+              <NxGrid.Column>
+                <img src="images/billymays.png" width={420} height={420} />
+                <blockquote className="nx-blockquote">
+                  <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>
+                </blockquote>
+              </NxGrid.Column>
+            </NxGrid.Row>
+          </NxTile.Subsection>
+        </React.Fragment>
       );
     }
     return null;
