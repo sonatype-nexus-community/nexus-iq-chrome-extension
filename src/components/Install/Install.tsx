@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxH1, NxH2, NxPageTitle, NxTile} from '@sonatype/react-shared-components';
+import {NxH2, NxH3, NxP, NxPageTitle, NxTile} from '@sonatype/react-shared-components';
 import React from 'react';
 import IQServerOptionsPage from '../Options/IQServer/IQServerOptionsPage';
 
@@ -23,17 +23,22 @@ const Install = (): JSX.Element => {
       <React.Fragment>
         <h1>
           <NxPageTitle>
-            &#127881; Thanks for installing the Sonatype Nexus Browser Extension!
+            &#127881; Thanks for installing the Sonatype Nexus Browser Extension &#127881;
           </NxPageTitle>
         </h1>
         <NxTile>
-          <NxTile.Content>
+          <NxTile.Header>
             <NxH2>Getting Started</NxH2>
+          </NxTile.Header>
+          <NxTile.Content>
+            <NxP>
+              If you are using OSS Index, you are good to go and can skip this. If you want to use
+              this extension with Nexus IQ Server, follow the quick setup below!
+            </NxP>
+            <NxTile.Subsection>
+              <IQServerOptionsPage />
+            </NxTile.Subsection>
           </NxTile.Content>
-          <NxTile.Subsection>
-            <NxH2>IQ Server Quick Setup</NxH2>
-            <IQServerOptionsPage />
-          </NxTile.Subsection>
         </NxTile>
       </React.Fragment>
     );

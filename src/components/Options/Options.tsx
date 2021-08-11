@@ -32,7 +32,7 @@ const SCAN_TYPE = 'scanType';
 const Options = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
 
-  const [scanType, setScanType] = useState<string | null>('');
+  const [scanType, setScanType] = useState<string>(DATA_SOURCES.OSSINDEX);
 
   const nexusContext = useContext(NexusContext);
 
@@ -59,7 +59,7 @@ const Options = (): JSX.Element | null => {
             </div>
           </header>
           <div className="nx-tile-content nx-viewport-sized__container">
-            <NxFieldset label={`Selected Scan Type: ${scanType}`}>
+            <NxFieldset label={`Selected Scan Type: ${scanType}`} isRequired>
               <NxRadio
                 name={SCAN_TYPE}
                 value={DATA_SOURCES.OSSINDEX}

@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {FormEvent, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   hasValidationErrors,
   NxButton,
+  NxForm,
   NxFormGroup,
   NxGrid,
   NxH3,
-  NxH4,
-  NxP,
   NxStatefulErrorAlert,
   NxStatefulSuccessAlert,
   NxStatefulTextInput,
-  NxTooltip
+  NxTile
 } from '@sonatype/react-shared-components';
 import {IqRequestService, TestLogger} from '@sonatype/js-sona-types';
 import classnames from 'classnames';
@@ -47,15 +46,14 @@ const IQServerOptionsPage = (): JSX.Element | null => {
 
   const stateHasValidationErrors = (state: StateProps) =>
       hasValidationErrors(state.validationErrors),
-    isValid = [iqServerURL != '', iqServerUser != '', iqServerToken != ''],
-    isSubmittable = isValid;
+    isSubmittable =
+      iqServerURL !== '' &&
+      iqServerUser !== '' &&
+      iqServerToken !== '' &&
+      iqServerApplication != '';
 
   const submitBtnClasses = classnames({disabled: !isSubmittable}),
-    submitTooltip = isSubmittable
-      ? ''
-      : isValid
-      ? 'Validation errors are present'
-      : 'Required fields are missing';
+    submitTooltip = isSubmittable ? '' : 'Required fields are missing';
 
   const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
 
@@ -82,9 +80,11 @@ const IQServerOptionsPage = (): JSX.Element | null => {
     chrome.storage.local.set({[key]: value});
   };
 
-  const onSubmit = async (evt: FormEvent): Promise<void> => {
-    evt.preventDefault();
+  const onSubmit = (): void => {
+    doSubmit();
+  };
 
+  const doSubmit = async () => {
     if (isSubmittable) {
       try {
         const requestService = new IqRequestService({
@@ -111,8 +111,6 @@ const IQServerOptionsPage = (): JSX.Element | null => {
         setLoggedIn(false);
         setErrorLoggingIn(err);
       }
-    } else {
-      evt.stopPropagation();
     }
   };
 
@@ -140,76 +138,78 @@ const IQServerOptionsPage = (): JSX.Element | null => {
       return (
         <NxGrid.Row>
           <NxGrid.Column>
-            <form className="nx-form" onSubmit={onSubmit}>
-              <p className="nx-p">
-                <strong>1)</strong> Enter the URL for Nexus IQ Server
-              </p>
-              <NxFormGroup label={`IQ Server URL`} isRequired>
-                <NxStatefulTextInput
-                  defaultValue={iqServerURL}
-                  validator={nonEmptyValidator}
-                  onChange={setItem(setIQServerURL, IQ_SERVER_URL)}
-                />
-              </NxFormGroup>
-              <p className="nx-p">
-                <strong>1.5)</strong> Allow the extension to communicate with Nexus IQ Server
-              </p>
-              <NxButton type="button" onClick={askForPermissions}>
-                Grant Permissions to IQ Server URL
-              </NxButton>
-              <p className="nx-p">
-                <strong>2)</strong> Provide username and token for Nexus IQ Server
-              </p>
-              <div className="nx-form-row">
-                <NxFormGroup label={`IQ Server Username`} isRequired>
-                  <NxStatefulTextInput
-                    defaultValue={iqServerUser}
-                    validator={nonEmptyValidator}
-                    onChange={setItem(setIQServerUser, IQ_SERVER_USER)}
-                  />
-                </NxFormGroup>
-                <NxFormGroup label={`Nexus IQ Server Token`} isRequired>
-                  <NxStatefulTextInput
-                    defaultValue={iqServerToken}
-                    validator={nonEmptyValidator}
-                    type="password"
-                    onChange={setItem(setIQServerToken, IQ_SERVER_TOKEN)}
-                  />
-                </NxFormGroup>
-              </div>
-              <p className="nx-p">
-                <strong>3)</strong> Set application
-              </p>
-              <NxFormGroup label={`IQ Server Application`} isRequired>
-                <NxStatefulTextInput
-                  defaultValue={iqServerApplication}
-                  validator={nonEmptyValidator}
-                  onChange={setItem(setIQServerApplication, IQ_SERVER_APPLICATION)}
-                />
-              </NxFormGroup>
-              <p className="nx-p">
-                <strong>4)</strong> Do a quick test to ensure you can connect to Nexus IQ Server
-              </p>
-              {loggedIn && (
-                <NxStatefulSuccessAlert>
-                  Congrats! You are able to login to Nexus IQ Server!
-                </NxStatefulSuccessAlert>
-              )}
-              {errorLoggingIn !== '' && (
-                <NxStatefulErrorAlert>
-                  There was an error logging in, it looks like: {errorLoggingIn}
-                </NxStatefulErrorAlert>
-              )}
-              <footer className="nx-form-footer">
-                <div className="nx-btn-bar">
-                  <NxTooltip title={submitTooltip}>
-                    <NxButton className={submitBtnClasses} variant="primary" type="submit">
-                      Test Connectivity
-                    </NxButton>
-                  </NxTooltip>
-                </div>
-              </footer>
-            </form>
+            <NxTile>
+              <NxForm
+                onSubmit={onSubmit}
+                submitBtnText={`Test Connectivity`}
+                submitBtnClasses={submitBtnClasses}
+              >
+                <NxTile.Header>
+                  <NxH3>IQ Server Quick Setup</NxH3>
+                </NxTile.Header>
+                <NxTile.Content>
+                  <p className="nx-p">
+                    <strong>1)</strong> Enter the URL for Nexus IQ Server
+                  </p>
+                  <NxFormGroup label={`IQ Server URL`} isRequired>
+                    <NxStatefulTextInput
+                      defaultValue={iqServerURL}
+                      validator={nonEmptyValidator}
+                      onChange={setItem(setIQServerURL, IQ_SERVER_URL)}
+                    />
+                  </NxFormGroup>
+                  <p className="nx-p">
+                    <strong>2)</strong> Allow the extension to communicate with Nexus IQ Server
+                  </p>
+                  <NxButton type="button" onClick={askForPermissions}>
+                    Grant Permissions to IQ Server URL
+                  </NxButton>
+                  <p className="nx-p">
+                    <strong>3)</strong> Provide username and token for Nexus IQ Server
+                  </p>
+                  <div className="nx-form-row">
+                    <NxFormGroup label={`IQ Server Username`} isRequired>
+                      <NxStatefulTextInput
+                        defaultValue={iqServerUser}
+                        validator={nonEmptyValidator}
+                        onChange={setItem(setIQServerUser, IQ_SERVER_USER)}
+                      />
+                    </NxFormGroup>
+                    <NxFormGroup label={`IQ Server Token`} isRequired>
+                      <NxStatefulTextInput
+                        defaultValue={iqServerToken}
+                        validator={nonEmptyValidator}
+                        type="password"
+                        onChange={setItem(setIQServerToken, IQ_SERVER_TOKEN)}
+                      />
+                    </NxFormGroup>
+                  </div>
+                  <p className="nx-p">
+                    <strong>4)</strong> Set application
+                  </p>
+                  <NxFormGroup label={`IQ Server Application`} isRequired>
+                    <NxStatefulTextInput
+                      defaultValue={iqServerApplication}
+                      validator={nonEmptyValidator}
+                      onChange={setItem(setIQServerApplication, IQ_SERVER_APPLICATION)}
+                    />
+                  </NxFormGroup>
+                  <p className="nx-p">
+                    <strong>5)</strong> Do a quick test to ensure you can connect to Nexus IQ Server
+                  </p>
+                  {loggedIn && (
+                    <NxStatefulSuccessAlert>
+                      Congrats! You are able to login to Nexus IQ Server!
+                    </NxStatefulSuccessAlert>
+                  )}
+                  {errorLoggingIn !== '' && (
+                    <NxStatefulErrorAlert>
+                      There was an error logging in, it looks like: {errorLoggingIn}
+                    </NxStatefulErrorAlert>
+                  )}
+                </NxTile.Content>
+              </NxForm>
+            </NxTile>
           </NxGrid.Column>
           <NxGrid.Column>
             <img src="images/billymays.png" width={420} height={420} />

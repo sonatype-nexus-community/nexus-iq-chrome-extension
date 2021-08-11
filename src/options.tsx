@@ -44,12 +44,12 @@ const renderOptions = () => {
         logoLink="#"
       >
         <NxGlobalSidebarNavigation>
-          <NxGlobalSidebarNavigationLink icon={faLink} text="Help" href="options.html?help" />
           <NxGlobalSidebarNavigationLink
             icon={faLink}
-            text="First Install"
+            text="First Setup"
             href="options.html?install"
           />
+          <NxGlobalSidebarNavigationLink icon={faLink} text="Help" href="options.html?help" />
           <NxGlobalSidebarNavigationLink icon={faLink} text="Options" href="options.html" />
         </NxGlobalSidebarNavigation>
         <NxGlobalSidebarFooter
