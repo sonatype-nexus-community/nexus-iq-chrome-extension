@@ -13,33 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxH4} from '@sonatype/react-shared-components';
+import {NxButton, NxFontAwesomeIcon, NxH4, NxList} from '@sonatype/react-shared-components';
+import {faCopy} from '@fortawesome/free-solid-svg-icons';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 
 const AdvancedLegalDisplay = (): JSX.Element => {
   const nexusContext = useContext(NexusContext);
 
+  const copyToClipboard = (_event: any, text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
   const renderLegalDisplay = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext && nexusContext.licenseDetails) {
       return (
         <React.Fragment>
           <NxH4>License Files</NxH4>
-          {nexusContext.licenseDetails.component.licenseLegalData.licenseFiles.map((licenses) => {
-            return (
-              <React.Fragment key={licenses.id}>
-                <NxH4>{licenses.relPath}</NxH4>
-                <blockquote className="nx-blockquote nx-truncate-ellipsis">
-                  {licenses.content}
-                </blockquote>
-              </React.Fragment>
-            );
-          })}
+          <NxList>
+            {nexusContext.licenseDetails.component.licenseLegalData.licenseFiles.map((licenses) => {
+              return (
+                <NxList.Item key={licenses.id}>
+                  <NxList.Text>{licenses.relPath}</NxList.Text>
+                  <NxList.Actions>
+                    <NxButton
+                      title="Copy License Text"
+                      variant="icon-only"
+                      onClick={(event) => copyToClipboard(event, licenses.content)}
+                    >
+                      <NxFontAwesomeIcon icon={faCopy} />
+                    </NxButton>
+                  </NxList.Actions>
+                </NxList.Item>
+              );
+            })}
+          </NxList>
           <NxH4>Copyright Statements</NxH4>
           {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map((copyrights) => {
             return (
-              <React.Fragment key={copyrights.id}>
-                <NxH4>{copyrights.id}</NxH4>
+              <React.Fragment key={copyrights.originalContentHash}>
                 <blockquote className="nx-blockquote nx-truncate-ellipsis">
                   {copyrights.content}
                 </blockquote>

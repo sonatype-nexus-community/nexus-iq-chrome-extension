@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {VersionChange} from '@sonatype/js-sona-types';
+import {NxList} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 
@@ -32,17 +33,17 @@ const RemediationDetails = (): JSX.Element | null => {
         nexusContext.remediationDetails.remediation.versionChanges;
 
       return (
-        <React.Fragment>
+        <NxList>
           {versionChanges &&
             versionChanges.map((change) => {
               return (
-                <React.Fragment key={change.type}>
-                  <h2>Remediation type: {change.type}</h2>
-                  <h3>Switch to: {change.data.component.packageUrl}</h3>
-                </React.Fragment>
+                <NxList.Item key={change.type}>
+                  <NxList.DescriptionTerm>{change.type}</NxList.DescriptionTerm>
+                  <NxList.Description>{change.data.component.packageUrl}</NxList.Description>
+                </NxList.Item>
               );
             })}
-        </React.Fragment>
+        </NxList>
       );
     }
     return null;

@@ -16,8 +16,12 @@
 import * as React from 'react';
 import {
   NxAccordion,
+  NxH2,
+  NxH3,
+  NxList,
   NxPolicyViolationIndicator,
   NxStatefulAccordion,
+  NxThreatIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
@@ -49,31 +53,44 @@ const LiteSecurityPage = (): JSX.Element | null => {
                 return (
                   <NxStatefulAccordion key={issue.reference}>
                     <NxAccordion.Header>
-                      <h2 className="nx-accordion__header-title">{issue.reference}</h2>
+                      <NxH2 className="nx-accordion__header-title">{issue.reference}</NxH2>
                       <div className="nx-btn-bar">
                         <NxPolicyViolationIndicator
                           policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
                         />
                       </div>
                     </NxAccordion.Header>
-                    <h3>
+                    <NxH3>
                       Learn more at{' '}
                       <a href={issue.url} target="_blank" rel="noreferrer">
                         OSS Index
                       </a>
-                    </h3>
-                    <h4>Description</h4>
-                    <p className="nx-p">{issue.description}</p>
-                    <h4>Severity</h4>
-                    <p className="nx-p">
-                      <NxPolicyViolationIndicator
-                        policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
-                      />
-                    </p>
-                    <h4>Vector</h4>
-                    <p className="nx-p">{issue.vector}</p>
-                    <h4>Source</h4>
-                    <p className="nx-p">{issue.source}</p>
+                    </NxH3>
+                    <NxList>
+                      <NxList.Item>
+                        <NxList.Text>Severity</NxList.Text>
+                        <NxList.Actions>
+                          <NxThreatIndicator></NxThreatIndicator>
+                          <NxPolicyViolationIndicator
+                            policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
+                          >
+                            {issue.severity.toString()}
+                          </NxPolicyViolationIndicator>
+                        </NxList.Actions>
+                      </NxList.Item>
+                      <NxList.Item>
+                        <NxList.DescriptionTerm>Description</NxList.DescriptionTerm>
+                        <NxList.Description>{issue.description}</NxList.Description>
+                      </NxList.Item>
+                      <NxList.Item>
+                        <NxList.DescriptionTerm>CVSS Vector</NxList.DescriptionTerm>
+                        <NxList.Description>{issue.vector}</NxList.Description>
+                      </NxList.Item>
+                      <NxList.Item>
+                        <NxList.DescriptionTerm>Source</NxList.DescriptionTerm>
+                        <NxList.Description>{issue.source}</NxList.Description>
+                      </NxList.Item>
+                    </NxList>
                   </NxStatefulAccordion>
                 );
               }
