@@ -151,6 +151,9 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   onChange={setItem(setIQServerURL, IQ_SERVER_URL)}
                 />
               </NxFormGroup>
+              <p className="nx-p">
+                <strong>1.5)</strong> Allow the extension to communicate with Nexus IQ Server
+              </p>
               <NxButton type="button" onClick={askForPermissions}>
                 Grant Permissions to IQ Server URL
               </NxButton>
@@ -209,7 +212,10 @@ const IQServerOptionsPage = (): JSX.Element | null => {
             </form>
           </NxGrid.Column>
           <NxGrid.Column>
-            <img src="images/billymays.png" width={300} height={300} />
+            <img src="images/billymays.png" width={420} height={420} />
+            <blockquote className="nx-blockquote">
+              <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>
+            </blockquote>
           </NxGrid.Column>
         </NxGrid.Row>
       );
