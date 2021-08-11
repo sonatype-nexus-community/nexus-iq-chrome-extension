@@ -18,6 +18,7 @@ import {
   NxAccordion,
   NxH2,
   NxH3,
+  NxH4,
   NxList,
   NxPolicyViolationIndicator,
   NxStatefulAccordion,
@@ -25,6 +26,7 @@ import {
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {CvssVectorExplainer} from '../../../../utils/CvssVectorExplainer';
 import {useContext} from 'react';
 import {SecurityIssue} from '@sonatype/js-sona-types';
 
@@ -50,6 +52,7 @@ const LiteSecurityPage = (): JSX.Element | null => {
           <div className="nx-tile-content nx-tile-content--accordion-container">
             {nexusContext.componentDetails.securityData.securityIssues.map(
               (issue: SecurityIssue) => {
+                const vectorExplained = CvssVectorExplainer(issue.vector.split('/'));
                 return (
                   <NxStatefulAccordion key={issue.reference}>
                     <NxAccordion.Header>
@@ -83,13 +86,21 @@ const LiteSecurityPage = (): JSX.Element | null => {
                         <NxList.Description>{issue.description}</NxList.Description>
                       </NxList.Item>
                       <NxList.Item>
-                        <NxList.DescriptionTerm>CVSS Vector</NxList.DescriptionTerm>
-                        <NxList.Description>{issue.vector}</NxList.Description>
-                      </NxList.Item>
-                      <NxList.Item>
                         <NxList.DescriptionTerm>Source</NxList.DescriptionTerm>
                         <NxList.Description>{issue.source}</NxList.Description>
                       </NxList.Item>
+                    </NxList>
+                    <NxH4>CVSS Vector</NxH4>
+                    <NxList>
+                      {vectorExplained &&
+                        Array.from(vectorExplained).map(([key, value]) => {
+                          return (
+                            <NxList.Item key={key}>
+                              <NxList.DescriptionTerm>{key}</NxList.DescriptionTerm>
+                              <NxList.Description>{value}</NxList.Description>
+                            </NxList.Item>
+                          );
+                        })}
                     </NxList>
                   </NxStatefulAccordion>
                 );
