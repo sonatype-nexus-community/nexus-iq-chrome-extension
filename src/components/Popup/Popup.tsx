@@ -50,6 +50,19 @@ const Popup = (props: PopupProps): JSX.Element | null => {
       nexusContext.policyDetails &&
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
+      const hasViolations =
+        nexusContext.policyDetails.results &&
+        nexusContext.policyDetails.results.length > 0 &&
+        nexusContext.policyDetails.results[0].policyData &&
+        nexusContext.policyDetails.results[0].policyData.policyViolations &&
+        nexusContext.policyDetails.results[0].policyData.policyViolations.length > 0;
+      const hasSecurityIssues =
+        nexusContext.policyDetails.results &&
+        nexusContext.policyDetails.results.length > 0 &&
+        nexusContext.policyDetails.results[0].securityData &&
+        nexusContext.policyDetails.results[0].securityData.securityIssues &&
+        nexusContext.policyDetails.results[0].securityData.securityIssues.length > 0;
+
       return (
         <section className="nx-tile nx-viewport-sized__container">
           <header className="nx-tile-header">
@@ -62,8 +75,8 @@ const Popup = (props: PopupProps): JSX.Element | null => {
               <NxTabList>
                 <NxTab>Info</NxTab>
                 <NxTab>Remediation</NxTab>
-                <NxTab>Security</NxTab>
-                <NxTab>Policy</NxTab>
+                {hasSecurityIssues && <NxTab>Security</NxTab>}
+                {hasViolations && <NxTab>Policy</NxTab>}
                 <NxTab>Licensing</NxTab>
               </NxTabList>
               <NxTabPanel>
@@ -72,12 +85,16 @@ const Popup = (props: PopupProps): JSX.Element | null => {
               <NxTabPanel>
                 <RemediationPage getRemediationDetails={props.getRemediationDetails} />
               </NxTabPanel>
-              <NxTabPanel>
-                <SecurityPage getVulnDetails={props.getVulnDetails}></SecurityPage>
-              </NxTabPanel>
-              <NxTabPanel>
-                <PolicyPage></PolicyPage>
-              </NxTabPanel>
+              {hasSecurityIssues && (
+                <NxTabPanel>
+                  <SecurityPage getVulnDetails={props.getVulnDetails}></SecurityPage>
+                </NxTabPanel>
+              )}
+              {hasViolations && (
+                <NxTabPanel>
+                  <PolicyPage></PolicyPage>
+                </NxTabPanel>
+              )}
               <NxTabPanel>
                 <LicensingPage getLicenseDetails={props.getLicenseDetails}></LicensingPage>
               </NxTabPanel>
