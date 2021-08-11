@@ -22,11 +22,12 @@ import {
   NxList,
   NxPolicyViolationIndicator,
   NxStatefulAccordion,
+  NxTag,
   NxThreatIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {CvssVectorExplainer} from '../../../../utils/CvssVectorExplainer';
+import {CvssVectorExplainer, VectorDetails} from '../../../../utils/CvssVectorExplainer';
 import {useContext} from 'react';
 import {SecurityIssue} from '@sonatype/js-sona-types';
 
@@ -91,17 +92,16 @@ const LiteSecurityPage = (): JSX.Element | null => {
                       </NxList.Item>
                     </NxList>
                     <NxH4>CVSS Vector</NxH4>
-                    <NxList>
+                    <React.Fragment>
                       {vectorExplained &&
                         Array.from(vectorExplained).map(([key, value]) => {
                           return (
-                            <NxList.Item key={key}>
-                              <NxList.DescriptionTerm>{key}</NxList.DescriptionTerm>
-                              <NxList.Description>{value}</NxList.Description>
-                            </NxList.Item>
+                            <NxTag key={key} color={(value as VectorDetails).color}>{`${key} - ${
+                              (value as VectorDetails).quickExplanation
+                            } ${(value as VectorDetails).vector}`}</NxTag>
                           );
                         })}
-                    </NxList>
+                    </React.Fragment>
                   </NxStatefulAccordion>
                 );
               }

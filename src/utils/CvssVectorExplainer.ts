@@ -22,77 +22,108 @@ const CONFIDENTIALITY_IMPACT = 'Confidentiality Impact';
 const INTEGRITY_IMPACT = 'Integrity Impact';
 const AVAILABILITY_IMPACT = 'Availability Impact';
 
-const CvssVectorExplainer = (vectors: string[]): Map<string, string> => {
-  const result = new Map<string, string>();
+interface VectorDetails {
+  vector: string;
+  quickExplanation: string;
+  color: string;
+  tooltip?: string;
+}
+
+const CvssVectorExplainer = (vectors: string[]): Map<string, VectorDetails> => {
+  const result = new Map<string, VectorDetails>();
 
   vectors.forEach((vector) => {
     switch (vector) {
       case 'AV:N':
-        result.set(ATTACK_VECTOR, `Network (${vector})`);
+        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Network', color: 'default'});
         break;
       case 'AV:A':
-        result.set(ATTACK_VECTOR, `Adjacent Network (${vector})`);
+        result.set(ATTACK_VECTOR, {
+          vector: vector,
+          quickExplanation: 'Adjacent Network',
+          color: 'default'
+        });
         break;
       case 'AV:L':
-        result.set(ATTACK_VECTOR, `Local (${vector})`);
+        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Local', color: 'default'});
         break;
       case 'AV:P':
         // Hell yeah Alien Vs Predator
-        result.set(ATTACK_VECTOR, `Physical (${vector})`);
+        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Physical', color: 'default'});
         break;
       case 'AC:L':
-        result.set(ATTACK_COMPLEXITY, `Low (${vector})`);
+        result.set(ATTACK_COMPLEXITY, {vector: vector, quickExplanation: 'Low', color: 'red'});
         break;
       case 'AC:H':
-        result.set(ATTACK_COMPLEXITY, `High (${vector})`);
+        result.set(ATTACK_COMPLEXITY, {vector: vector, quickExplanation: 'High', color: 'blue'});
         break;
       case 'PR:N':
-        result.set(PRIVILEGES_REQUIRED, `None (${vector})`);
+        result.set(PRIVILEGES_REQUIRED, {vector: vector, quickExplanation: 'None', color: 'red'});
         break;
       case 'PR:L':
-        result.set(PRIVILEGES_REQUIRED, `Low (${vector})`);
+        result.set(PRIVILEGES_REQUIRED, {vector: vector, quickExplanation: 'Low', color: 'orange'});
         break;
       case 'PR:H':
-        result.set(PRIVILEGES_REQUIRED, `High (${vector})`);
+        result.set(PRIVILEGES_REQUIRED, {vector: vector, quickExplanation: 'High', color: 'blue'});
         break;
       case 'UI:N':
-        result.set(USER_INTERACTION, `None (${vector})`);
+        result.set(USER_INTERACTION, {vector: vector, quickExplanation: 'None', color: 'red'});
         break;
       case 'UI:R':
-        result.set(USER_INTERACTION, `Required (${vector})`);
+        result.set(USER_INTERACTION, {
+          vector: vector,
+          quickExplanation: 'Required',
+          color: 'orange'
+        });
         break;
       case 'S:U':
-        result.set(SCOPE, `Unchanged (${vector})`);
+        result.set(SCOPE, {vector: vector, quickExplanation: 'Unchanged', color: 'default'});
         break;
       case 'S:C':
-        result.set(SCOPE, `Changed (${vector})`);
+        result.set(SCOPE, {vector: vector, quickExplanation: 'Changed', color: 'lime'});
         break;
       case 'C:N':
-        result.set(CONFIDENTIALITY_IMPACT, `None (${vector})`);
+        result.set(CONFIDENTIALITY_IMPACT, {
+          vector: vector,
+          quickExplanation: 'None',
+          color: 'default'
+        });
         break;
       case 'C:L':
-        result.set(CONFIDENTIALITY_IMPACT, `Low (${vector})`);
+        result.set(CONFIDENTIALITY_IMPACT, {
+          vector: vector,
+          quickExplanation: 'Low',
+          color: 'orange'
+        });
         break;
       case 'C:H':
-        result.set(CONFIDENTIALITY_IMPACT, `High (${vector})`);
+        result.set(CONFIDENTIALITY_IMPACT, {
+          vector: vector,
+          quickExplanation: 'High',
+          color: 'red'
+        });
         break;
       case 'I:N':
-        result.set(INTEGRITY_IMPACT, `None (${vector})`);
+        result.set(INTEGRITY_IMPACT, {vector: vector, quickExplanation: 'None', color: 'default'});
         break;
       case 'I:L':
-        result.set(INTEGRITY_IMPACT, `Low (${vector})`);
+        result.set(INTEGRITY_IMPACT, {vector: vector, quickExplanation: 'Low', color: 'orange'});
         break;
       case 'I:H':
-        result.set(INTEGRITY_IMPACT, `High (${vector})`);
+        result.set(INTEGRITY_IMPACT, {vector: vector, quickExplanation: 'High', color: 'red'});
         break;
       case 'A:N':
-        result.set(AVAILABILITY_IMPACT, `None (${vector})`);
+        result.set(AVAILABILITY_IMPACT, {
+          vector: vector,
+          quickExplanation: 'None',
+          color: 'default'
+        });
         break;
       case 'A:L':
-        result.set(AVAILABILITY_IMPACT, `Low (${vector})`);
+        result.set(AVAILABILITY_IMPACT, {vector: vector, quickExplanation: 'Low', color: 'orange'});
         break;
       case 'A:H':
-        result.set(AVAILABILITY_IMPACT, `High (${vector})`);
+        result.set(AVAILABILITY_IMPACT, {vector: vector, quickExplanation: 'High', color: 'red'});
         break;
       default:
         // Do nothing
@@ -103,4 +134,4 @@ const CvssVectorExplainer = (vectors: string[]): Map<string, string> => {
   return result;
 };
 
-export {CvssVectorExplainer};
+export {CvssVectorExplainer, VectorDetails};
