@@ -16,6 +16,7 @@
  */
 import {faArrowLeft, faArrowRight, faLink} from '@fortawesome/free-solid-svg-icons';
 import {
+  NxGlobalSidebarFooter,
   NxGlobalSidebarNavigation,
   NxGlobalSidebarNavigationLink,
   NxPageMain,
@@ -24,8 +25,7 @@ import {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import NexusOptionsContainer from './NexusOptionsContainer';
-
-const logoImg = require('../public/images/SON_logo_favicon.png');
+import * as pack from '../package.json';
 
 const renderOptions = () => {
   const search = window.location.search;
@@ -39,7 +39,7 @@ const renderOptions = () => {
         isDefaultOpen={true}
         toggleCloseIcon={faArrowRight}
         toggleOpenIcon={faArrowLeft}
-        logoImg={logoImg}
+        logoImg="images/theeecla.svg"
         logoAltText="Nexus Chrome Extension"
         logoLink="#"
       >
@@ -52,6 +52,13 @@ const renderOptions = () => {
           />
           <NxGlobalSidebarNavigationLink icon={faLink} text="Options" href="options.html" />
         </NxGlobalSidebarNavigation>
+        <NxGlobalSidebarFooter
+          supportText={`Support for ${pack.name}`}
+          supportLink={pack.homepage}
+          releaseText={`Release ${pack.version}`}
+          productTagLine="Powered by Sonatype, and Friends"
+          showCreatedBy={false}
+        />
       </NxStatefulGlobalSidebar>
       <NxPageMain>
         <NexusOptionsContainer install={install} help={help} />
