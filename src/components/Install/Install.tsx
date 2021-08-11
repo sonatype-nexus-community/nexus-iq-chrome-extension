@@ -19,7 +19,7 @@ const Install = (): JSX.Element => {
   const render = () => {
     return (
       <React.Fragment>
-        <h1>Hello! Thanks for installing the Sonatype Nexus Chrome Extension!</h1>
+        <h1>Hello! Thanks for installing the Sonatype Nexus Browser Extension!</h1>
         <p>
           First first things first (is that second?) maybe you want to{' '}
           <a href={`options.html?help`}>check out the Help page</a> to see if there is some

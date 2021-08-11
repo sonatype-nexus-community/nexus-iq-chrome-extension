@@ -1,6 +1,6 @@
 {
-  "name": "nexus-chrome-extension",
-  "version": "0.1.0",
+  "name": "nexus-browser-extension",
+  "version": "2.0.0",
   "private": true,
   "repository": "git@github.com:sonatype-nexus-community/nexus-iq-chrome-extension.git",
   "homepage": "https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/",
