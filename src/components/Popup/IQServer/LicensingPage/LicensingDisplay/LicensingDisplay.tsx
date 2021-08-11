@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import {NxTableRow, NxTableCell} from '@sonatype/react-shared-components';
+import {NxTableRow, NxTableCell, NxList} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../../types/ArtifactMessage';
 
 type LicensingDisplayProps = {
@@ -23,10 +23,10 @@ type LicensingDisplayProps = {
 
 const LicensingDisplay = (props: LicensingDisplayProps): JSX.Element => {
   return (
-    <NxTableRow>
-      <NxTableCell>ID: {props.licenseData.licenseId}</NxTableCell>
-      <NxTableCell>Name: {props.licenseData.licenseName}</NxTableCell>
-    </NxTableRow>
+    <NxList.Item>
+      <NxList.DescriptionTerm>Name</NxList.DescriptionTerm>
+      <NxList.Description>{props.licenseData.licenseName}</NxList.Description>
+    </NxList.Item>
   );
 };
 

@@ -18,11 +18,10 @@ import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {
-  NxTable,
-  NxTableHead,
-  NxTableRow,
-  NxTableCell,
-  NxTableBody
+  NxList,
+  NxH3,
+  NxPolicyViolationIndicator,
+  ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
@@ -43,37 +42,64 @@ const LicensingPage = (props: LicensingPageProps): JSX.Element | null => {
       props.getLicenseDetails(nexusContext.policyDetails.results[0].component.packageUrl);
 
       const licenseData = nexusContext.policyDetails.results[0].licenseData;
+      const observedLicenses = licenseData.observedLicenses.filter(
+        (license) => license.licenseId != 'Not-Supported'
+      );
       return (
         <React.Fragment>
-          <NxTable>
-            <NxTableHead>
-              <NxTableRow>
-                <NxTableCell colSpan={2}>Declared Licenses</NxTableCell>
-              </NxTableRow>
-            </NxTableHead>
-            <NxTableBody>
-              {licenseData.declaredLicenses.map((license: LicenseDetail) => {
-                return <LicensingDisplay key={license.licenseId} licenseData={license} />;
-              })}
-            </NxTableBody>
-          </NxTable>
-          <NxTable>
-            <NxTableHead>
-              <NxTableRow>
-                <NxTableCell colSpan={2}>Observed Licenses</NxTableCell>
-              </NxTableRow>
-            </NxTableHead>
-            <NxTableBody>
-              {licenseData.observedLicenses.map((license: LicenseDetail) => {
-                return <LicensingDisplay key={license.licenseId} licenseData={license} />;
-              })}
-            </NxTableBody>
-          </NxTable>
+          <div className="nx-grid-row">
+            <section className="nx-grid-col--75">
+              <NxH3>Declared Licenses</NxH3>
+              <NxList>
+                {licenseData.declaredLicenses.map((license: LicenseDetail) => {
+                  return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+                })}
+              </NxList>
+              {observedLicenses && observedLicenses.length > 0 && (
+                <React.Fragment>
+                  <NxH3>Observed Licenses</NxH3>
+                  <NxList>
+                    {observedLicenses.map((license: LicenseDetail) => {
+                      return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+                    })}
+                  </NxList>
+                </React.Fragment>
+              )}
+            </section>
+            <section className="nx-grid-col--25">
+              {nexusContext.licenseDetails &&
+                nexusContext.licenseDetails.component &&
+                nexusContext.licenseDetails.component.licenseLegalData &&
+                getLicenseThreat(
+                  (
+                    nexusContext.licenseDetails.component.licenseLegalData
+                      .highestEffectiveLicenseThreatGroup as any
+                  ).licenseThreatGroupLevel,
+                  (
+                    nexusContext.licenseDetails.component.licenseLegalData
+                      .highestEffectiveLicenseThreatGroup as any
+                  ).licenseThreatGroupName
+                )}
+            </section>
+          </div>
           <AdvancedLegalDisplay />
         </React.Fragment>
       );
     }
     return null;
+  };
+
+  const getLicenseThreat = (threatGroupLevel: number, threatGroupName: string) => {
+    return (
+      <React.Fragment>
+        <NxH3>Max License Threat</NxH3>
+        <NxPolicyViolationIndicator
+          policyThreatLevel={Math.round(threatGroupLevel) as ThreatLevelNumber}
+        >
+          {threatGroupName}
+        </NxPolicyViolationIndicator>
+      </React.Fragment>
+    );
   };
 
   return renderLicensePage(nexusContext);

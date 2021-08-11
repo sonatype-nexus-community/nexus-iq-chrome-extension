@@ -131,7 +131,7 @@ const Popup = (props: PopupProps): JSX.Element | null => {
           <div className="nx-tile-content nx-viewport-sized__container">
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
-                <NxTab>Component Info</NxTab>
+                <NxTab>Info</NxTab>
                 {hasVulns && <NxTab>Security</NxTab>}
               </NxTabList>
               <NxTabPanel>
