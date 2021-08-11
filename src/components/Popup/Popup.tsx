@@ -26,7 +26,6 @@ import SecurityPage from './IQServer/SecurityPage/SecurityPage';
 import RemediationPage from './IQServer/RemediationPage/RemediationPage';
 import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
-import LiteComponentInfoPage from './OSSIndex/LiteComponentInfoPage/LiteComponentInfoPage';
 import {DATA_SOURCES} from '../../utils/Constants';
 import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
 import {Puff} from '@agney/react-loading';
