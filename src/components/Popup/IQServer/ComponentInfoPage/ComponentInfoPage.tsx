@@ -13,21 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import React from 'react';
 import {
   NxH2,
   NxH3,
   NxList,
+  NxP,
   NxPolicyViolationIndicator,
-  NxTooltip,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import {PolicyData} from '@sonatype/js-sona-types';
+import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
+import {PackageURL} from 'packageurl-js';
 
-const ComponentInfoPage = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+type ComponentInfoPageProps = {
+  purl: PackageURL;
+  description?: string;
+  catalogDate?: Date;
+  matchState?: string;
+  policyData?: PolicyData;
+  securityData?: SecurityData;
+  hash?: string;
+};
 
+const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null => {
   const formatDate = (date: Date | undefined | null): string => {
     if (date) {
       const dateTime = new Date(date);
@@ -36,55 +44,62 @@ const ComponentInfoPage = (): JSX.Element | null => {
     return 'Unknown';
   };
 
-  const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0
-    ) {
-      const results = nexusContext.policyDetails.results[0];
-      return (
-        <React.Fragment>
-          <div className="nx-grid-row">
-            <section className="nx-grid-col--75">
-              <NxH2>{results.component.packageUrl}</NxH2>
-              <NxH3>{results.component.displayName}</NxH3>
-              <NxList>
+  const renderCIPPage = () => {
+    return (
+      <React.Fragment>
+        <div className="nx-grid-row">
+          <section className="nx-grid-col--75">
+            <NxH2>{props.purl.toString()}</NxH2>
+            {props.description && <NxP>{props.description}</NxP>}
+            <NxList>
+              {props.hash && (
                 <NxList.Item>
                   <NxList.DescriptionTerm>Hash</NxList.DescriptionTerm>
-                  <NxList.Description>{results.component.hash}</NxList.Description>
+                  <NxList.Description>{props.hash}</NxList.Description>
                 </NxList.Item>
+              )}
+              {props.purl.namespace && (
                 <NxList.Item>
-                  <NxList.DescriptionTerm>Version</NxList.DescriptionTerm>
-                  <NxList.Description>
-                    {results.component.componentIdentifier.coordinates.version}
-                  </NxList.Description>
+                  <NxList.DescriptionTerm>Namespace</NxList.DescriptionTerm>
+                  <NxList.Description>{props.purl.namespace}</NxList.Description>
                 </NxList.Item>
+              )}
+              <NxList.Item>
+                <NxList.DescriptionTerm>Name</NxList.DescriptionTerm>
+                <NxList.Description>{props.purl.name}</NxList.Description>
+              </NxList.Item>
+              <NxList.Item>
+                <NxList.DescriptionTerm>Version</NxList.DescriptionTerm>
+                <NxList.Description>{props.purl.version}</NxList.Description>
+              </NxList.Item>
+              {props.matchState && (
                 <NxList.Item>
                   <NxList.DescriptionTerm>Match State</NxList.DescriptionTerm>
-                  <NxList.Description>{results.matchState}</NxList.Description>
+                  <NxList.Description>{props.matchState}</NxList.Description>
                 </NxList.Item>
+              )}
+              {props.catalogDate && (
                 <NxList.Item>
                   <NxList.DescriptionTerm>Catalog Date</NxList.DescriptionTerm>
-                  <NxList.Description>{formatDate(results.catalogDate)}</NxList.Description>
+                  <NxList.Description>{formatDate(props.catalogDate)}</NxList.Description>
                 </NxList.Item>
-              </NxList>
-            </section>
-            <section className="nx-grid-col--25">
-              {getPolicyViolationIndicator(nexusContext.policyDetails.results[0].policyData)}
-            </section>
-          </div>
-        </React.Fragment>
-      );
-    }
-    return null;
+              )}
+            </NxList>
+          </section>
+          <section className="nx-grid-col--25">
+            {props.policyData && getPolicyViolationIndicator(props.policyData)}
+            {props.securityData && getSecurityIssueIndicator(props.securityData)}
+          </section>
+        </div>
+      </React.Fragment>
+    );
   };
 
-  const getPolicyViolationIndicator = (policyData: PolicyData | undefined): JSX.Element => {
+  const getPolicyViolationIndicator = (policyData: PolicyData | undefined): JSX.Element | null => {
     if (policyData && policyData.policyViolations && policyData.policyViolations.length > 0) {
-      const violations = policyData.policyViolations;
-      const maxViolation = Math.max(...violations.map((violation) => violation.threatLevel));
+      const maxViolation = Math.max(
+        ...policyData.policyViolations.map((violation) => violation.threatLevel)
+      );
       return (
         <React.Fragment>
           <NxH3>Max Policy Violation</NxH3>
@@ -104,10 +119,33 @@ const ComponentInfoPage = (): JSX.Element | null => {
         </React.Fragment>
       );
     }
-    return <NxH3>Loading</NxH3>;
+    return null;
   };
 
-  return renderCIPPage(nexusContext);
+  const getSecurityIssueIndicator = (
+    securityData: SecurityData | undefined
+  ): JSX.Element | null => {
+    if (securityData && securityData.securityIssues && securityData.securityIssues.length > 0) {
+      const maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
+      return (
+        <React.Fragment>
+          <NxH3>Max Security Threat</NxH3>
+          <NxPolicyViolationIndicator
+            policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
+          />
+        </React.Fragment>
+      );
+    }
+    if (securityData && securityData.securityIssues && securityData.securityIssues.length == 0) {
+      <React.Fragment>
+        <NxH3>No Security Issues</NxH3>
+        <NxPolicyViolationIndicator threatLevelCategory="none">Woohoo!</NxPolicyViolationIndicator>
+      </React.Fragment>;
+    }
+    return null;
+  };
+
+  return renderCIPPage();
 };
 
 export default ComponentInfoPage;

@@ -32,6 +32,7 @@ import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
 import {Puff} from '@agney/react-loading';
 import './Popup.css';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
+import {PackageURL} from 'packageurl-js';
 
 type PopupProps = {
   getVulnDetails: (v: string) => Promise<void>;
@@ -48,20 +49,21 @@ const Popup = (props: PopupProps): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.policyDetails &&
+      nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0 &&
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
+      const results = nexusContext.policyDetails.results[0];
       const hasViolations =
-        nexusContext.policyDetails.results &&
-        nexusContext.policyDetails.results.length > 0 &&
-        nexusContext.policyDetails.results[0].policyData &&
-        nexusContext.policyDetails.results[0].policyData.policyViolations &&
-        nexusContext.policyDetails.results[0].policyData.policyViolations.length > 0;
+        results.policyData &&
+        results.policyData.policyViolations &&
+        results.policyData.policyViolations.length > 0;
       const hasSecurityIssues =
-        nexusContext.policyDetails.results &&
-        nexusContext.policyDetails.results.length > 0 &&
-        nexusContext.policyDetails.results[0].securityData &&
-        nexusContext.policyDetails.results[0].securityData.securityIssues &&
-        nexusContext.policyDetails.results[0].securityData.securityIssues.length > 0;
+        results.securityData &&
+        results.securityData.securityIssues &&
+        results.securityData.securityIssues.length > 0;
+
+      console.info('Rendering IQ Server View');
 
       return (
         <section className="nx-tile nx-viewport-sized__container">
@@ -80,7 +82,14 @@ const Popup = (props: PopupProps): JSX.Element | null => {
                 <NxTab>Licensing</NxTab>
               </NxTabList>
               <NxTabPanel>
-                <ComponentInfoPage></ComponentInfoPage>
+                <ComponentInfoPage
+                  policyData={results.policyData}
+                  securityData={results.securityData}
+                  matchState={results.matchState}
+                  purl={PackageURL.fromString(results.component.packageUrl)}
+                  hash={results.component.hash}
+                  catalogDate={results.catalogDate}
+                ></ComponentInfoPage>
               </NxTabPanel>
               <NxTabPanel>
                 <RemediationPage getRemediationDetails={props.getRemediationDetails} />
@@ -107,6 +116,7 @@ const Popup = (props: PopupProps): JSX.Element | null => {
       nexusContext.componentDetails &&
       nexusContext.scanType === DATA_SOURCES.OSSINDEX
     ) {
+      const purl = PackageURL.fromString(nexusContext.componentDetails.component.packageUrl);
       const hasVulns =
         nexusContext.componentDetails.securityData &&
         nexusContext.componentDetails.securityData.securityIssues &&
@@ -126,7 +136,11 @@ const Popup = (props: PopupProps): JSX.Element | null => {
                 {hasVulns && <NxTab>Security</NxTab>}
               </NxTabList>
               <NxTabPanel>
-                <LiteComponentInfoPage></LiteComponentInfoPage>
+                <ComponentInfoPage
+                  purl={purl}
+                  description={nexusContext.componentDetails.component.description}
+                  securityData={nexusContext.componentDetails.securityData}
+                />
               </NxTabPanel>
               {hasVulns && (
                 <NxTabPanel>
