@@ -23,6 +23,11 @@ import $ from 'cash-dom';
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Recieved a message on content.js', event);
 
+  if (event.type === 'changedURLOnPage') {
+    console.trace('Recieved changedURLOnPage message on content.js');
+    console.trace(event);
+    checkPage();
+  }
   if (event.type === 'getArtifactDetailsFromWebpage') {
     console.trace('Received getArtifactDetailsFromWebpage message on content.js');
     const data: ArtifactMessage = event;

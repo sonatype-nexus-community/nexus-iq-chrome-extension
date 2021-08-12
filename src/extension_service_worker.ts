@@ -291,3 +291,12 @@ chrome.runtime.onInstalled.addListener((details) => {
   } else if (details.reason === 'shared_module_update') {
   }
 });
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.url) {
+    chrome.tabs.sendMessage(tabId, {
+      type: 'changedURLOnPage',
+      url: changeInfo.url
+    });
+  }
+});
