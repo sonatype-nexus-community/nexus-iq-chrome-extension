@@ -15,12 +15,12 @@
  */
 import React, {useEffect, useState} from 'react';
 import {
-  hasValidationErrors,
-  NxButton,
   NxForm,
   NxFormGroup,
   NxGrid,
   NxH3,
+  NxH4,
+  NxList,
   NxStatefulErrorAlert,
   NxStatefulSuccessAlert,
   NxStatefulTextInput,
@@ -28,29 +28,27 @@ import {
 } from '@sonatype/react-shared-components';
 import {IqRequestService, TestLogger} from '@sonatype/js-sona-types';
 import classnames from 'classnames';
-import {StateProps} from '@sonatype/react-shared-components/components/NxTextInput/types';
+import {DATA_SOURCES} from '../../../utils/Constants';
+import './IQServerOptionsPage.css';
 
 const IQ_SERVER_URL = 'iqServerURL';
 const IQ_SERVER_USER = 'iqServerUser';
 const IQ_SERVER_TOKEN = 'iqServerToken';
 const IQ_SERVER_APPLICATION = 'iqServerApplication';
+const SCAN_TYPE = 'scanType';
 
 const IQServerOptionsPage = (): JSX.Element | null => {
   const [iqServerURL, setIQServerURL] = useState('');
   const [iqServerUser, setIQServerUser] = useState('');
   const [iqServerToken, setIQServerToken] = useState('');
   const [iqServerApplication, setIQServerApplication] = useState('');
+  const [currentScanType, setCurrentScanType] = useState(DATA_SOURCES.OSSINDEX);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [errorLoggingIn, setErrorLoggingIn] = useState('');
 
-  const stateHasValidationErrors = (state: StateProps) =>
-      hasValidationErrors(state.validationErrors),
-    isSubmittable =
-      iqServerURL !== '' &&
-      iqServerUser !== '' &&
-      iqServerToken !== '' &&
-      iqServerApplication != '';
+  const isSubmittable =
+    iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '' && iqServerApplication !== '';
 
   const submitBtnClasses = classnames({disabled: !isSubmittable}),
     submitTooltip = isSubmittable ? '' : 'Required fields are missing';
@@ -71,13 +69,22 @@ const IQServerOptionsPage = (): JSX.Element | null => {
       if (items[IQ_SERVER_APPLICATION]) {
         setIQServerApplication(items[IQ_SERVER_APPLICATION]);
       }
+      if (items[SCAN_TYPE]) {
+        setCurrentScanType(items[SCAN_TYPE]);
+      }
       setLoading(false);
     });
-  }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser]);
+  }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
 
-  const setItem = (setter: any, key: string) => (value: string) => {
+  const setItem = (setter: any, value: string, key: string) => {
     setter(value);
-    chrome.storage.local.set({[key]: value});
+    chrome.storage.local.set({[key]: value}, () => {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError);
+      } else {
+        console.trace('Set value', key, value);
+      }
+    });
   };
 
   const onSubmit = (): void => {
@@ -101,15 +108,25 @@ const IQServerOptionsPage = (): JSX.Element | null => {
         const loggedIn = await requestService.loginViaRest();
 
         if (loggedIn) {
+          console.trace('Able to login to Nexus IQ Server');
           setErrorLoggingIn('');
+          console.trace('Set error logging in to empty');
           setLoggedIn(loggedIn);
+          console.trace('Set logged in on state to true');
+          setItem(setCurrentScanType, DATA_SOURCES.NEXUSIQ, SCAN_TYPE);
         } else {
-          setLoggedIn(false);
+          console.error('Unable to login to Nexus IQ Server');
           setErrorLoggingIn('Unable to login');
+          console.trace('Set error logging in to message');
+          setLoggedIn(false);
+          console.trace('Set logged in on state to false');
         }
       } catch (err) {
-        setLoggedIn(false);
+        console.error('Unable to login to Nexus IQ Server');
         setErrorLoggingIn(err);
+        console.trace('Set error logging in to message');
+        setLoggedIn(false);
+        console.trace('Set logged in on state to false');
       }
     }
   };
@@ -141,13 +158,13 @@ const IQServerOptionsPage = (): JSX.Element | null => {
             <NxH3>IQ Server Quick Setup</NxH3>
           </NxTile.SubsectionHeader>
           <NxTile.Subsection>
-            <NxGrid.Row>
-              <NxGrid.Column>
-                <NxForm
-                  onSubmit={onSubmit}
-                  submitBtnText={`Test Connectivity`}
-                  submitBtnClasses={submitBtnClasses}
-                >
+            <NxForm
+              onSubmit={onSubmit}
+              submitBtnText={`Test Connectivity`}
+              submitBtnClasses={submitBtnClasses}
+            >
+              <NxGrid.Row>
+                <NxGrid.Column>
                   <p className="nx-p">
                     <strong>1)</strong> Enter the URL for Nexus IQ Server
                   </p>
@@ -155,15 +172,15 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                     <NxStatefulTextInput
                       defaultValue={iqServerURL}
                       validator={nonEmptyValidator}
-                      onChange={setItem(setIQServerURL, IQ_SERVER_URL)}
+                      onChange={(event) => setItem(setIQServerURL, event, IQ_SERVER_URL)}
                     />
                   </NxFormGroup>
                   <p className="nx-p">
                     <strong>2)</strong> Allow the extension to communicate with Nexus IQ Server
                   </p>
-                  <NxButton type="button" onClick={askForPermissions}>
+                  <button className="nx-btn grant-permissions" onClick={askForPermissions}>
                     Grant Permissions to IQ Server URL
-                  </NxButton>
+                  </button>
                   <p className="nx-p">
                     <strong>3)</strong> Provide username and token for Nexus IQ Server
                   </p>
@@ -172,7 +189,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                       <NxStatefulTextInput
                         defaultValue={iqServerUser}
                         validator={nonEmptyValidator}
-                        onChange={setItem(setIQServerUser, IQ_SERVER_USER)}
+                        onChange={(event) => setItem(setIQServerUser, event, IQ_SERVER_USER)}
                       />
                     </NxFormGroup>
                     <NxFormGroup label={`IQ Server Token`} isRequired>
@@ -180,7 +197,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                         defaultValue={iqServerToken}
                         validator={nonEmptyValidator}
                         type="password"
-                        onChange={setItem(setIQServerToken, IQ_SERVER_TOKEN)}
+                        onChange={(event) => setItem(setIQServerToken, event, IQ_SERVER_TOKEN)}
                       />
                     </NxFormGroup>
                   </div>
@@ -191,31 +208,40 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                     <NxStatefulTextInput
                       defaultValue={iqServerApplication}
                       validator={nonEmptyValidator}
-                      onChange={setItem(setIQServerApplication, IQ_SERVER_APPLICATION)}
+                      onChange={(event) =>
+                        setItem(setIQServerApplication, event, IQ_SERVER_APPLICATION)
+                      }
                     />
                   </NxFormGroup>
                   <p className="nx-p">
                     <strong>5)</strong> Do a quick test to ensure you can connect to Nexus IQ Server
                   </p>
-                  {loggedIn && (
-                    <NxStatefulSuccessAlert>
-                      Congrats! You are able to login to Nexus IQ Server!
-                    </NxStatefulSuccessAlert>
-                  )}
-                  {errorLoggingIn !== '' && (
-                    <NxStatefulErrorAlert>
-                      There was an error logging in, it looks like: {errorLoggingIn}
-                    </NxStatefulErrorAlert>
-                  )}
-                </NxForm>
-              </NxGrid.Column>
-              <NxGrid.Column>
-                <img src="images/billymays.png" width={420} height={420} />
-                <blockquote className="nx-blockquote">
-                  <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>
-                </blockquote>
-              </NxGrid.Column>
-            </NxGrid.Row>
+                </NxGrid.Column>
+                <NxGrid.Column>
+                  <img src="images/billymays.png" width={420} height={420} />
+                  <blockquote className="nx-blockquote">
+                    <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>
+                  </blockquote>
+                  <NxH4>Current Extension Configuration</NxH4>
+                  <NxList>
+                    <NxList.Item>
+                      <NxList.DescriptionTerm>Current Scan Type</NxList.DescriptionTerm>
+                      <NxList.Description>{currentScanType}</NxList.Description>
+                    </NxList.Item>
+                  </NxList>
+                </NxGrid.Column>
+              </NxGrid.Row>
+              {loggedIn && (
+                <NxStatefulSuccessAlert>
+                  Congrats! You are able to login to Nexus IQ Server!
+                </NxStatefulSuccessAlert>
+              )}
+              {errorLoggingIn !== '' && (
+                <NxStatefulErrorAlert>
+                  There was an error logging in, it looks like: {errorLoggingIn}
+                </NxStatefulErrorAlert>
+              )}
+            </NxForm>
           </NxTile.Subsection>
         </React.Fragment>
       );

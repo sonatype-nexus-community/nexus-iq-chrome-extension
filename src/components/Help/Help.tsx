@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {NxH2, NxP, NxPageTitle, NxTile} from '@sonatype/react-shared-components';
 import React from 'react';
 
 const Help = (): JSX.Element => {
   const renderHelp = () => {
     return (
       <React.Fragment>
-        <h1>Hello I am the Help Page</h1>
-        <h2>I am not very helpful...YET</h2>
+        <h1>
+          <NxPageTitle>Sonatype Nexus Browser Extension Help</NxPageTitle>
+        </h1>
+        <NxTile>
+          <NxTile.Header>
+            <NxH2>Frequently Asked Questions</NxH2>
+          </NxTile.Header>
+          <NxTile.Content>
+            <NxP>What is an egg?</NxP>
+          </NxTile.Content>
+        </NxTile>
       </React.Fragment>
     );
   };
