@@ -164,12 +164,16 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
   getLicenseDetails = async (purl: string): Promise<void> => {
     // Likely ok to skip setting the CSRF etc... because if this is getting requested, we know it's been set
-    const packageUrl = PackageURL.fromString(purl);
-    const licenseDetails = await (
-      this._requestService as IqRequestService
-    ).getLicenseLegalComponentReport(packageUrl);
+    if (this._requestService instanceof IqRequestService) {
+      const packageUrl = PackageURL.fromString(purl);
+      const licenseDetails = await (
+        this._requestService as IqRequestService
+      ).getLicenseLegalComponentReport(packageUrl);
 
-    this.setState({licenseDetails: licenseDetails});
+      this.setState({licenseDetails: licenseDetails});
+      return;
+    }
+    return;
   };
 
   getAllVersions = async (purl: string): Promise<void> => {

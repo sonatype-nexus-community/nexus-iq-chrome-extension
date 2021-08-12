@@ -262,12 +262,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       getSettings()
         .then((settings: Settings) => {
           try {
-            if (settings.scanType === 'OSSINDEX') {
-              console.debug('Attempting to call OSS Index');
-              handleOSSIndexWrapper(request.purl, settings);
-            } else {
+            if (settings.scanType === 'NEXUSIQ') {
               console.debug('Attempting to call Nexus IQ Server');
               handleIQServerWrapper(request.purl, settings);
+            } else {
+              console.debug('Attempting to call OSS Index');
+              handleOSSIndexWrapper(request.purl, settings);
             }
           } catch (err) {
             console.error(err);

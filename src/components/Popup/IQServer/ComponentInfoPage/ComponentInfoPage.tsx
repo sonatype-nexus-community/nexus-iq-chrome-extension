@@ -26,6 +26,7 @@ import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import LicenseThreat from '../LicensingPage/LicenseThreat/LicenseThreat';
+import {DATA_SOURCES} from '../../../../utils/Constants';
 
 type ComponentInfoPageProps = {
   purl: PackageURL;
@@ -96,7 +97,9 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
           <section className="nx-grid-col--25">
             {props.policyData && getPolicyViolationIndicator(props.policyData)}
             {props.securityData && getSecurityIssueIndicator(props.securityData)}
-            {nexusContext && nexusContext.licenseDetails && <LicenseThreat />}
+            {nexusContext &&
+              nexusContext.licenseDetails &&
+              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
           </section>
         </div>
       </React.Fragment>
