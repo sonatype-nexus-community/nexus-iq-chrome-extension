@@ -100,7 +100,9 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
             {props.securityData && <SecurityThreat securityData={props.securityData} />}
             {nexusContext &&
               nexusContext.licenseDetails &&
-              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
+              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
+                <LicenseThreat licenseDetails={nexusContext.licenseDetails} />
+              )}
           </section>
         </div>
       </React.Fragment>

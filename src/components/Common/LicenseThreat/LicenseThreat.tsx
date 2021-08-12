@@ -19,28 +19,24 @@ import {
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+import {IqServerLicenseLegalMetadataResult} from '@sonatype/js-sona-types';
 
-const LicenseThreat = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+type LicenseThreatProps = {
+  licenseDetails?: IqServerLicenseLegalMetadataResult;
+};
 
-  const renderLicenseThreat = (nexusContext: NexusContextInterface | undefined) => {
+const LicenseThreat = (props: LicenseThreatProps): JSX.Element | null => {
+  const renderLicenseThreat = () => {
     if (
-      nexusContext &&
-      nexusContext.licenseDetails &&
-      nexusContext.licenseDetails.component &&
-      nexusContext.licenseDetails.component.licenseLegalData
+      props.licenseDetails &&
+      props.licenseDetails.component &&
+      props.licenseDetails.component.licenseLegalData
     ) {
       return getLicenseThreat(
-        (
-          nexusContext.licenseDetails.component.licenseLegalData
-            .highestEffectiveLicenseThreatGroup as any
-        ).licenseThreatGroupLevel,
-        (
-          nexusContext.licenseDetails.component.licenseLegalData
-            .highestEffectiveLicenseThreatGroup as any
-        ).licenseThreatGroupName
+        (props.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup as any)
+          .licenseThreatGroupLevel,
+        (props.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup as any)
+          .licenseThreatGroupName
       );
     }
     return null;
@@ -59,7 +55,7 @@ const LicenseThreat = (): JSX.Element | null => {
     );
   };
 
-  return renderLicenseThreat(nexusContext);
+  return renderLicenseThreat();
 };
 
 export default LicenseThreat;

@@ -16,31 +16,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SecurityData } from '@sonatype/js-sona-types';
+import {SecurityData} from '@sonatype/js-sona-types';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import SecurityThreat from './SecurityThreat';
 
 const securityData: SecurityData = {
-  securityIssues: [{id: "test", source: "cve", reference: "reference", severity: 9.9, vector: "vector", url: "http://aurltosomewhere.com", description: "test description"}]
-}
+  securityIssues: [
+    {
+      id: 'test',
+      source: 'cve',
+      reference: 'reference',
+      severity: 9.9,
+      vector: 'vector',
+      url: 'http://aurltosomewhere.com',
+      description: 'test description'
+    }
+  ]
+};
 
 describe('<SecurityThreat />', () => {
   test('renders null when provided no props', () => {
-    const component = renderer.create(
-      <SecurityThreat />
-    );
+    const component = renderer.create(<SecurityThreat />);
 
-    let tree = component.toJSON();
+    const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   test('renders properly when provided AWESOME props', () => {
-    const component = renderer.create(
-      <SecurityThreat securityData={securityData} />
-    );
+    const component = renderer.create(<SecurityThreat securityData={securityData} />);
 
-    let tree = component.toJSON();
+    const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
