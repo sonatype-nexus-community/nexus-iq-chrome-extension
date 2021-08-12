@@ -16,8 +16,9 @@
 /// <reference lib="webworker" />
 
 import 'node-window-polyfill/register';
-import {IqRequestService, OSSIndexRequestService, TestLogger} from '@sonatype/js-sona-types';
+import {IqRequestService, OSSIndexRequestService} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
+import BrowserExtensionLogger from './logger/Logger';
 import localforage from 'localforage';
 
 const _browser: any = chrome ? chrome : browser;
@@ -63,7 +64,7 @@ const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
         browser: true,
         user: settings.user,
         application: settings.application,
-        logger: new TestLogger(),
+        logger: new BrowserExtensionLogger(),
         product: manifestData.name,
         version: manifestData.version
       },
@@ -92,7 +93,7 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
       browser: true,
       user: settings.user,
       application: settings.application,
-      logger: new TestLogger(),
+      logger: new BrowserExtensionLogger(),
       product: manifestData.name,
       version: manifestData.version
     });

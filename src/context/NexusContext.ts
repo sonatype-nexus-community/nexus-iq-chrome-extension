@@ -16,12 +16,14 @@
 import React from 'react';
 import {
   ComponentContainer,
+  ILogger,
   IqServerComponentPolicyEvaluationResult,
   IqServerComponentRemediationResult,
   IqServerLicenseLegalMetadataResult,
   IqServerVulnerabilityDetails
 } from '@sonatype/js-sona-types';
 import {DATA_SOURCES} from '../utils/Constants';
+import BrowserExtensionLogger from '../logger/Logger';
 
 export interface NexusContextInterface {
   scanType: string;
@@ -32,6 +34,7 @@ export interface NexusContextInterface {
   errorMessage?: string;
   componentVersions?: string[];
   remediationDetails?: IqServerComponentRemediationResult;
+  logger: ILogger;
 }
 
 const initialContext: NexusContextInterface = {
@@ -42,7 +45,8 @@ const initialContext: NexusContextInterface = {
   licenseDetails: undefined,
   errorMessage: undefined,
   componentVersions: undefined,
-  remediationDetails: undefined
+  remediationDetails: undefined,
+  logger: undefined
 };
 
 export const NexusContext = React.createContext(initialContext);
