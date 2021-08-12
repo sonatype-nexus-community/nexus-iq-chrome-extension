@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 /*
  * Copyright (c) 2019-present Sonatype, Inc.
  *
@@ -13,7 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
