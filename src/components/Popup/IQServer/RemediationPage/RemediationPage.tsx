@@ -19,11 +19,7 @@ import {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import RemediationDetails from './RemediationDetails/RemediationDetails';
 
-type RemediationPageProps = {
-  getRemediationDetails: (p: string) => Promise<void>;
-};
-
-const RemediationPage = (props: RemediationPageProps): JSX.Element | null => {
+const RemediationPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderRemediationPage = (nexusContext: NexusContextInterface | undefined) => {
@@ -31,9 +27,12 @@ const RemediationPage = (props: RemediationPageProps): JSX.Element | null => {
       nexusContext &&
       nexusContext.policyDetails &&
       nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0
+      nexusContext.policyDetails.results.length > 0 &&
+      nexusContext.getRemediationDetails
     ) {
-      props.getRemediationDetails(nexusContext.policyDetails.results[0].component.packageUrl);
+      nexusContext.getRemediationDetails(
+        nexusContext.policyDetails.results[0].component.packageUrl
+      );
 
       return (
         <React.Fragment>

@@ -41,7 +41,10 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.state = {
       errorMessage: undefined,
       scanType: DATA_SOURCES.OSSINDEX,
-      logger: new BrowserExtensionLogger()
+      logger: new BrowserExtensionLogger(),
+      getVulnDetails: this.getVulnDetails,
+      getLicenseDetails: this.getLicenseDetails,
+      getRemediationDetails: this.getRemediationDetails
     };
   }
 
@@ -271,11 +274,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       <NexusContext.Provider value={this.state}>
         <div className="nx-page-content">
           <main className="nx-page-main nx-viewport-sized">
-            <Popup
-              getVulnDetails={this.getVulnDetails}
-              getLicenseDetails={this.getLicenseDetails}
-              getRemediationDetails={this.getRemediationDetails}
-            />
+            <Popup />
           </main>
         </div>
       </NexusContext.Provider>

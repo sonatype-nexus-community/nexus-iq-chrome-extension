@@ -21,36 +21,46 @@ import {
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {SecurityIssue} from '../../../../../types/ArtifactMessage';
+import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import {useContext} from 'react';
 
 type SecurityItemProps = {
   securityIssue: SecurityIssue;
   open: boolean;
   packageUrl: string;
   remediationEvent: (vulnID: string) => void;
-  getVulnDetails: (v: string) => Promise<void>;
 };
 
-const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element => {
-  return (
-    <NxAccordion
-      open={props.open}
-      onToggle={() => {
-        props.remediationEvent(props.securityIssue.reference);
-        props.getVulnDetails(props.securityIssue.reference);
-      }}
-    >
-      <NxAccordion.Header>
-        <h2 className="nx-accordion__header-title">{props.securityIssue.reference}</h2>
-        <div className="nx-btn-bar">
-          <NxPolicyViolationIndicator
-            policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
-          />
-        </div>
-      </NxAccordion.Header>
-      <h3 className="nx-h3">Details</h3>
-      <VulnDetails />
-    </NxAccordion>
-  );
+const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
+  const nexusContext = useContext(NexusContext);
+
+  const renderSecurityItem = (nexusContext: NexusContextInterface | undefined) => {
+    if (nexusContext && nexusContext.getVulnDetails) {
+      return (
+        <NxAccordion
+          open={props.open}
+          onToggle={() => {
+            props.remediationEvent(props.securityIssue.reference);
+            nexusContext.getVulnDetails(props.securityIssue.reference);
+          }}
+        >
+          <NxAccordion.Header>
+            <h2 className="nx-accordion__header-title">{props.securityIssue.reference}</h2>
+            <div className="nx-btn-bar">
+              <NxPolicyViolationIndicator
+                policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
+              />
+            </div>
+          </NxAccordion.Header>
+          <h3 className="nx-h3">Details</h3>
+          <VulnDetails />
+        </NxAccordion>
+      );
+    }
+    return null;
+  };
+
+  return renderSecurityItem(nexusContext);
 };
 
 export default SecurityItemDisplay;

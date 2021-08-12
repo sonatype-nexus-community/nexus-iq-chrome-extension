@@ -33,13 +33,7 @@ import './Popup.css';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 import {PackageURL} from 'packageurl-js';
 
-type PopupProps = {
-  getVulnDetails: (v: string) => Promise<void>;
-  getLicenseDetails: (v: string) => Promise<void>;
-  getRemediationDetails: (p: string) => Promise<void>;
-};
-
-const Popup = (props: PopupProps): JSX.Element | null => {
+const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
 
   const nexusContext = useContext(NexusContext);
@@ -91,11 +85,11 @@ const Popup = (props: PopupProps): JSX.Element | null => {
                 ></ComponentInfoPage>
               </NxTabPanel>
               <NxTabPanel>
-                <RemediationPage getRemediationDetails={props.getRemediationDetails} />
+                <RemediationPage />
               </NxTabPanel>
               {hasSecurityIssues && (
                 <NxTabPanel>
-                  <SecurityPage getVulnDetails={props.getVulnDetails}></SecurityPage>
+                  <SecurityPage></SecurityPage>
                 </NxTabPanel>
               )}
               {hasViolations && (
@@ -104,7 +98,7 @@ const Popup = (props: PopupProps): JSX.Element | null => {
                 </NxTabPanel>
               )}
               <NxTabPanel>
-                <LicensingPage getLicenseDetails={props.getLicenseDetails}></LicensingPage>
+                <LicensingPage></LicensingPage>
               </NxTabPanel>
             </NxTabs>
           </div>

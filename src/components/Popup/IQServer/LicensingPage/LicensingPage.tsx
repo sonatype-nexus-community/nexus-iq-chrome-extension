@@ -25,11 +25,7 @@ import {
 } from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
-type LicensingPageProps = {
-  getLicenseDetails: (p: string) => Promise<void>;
-};
-
-const LicensingPage = (props: LicensingPageProps): JSX.Element | null => {
+const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
@@ -37,9 +33,10 @@ const LicensingPage = (props: LicensingPageProps): JSX.Element | null => {
       nexusContext &&
       nexusContext.policyDetails &&
       nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0
+      nexusContext.policyDetails.results.length > 0 &&
+      nexusContext.getLicenseDetails
     ) {
-      props.getLicenseDetails(nexusContext.policyDetails.results[0].component.packageUrl);
+      nexusContext.getLicenseDetails(nexusContext.policyDetails.results[0].component.packageUrl);
 
       const licenseData = nexusContext.policyDetails.results[0].licenseData;
       const observedLicenses = licenseData.observedLicenses.filter(

@@ -23,7 +23,6 @@ import {
   IqServerVulnerabilityDetails
 } from '@sonatype/js-sona-types';
 import {DATA_SOURCES} from '../utils/Constants';
-import BrowserExtensionLogger from '../logger/Logger';
 
 export interface NexusContextInterface {
   scanType: string;
@@ -35,6 +34,9 @@ export interface NexusContextInterface {
   componentVersions?: string[];
   remediationDetails?: IqServerComponentRemediationResult;
   logger: ILogger;
+  getVulnDetails?: (vulnId: string) => Promise<void>;
+  getLicenseDetails?: (purl: string) => Promise<void>;
+  getRemediationDetails?: (purl: string) => Promise<void>;
 }
 
 const initialContext: NexusContextInterface = {

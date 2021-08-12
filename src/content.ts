@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
 
   if (event.type === 'changedURLOnPage') {
     console.trace('Recieved changedURLOnPage message on content.js');
-    console.trace(event);
+    console.trace(event.url);
     checkPage();
   }
   if (event.type === 'getArtifactDetailsFromWebpage') {
