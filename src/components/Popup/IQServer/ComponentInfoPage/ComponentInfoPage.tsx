@@ -25,7 +25,8 @@ import {
 import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import LicenseThreat from '../LicensingPage/LicenseThreat/LicenseThreat';
+import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
+import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat';
 import {DATA_SOURCES} from '../../../../utils/Constants';
 
 type ComponentInfoPageProps = {
@@ -96,7 +97,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
           </section>
           <section className="nx-grid-col--25">
             {props.policyData && getPolicyViolationIndicator(props.policyData)}
-            {props.securityData && getSecurityIssueIndicator(props.securityData)}
+            {props.securityData && <SecurityThreat securityData={props.securityData} />}
             {nexusContext &&
               nexusContext.licenseDetails &&
               nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
@@ -129,29 +130,6 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
           </NxPolicyViolationIndicator>
         </React.Fragment>
       );
-    }
-    return null;
-  };
-
-  const getSecurityIssueIndicator = (
-    securityData: SecurityData | undefined
-  ): JSX.Element | null => {
-    if (securityData && securityData.securityIssues && securityData.securityIssues.length > 0) {
-      const maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
-      return (
-        <React.Fragment>
-          <NxH3>Max Security Threat</NxH3>
-          <NxPolicyViolationIndicator
-            policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
-          />
-        </React.Fragment>
-      );
-    }
-    if (securityData && securityData.securityIssues && securityData.securityIssues.length == 0) {
-      <React.Fragment>
-        <NxH3>No Security Issues</NxH3>
-        <NxPolicyViolationIndicator threatLevelCategory="none">Woohoo!</NxPolicyViolationIndicator>
-      </React.Fragment>;
     }
     return null;
   };

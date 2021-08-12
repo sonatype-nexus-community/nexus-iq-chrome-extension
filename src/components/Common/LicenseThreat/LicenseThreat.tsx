@@ -20,7 +20,7 @@ import {
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
 
 const LicenseThreat = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);

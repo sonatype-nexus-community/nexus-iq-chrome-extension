@@ -16,7 +16,7 @@
 import React, {useContext} from 'react';
 import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
-import LicenseThreat from './LicenseThreat/LicenseThreat';
+import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {NxList, NxH3} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
