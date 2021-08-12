@@ -16,13 +16,9 @@
 import React, {useContext} from 'react';
 import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
+import LicenseThreat from './LicenseThreat/LicenseThreat';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {
-  NxList,
-  NxH3,
-  NxPolicyViolationIndicator,
-  ThreatLevelNumber
-} from '@sonatype/react-shared-components';
+import {NxList, NxH3} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
 const LicensingPage = (): JSX.Element | null => {
@@ -64,19 +60,7 @@ const LicensingPage = (): JSX.Element | null => {
               )}
             </section>
             <section className="nx-grid-col--25">
-              {nexusContext.licenseDetails &&
-                nexusContext.licenseDetails.component &&
-                nexusContext.licenseDetails.component.licenseLegalData &&
-                getLicenseThreat(
-                  (
-                    nexusContext.licenseDetails.component.licenseLegalData
-                      .highestEffectiveLicenseThreatGroup as any
-                  ).licenseThreatGroupLevel,
-                  (
-                    nexusContext.licenseDetails.component.licenseLegalData
-                      .highestEffectiveLicenseThreatGroup as any
-                  ).licenseThreatGroupName
-                )}
+              <LicenseThreat />
             </section>
           </div>
           <AdvancedLegalDisplay />
@@ -84,19 +68,6 @@ const LicensingPage = (): JSX.Element | null => {
       );
     }
     return null;
-  };
-
-  const getLicenseThreat = (threatGroupLevel: number, threatGroupName: string) => {
-    return (
-      <React.Fragment>
-        <NxH3>Max License Threat</NxH3>
-        <NxPolicyViolationIndicator
-          policyThreatLevel={Math.round(threatGroupLevel) as ThreatLevelNumber}
-        >
-          {threatGroupName}
-        </NxPolicyViolationIndicator>
-      </React.Fragment>
-    );
   };
 
   return renderLicensePage(nexusContext);

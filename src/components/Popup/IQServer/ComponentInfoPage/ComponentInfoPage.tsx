@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   NxH2,
   NxH3,
@@ -24,6 +24,8 @@ import {
 } from '@sonatype/react-shared-components';
 import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
+import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import LicenseThreat from '../LicensingPage/LicenseThreat/LicenseThreat';
 
 type ComponentInfoPageProps = {
   purl: PackageURL;
@@ -36,6 +38,8 @@ type ComponentInfoPageProps = {
 };
 
 const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null => {
+  const nexusContext = useContext(NexusContext);
+
   const formatDate = (date: Date | undefined | null): string => {
     if (date) {
       const dateTime = new Date(date);
@@ -44,7 +48,10 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
     return 'Unknown';
   };
 
-  const renderCIPPage = () => {
+  const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
+    if (nexusContext && nexusContext.getLicenseDetails) {
+      nexusContext.getLicenseDetails(props.purl.toString());
+    }
     return (
       <React.Fragment>
         <div className="nx-grid-row">
@@ -89,6 +96,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
           <section className="nx-grid-col--25">
             {props.policyData && getPolicyViolationIndicator(props.policyData)}
             {props.securityData && getSecurityIssueIndicator(props.securityData)}
+            {nexusContext && nexusContext.licenseDetails && <LicenseThreat />}
           </section>
         </div>
       </React.Fragment>
@@ -145,7 +153,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
     return null;
   };
 
-  return renderCIPPage();
+  return renderCIPPage(nexusContext);
 };
 
 export default ComponentInfoPage;
