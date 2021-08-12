@@ -15,11 +15,14 @@
  */
 import {
   NxFieldset,
+  NxH2,
+  NxPageTitle,
   NxRadio,
   NxTab,
   NxTabList,
   NxTabPanel,
-  NxTabs
+  NxTabs,
+  NxTile
 } from '@sonatype/react-shared-components';
 import React, {useContext, useEffect, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
@@ -52,50 +55,52 @@ const Options = (): JSX.Element | null => {
   const renderOptions = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext) {
       return (
-        <section className="nx-tile nx-viewport-sized__container">
-          <header className="nx-tile-header">
-            <div className="nx-tile-header__title">
-              <h2 className="nx-h2">Options</h2>
-            </div>
-          </header>
-          <div className="nx-tile-content nx-viewport-sized__container">
-            <NxFieldset label={`Selected Scan Type: ${scanType}`} isRequired>
-              <NxRadio
-                name={SCAN_TYPE}
-                value={DATA_SOURCES.OSSINDEX}
-                onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
-                isChecked={scanType === DATA_SOURCES.OSSINDEX}
-                radioId="scanType-OSS-Index"
-              >
-                OSS Index
-              </NxRadio>
-              <NxRadio
-                name={SCAN_TYPE}
-                value={DATA_SOURCES.NEXUSIQ}
-                onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
-                isChecked={scanType === DATA_SOURCES.NEXUSIQ}
-                radioId="scanType-IQ-Server"
-              >
-                IQ Server
-              </NxRadio>
-            </NxFieldset>
-
-            <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-              <NxTabList>
-                <NxTab>General</NxTab>
-                <NxTab>Nexus IQ</NxTab>
-                <NxTab>OSS Index</NxTab>
-              </NxTabList>
-              <NxTabPanel></NxTabPanel>
-              <NxTabPanel>
-                <IQServerOptionsPage />
-              </NxTabPanel>
-              <NxTabPanel>
-                <OSSIndexOptionsPage />
-              </NxTabPanel>
-            </NxTabs>
-          </div>
-        </section>
+        <React.Fragment>
+          <h1>
+            <NxPageTitle>Sonatype Nexus Browser Extension Options</NxPageTitle>
+          </h1>
+          <NxTile>
+            <NxTile.Header>
+              <NxH2>Base Option</NxH2>
+            </NxTile.Header>
+            <NxTile.Content>
+              <NxFieldset label={`Selected Scan Type: ${scanType}`} isRequired>
+                <NxRadio
+                  name={SCAN_TYPE}
+                  value={DATA_SOURCES.OSSINDEX}
+                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
+                  isChecked={scanType === DATA_SOURCES.OSSINDEX}
+                  radioId="scanType-OSS-Index"
+                >
+                  OSS Index
+                </NxRadio>
+                <NxRadio
+                  name={SCAN_TYPE}
+                  value={DATA_SOURCES.NEXUSIQ}
+                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
+                  isChecked={scanType === DATA_SOURCES.NEXUSIQ}
+                  radioId="scanType-IQ-Server"
+                >
+                  IQ Server
+                </NxRadio>
+              </NxFieldset>
+              <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+                <NxTabList>
+                  <NxTab>General</NxTab>
+                  <NxTab>Nexus IQ</NxTab>
+                  <NxTab>OSS Index</NxTab>
+                </NxTabList>
+                <NxTabPanel></NxTabPanel>
+                <NxTabPanel>
+                  <IQServerOptionsPage />
+                </NxTabPanel>
+                <NxTabPanel>
+                  <OSSIndexOptionsPage />
+                </NxTabPanel>
+              </NxTabs>
+            </NxTile.Content>
+          </NxTile>
+        </React.Fragment>
       );
     }
     return null;
