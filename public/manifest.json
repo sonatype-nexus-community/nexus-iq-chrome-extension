@@ -23,8 +23,7 @@
     "service_worker": "extension_service_worker.js"
   },
   "host_permissions": [
-    "http://*/",
-    "https://*/",
+    "<all_urls>",
     "https://pkgs.alpinelinux.org/",
     "https://anaconda.org/",
     "https://chocolatey.org/packages/",

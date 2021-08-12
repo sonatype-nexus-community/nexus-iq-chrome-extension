@@ -138,7 +138,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
 
     chrome.permissions.request(
       {
-        origins: [iqServerURL]
+        origins: [iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`]
       },
       (granted) => {
         if (granted) {
@@ -216,6 +216,16 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   <p className="nx-p">
                     <strong>5)</strong> Do a quick test to ensure you can connect to Nexus IQ Server
                   </p>
+                  {loggedIn && (
+                    <NxStatefulSuccessAlert>
+                      Congrats! You are able to login to Nexus IQ Server!
+                    </NxStatefulSuccessAlert>
+                  )}
+                  {errorLoggingIn !== '' && (
+                    <NxStatefulErrorAlert>
+                      There was an error logging in, it looks like: {errorLoggingIn}
+                    </NxStatefulErrorAlert>
+                  )}
                 </NxGrid.Column>
                 <NxGrid.Column>
                   <img src="images/billymays.png" width={420} height={420} />
@@ -231,16 +241,6 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   </NxList>
                 </NxGrid.Column>
               </NxGrid.Row>
-              {loggedIn && (
-                <NxStatefulSuccessAlert>
-                  Congrats! You are able to login to Nexus IQ Server!
-                </NxStatefulSuccessAlert>
-              )}
-              {errorLoggingIn !== '' && (
-                <NxStatefulErrorAlert>
-                  There was an error logging in, it looks like: {errorLoggingIn}
-                </NxStatefulErrorAlert>
-              )}
             </NxForm>
           </NxTile.Subsection>
         </React.Fragment>
