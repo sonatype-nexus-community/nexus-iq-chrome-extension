@@ -155,9 +155,12 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
   getVulnDetails = async (vulnId: string): Promise<void> => {
     // Likely ok to skip setting the CSRF etc... because if this is getting requested, we know it's been set
+    this.state.logger.logMessage('Attempting to get details for vulnerability', TRACE, vulnId);
     const vulnDetails = await (this._requestService as IqRequestService).getVulnerabilityDetails(
       vulnId
     );
+
+    this.state.logger.logMessage('Obtained detail for vulnerability', TRACE, vulnDetails);
 
     this.setState({vulnDetails: vulnDetails});
   };
@@ -165,10 +168,21 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   getLicenseDetails = async (purl: string): Promise<void> => {
     // Likely ok to skip setting the CSRF etc... because if this is getting requested, we know it's been set
     if (this._requestService instanceof IqRequestService) {
+      this.state.logger.logMessage(
+        'Attempting to get license legal details for component',
+        TRACE,
+        purl
+      );
       const packageUrl = PackageURL.fromString(purl);
       const licenseDetails = await (
         this._requestService as IqRequestService
       ).getLicenseLegalComponentReport(packageUrl);
+
+      this.state.logger.logMessage(
+        'Obtained license legal detail for component',
+        TRACE,
+        licenseDetails
+      );
 
       this.setState({licenseDetails: licenseDetails});
       return;
@@ -179,7 +193,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   getAllVersions = async (purl: string): Promise<void> => {
     const packageUrl = PackageURL.fromString(purl);
 
-    this.state.logger.logMessage('Attempting to get all Versions for Component', TRACE, packageUrl);
+    this.state.logger.logMessage('Attempting to get all Versions for component', TRACE, packageUrl);
 
     const allVersions = await (this._requestService as IqRequestService).getVersionsForComponent(
       packageUrl

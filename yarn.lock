@@ -1646,9 +1646,9 @@
     xss-filters "^1.2.6"
 
 "@sonatype/js-sona-types@^1.0.51":
-  version "1.0.54"
-  resolved "https://registry.yarnpkg.com/@sonatype/js-sona-types/-/js-sona-types-1.0.54.tgz#3d175c418d17d4f98286a5c3a6b4233d25954845"
-  integrity sha512-HRSGtuIMvot7gHbKTofZVzDXkg3AUx63pWDZ61oeMHNXlWkBo4jOMDY9GgB7VvGo8tc1oO5fXBQJ/pVtDUSE+w==
+  version "1.0.57"
+  resolved "https://registry.yarnpkg.com/@sonatype/js-sona-types/-/js-sona-types-1.0.57.tgz#735837c13c03f1d40d881cf11b8019666e038502"
+  integrity sha512-42zjzVTs2sZJc9m2K3M5HcNfmf8jU+Rn3YYdSn4sbqb4FbzzHjGlC4d9BkP81+6f0QqK4gudF1iTgboZF0LU7A==
   dependencies:
     browser-cookies "^1.2.0"
     cross-fetch "^3.1.4"
@@ -1848,9 +1848,9 @@
   integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
 
 "@types/node@*":
-  version "16.6.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.1.tgz#aee62c7b966f55fc66c7b6dfa1d58db2a616da61"
-  integrity sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==
+  version "16.6.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.2.tgz#331b7b9f8621c638284787c5559423822fdffc50"
+  integrity sha512-LSw8TZt12ZudbpHc6EkIyDM3nHVWKYrAvGy6EAJfNfjusbwnThqjqxUKKRwuV3iWYeW/LYMzNgaq3MaLffQ2xA==
 
 "@types/node@^12.0.0":
   version "12.20.19"
