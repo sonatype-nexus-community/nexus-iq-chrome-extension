@@ -13,11 +13,17 @@
     "default_popup": "popup.html",
     "default_title": "Open the popup",
     "default_icon": {
-      "16": "images/SON_logo_favicon.png",
-      "32": "images/SON_logo_favicon.png",
-      "48": "images/SON_logo_favicon.png",
-      "128": "images/SON_logo_favicon.png"
+      "16": "images/turtle-smol.png",
+      "32": "images/turtle-32x32.png",
+      "48": "images/turtle-48x48.png",
+      "128": "images/turtle-128x128.png"
     }
+  },
+  "icons": {
+    "16": "images/turtle-smol.png",
+    "32": "images/turtle-32x32.png",
+    "48": "images/turtle-48x48.png",
+    "128": "images/turtle-128x128.png"
   },
   "background": {
     "service_worker": "extension_service_worker.js"

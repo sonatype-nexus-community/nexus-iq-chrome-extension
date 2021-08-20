@@ -39,7 +39,7 @@ const renderOptions = () => {
         isDefaultOpen={true}
         toggleCloseIcon={faArrowRight}
         toggleOpenIcon={faArrowLeft}
-        logoImg="images/theeecla.svg"
+        logoImg="images/SON_logo_turtle_no_gradient.svg"
         logoAltText="Nexus Chrome Extension"
         logoLink="#"
       >

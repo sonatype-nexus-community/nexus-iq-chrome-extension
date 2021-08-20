@@ -19,5 +19,5 @@
 }
 
 .vuln:before {
-  content: url("chrome-extension://__MSG_@@extension_id__/images/SON_logo_favicon_Vulnerable.png");
+  content: url("chrome-extension://__MSG_@@extension_id__/images/turtle-right-vulnerable-48x48.png");
 }

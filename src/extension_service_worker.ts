@@ -161,7 +161,7 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
   ) {
     getActiveTabId()
       .then((tabId) => {
-        chrome.action.setIcon({tabId: tabId, path: '/images/SON_logo_favicon_Vulnerable.png'});
+        chrome.action.setIcon({tabId: tabId, path: '/images/turtle-right-vulnerable.png'});
       })
       .catch((err) => {
         console.error(err);
@@ -171,7 +171,7 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
     chrome.notifications.create(
       {
         title: `Sonatype Scan Results - ${purl}`,
-        iconUrl: '/images/SON_logo_favicon_Vulnerable.png',
+        iconUrl: '/images/turtle-left-vulnerable.png',
         type: 'basic',
         message: 'Vulnerabilities have been found in this version',
         priority: 1,
@@ -189,7 +189,7 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
   } else {
     getActiveTabId()
       .then((tabId) => {
-        chrome.action.setIcon({tabId: tabId, path: '/images/SON_logo_favicon_not_vuln.png'});
+        chrome.action.setIcon({tabId: tabId, path: '/images/turtle-32x32.png'});
       })
       .catch((err) => {
         console.error(err);

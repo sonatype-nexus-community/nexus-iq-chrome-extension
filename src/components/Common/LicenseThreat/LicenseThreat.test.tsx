@@ -33,7 +33,6 @@ const licenseDetail: IqServerLicenseLegalMetadataResult = {
       declaredLicenses: ['MIT'],
       observedLicenses: ['Not-Supported'],
       effectiveLicenses: ['MIT'],
-      // This should be an object, not a string, need to fix in js-sona-types
       highestEffectiveLicenseThreatGroup: {
         licenseThreatGroupCategory: 'liberal',
         licenseThreatGroupLevel: 0,
