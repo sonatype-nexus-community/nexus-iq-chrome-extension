@@ -32,8 +32,6 @@ const LicensingPage = (): JSX.Element | null => {
       nexusContext.policyDetails.results.length > 0 &&
       nexusContext.getLicenseDetails
     ) {
-      nexusContext.getLicenseDetails(nexusContext.policyDetails.results[0].component.packageUrl);
-
       const licenseData = nexusContext.policyDetails.results[0].licenseData;
       const observedLicenses = licenseData.observedLicenses.filter(
         (license) => license.licenseId != 'Not-Supported'

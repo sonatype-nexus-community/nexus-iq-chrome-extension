@@ -51,7 +51,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
   };
 
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.getLicenseDetails) {
+    if (nexusContext && nexusContext.getLicenseDetails && !nexusContext.licenseDetails) {
       nexusContext.getLicenseDetails(props.purl.toString());
     }
     return (
@@ -100,9 +100,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
             {props.securityData && <SecurityThreat securityData={props.securityData} />}
             {nexusContext &&
               nexusContext.licenseDetails &&
-              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
-                <LicenseThreat licenseDetails={nexusContext.licenseDetails} />
-              )}
+              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
           </section>
         </div>
       </React.Fragment>

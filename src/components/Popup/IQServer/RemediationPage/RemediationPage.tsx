@@ -30,9 +30,11 @@ const RemediationPage = (): JSX.Element | null => {
       nexusContext.policyDetails.results.length > 0 &&
       nexusContext.getRemediationDetails
     ) {
-      nexusContext.getRemediationDetails(
-        nexusContext.policyDetails.results[0].component.packageUrl
-      );
+      if (!nexusContext.remediationDetails) {
+        nexusContext.getRemediationDetails(
+          nexusContext.policyDetails.results[0].component.packageUrl
+        );
+      }
 
       return (
         <React.Fragment>

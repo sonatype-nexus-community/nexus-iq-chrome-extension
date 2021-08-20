@@ -16,9 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {IqServerLicenseLegalMetadataResult} from '@sonatype/js-sona-types';
+import {IqServerLicenseLegalMetadataResult, TestLogger} from '@sonatype/js-sona-types';
 import React from 'react';
 import renderer from 'react-test-renderer';
+import {NexusContext} from '../../../context/NexusContext';
+import {DATA_SOURCES} from '../../../utils/Constants';
 import LicenseThreat from './LicenseThreat';
 
 const licenseDetail: IqServerLicenseLegalMetadataResult = {
@@ -63,7 +65,17 @@ describe('<LicenseThreat />', () => {
   });
 
   test('renders properly when provided AWESOME props', () => {
-    const component = renderer.create(<LicenseThreat licenseDetails={licenseDetail} />);
+    const component = renderer.create(
+      <NexusContext.Provider
+        value={{
+          scanType: DATA_SOURCES.NEXUSIQ,
+          licenseDetails: licenseDetail,
+          logger: new TestLogger()
+        }}
+      >
+        <LicenseThreat />
+      </NexusContext.Provider>
+    );
 
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
