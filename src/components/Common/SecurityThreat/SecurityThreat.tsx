@@ -13,21 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   NxH3,
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {SecurityData} from '@sonatype/js-sona-types';
+import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
 
-type SecurityThreatProps = {
-  securityData?: SecurityData;
-};
+const SecurityThreat = (): JSX.Element | null => {
+  const nexusContext = useContext(NexusContext);
 
-const SecurityThreat = (props: SecurityThreatProps): JSX.Element | null => {
-  const renderSecurityThreat = () => {
-    return getSecurityThreat(props.securityData);
+  const renderSecurityThreat = (nexusContext: NexusContextInterface | undefined) => {
+    if (
+      nexusContext &&
+      nexusContext.componentDetails &&
+      nexusContext.componentDetails.securityData
+    ) {
+      return getSecurityThreat(nexusContext.componentDetails.securityData);
+    } else if (
+      nexusContext &&
+      nexusContext.policyDetails &&
+      nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0 &&
+      nexusContext.policyDetails.results[0].securityData
+    ) {
+      return getSecurityThreat(nexusContext.policyDetails.results[0].securityData);
+    } else {
+      return null;
+    }
   };
 
   const getSecurityThreat = (securityData: SecurityData | undefined) => {
@@ -51,7 +66,7 @@ const SecurityThreat = (props: SecurityThreatProps): JSX.Element | null => {
     return null;
   };
 
-  return renderSecurityThreat();
+  return renderSecurityThreat(nexusContext);
 };
 
 export default SecurityThreat;

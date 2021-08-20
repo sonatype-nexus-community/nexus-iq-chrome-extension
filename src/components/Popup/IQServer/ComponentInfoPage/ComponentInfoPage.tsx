@@ -35,7 +35,6 @@ type ComponentInfoPageProps = {
   catalogDate?: Date;
   matchState?: string;
   policyData?: PolicyData;
-  securityData?: SecurityData;
   hash?: string;
 };
 
@@ -97,7 +96,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
           </section>
           <section className="nx-grid-col--25">
             {props.policyData && getPolicyViolationIndicator(props.policyData)}
-            {props.securityData && <SecurityThreat securityData={props.securityData} />}
+            <SecurityThreat />
             {nexusContext &&
               nexusContext.licenseDetails &&
               nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}

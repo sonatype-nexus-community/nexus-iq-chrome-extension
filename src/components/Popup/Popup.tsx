@@ -77,7 +77,6 @@ const Popup = (): JSX.Element | null => {
               <NxTabPanel>
                 <ComponentInfoPage
                   policyData={results.policyData}
-                  securityData={results.securityData}
                   matchState={results.matchState}
                   purl={PackageURL.fromString(results.component.packageUrl)}
                   hash={results.component.hash}
@@ -132,7 +131,6 @@ const Popup = (): JSX.Element | null => {
                 <ComponentInfoPage
                   purl={purl}
                   description={nexusContext.componentDetails.component.description}
-                  securityData={nexusContext.componentDetails.securityData}
                 />
               </NxTabPanel>
               {hasVulns && (

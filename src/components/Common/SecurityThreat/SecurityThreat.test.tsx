@@ -16,9 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SecurityData} from '@sonatype/js-sona-types';
+import {SecurityData, TestLogger} from '@sonatype/js-sona-types';
 import React from 'react';
 import renderer from 'react-test-renderer';
+import {NexusContext} from '../../../context/NexusContext';
+import {DATA_SOURCES} from '../../../utils/Constants';
 import SecurityThreat from './SecurityThreat';
 
 const securityData: SecurityData = {
@@ -43,8 +45,23 @@ describe('<SecurityThreat />', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  test('renders properly when provided AWESOME props', () => {
-    const component = renderer.create(<SecurityThreat securityData={securityData} />);
+  test('renders properly when provided Nexus IQ like context', () => {
+    const component = renderer.create(
+      <NexusContext.Provider value={{logger: new TestLogger(), scanType: DATA_SOURCES.NEXUSIQ}}>
+        <SecurityThreat />
+      </NexusContext.Provider>
+    );
+
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  test('renders properly when provided OSS Index like context', () => {
+    const component = renderer.create(
+      <NexusContext.Provider value={{logger: new TestLogger(), scanType: DATA_SOURCES.OSSINDEX}}>
+        <SecurityThreat />
+      </NexusContext.Provider>
+    );
 
     const tree = component.toJSON();
     expect(tree).toMatchSnapshot();
