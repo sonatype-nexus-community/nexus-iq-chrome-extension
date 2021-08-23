@@ -44,12 +44,31 @@ const copyWebpackPlugin = new CopyWebpackPlugin({
         dot: true,
         gitignore: true,
         ignore: [
-          "**/index.html"
+          "**/index.html", "**/manifest.json"
         ],
       },
     },
   ],
 });
+
+const modify = (buffer) => {
+  let manifest = JSON.parse(buffer.toString());
+  let package = require('./package.json');
+
+  manifest.version = package.version;
+
+  manifest_JSON = JSON.stringify(manifest, null, 2);
+  return manifest_JSON;
+};
+
+const copyWebpackPluginManifest = new CopyWebpackPlugin({
+  patterns: [{
+  from: './public/manifest.json',
+  transform (content, path) {
+    return modify(content);
+  }
+}
+  ]});
 
 const forkTsCheckerWebpackPlugin = new ForkTsCheckerWebpackPlugin({
   eslint: {
@@ -174,8 +193,9 @@ const appConfig = {
     htmlPlugin,
     cspHtmlWebpackPlugin,
     miniCssExtractPlugin, 
-    forkTsCheckerWebpackPlugin, 
+    forkTsCheckerWebpackPlugin,
     copyWebpackPlugin,
+    copyWebpackPluginManifest,
     new webpack.ProvidePlugin({process: "process/browser"}),
     new NodePolyfillPlugin()
   ],

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<SecurityThreat /> renders null when provided no props 1`] = `null`;
+exports[`<SecurityThreat /> renders null when provided no context 1`] = `null`;
 
 exports[`<SecurityThreat /> renders properly when provided Nexus IQ like context 1`] = `
 Array [
