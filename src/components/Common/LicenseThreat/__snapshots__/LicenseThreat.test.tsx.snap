@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<LicenseThreat /> renders null when provided no props 1`] = `null`;
+exports[`<LicenseThreat /> renders null when provided no context values 1`] = `null`;
 
-exports[`<LicenseThreat /> renders properly when provided AWESOME props 1`] = `
+exports[`<LicenseThreat /> renders properly when provided AWESOME context 1`] = `
 Array [
   <h3
     className="nx-h3"

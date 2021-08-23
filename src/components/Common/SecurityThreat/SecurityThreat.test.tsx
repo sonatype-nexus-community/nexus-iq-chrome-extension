@@ -22,6 +22,7 @@ import renderer from 'react-test-renderer';
 import {NexusContext} from '../../../context/NexusContext';
 import {DATA_SOURCES} from '../../../utils/Constants';
 import SecurityThreat from './SecurityThreat';
+const policyJson = require('./iq_server_policy_result.json');
 
 const securityData: SecurityData = {
   securityIssues: [
@@ -37,33 +38,54 @@ const securityData: SecurityData = {
   ]
 };
 
-describe('<SecurityThreat />', () => {
-  test('renders null when provided no props', () => {
-    const component = renderer.create(<SecurityThreat />);
+const component = {
+  matchState: 'NONE',
+  catalogDate: '',
+  relativePopularity: '',
+  licenseData: undefined,
+  securityData: securityData,
+  component: {packageUrl: 'pkg:npm/jquery@3.1.1', name: 'jquery', hash: ''}
+};
 
-    const tree = component.toJSON();
+describe('<SecurityThreat />', () => {
+  test('renders null when provided no context', () => {
+    const comp = renderer.create(<SecurityThreat />);
+
+    const tree = comp.toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   test('renders properly when provided Nexus IQ like context', () => {
-    const component = renderer.create(
-      <NexusContext.Provider value={{logger: new TestLogger(), scanType: DATA_SOURCES.NEXUSIQ}}>
+    const comp = renderer.create(
+      <NexusContext.Provider
+        value={{
+          logger: new TestLogger(),
+          scanType: DATA_SOURCES.NEXUSIQ,
+          policyDetails: policyJson
+        }}
+      >
         <SecurityThreat />
       </NexusContext.Provider>
     );
 
-    const tree = component.toJSON();
+    const tree = comp.toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   test('renders properly when provided OSS Index like context', () => {
-    const component = renderer.create(
-      <NexusContext.Provider value={{logger: new TestLogger(), scanType: DATA_SOURCES.OSSINDEX}}>
+    const comp = renderer.create(
+      <NexusContext.Provider
+        value={{
+          logger: new TestLogger(),
+          scanType: DATA_SOURCES.OSSINDEX,
+          componentDetails: component
+        }}
+      >
         <SecurityThreat />
       </NexusContext.Provider>
     );
 
-    const tree = component.toJSON();
+    const tree = comp.toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
