@@ -81,10 +81,6 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   }
 });
 
-const doClick = () => {
-  alert('i Was cliekd');
-};
-
 const checkPage = () => {
   const repoType = findRepoType(window.location.href);
 
