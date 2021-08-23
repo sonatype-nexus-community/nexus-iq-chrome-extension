@@ -27,7 +27,7 @@ import {generatePackageURLWithNamespace} from './PurlUtils';
   https://pkg.go.dev/google.golang.org/protobuf@v1.26.0/runtime/protoimpl ->Todo Version: v1.26.0 ->No vulns, but different namespace and some stuff at the end
 */
 
-const PKG_GO_DEV_SELECTOR =
+const PKG_GO_DEV_VERSION_SELECTOR =
   'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
 const GO_PKG_IN_V1 = /^gopkg.in\/([^.]+).*/;
 const GO_PKG_IN_V2 = /^gopkg.in\/([^\/]+)\/([^.]+).*/;
@@ -46,7 +46,7 @@ const parsePkgGoDevURLIntoPackageURL = (url: string): PackageURL | undefined => 
   if (version !== undefined) {
     nameAndNamespace = getName(handleGoPkgIn(nameVersion[0].replace(/^\//, '')));
   } else {
-    const found = $(PKG_GO_DEV_SELECTOR);
+    const found = $(PKG_GO_DEV_VERSION_SELECTOR);
 
     if (typeof found !== 'undefined') {
       nameAndNamespace = getName(handleGoPkgIn(uri.pathname.replace(/^\//, '')));

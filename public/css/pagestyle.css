@@ -2,28 +2,28 @@
   border: 3px solid red !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 10px 8px red;
+  box-shadow: 5px 5px 8px red;
 }
 
 .vuln-high {
   border: 3px solid orangered !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 10px 8px orangered;
+  box-shadow: 5px 5px 8px orangered;
 }
 
 .vuln-med {
   border: 3px solid orange !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 10px 8px orange;
+  box-shadow: 5px 5px 8px orange;
 }
 
 .vuln-low {
   border: 3px solid yellow !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 10px 8px yellow;
+  box-shadow: 5px 5px 8px yellow;
 }
 
 .vuln:before {

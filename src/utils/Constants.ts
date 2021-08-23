@@ -176,7 +176,7 @@ export const REPO_TYPES: RepoType[] = [
     repoFormat: FORMATS.golang,
     repoID: REPOS.pkgGoDev,
     titleSelector:
-      'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a',
+      'body > main > header > div.go-Main-headerContent > div.go-Main-headerTitle.js-stickyHeader > h1',
     versionPath: '{url}/{packagename}/@{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '@{versionNumber}'
