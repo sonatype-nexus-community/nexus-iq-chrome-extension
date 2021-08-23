@@ -15,6 +15,6 @@ jobs:
           name: Run YARN tests
 
 workflows:
-  test_my_app:
+  test_browser_extension_with_yarn:
     jobs:
       - test
