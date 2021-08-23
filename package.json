@@ -99,6 +99,7 @@
     "setupFilesAfterEnv": [
       "./src/setupTests.ts"
     ],
+    "testEnvironment": "jsdom",
     "globals": {
       "ts-jest": {
         "tsconfig": {

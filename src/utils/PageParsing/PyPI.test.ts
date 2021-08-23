@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 /*
  * Copyright (c) 2019-present Sonatype, Inc.
  *

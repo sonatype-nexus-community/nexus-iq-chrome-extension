@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 /* eslint @typescript-eslint/no-var-requires: "off" */
 /*
  * Copyright (c) 2019-present Sonatype, Inc.
