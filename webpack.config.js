@@ -121,7 +121,7 @@ const appConfig = {
     content: './src/content.ts',
   },
 
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
 
   module: {
     rules: [
@@ -206,7 +206,7 @@ const optionsConfig = {
     options: './src/options.tsx',
   },
 
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
 
   module: {
     rules: [
@@ -288,7 +288,7 @@ const optionsConfig = {
 const serviceWorkerConfig = {
   target: "web",
 
-  devtool: "source-map",
+  devtool: "inline-source-map",
 
   entry: {
     extension_service_worker: path.join(__dirname, "src", "extension_service_worker.ts"),

@@ -1,21 +1,25 @@
 .vuln-severe {
-  /* background-color: red !important;
-  background-image: url("images/IQ_Vulnerable.png");
-  background-repeat: no-repeat;
-  padding-left: 30px;
-  display: block; */
+  border: 3px solid red !important;
+  border-radius: 10px;
+  padding: 5px;
 }
 
 .vuln-high {
-  /* background-color: yellow !important; */
+  border: 3px solid orangered !important;
+  border-radius: 10px;
+  padding: 5px;
 }
 
 .vuln-med {
-  /* background-color: blue !important; */
+  border: 3px solid orange !important;
+  border-radius: 10px;
+  padding: 5px;
 }
 
 .vuln-low {
-  /* background-color: yellow !important; */
+  border: 3px solid yellow !important;
+  border-radius: 10px;
+  padding: 5px;
 }
 
 .vuln:before {
