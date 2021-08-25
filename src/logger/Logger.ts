@@ -13,42 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {ILogger} from '@sonatype/js-sona-types';
+import {ILogger, TestLogger} from '@sonatype/js-sona-types';
 
-export const DEBUG = 'debug';
-export const ERROR = 'error';
-export const TRACE = 'trace';
-export const INFO = 'info';
-export const LOG = 'log';
-export const WARN = 'warn';
-
-export class BrowserExtensionLogger implements ILogger {
-  logMessage(message: string, level: string, ...meta: any): void {
-    switch (level) {
-      case DEBUG:
-        console.debug(message, ...meta);
-        break;
-      case ERROR:
-        console.error(message, ...meta);
-        break;
-      case TRACE:
-        console.trace(message, ...meta);
-        break;
-      case INFO:
-        console.info(message, ...meta);
-        break;
-      case LOG:
-        console.log(message, ...meta);
-        break;
-      case WARN:
-        console.warn(message, ...meta);
-        break;
-      default:
-        console.error('Unsupported log level', level);
-        console.error('Logging as error', message, ...meta);
-        break;
-    }
-  }
-}
+export class BrowserExtensionLogger extends TestLogger implements ILogger {}
 
 export default BrowserExtensionLogger;

@@ -16,18 +16,21 @@
 /// <reference lib="webworker" />
 
 import 'node-window-polyfill/register';
-import {IqRequestService, OSSIndexRequestService} from '@sonatype/js-sona-types';
+import {IqRequestService, LogLevel, OSSIndexRequestService} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import BrowserExtensionLogger from './logger/Logger';
 import localforage from 'localforage';
 
 const _browser: any = chrome ? chrome : browser;
 
+const logger = new BrowserExtensionLogger(LogLevel.ERROR);
+
 const SCAN_TYPE = 'scanType';
 const IQ_SERVER_URL = 'iqServerURL';
 const IQ_SERVER_APPLICATION = 'iqServerApplication';
 const IQ_SERVER_USER = 'iqServerUser';
 const IQ_SERVER_TOKEN = 'iqServerToken';
+const LOG_LEVEL = 'logLevel';
 
 interface Settings {
   scanType: string | undefined;
@@ -35,19 +38,21 @@ interface Settings {
   user: string | undefined;
   token: string | undefined;
   application: string | undefined;
+  logLevel: number | undefined;
 }
 
 const getSettings = async (): Promise<Settings> => {
   const promise = new Promise<Settings>((resolve) => {
     _browser.storage.local.get(
-      [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION],
+      [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
       (items: {[key: string]: any}) => {
         resolve({
           scanType: items[SCAN_TYPE],
           host: items[IQ_SERVER_URL],
           user: items[IQ_SERVER_USER],
           token: items[IQ_SERVER_TOKEN],
-          application: items[IQ_SERVER_APPLICATION]
+          application: items[IQ_SERVER_APPLICATION],
+          logLevel: items[LOG_LEVEL]
         });
       }
     );
@@ -64,7 +69,7 @@ const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
         browser: true,
         user: settings.user,
         application: settings.application,
-        logger: new BrowserExtensionLogger(),
+        logger: logger,
         product: manifestData.name,
         version: manifestData.version
       },
@@ -93,7 +98,7 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
       browser: true,
       user: settings.user,
       application: settings.application,
-      logger: new BrowserExtensionLogger(),
+      logger: logger,
       product: manifestData.name,
       version: manifestData.version
     });
@@ -102,7 +107,7 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
       .loginViaRest()
       .then((loggedIn) => {
         if (loggedIn) {
-          console.debug('Logged in to Nexus IQ Server via service worker');
+          logger.logMessage('Logged in to Nexus IQ Server via service worker', LogLevel.INFO);
           _doRequestToIQServer(requestService, purl)
             .then((res) => {
               resolve(res);
@@ -141,8 +146,8 @@ const _doRequestToIQServer = (requestService: IqRequestService, purl: string): P
 const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
   handleURLOSSIndex(purl, settings)
     .then((componentDetails) => {
-      console.debug('Got back response from OSS Index');
-      console.trace(componentDetails);
+      logger.logMessage('Got back response from OSS Index', LogLevel.INFO);
+      logger.logMessage('Response from OSS Index', LogLevel.TRACE, componentDetails);
 
       sendNotificationAndMessage(purl, componentDetails);
     })
@@ -164,10 +169,10 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
         chrome.action.setIcon({tabId: tabId, path: '/images/turtle-right-vulnerable.png'});
       })
       .catch((err) => {
-        console.error(err);
+        logger.logMessage('Error encountered', LogLevel.ERROR, err);
       });
 
-    console.debug('Sending notification that component is vulnerable');
+    logger.logMessage('Sending notification that component is vulnerable', LogLevel.INFO);
     chrome.notifications.create(
       {
         title: `Sonatype Scan Results - ${purl}`,
@@ -183,7 +188,7 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
         isClickable: true
       },
       (notificationId) => {
-        console.trace('Notification sent: ' + notificationId);
+        logger.logMessage('Notification sent', LogLevel.TRACE, notificationId);
       }
     );
   } else {
@@ -192,7 +197,7 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
         chrome.action.setIcon({tabId: tabId, path: '/images/turtle-32x32.png'});
       })
       .catch((err) => {
-        console.error(err);
+        logger.logMessage('Error encountered', LogLevel.ERROR, err);
       });
   }
 
@@ -204,7 +209,7 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
       });
     })
     .catch((err) => {
-      console.error(err);
+      logger.logMessage('Error encountered', LogLevel.ERROR, err);
     });
 };
 
@@ -234,17 +239,17 @@ const toggleIcon = (show: boolean) => {
         throw new Error(err);
       });
   } catch (err) {
-    console.error(err);
+    logger.logMessage('Error encountered', LogLevel.ERROR, err);
   }
 };
 
 const handleIQServerWrapper = (purl: string, settings: Settings) => {
   if (settings.host && settings.token && settings.application && settings.user) {
-    console.debug('Attempting to call Nexus IQ Server', purl, settings);
+    logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
 
     handleURLIQServer(purl, settings).then((componentDetails) => {
-      console.debug('Got back response from Nexus IQ Server');
-      console.trace(componentDetails);
+      logger.logMessage('Got back response from Nexus IQ Server', LogLevel.INFO);
+      logger.logMessage('Got back component details', LogLevel.TRACE, componentDetails);
 
       sendNotificationAndMessage(purl, componentDetails);
     });
@@ -254,27 +259,30 @@ const handleIQServerWrapper = (purl: string, settings: Settings) => {
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.trace(request);
+  logger.logMessage('Request recieved', LogLevel.INFO, request);
 
   if (request && request.type) {
     if (request.type === 'getArtifactDetailsFromPurl') {
-      console.debug('Getting settings');
+      logger.logMessage('Getting settings', LogLevel.INFO);
       getSettings()
         .then((settings: Settings) => {
+          if (settings.logLevel) {
+            logger.setLevel(settings.logLevel);
+          }
           try {
             if (settings.scanType === 'NEXUSIQ') {
-              console.debug('Attempting to call Nexus IQ Server');
+              logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
               handleIQServerWrapper(request.purl, settings);
             } else {
-              console.debug('Attempting to call OSS Index');
+              logger.logMessage('Attempting to call OSS Index', LogLevel.INFO);
               handleOSSIndexWrapper(request.purl, settings);
             }
           } catch (err) {
-            console.error(err);
+            logger.logMessage('Error encountered', LogLevel.ERROR, err);
           }
         })
         .catch((err) => {
-          console.error(err);
+          logger.logMessage('Error encountered', LogLevel.ERROR, err);
         });
     }
     if (request.type === 'togglePage') {

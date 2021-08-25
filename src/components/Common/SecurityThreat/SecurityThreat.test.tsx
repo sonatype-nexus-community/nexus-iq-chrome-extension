@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SecurityData, TestLogger} from '@sonatype/js-sona-types';
+import {LogLevel, SecurityData, TestLogger} from '@sonatype/js-sona-types';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {NexusContext} from '../../../context/NexusContext';
@@ -57,7 +57,7 @@ describe('<SecurityThreat />', () => {
     const comp = renderer.create(
       <NexusContext.Provider
         value={{
-          logger: new TestLogger(),
+          logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.NEXUSIQ,
           policyDetails: policyJson
         }}
@@ -74,7 +74,7 @@ describe('<SecurityThreat />', () => {
     const comp = renderer.create(
       <NexusContext.Provider
         value={{
-          logger: new TestLogger(),
+          logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.OSSINDEX,
           componentDetails: component
         }}

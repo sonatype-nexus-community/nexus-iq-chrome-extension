@@ -29,6 +29,7 @@ import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import {DATA_SOURCES} from '../../utils/Constants';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
+import GeneralOptionsPage from './General/GeneralOptionsPage';
 
 const SCAN_TYPE = 'scanType';
 
@@ -90,7 +91,9 @@ const Options = (): JSX.Element | null => {
                   <NxTab>Nexus IQ</NxTab>
                   <NxTab>OSS Index</NxTab>
                 </NxTabList>
-                <NxTabPanel></NxTabPanel>
+                <NxTabPanel>
+                  <GeneralOptionsPage />
+                </NxTabPanel>
                 <NxTabPanel>
                   <IQServerOptionsPage />
                 </NxTabPanel>

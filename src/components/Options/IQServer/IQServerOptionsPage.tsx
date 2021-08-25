@@ -26,7 +26,7 @@ import {
   NxStatefulTextInput,
   NxTile
 } from '@sonatype/react-shared-components';
-import {IqRequestService, TestLogger} from '@sonatype/js-sona-types';
+import {IqRequestService, LogLevel, TestLogger} from '@sonatype/js-sona-types';
 import classnames from 'classnames';
 import {DATA_SOURCES} from '../../../utils/Constants';
 import './IQServerOptionsPage.css';
@@ -99,7 +99,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
           token: iqServerToken,
           host: iqServerURL,
           application: iqServerApplication,
-          logger: new TestLogger(),
+          logger: new TestLogger(LogLevel.ERROR),
           product: 'nexus-chrome-extension',
           version: '1.0.0',
           browser: true

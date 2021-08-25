@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {IqServerLicenseLegalMetadataResult, TestLogger} from '@sonatype/js-sona-types';
+import {IqServerLicenseLegalMetadataResult, LogLevel, TestLogger} from '@sonatype/js-sona-types';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {NexusContext} from '../../../context/NexusContext';
@@ -67,7 +67,7 @@ describe('<LicenseThreat />', () => {
         value={{
           scanType: DATA_SOURCES.NEXUSIQ,
           licenseDetails: licenseDetail,
-          logger: new TestLogger()
+          logger: new TestLogger(LogLevel.ERROR)
         }}
       >
         <LicenseThreat />
