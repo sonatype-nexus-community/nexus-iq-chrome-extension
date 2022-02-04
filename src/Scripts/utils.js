@@ -2340,33 +2340,34 @@ function parsePyPI(format, url) {
     version = elements[5];
   }
   //qualifier is
-  let qualifierHTML = document.querySelectorAll(
-    "#files > table > tbody > tr > th > a"
-  )[0].href;
-  qualifierHTML = qualifierHTML.split("/")[qualifierHTML.split("/").length - 1];
-  console.log("qualifierHTML", qualifierHTML);
-  //"numpy-1.16.4-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"
-  //qualifier is ->cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64
-  let name_ver = `${name}-${version}-`;
-  qualifier = qualifierHTML.substr(
-    name_ver.length,
-    qualifierHTML.lastIndexOf(".") - name_ver.length
-  );
+  // let qualifierHTML = document.querySelectorAll(
+  //   "#files > table > tbody > tr > th > a"
+  // )[0].href;
+  // qualifierHTML = qualifierHTML.split("/")[qualifierHTML.split("/").length - 1];
+  // console.log("qualifierHTML", qualifierHTML);
+  // //"numpy-1.16.4-cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"
+  // //qualifier is ->cp27-cp27m-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64
+  // let name_ver = `${name}-${version}-`;
+  // qualifier = qualifierHTML.substr(
+  //   name_ver.length,
+  //   qualifierHTML.lastIndexOf(".") - name_ver.length
+  // );
   // extension = qualifierHTML.substr(qualifierHTML.lastIndexOf(".") + 1);
   //$("#files > table > tbody:contains('.zip')").text()
-  console.log("qualifier", qualifier);
-  extension = qualifierHTML.substring(qualifierHTML.lastIndexOf(".") + 1);
-  console.log("extension", extension);
-  name = encodeURIComponent(name);
+  // console.log("qualifier", qualifier);
+  // extension = qualifierHTML.substring(qualifierHTML.lastIndexOf(".") + 1);
+  // console.log("extension", extension);
+  // name = encodeURIComponent(name);
   version = encodeURIComponent(version);
   datasource = dataSources.NEXUSIQ;
+  extension = "tar.gz";
   let artifact = {
     format: format,
     name: name,
     version: version,
     datasource: datasource,
     extension: extension,
-    qualifier: qualifier,
+    // qualifier: qualifier,
   };
   return artifact;
 }
