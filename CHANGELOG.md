@@ -1,3 +1,9 @@
+## [1.9.7]
+
+### Bug Fixes
+
+- [#170] Plugin broken when browsing PyPi.org
+
 ## [1.9.0](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/compare/v1.9.0...v1.8.2) (2020-05-25)
 
 ### Features
