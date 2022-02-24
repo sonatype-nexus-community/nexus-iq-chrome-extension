@@ -252,3 +252,4 @@ Please read the [Contributing guide](contributing.md)
 ## The Fine Print
 
 Supported by Sonatype
+
