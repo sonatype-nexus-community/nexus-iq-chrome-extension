@@ -1,6 +1,3 @@
 {
-  "name": "Nexus IQ Chrome Extension",
-  "jest": {
-    "verbose": true
-  }
+  "name": "Nexus IQ Chrome Extension"
 }
