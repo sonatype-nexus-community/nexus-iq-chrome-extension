@@ -1,4 +1,4 @@
-/*jslint es6 */
+/* globals describe, expect, it, test */
 // import BuildEmptySettings from '../dist/Scripts/util';
 const {
   Artifact,
@@ -1628,6 +1628,37 @@ test.skip("Check getExtensionVersion positive test", () => {
   expect(actual).toEqual(expected);
 });
 
+//cant unit test chrome app apis
+test("Check Manifest", () => {
+  const fs = require("fs");
+let manifest;
+  try {
+    const rootDir = process.cwd();
+    // console.log("rootDir", rootDir);
+    const data = fs.readFileSync(rootDir + "/src/manifest.json", "utf8");
+    // console.log(data);
+     manifest = JSON.parse(data);
+    console.log("content_security_policy", manifest.content_security_policy);
+  } catch (err) {
+    console.error(err);
+  }
+  let actual = manifest.content_security_policy.trim();
+  let expected =
+    "default-src 'none'; script-src 'self'; object-src 'none'; connect-src *; style-src 'self' data: 'unsafe-inline'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; sandbox allow-popups allow-same-origin allow-scripts;";
+  expect(actual).toEqual(expected);
+  let permissions = manifest.permissions;  
+  // console.log(permissions);
+  expect(permissions.includes("activeTab")).toBeTruthy();
+  // console.log(permissions.includes("*://*/*"));
+  expect(permissions.includes("*://*/*")).toBeFalsy();
+  expect(permissions.includes("tabs")).toBeFalsy();
+  expect(permissions.includes("notifications")).toBeFalsy();
+
+  let optional_permissions = manifest.optional_permissions
+  expect(optional_permissions.includes("*://*/*")).toBeTruthy();
+  expect(optional_permissions.includes("tabs")).toBeTruthy();
+  expect(optional_permissions.includes("notifications")).toBeTruthy();  
+});
 // test('Check removeCookies(settings_url) positive test', () => {
 //   //to do: Implement unit test to delete cookie
 //   let settings_url = 'http://iq-server:8070/'
