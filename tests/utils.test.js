@@ -220,8 +220,8 @@ test("CheckPageIsHandled positive test - Crates", () => {
   expect(expected).toBe(actual);
 });
 
-test("CheckPageIsHandled positive test - gocenter", () => {
-  let actual = checkPageIsHandled("https://search.gocenter.io/"); //url changed
+test("CheckPageIsHandled positive test - pkg.go.dev", () => {
+  let actual = checkPageIsHandled("https://pkg.go.dev/"); //url changed
   let expected = true;
   expect(expected).toBe(actual);
 });
@@ -703,7 +703,7 @@ test("Check pypiArtifact class", () => {
   expect(actual).toEqual(expected);
 });
 test("Check parseURLChocolatey positive test", () => {
-  //https://chocolatey.org/packages/python3/3.9.0-a5
+  //https://community.chocolatey.org/packages/python3/3.9.0-a5
   let format = "chocolatey";
   let name = "python3";
   let version = "3.9.0-a5";
@@ -715,7 +715,7 @@ test("Check parseURLChocolatey positive test", () => {
     version,
     datasource
   );
-  let url = "https://chocolatey.org/packages/python3/3.9.0-a5";
+  let url = "https://community.chocolatey.org/packages/python3/3.9.0-a5";
   let actual = parseURLChocolatey(url);
   let expected = artifact;
   expect(actual).toEqual(expected);
@@ -1109,7 +1109,7 @@ test("Check parseCRANURL(cran.r-project.org) negative test", () => {
   expect(actual).toBeFalsy();
 });
 
-test("Check parseGoLangURL(GOCENTER GOLANG) negative test", () => {
+test("Check parseGoLangURL(GOLANG) negative test", () => {
   // parseGoLangURL ->falsy only
   let format = "golang";
   let artifact = {
@@ -1119,8 +1119,7 @@ test("Check parseGoLangURL(GOCENTER GOLANG) negative test", () => {
     datasource: "OSSINDEX",
   };
 
-  let url =
-    "https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions";
+  let url = "https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9";
   let actual = parseGoLangURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();
@@ -1529,8 +1528,7 @@ test("Check ParsePageURL(parseGoLangURL) negative test", () => {
     datasource: "OSSINDEX",
   };
 
-  let url =
-    "https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions";
+  let url = "https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9";
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();

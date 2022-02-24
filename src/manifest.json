@@ -2,7 +2,7 @@
   "name": "Sonatype Nexus IQ Evaluation",
   "description": "Sonatype Nexus IQ Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
   "author": "Cameron Townshend - ctownshend@sonatype.com",
-  "version": "1.9.3",
+  "version": "1.9.8",
   "manifest_version": 2,
   "content_security_policy": "default-src 'none'; script-src 'self'; object-src 'none'; connect-src *; style-src 'self' data: 'unsafe-inline'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; sandbox allow-popups allow-same-origin allow-scripts;  ",
   "optional_permissions": ["*://*/*", "tabs", "notifications"],
@@ -14,7 +14,7 @@
     "storage",
     "https://pkgs.alpinelinux.org/",
     "https://anaconda.org/anaconda/",
-    "https://chocolatey.org/",
+    "https://community.chocolatey.org/",
     "https://clojars.org/",
     "https://cocoapods.org/",
     "https://cran.r-project.org/",
@@ -31,7 +31,7 @@
     "https://repo.maven.apache.org/",
     "https://rpmfind.net/linux/RPM/epel/",
     "https://rubygems.org/",
-    "https://search.gocenter.io/",
+    "https://pkg.go.dev/",
     "https://search.maven.org/",
     "https://repo.spring.io/list/",
     "https://conan.io/center/",
@@ -42,7 +42,7 @@
       "matches": [
         "https://pkgs.alpinelinux.org/package/*",
         "https://anaconda.org/anaconda/*",
-        "https://chocolatey.org/packages/*",
+        "https://community.chocolatey.org/packages/*",
         "https://clojars.org/*",
         "https://cocoapods.org/*",
         "https://conan.io/center/*",
@@ -62,7 +62,7 @@
         "https://repo.spring.io/list/*",
         "https://rpmfind.net/linux/RPM/epel/*",
         "https://rubygems.org/*",
-        "https://search.gocenter.io/*",
+        "https://pkg.go.dev/*",
         "https://search.maven.org/*"
       ],
       "css": ["css/pagestyle.css"],
@@ -94,7 +94,7 @@
     "128": "images/SON_logo_favicon.png"
   },
   "options_ui": {
-    "page": "html/options.html?ver=1.9.3",
+    "page": "html/options.html?ver=1.9.8",
     "open_in_tab": true
   }
 }
