@@ -7,3 +7,4 @@ data
 .idea/*
 release
 SAVETEXT.txt
+package-lock.json

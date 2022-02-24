@@ -26,7 +26,7 @@
     "https://packagist.org/",
     "https://cran.r-project.org/",
     "https://crates.io/",
-    "https://search.gocenter.io/",
+    "https://pkg.go.dev/",
     "https://ossindex.sonatype.org/",
     "https://github.com/",
     "*://*/*"
@@ -50,7 +50,7 @@
     "128": "images/SON_logo_favicon.png"
   },
   "options_ui": {
-    "page": "html/options.html?ver=1.9.3",
+    "page": "html/options.html?ver=1.9.8",
     "open_in_tab": false
   }
 }

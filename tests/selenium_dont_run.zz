@@ -13,11 +13,11 @@ describe("test chrome extension", () => {
     driver.quit();
   });
 
-  it("should open search.gocenter.io", async () => {
+  it("should open pkg.go.dev", async () => {
     //chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/options.html
     //chrome-extension://nkpgoindccoclcgddkoadidecjfhchdi/popup.html
     await driver.get(
-      "https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1"
+      "https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9"
     );
     await driver.wait(
       until.elementLocated(By.id("selenium-container")),

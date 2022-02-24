@@ -398,7 +398,7 @@ const checkPageIsHandled = (url) => {
   if (
     url.search("https://pkgs.alpinelinux.org/package/") >= 0 ||
     url.search("https://anaconda.org/anaconda/") >= 0 ||
-    url.search("https://chocolatey.org/packages/") >= 0 ||
+    url.search("https://community.chocolatey.org/packages/") >= 0 ||
     url.search("https://clojars.org/") >= 0 ||
     url.search("https://cocoapods.org/pods/") >= 0 ||
     url.search("https://conan.io/center/") >= 0 ||
@@ -408,7 +408,7 @@ const checkPageIsHandled = (url) => {
     url.search("https://tracker.debian.org/pkg/") >= 0 ||
     (url.search("https://github.com/") >= 0 &&
       url.search("/releases/tag/") >= 0) || //https://github.com/jquery/jquery/releases/tag/3.0.0
-    url.search("https://search.gocenter.io/") >= 0 ||
+    url.search("https://pkg.go.dev/") >= 0 ||
     url.search("https://repo1.maven.org/maven2/") >= 0 ||
     url.search("https://repo.maven.apache.org/maven2/") >= 0 ||
     url.search("https://search.maven.org/artifact/") >= 0 ||
@@ -450,7 +450,7 @@ const ParsePageURL = (url) => {
     //https://anaconda.org/anaconda/
     format = formats.conda;
     artifact = parseURLConda(url);
-  } else if (url.search("https://chocolatey.org/packages/") >= 0) {
+  } else if (url.search("https://community.chocolatey.org/packages/") >= 0) {
     //https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
     format = formats.chocolatey;
     artifact = parseURLChocolatey(url);
@@ -517,7 +517,7 @@ const ParsePageURL = (url) => {
   } else if (url.search("https://crates.io/crates/") >= 0) {
     format = formats.cargo;
     artifact = parseCratesURL(url);
-  } else if (url.search("https://search.gocenter.io/") >= 0) {
+  } else if (url.search("https://pkg.go.dev/") >= 0) {
     format = formats.golang;
     artifact = parseGoLangURL(url);
   }
@@ -1078,8 +1078,7 @@ const parseCRANURL = (url) => {
 };
 
 const parseGoLangURL = (url) => {
-  //https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions
-  //https://search.gocenter.io/github.com~2Fbazelbuild~2Fbazel-integration-testing/versions
+  //https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9
   let format = formats.golang;
   let datasource = dataSources.NEXUSIQ;
   return false;
@@ -1172,7 +1171,7 @@ const parseURLClojars = (url) => {
 };
 
 const parseURLChocolatey = (url) => {
-  //https://chocolatey.org/packages/python3/3.9.0-a5
+  //https://community.chocolatey.org/packages/python3/3.9.0-a5
   let format = formats.chocolatey;
   let urlObject = new URL(url);
   let pathElements = urlObject.pathname.split("/");
@@ -2043,25 +2042,23 @@ function parseDebianTracker(format, url) {
 
 function parseGoLang(format, url) {
   //server is non-defined, language is go/golang
-  //index of github stored at jfrog
-  /////////Todo get this working better
-  //https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
-  //becomes
-  //https://ossindex.sonatype.org/component/pkg:golang/github.com/etcd-io:etcd@v3.3.13
-
   // pkg:golang/github.com/etcd-io/etcd@3.3.1
   // pkg:github/etcd-io/etcd@3.3.1
-  //https://search.gocenter.io/github.com/go-gitea/gitea
+
+  //24/02/2022 -> Now becomes https://pkg.go.dev
+  //https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9
+  // pkg:golang/github.com/etcd-io/etcd@0.4.9
   console.log("parseGolang:", format, url);
   let elements = url.split("/");
 
   let name;
   let namespace;
   let type;
-  if (url.search("search.gocenter.io") >= 0) {
+  let version;
+  if (url.search("pkg.go.dev") >= 0) {
     //has packagename in 5
     let fullname = elements[3];
-    //now looks like https://search.gocenter.io/github.com/go-gitea/gitea
+
     // let nameElements = fullname.split("");
     // 0: "github.com"
     // 1: "hansrodtang"
@@ -2069,51 +2066,32 @@ function parseGoLang(format, url) {
     type = elements[3]; //"github.com";
     namespace = elements[4];
 
-    // Handles URLs with a query string param like so:
-    // https://search.gocenter.io/github.com/go-gitea/gitea?version=v1.5.1
-    let names = elements[5].split("?")
+    // Handles URLs with a query string param like so:    
+    //https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9
+    let names = elements[5].split("@v");
     if (names.length > 1) {
       name = names[0];
+      version = names[1];
     } else {
       name = elements[5];
+      let versionHTMLElement;
+      //$("span:contains('Version')").parent()[1].innerText    
+      versionHTMLElement = $("span:contains('Version')").parent()[1];
+      console.log("else versionHTMLElement", versionHTMLElement);
+      if (typeof versionHTMLElement === "undefined") {
+        //raiserror  "DOM changed"
+        console.log("DOM changed");
+      }
+      else {
+        let versionHTML = versionHTMLElement.innerText;
+        //'Version: v0.4.9'
+        console.log("versionHTML", versionHTML);
+        let version = versionHTML.split(": v")[1].trim();
+        console.log("version", version);
+      }
     }
   }
 
-  //CPT 19/09/19 - Gocenter keep changing their markup for golang so we are having trouble
-  //parsing.
-  let versionHTMLElement;
-  if (elements[4] == "versions") {
-    //last element in array is versions
-    //then we parse for latest version in the document
-    //e.g. https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions
-    // versionHTMLElement = $(
-    //   "#jf-content > ui-view > content-layout > ui-view > go-center-home-page > div > div > div > div > div > div.page-specific-content > ui-view > module-versions-info > div.module-versions-info > div.processed-versions > jf-table-view > div > div.jf-table-view-container.ng-scope > div.table-rows-container.ng-scope > jf-vscroll > div > div > div.h-scroll-wrapper > div > jf-vscroll-element:nth-child(1) > div > div > div > div > div > jf-table-compiled-cell > div > div > span"
-    // )[0];
-    //<span data-v-43be9f46="" class="red--text mr-2">v1.18.0</span>
-    versionHTMLElement = $(".version-name")[0];
-    console.log("if versionHTMLElement", versionHTMLElement);
-  } else {
-    //e.g., https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
-    //<div class="v-select__selection v-select__selection--comma">v1.9.0-dev</div>
-    // versionHTMLElement = $(
-    //   "#select-header > span > span.ui-select-match-text.pull-left"
-    // )[0];
-    versionHTMLElement = $("div.v-select__selection")[0];
-    console.log("else versionHTMLElement", versionHTMLElement);
-  }
-  console.log("versionHTMLElement", versionHTMLElement);
-  if (typeof versionHTMLElement === "undefined") {
-    //raiserror  "DOM changed"
-    console.log("DOM changed");
-  }
-  let versionHTML = versionHTMLElement.innerText;
-  console.log("versionHTML", versionHTML);
-  let version = versionHTML.trim();
-  console.log("version", version);
-  //keep the v in version
-  // if (version.substr(0, 1) === "v") {
-  //   version = version.substr(1);
-  // }
   // name = encodeURIComponent(name);
   // version = encodeURIComponent(version);
   let datasource = dataSources.NEXUSIQ;
@@ -2357,10 +2335,28 @@ function parsePyPI(format, url) {
   // console.log("qualifier", qualifier);
   // extension = qualifierHTML.substring(qualifierHTML.lastIndexOf(".") + 1);
   // console.log("extension", extension);
-  // name = encodeURIComponent(name);
+
+  //if zip or tar.gz then use that as the extension
+  extension = "tar.gz"; //default
+  let selector = $("div.file>div.file__card")[0];
+  if (typeof selector !== "undefined") {
+    let anchors = $("a", selector);
+    if (typeof anchors !== "undefined") {
+      let filetypeHTMLElements = anchors[0].href.split("."); // All the anchor elements;
+      console.log("filetypeHTMLElements", filetypeHTMLElements);
+      let fileExtension = filetypeHTMLElements[filetypeHTMLElements.length - 1];
+      console.log("fileExtension", fileExtension);
+      if (fileExtension == "gz") {
+        extension = "tar.gz";
+      } else if (fileExtension == "zip") {
+        extension = "zip";
+      }
+    }
+  }
+  name = encodeURIComponent(name);
   version = encodeURIComponent(version);
   datasource = dataSources.NEXUSIQ;
-  extension = "tar.gz";
+
   let artifact = {
     format: format,
     name: name,
@@ -2544,7 +2540,7 @@ var repoTypes = [
     appendVersionPath: "",
   },
   {
-    url: "https://chocolatey.org/packages/",
+    url: "https://community.chocolatey.org/packages/",
     repoFormat: formats.chocolatey,
     parseFunction: parseChocolatey,
     titleSelector: "h1",
@@ -2613,11 +2609,11 @@ var repoTypes = [
     dataSource: dataSources.NEXUSIQ,
   },
   {
-    url: "https://search.gocenter.io/",
+    url: "https://pkg.go.dev",
     repoFormat: formats.golang,
     parseFunction: parseGoLang,
-    titleSelector: "#app div.v-application--wrap h1",
-    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1
+    titleSelector: "h1.UnitHeader-titleHeading",
+    versionPath: "{url}/{packagename}/info?version={versionNumber}", // https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9
     dataSource: dataSources.NEXUSIQ,
     appendVersionPath: "/info?version={versionNumber}",
   },
@@ -2715,8 +2711,8 @@ var repoTypes = [
   },
 ];
 
-function findRepoType() {
-  let url = location.href;
+function findRepoType(url) {
+  if (typeof url === "undefined") url = location.href;
   for (let i = 0; i < repoTypes.length; i++) {
     console.log("url", repoTypes[i].url, url);
     if (url.search(repoTypes[i].url) >= 0) {

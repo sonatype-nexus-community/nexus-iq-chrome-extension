@@ -1,4 +1,4 @@
-/*jslint es6 */
+/* globals describe, expect, it, test */
 // import BuildEmptySettings from '../dist/Scripts/util';
 const {
   Artifact,
@@ -220,8 +220,8 @@ test("CheckPageIsHandled positive test - Crates", () => {
   expect(expected).toBe(actual);
 });
 
-test("CheckPageIsHandled positive test - gocenter", () => {
-  let actual = checkPageIsHandled("https://search.gocenter.io/"); //url changed
+test("CheckPageIsHandled positive test - pkg.go.dev", () => {
+  let actual = checkPageIsHandled("https://pkg.go.dev/"); //url changed
   let expected = true;
   expect(expected).toBe(actual);
 });
@@ -703,7 +703,7 @@ test("Check pypiArtifact class", () => {
   expect(actual).toEqual(expected);
 });
 test("Check parseURLChocolatey positive test", () => {
-  //https://chocolatey.org/packages/python3/3.9.0-a5
+  //https://community.chocolatey.org/packages/python3/3.9.0-a5
   let format = "chocolatey";
   let name = "python3";
   let version = "3.9.0-a5";
@@ -715,7 +715,7 @@ test("Check parseURLChocolatey positive test", () => {
     version,
     datasource
   );
-  let url = "https://chocolatey.org/packages/python3/3.9.0-a5";
+  let url = "https://community.chocolatey.org/packages/python3/3.9.0-a5";
   let actual = parseURLChocolatey(url);
   let expected = artifact;
   expect(actual).toEqual(expected);
@@ -1109,7 +1109,7 @@ test("Check parseCRANURL(cran.r-project.org) negative test", () => {
   expect(actual).toBeFalsy();
 });
 
-test("Check parseGoLangURL(GOCENTER GOLANG) negative test", () => {
+test("Check parseGoLangURL(GOLANG) negative test", () => {
   // parseGoLangURL ->falsy only
   let format = "golang";
   let artifact = {
@@ -1119,8 +1119,7 @@ test("Check parseGoLangURL(GOCENTER GOLANG) negative test", () => {
     datasource: "OSSINDEX",
   };
 
-  let url =
-    "https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions";
+  let url = "https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9";
   let actual = parseGoLangURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();
@@ -1529,8 +1528,7 @@ test("Check ParsePageURL(parseGoLangURL) negative test", () => {
     datasource: "OSSINDEX",
   };
 
-  let url =
-    "https://gocenter.jfrog.com/github.com~2Fhansrodtang~2Frandomcolor/versions";
+  let url = "https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9";
   let actual = ParsePageURL(url);
   let expected = artifact;
   expect(actual).toBeFalsy();
@@ -1630,6 +1628,37 @@ test.skip("Check getExtensionVersion positive test", () => {
   expect(actual).toEqual(expected);
 });
 
+//cant unit test chrome app apis
+test("Check Manifest", () => {
+  const fs = require("fs");
+let manifest;
+  try {
+    const rootDir = process.cwd();
+    // console.log("rootDir", rootDir);
+    const data = fs.readFileSync(rootDir + "/src/manifest.json", "utf8");
+    // console.log(data);
+     manifest = JSON.parse(data);
+    console.log("content_security_policy", manifest.content_security_policy);
+  } catch (err) {
+    console.error(err);
+  }
+  let actual = manifest.content_security_policy.trim();
+  let expected =
+    "default-src 'none'; script-src 'self'; object-src 'none'; connect-src *; style-src 'self' data: 'unsafe-inline'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; sandbox allow-popups allow-same-origin allow-scripts;";
+  expect(actual).toEqual(expected);
+  let permissions = manifest.permissions;  
+  // console.log(permissions);
+  expect(permissions.includes("activeTab")).toBeTruthy();
+  // console.log(permissions.includes("*://*/*"));
+  expect(permissions.includes("*://*/*")).toBeFalsy();
+  expect(permissions.includes("tabs")).toBeFalsy();
+  expect(permissions.includes("notifications")).toBeFalsy();
+
+  let optional_permissions = manifest.optional_permissions
+  expect(optional_permissions.includes("*://*/*")).toBeTruthy();
+  expect(optional_permissions.includes("tabs")).toBeTruthy();
+  expect(optional_permissions.includes("notifications")).toBeTruthy();  
+});
 // test('Check removeCookies(settings_url) positive test', () => {
 //   //to do: Implement unit test to delete cookie
 //   let settings_url = 'http://iq-server:8070/'

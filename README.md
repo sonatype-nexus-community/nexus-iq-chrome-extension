@@ -23,7 +23,7 @@ The plugin can scan packages at the following repositories:
 
 1. .Net – NuGet – `https://www.nuget.org/`
 2. Alpine – Linux – `https://pkgs.alpinelinux.org/`
-3. Chocolatey – Windows – `https://chocolatey.org/`
+3. Chocolatey – Windows – `https://community.chocolatey.org/`
 4. Clojars – Clojure – `https://clojars.org/`
 5. CocoaPods – iOS – `https://cocoapods.org/`
 6. Conan – C/C++ – `https://conan.io/center/`
@@ -31,7 +31,7 @@ The plugin can scan packages at the following repositories:
 8. Debian – Linux – `https://packages.debian.org/`
 9. Debian – Linux – `https://tracker.debian.org/pkg/`
 10. GitHub – releases – `https://github.com/*/releases/tag/*`
-11. Golang – Go – `https://search.gocenter.io/`
+11. Golang – Go – `https://pkg.go.dev/`
 12. Java – Maven – `https://mvnrepository.com/`
 13. Java – Maven – `https://repo.maven.apache.org/`
 14. Java – Maven – `https://repo.spring.io/list/`
@@ -112,7 +112,7 @@ When you browse to a website that is covered by the tool, such as Maven Central 
 The list of pages that are supported are here:
 
 1. Alpine – Linux – https://pkgs.alpinelinux.org/
-2. Chocolatey – Windows – https://chocolatey.org/
+2. Chocolatey – Windows – https://community.chocolatey.org/
 3. Clojars – Clojure – https://clojars.org/
 4. Cocoa pods – iOS – https://cocoapods.org/
 5. Conan – C/C++ – https://conan.io/center/
@@ -129,10 +129,10 @@ Pattern - `https://www.nuget.org/packages/<package>/<version>`
 
 <https://github.com/jquery/jquery/releases/tag/1.11.1>
 
-### Golang - Gocenter
+### Golang - <https://pkg.go.dev/>
 
-`https://search.gocenter.io/`
-<br/>e.g. <https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions>
+`https://pkg.go.dev/`
+<br/>e.g. <https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9>
 
 ### Java - Maven
 

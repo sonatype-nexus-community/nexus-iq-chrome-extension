@@ -111,13 +111,8 @@
       "url": "https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1"
     },
     {
-      "name": "JFrog GoCenter - The Central Go Modules Repository",
-      "url": "https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions"
-    },
-
-    {
-      "name": "JFrog GoCenter - The Central Go Modules Repository",
-      "url": "https://search.gocenter.io/github.com~2Fgo-gitea~2Fgitea/info?version=v1.5.1"
+      "name": "etcd · pkg.go.dev",
+      "url": "https://pkg.go.dev/github.com/etcd-io/etcd@v0.4.9"
     },
 
     {

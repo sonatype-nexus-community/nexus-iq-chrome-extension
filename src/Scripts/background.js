@@ -508,10 +508,10 @@ browser.runtime.onInstalled.addListener(function () {
               pathContains: "anaconda",
             },
           }),
-          //https://chocolatey.org/packages/python3
+          //https://community.chocolatey.org/packages/python3
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
-              hostEquals: "chocolatey.org",
+              hostEquals: "community.chocolatey.org",
               schemes: ["https"],
               pathContains: "packages",
             },
@@ -578,7 +578,7 @@ browser.runtime.onInstalled.addListener(function () {
           //perhaps add support for https://go-search.org/view?id=github.com%2fetcd-io%2fetcd
           new browser.declarativeContent.PageStateMatcher({
             pageUrl: {
-              hostEquals: "search.gocenter.io",
+              hostEquals: "pkg.go.dev",
               schemes: ["https"],
               pathContains: "github.com",
             },
@@ -673,7 +673,8 @@ browser.runtime.onInstalled.addListener(function () {
           //http://nexus:8081/#browse/browse:maven-central:antlr%2Fantlr%2F2.7.2
           //#browse/browse:
           //Chrome does not support parsing after the # in these PageMatchers
-
+          //So I put a kludge in to use the css selector.
+          //24/02/2022 todo fix. Seems Nexus has dropped this selector now so doesn't work anymore :(
           new browser.declarativeContent.PageStateMatcher({
             css: ["label.x-component"],
           }),
