@@ -30,22 +30,21 @@ The plugin can scan packages at the following repositories:
 7. Conda – Python – `https://anaconda.org/anaconda/`
 8. Debian – Linux – `https://packages.debian.org/`
 9. Debian – Linux – `https://tracker.debian.org/pkg/`
-10. GitHub – releases – `https://github.com/*/releases/tag/*`
-11. Golang – Go – `https://pkg.go.dev/`
-12. Java – Maven – `https://mvnrepository.com/`
-13. Java – Maven – `https://repo.maven.apache.org/`
-14. Java – Maven – `https://repo.spring.io/list/`
-15. Java – Maven – `https://repo1.maven.org/`
-16. Java – Maven – `https://search.maven.org/`
-17. JavaScript/Node – npm – `https://www.npmjs.com/`
-18. PHP – Packagist/composer – `https://packagist.org/`
-19. Python – PyPI – `https://pypi.org/`
-20. R – CRAN – `https://cran.r–project.org/`
-21. Ruby – RubyGems – `https://rubygems.org/`
-22. Rust – Crates – `https://crates.io/`
-23. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-24. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
-25. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+10. Golang – Go – `https://pkg.go.dev/`
+11. Java – Maven – `https://mvnrepository.com/`
+12. Java – Maven – `https://repo.maven.apache.org/`
+13. Java – Maven – `https://repo.spring.io/list/`
+14. Java – Maven – `https://repo1.maven.org/`
+15. Java – Maven – `https://search.maven.org/`
+16. JavaScript/Node – npm – `https://www.npmjs.com/`
+17. PHP – Packagist/composer – `https://packagist.org/`
+18. Python – PyPI – `https://pypi.org/`
+19. R – CRAN – `https://cran.r–project.org/`
+20. Ruby – RubyGems – `https://rubygems.org/`
+21. Rust – Crates – `https://crates.io/`
+22. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+23. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+24. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Documentation
 
@@ -124,10 +123,6 @@ The list of pages that are supported are here:
 
 Pattern - `https://www.nuget.org/packages/<package>/<version>`
 <br/>e.g. <https://www.nuget.org/packages/LibGit2Sharp/0.20.1>
-
-### Github - any language supported by OSSIndex but only supports the releases tag at this stage
-
-<https://github.com/jquery/jquery/releases/tag/1.11.1>
 
 ### Golang - <https://pkg.go.dev/>
 
