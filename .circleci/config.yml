@@ -16,7 +16,6 @@ workflows:
             branches:
               only:
                 - master
-                - fixVersionHistory
     jobs:
       - build
 
