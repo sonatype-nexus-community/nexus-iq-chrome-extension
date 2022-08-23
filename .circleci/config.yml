@@ -2,7 +2,11 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.10.1
+
 jobs:
   build:
     docker:
@@ -43,3 +47,21 @@ jobs:
       - run:
           name: "semantic-release"
           command: npx semantic-release -b master
+
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - build:
+          context: slack_community_oss_fun
+
+  build_nightly:
+    triggers:
+      - schedule:
+          cron: "40 21 * * *"
+          filters:
+            branches:
+              only: main
+    jobs:
+      - build:
+          context: slack_community_oss_fun
