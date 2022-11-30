@@ -28,7 +28,7 @@ Windows (PowerShell): `yo --version; echo %PATH% %NODE_PATH%; node -e "console.l
 - Run `yo` and you should now see the linked generators in the list.
 - Start hacking :)
 
-You can keep the various repos up to date by running `git pull --rebase upstream master` in each.
+You can keep the various repos up to date by running `git pull --rebase upstream main` in each.
 
 
 ## Style Guide
@@ -47,7 +47,7 @@ Please ensure any pull requests follow this closely. If you notice existing code
 
 * Please check to make sure that there aren't existing pull requests attempting to address the issue mentioned. We also recommend checking for issues related to the issue on the tracker, as a team member may be working on the issue in a branch or fork.
 * Non-trivial changes should be discussed in an issue first
-* Develop in a topic branch, not master
+* Develop in a topic branch, not main
 * Add relevant tests to cover the change
 * Make sure test-suite passes: `npm test`
 * Lint the code (mostly done with running the tests)

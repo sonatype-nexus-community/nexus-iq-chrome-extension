@@ -46,7 +46,7 @@ jobs:
 
       - run:
           name: "semantic-release"
-          command: npx semantic-release -b master
+          command: npx semantic-release -b main
 
 workflows:
   version: 2.1
