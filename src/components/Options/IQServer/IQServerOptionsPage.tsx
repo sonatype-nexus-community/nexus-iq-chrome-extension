@@ -162,6 +162,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
               onSubmit={onSubmit}
               submitBtnText={`Test Connectivity`}
               submitBtnClasses={submitBtnClasses}
+              showValidationErrors={true}
             >
               <NxGrid.Row>
                 <NxGrid.Column>
