@@ -16,6 +16,7 @@
     "packageurl-js": "^0.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "watch": "^1.0.2",
     "web-vitals": "^1.1.1"
   },
   "devDependencies": {
@@ -65,10 +66,10 @@
     "mini-css-extract-plugin": "^1.6.0",
     "node-fetch": "^2.6.1",
     "node-polyfill-webpack-plugin": "^1.1.4",
-    "sass": "^1.57.1",
     "prettier": "^2.2.1",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
+    "sass": "^1.57.1",
     "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",
@@ -81,7 +82,8 @@
     "webpack-cli": "^4.6.0"
   },
   "scripts": {
-    "build": "eslint './src/**/*.{ts,tsx}' --fix && webpack --mode production --env production --progress",
+    "big_build": "eslint './src/**/*.{ts,tsx}' --fix && webpack --mode production --env production --progress",
+    "build": "webpack --mode production --env production --progress",
     "lint": "eslint './src/**/*.{ts,tsx}'",
     "test": "jest"
   },

@@ -205,6 +205,7 @@ const optionsConfig = {
   entry: {
     options: './src/options.tsx',
   },
+  watch:true,
 
   devtool: 'inline-source-map',
 

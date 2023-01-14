@@ -62,10 +62,10 @@ const Options = (): JSX.Element | null => {
           </h1>
           <NxTile>
             <NxTile.Header>
-              <NxH2>Base Option</NxH2>
+              <NxH2>Evaluation Data Source</NxH2>
             </NxTile.Header>
             <NxTile.Content>
-              <NxFieldset label={`Selected Scan Type: ${scanType}`} isRequired>
+              <NxFieldset label={`Selected Evaluation Type: ${scanType}`} isRequired>
                 <NxRadio
                   name={SCAN_TYPE}
                   value={DATA_SOURCES.OSSINDEX}
@@ -85,6 +85,9 @@ const Options = (): JSX.Element | null => {
                   IQ Server
                 </NxRadio>
               </NxFieldset>
+              <NxTile.Header>
+                <NxH2>Additional Configuration</NxH2>
+              </NxTile.Header>
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
                   <NxTab>General</NxTab>
