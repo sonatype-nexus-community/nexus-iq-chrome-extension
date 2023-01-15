@@ -18,7 +18,8 @@ import VulnDetails from './VulnDetails/VulnDetails';
 import {
   NxAccordion,
   NxPolicyViolationIndicator,
-  ThreatLevelNumber
+  ThreatLevelNumber,
+  NxButton
 } from '@sonatype/react-shared-components';
 import {SecurityIssue} from '../../../../../types/ArtifactMessage';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
@@ -45,14 +46,15 @@ const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
           }}
         >
           <NxAccordion.Header>
-            <h2 className="nx-accordion__header-title">{props.securityIssue.reference}</h2>
+            <NxAccordion.Title className="nx-accordion__header-title">
+              {props.securityIssue.reference}
+            </NxAccordion.Title>
             <div className="nx-btn-bar">
               <NxPolicyViolationIndicator
                 policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
               />
             </div>
           </NxAccordion.Header>
-          <h3 className="nx-h3">Details</h3>
           <VulnDetails />
         </NxAccordion>
       );

@@ -68,10 +68,10 @@ const Popup = (): JSX.Element | null => {
           <div className="nx-tile-content nx-viewport-sized__container">
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
-                <NxTab>Info</NxTab>
+                <NxTab>Overview</NxTab>
                 <NxTab>Remediation</NxTab>
-                {hasSecurityIssues && <NxTab>Security</NxTab>}
                 {hasViolations && <NxTab>Policy</NxTab>}
+                {hasSecurityIssues && <NxTab>Security</NxTab>}
                 <NxTab>Licensing</NxTab>
               </NxTabList>
               <NxTabPanel>
@@ -86,14 +86,14 @@ const Popup = (): JSX.Element | null => {
               <NxTabPanel>
                 <RemediationPage />
               </NxTabPanel>
-              {hasSecurityIssues && (
-                <NxTabPanel>
-                  <SecurityPage></SecurityPage>
-                </NxTabPanel>
-              )}
               {hasViolations && (
                 <NxTabPanel>
                   <PolicyPage></PolicyPage>
+                </NxTabPanel>
+              )}
+              {hasSecurityIssues && (
+                <NxTabPanel>
+                  <SecurityPage></SecurityPage>
                 </NxTabPanel>
               )}
               <NxTabPanel>

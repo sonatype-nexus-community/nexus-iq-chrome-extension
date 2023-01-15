@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxH3} from '@sonatype/react-shared-components';
+import {NxH2} from '@sonatype/react-shared-components';
 import React from 'react';
 import {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
@@ -38,7 +38,7 @@ const RemediationPage = (): JSX.Element | null => {
 
       return (
         <React.Fragment>
-          <NxH3>Recommended Versions</NxH3>
+          <NxH2>Recommended Versions</NxH2>
           <RemediationDetails />
         </React.Fragment>
       );
