@@ -27,9 +27,10 @@ import {parsePackagist} from './PageParsing/Packagist';
 import {parseMVNRepository} from './PageParsing/MVNRepository';
 import {parseMavenApache} from './PageParsing/MavenApache';
 import {parseSearchMavenOrg} from './PageParsing/SearchMavenOrg';
+import {parseCentralSonatypeDev} from './PageParsing/CentralSonatypeDev';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  // console.trace("getArtifactDetailsFromDOM: repoFormat, url", repoFormat, url);
+  console.info('getArtifactDetailsFromDOM: repoFormat, url ', repoFormat, url);
   switch (repoFormat.repoID) {
     case REPOS.npmJs: {
       return parseNPM(url);
@@ -77,6 +78,11 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     }
     case REPOS.searchMavenOrg: {
       return parseSearchMavenOrg(url);
+      break;
+    }
+    case REPOS.centralSonatypeDev: {
+      console.info('fixin to call parseCentralSonatypeDev: ' + url);
+      return parseCentralSonatypeDev(url);
       break;
     }
 

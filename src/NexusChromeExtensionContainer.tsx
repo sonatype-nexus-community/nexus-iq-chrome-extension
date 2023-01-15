@@ -123,10 +123,11 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
       if (tabs[0]) {
         const repoType: RepoType | undefined = findRepoType(tabs[0].url!);
-
+        console.info('Found repoType' + repoType.repoFormat);
         this.state.logger.logMessage('Found repoType', LogLevel.TRACE, repoType);
 
         if (repoType && tabs[0].id) {
+          console.info('sendMessage: ' + repoType.repoID + ' : ' + tabs[0].url);
           chrome.tabs.sendMessage(
             tabs[0].id,
             {
@@ -240,17 +241,25 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
   handleResponse = async (purlString: string): Promise<void> => {
     this.state.logger.logMessage('Setting up request service', LogLevel.INFO);
+    console.info('Setting up request service');
+
     this._setupRequestService()
       .then(async () => {
         this.state.logger.logMessage('Finished setting up request service', LogLevel.INFO);
+        console.info('Finished setting up request service', LogLevel.INFO);
 
+        console.info('purl: fixin to get purl: ', purlString);
         const purl = PackageURL.fromString(purlString);
+
         this.state.logger.logMessage('Parsed purl into object', LogLevel.TRACE, purl);
+        console.info('Parsed purl into object', LogLevel.TRACE, purl);
 
         if (this._requestService instanceof IqRequestService) {
           this.state.logger.logMessage('Attempting to login to Nexus IQ Server', LogLevel.INFO);
+          console.info('Attempting to login to Nexus IQ Server', LogLevel.INFO);
           const loggedIn = await this._requestService.loginViaRest();
           this.state.logger.logMessage('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
+          console.info('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
 
           this.getCSRFTokenFromCookie()
             .then(async (token) => {
@@ -272,6 +281,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
                       results: results
                     }
                   );
+                  console.info('Got results from Nexus IQ Server for Component Policy Eval');
                   this.setState({policyDetails: results});
 
                   this.getAllVersions(purlString);
@@ -280,6 +290,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
             })
             .catch((err: any) => {
               this.state.logger.logMessage(err, LogLevel.ERROR);
+              console.info('ERROR: ', err);
               this.setState({errorMessage: err.message});
             });
         } else {

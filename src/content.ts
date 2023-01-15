@@ -24,12 +24,12 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Recieved a message on content.js', event);
 
   if (event.type === 'changedURLOnPage') {
-    console.trace('Recieved changedURLOnPage message on content.js');
+    console.trace('Received changedURLOnPage message on content.js');
     console.trace(event.url);
     checkPage();
   }
   if (event.type === 'getArtifactDetailsFromWebpage') {
-    console.trace('Received getArtifactDetailsFromWebpage message on content.js');
+    console.info('Received getArtifactDetailsFromWebpage message on content.js');
     const data: ArtifactMessage = event;
     console.info('Message says to get some artifact details from the webpage, will do boss!', data);
 
@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
     }
   }
   if (event.type === 'artifactDetailsFromServiceWorker') {
-    console.trace('Recieved artifactDetailsFromServiceWorker message on content.js');
+    console.trace('Received artifactDetailsFromServiceWorker message on content.js');
     if (event.componentDetails) {
       const data: ComponentDetails = event.componentDetails;
 

@@ -54,7 +54,8 @@
     "https://rubygems.org/",
     "https://search.gocenter.io/",
     "https://search.maven.org/",
-    "https://pkg.go.dev/"
+    "https://pkg.go.dev/",
+    "https://central.sonatype.dev/"
   ],
   "permissions": [
     "activeTab", 
@@ -92,7 +93,8 @@
         "https://rubygems.org/*",
         "https://search.gocenter.io/*",
         "https://search.maven.org/*",
-        "https://pkg.go.dev/*"
+        "https://pkg.go.dev/*",
+        "https://central.sonatype.dev/*"
       ],
       "css": ["/css/pagestyle.css"],
       "js": ["/static/js/content.js"],
