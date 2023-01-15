@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {VersionChange} from '@sonatype/js-sona-types';
-import {NxList} from '@sonatype/react-shared-components';
+import {NxList, NxDescriptionList} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 
@@ -33,17 +33,19 @@ const RemediationDetails = (): JSX.Element | null => {
         nexusContext.remediationDetails.remediation.versionChanges;
 
       return (
-        <NxList>
+        <NxDescriptionList>
           {versionChanges &&
             versionChanges.map((change) => {
               return (
-                <NxList.Item key={change.type}>
+                <NxDescriptionList.Item key={change.type}>
                   <NxList.DescriptionTerm>{change.type}</NxList.DescriptionTerm>
-                  <NxList.Description>{change.data.component.packageUrl}</NxList.Description>
-                </NxList.Item>
+                  <NxList.Description>
+                    {change.data.component.componentIdentifier.coordinates.version}
+                  </NxList.Description>
+                </NxDescriptionList.Item>
               );
             })}
-        </NxList>
+        </NxDescriptionList>
       );
     }
     return null;

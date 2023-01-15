@@ -20,7 +20,8 @@ import {
   NxList,
   NxP,
   NxPolicyViolationIndicator,
-  ThreatLevelNumber
+  ThreatLevelNumber,
+  NxDescriptionList
 } from '@sonatype/react-shared-components';
 import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
@@ -56,43 +57,45 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
     return (
       <React.Fragment>
         <div className="nx-grid-row">
-          <section className="nx-grid-col--75">
-            <NxH2>{props.purl.toString()}</NxH2>
+          {/*<section className="nx-grid nx-grid-col--50 nx-scrollable">*/}
+          <section className="nx-scrollable">
+            <NxH2>{props.purl.name}</NxH2>
+            {/*<NxH2>{props.purl.toString()}</NxH2>*/}
             {props.description && <NxP>{props.description}</NxP>}
-            <NxList>
-              {props.hash && (
-                <NxList.Item>
-                  <NxList.DescriptionTerm>Hash</NxList.DescriptionTerm>
-                  <NxList.Description>{props.hash}</NxList.Description>
-                </NxList.Item>
-              )}
+            <NxDescriptionList>
               {props.purl.namespace && (
-                <NxList.Item>
+                <NxDescriptionList.Item>
                   <NxList.DescriptionTerm>Namespace</NxList.DescriptionTerm>
                   <NxList.Description>{props.purl.namespace}</NxList.Description>
-                </NxList.Item>
+                </NxDescriptionList.Item>
               )}
-              <NxList.Item>
+              <NxDescriptionList.Item>
                 <NxList.DescriptionTerm>Name</NxList.DescriptionTerm>
                 <NxList.Description>{props.purl.name}</NxList.Description>
-              </NxList.Item>
-              <NxList.Item>
+              </NxDescriptionList.Item>
+              <NxDescriptionList.Item>
                 <NxList.DescriptionTerm>Version</NxList.DescriptionTerm>
                 <NxList.Description>{props.purl.version}</NxList.Description>
-              </NxList.Item>
-              {props.matchState && (
-                <NxList.Item>
-                  <NxList.DescriptionTerm>Match State</NxList.DescriptionTerm>
-                  <NxList.Description>{props.matchState}</NxList.Description>
-                </NxList.Item>
-              )}
+              </NxDescriptionList.Item>
+              {/*{props.matchState && (*/}
+              {/*  <NxDescriptionList.Item>*/}
+              {/*    <NxList.DescriptionTerm>Match State</NxList.DescriptionTerm>*/}
+              {/*    <NxList.Description>{props.matchState}</NxList.Description>*/}
+              {/*  </NxDescriptionList.Item>*/}
+              {/*)}*/}
               {props.catalogDate && (
-                <NxList.Item>
+                <NxDescriptionList.Item>
                   <NxList.DescriptionTerm>Catalog Date</NxList.DescriptionTerm>
                   <NxList.Description>{formatDate(props.catalogDate)}</NxList.Description>
-                </NxList.Item>
+                </NxDescriptionList.Item>
               )}
-            </NxList>
+              {props.hash && (
+                <NxDescriptionList.Item>
+                  <NxList.DescriptionTerm>Hash</NxList.DescriptionTerm>
+                  <NxList.Description>{props.hash}</NxList.Description>
+                </NxDescriptionList.Item>
+              )}
+            </NxDescriptionList>
           </section>
           <section className="nx-grid-col--25">
             {props.policyData && getPolicyViolationIndicator(props.policyData)}

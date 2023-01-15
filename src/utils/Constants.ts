@@ -213,8 +213,8 @@ export const REPO_TYPES: RepoType[] = [
     url: 'https://central.sonatype.dev/artifact/',
     repoFormat: FORMATS.maven,
     repoID: REPOS.centralSonatypeDev,
-    titleSelector: '.nx-h1',
-    versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
+    titleSelector: 'h1',
+    versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: ''
   },

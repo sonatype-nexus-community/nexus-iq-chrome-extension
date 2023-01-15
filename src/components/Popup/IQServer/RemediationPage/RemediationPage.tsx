@@ -38,7 +38,7 @@ const RemediationPage = (): JSX.Element | null => {
 
       return (
         <React.Fragment>
-          <NxH3>Suggested Remediations</NxH3>
+          <NxH3>Recommended Versions</NxH3>
           <RemediationDetails />
         </React.Fragment>
       );
