@@ -15,8 +15,6 @@
  */
 import React, {useContext} from 'react';
 import {
-  NxH2,
-  NxH3,
   NxList,
   NxP,
   NxPolicyViolationIndicator,
@@ -59,7 +57,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
         <div className="nx-grid-row">
           {/*<section className="nx-grid nx-grid-col--50 nx-scrollable">*/}
           <section className="nx-scrollable">
-            <NxH2>{props.purl.name}</NxH2>
+            <h2 className="nx-h2">{props.purl.name}</h2>
             {/*<NxH2>{props.purl.toString()}</NxH2>*/}
             {props.description && <NxP>{props.description}</NxP>}
             <NxDescriptionList>
@@ -97,7 +95,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
               )}
             </NxDescriptionList>
           </section>
-          <section className="nx-grid-col--25">
+          <section className="nx-grid-col--20">
             {props.policyData && getPolicyViolationIndicator(props.policyData)}
             <SecurityThreat />
             {nexusContext &&
@@ -116,7 +114,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
       );
       return (
         <React.Fragment>
-          <NxH3>Max Policy Violation</NxH3>
+          <h3 className={'nx-h3'}>Max Policy Violation</h3>
           <NxPolicyViolationIndicator
             policyThreatLevel={Math.round(maxViolation) as ThreatLevelNumber}
           ></NxPolicyViolationIndicator>
@@ -126,7 +124,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
     if (policyData && policyData.policyViolations && policyData.policyViolations.length == 0) {
       return (
         <React.Fragment>
-          <NxH3>No Policy Violations</NxH3>
+          <h3 className={'nx-h3'}>No Policy Violations</h3>
           <NxPolicyViolationIndicator threatLevelCategory="none">
             Woohoo!
           </NxPolicyViolationIndicator>

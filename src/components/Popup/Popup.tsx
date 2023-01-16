@@ -65,14 +65,14 @@ const Popup = (): JSX.Element | null => {
               <h2 className="nx-h2">Sonatype Nexus Lifecycle Results</h2>
             </div>
           </header>
-          <div className="nx-tile-content nx-viewport-sized__container">
+          <div className="nx-tile-subsection nx-viewport-sized__container nx-scrollable">
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
                 <NxTab>Overview</NxTab>
                 <NxTab>Remediation</NxTab>
                 {hasViolations && <NxTab>Policy</NxTab>}
                 {hasSecurityIssues && <NxTab>Security</NxTab>}
-                <NxTab>Licensing</NxTab>
+                <NxTab>Legal</NxTab>
               </NxTabList>
               <NxTabPanel>
                 <ComponentInfoPage

@@ -18,7 +18,7 @@ import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {NxList, NxH3} from '@sonatype/react-shared-components';
+import {NxList, NxDescriptionList} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
 const LicensingPage = (): JSX.Element | null => {
@@ -38,30 +38,28 @@ const LicensingPage = (): JSX.Element | null => {
       );
       return (
         <React.Fragment>
-          <div className="nx-grid-row">
-            <section className="nx-grid-col--75">
-              <NxH3>Declared Licenses</NxH3>
-              <NxList>
-                {licenseData.declaredLicenses.map((license: LicenseDetail) => {
+          <section className="nx-tile nx-viewport-sized__container">
+            <div className="nx-grid-row">
+              <section className="nx-grid-col--75 nx-scrollable">
+                <h3 className={'nx-h3'}>Effective License(s)</h3>
+                {licenseData.effectiveLicenses.map((license: LicenseDetail) => {
                   return <LicensingDisplay key={license.licenseId} licenseData={license} />;
                 })}
-              </NxList>
-              {observedLicenses && observedLicenses.length > 0 && (
-                <React.Fragment>
-                  <NxH3>Observed Licenses</NxH3>
-                  <NxList>
+                {observedLicenses && observedLicenses.length > 0 && (
+                  <React.Fragment>
+                    <h3 className={'nx-h3'}>Observed Licenses</h3>
                     {observedLicenses.map((license: LicenseDetail) => {
                       return <LicensingDisplay key={license.licenseId} licenseData={license} />;
                     })}
-                  </NxList>
-                </React.Fragment>
-              )}
-            </section>
-            <section className="nx-grid-col--25">
-              <LicenseThreat />
-            </section>
-          </div>
-          <AdvancedLegalDisplay />
+                  </React.Fragment>
+                )}
+              </section>
+              <section className="nx-grid-col--25">
+                <LicenseThreat />
+              </section>
+            </div>
+            <AdvancedLegalDisplay />
+          </section>
         </React.Fragment>
       );
     }
