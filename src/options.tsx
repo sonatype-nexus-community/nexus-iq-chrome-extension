@@ -46,14 +46,14 @@ const renderOptions = () => {
         isDefaultOpen={true}
         toggleCloseIcon={faArrowRight}
         toggleOpenIcon={faArrowLeft}
-        logoImg="images/NexusLifecycle_Icon.svg"
-        logoAltText="Nexus Chrome Extension"
+        logoImg="images/nexus_lifecycle_sidebar.svg"
+        logoAltText="Sonatype Nexus Browser Extension"
         logoLink="#"
       >
         <NxGlobalSidebarNavigation>
           <NxGlobalSidebarNavigationLink
             icon={faPlay}
-            text="First Setup"
+            text="Getting Started"
             href="options.html?install"
           />
           <NxGlobalSidebarNavigationLink
@@ -64,11 +64,11 @@ const renderOptions = () => {
           <NxGlobalSidebarNavigationLink icon={faCog} text="Options" href="options.html" />
         </NxGlobalSidebarNavigation>
         <NxGlobalSidebarFooter
-          supportText={`Support for ${pack.name}`}
+          supportText={`Request Support`}
           supportLink={pack.homepage}
           releaseText={`Release ${pack.version}`}
-          productTagLine="Powered by Sonatype, and Friends"
-          showCreatedBy={false}
+          productTagLine="Powered by Nexus IQ Server and OSS Index"
+          showCreatedBy={true}
         />
       </NxStatefulGlobalSidebar>
       <NxPageMain>

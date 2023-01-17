@@ -30,28 +30,46 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
         <section className="nx-tile nx-viewport-sized__container">
           <NxAccordion open={open} onToggle={setOpen}>
             <NxAccordion.Header>
-              <h2 className="nx-accordion__header-title">{policyViolation.policyName}</h2>
+              <NxAccordion.Title>{policyViolation.policyName}</NxAccordion.Title>
               <div className="nx-btn-bar">
                 <NxPolicyViolationIndicator
                   policyThreatLevel={Math.round(policyViolation.threatLevel) as any}
                 />
               </div>
             </NxAccordion.Header>
-            <h2 className="nx-h2">Threat Level: {policyViolation.threatLevel}</h2>
-            {policyViolation.constraintViolations &&
-              policyViolation.constraintViolations.map((constraint: ConstraintViolation) => (
-                <React.Fragment key={constraint.constraintName}>
-                  <h3 className="nx-h3">Constraint: {constraint.constraintName}</h3>
-                  <h3 className="nx-h3">Reasons</h3>
-                  <ul className="nx-list">
-                    {constraint.reasons.map((reason: Reason) => (
-                      <li key={reason.reason} className="nx-list__item">
-                        <span className="nx-list__text">{reason.reason}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </React.Fragment>
-              ))}
+            <p className="nx-p">
+              <table className="nx-table">
+                <thead>
+                  <tr className="nx-table-row nx-table-row--header">
+                    <th className="nx-cell nx-cell--header nx-cell--num">Threat</th>
+                    <th className="nx-cell nx-cell--header">Constraint Name</th>
+                    <th className="nx-cell nx-cell--header">Condition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="nx-table-row">
+                    <td className="nx-cell">{policyViolation.threatLevel}</td>
+                    {policyViolation.constraintViolations &&
+                      policyViolation.constraintViolations.map(
+                        (constraint: ConstraintViolation) => (
+                          <React.Fragment key={constraint.constraintName}>
+                            <td className="nx-cell">{constraint.constraintName}</td>
+                            <td className="nx-cell">
+                              <ul className="nx-list">
+                                {constraint.reasons.map((reason: Reason) => (
+                                  <li key={reason.reason} className="nx-list__item">
+                                    <span className="nx-list__text">{reason.reason}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </td>
+                          </React.Fragment>
+                        )
+                      )}
+                  </tr>
+                </tbody>
+              </table>
+            </p>
           </NxAccordion>
         </section>
       );

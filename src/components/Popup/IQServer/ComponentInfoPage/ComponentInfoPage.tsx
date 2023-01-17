@@ -43,9 +43,9 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
   const formatDate = (date: Date | undefined | null): string => {
     if (date) {
       const dateTime = new Date(date);
-      return dateTime.toDateString();
+      return dateTime.toISOString();
     }
-    return 'Unknown';
+    return 'N/A';
   };
 
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
@@ -55,9 +55,8 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
     return (
       <React.Fragment>
         <div className="nx-grid-row">
-          {/*<section className="nx-grid nx-grid-col--50 nx-scrollable">*/}
-          <section className="nx-scrollable">
-            <h2 className="nx-h2">{props.purl.name}</h2>
+          <section className="nx-grid nx-grid-col--80 nx-scrollable">
+            <h3 className="nx-h3 nx-tile__section-header">{props.purl.name}</h3>
             {/*<NxH2>{props.purl.toString()}</NxH2>*/}
             {props.description && <NxP>{props.description}</NxP>}
             <NxDescriptionList>
@@ -68,12 +67,12 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
                 </NxDescriptionList.Item>
               )}
               <NxDescriptionList.Item>
-                <NxList.DescriptionTerm>Name</NxList.DescriptionTerm>
-                <NxList.Description>{props.purl.name}</NxList.Description>
+                <NxDescriptionList.Term>Name</NxDescriptionList.Term>
+                <NxDescriptionList.Description>{props.purl.name}</NxDescriptionList.Description>
               </NxDescriptionList.Item>
               <NxDescriptionList.Item>
-                <NxList.DescriptionTerm>Version</NxList.DescriptionTerm>
-                <NxList.Description>{props.purl.version}</NxList.Description>
+                <NxDescriptionList.Term>Version</NxDescriptionList.Term>
+                <NxDescriptionList.Description>{props.purl.version}</NxDescriptionList.Description>
               </NxDescriptionList.Item>
               {/*{props.matchState && (*/}
               {/*  <NxDescriptionList.Item>*/}
@@ -83,24 +82,29 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
               {/*)}*/}
               {props.catalogDate && (
                 <NxDescriptionList.Item>
-                  <NxList.DescriptionTerm>Catalog Date</NxList.DescriptionTerm>
-                  <NxList.Description>{formatDate(props.catalogDate)}</NxList.Description>
+                  <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
+                  <NxDescriptionList.Description>
+                    {formatDate(props.catalogDate)}
+                  </NxDescriptionList.Description>
                 </NxDescriptionList.Item>
               )}
               {props.hash && (
                 <NxDescriptionList.Item>
-                  <NxList.DescriptionTerm>Hash</NxList.DescriptionTerm>
-                  <NxList.Description>{props.hash}</NxList.Description>
+                  <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
+                  <NxDescriptionList.Description>{props.hash}</NxDescriptionList.Description>
                 </NxDescriptionList.Item>
               )}
             </NxDescriptionList>
           </section>
-          <section className="nx-grid-col--20">
-            {props.policyData && getPolicyViolationIndicator(props.policyData)}
-            <SecurityThreat />
-            {nexusContext &&
-              nexusContext.licenseDetails &&
-              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
+          <section>
+            {/*<section className="nx-grid-col--10">*/}
+            <p className="nx-p">
+              {props.policyData && getPolicyViolationIndicator(props.policyData)}
+              <SecurityThreat />
+              {nexusContext &&
+                nexusContext.licenseDetails &&
+                nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
+            </p>
           </section>
         </div>
       </React.Fragment>

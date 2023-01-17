@@ -1,5 +1,9 @@
 
 .nx-page {
-  min-width: 800px !important;
-  min-height: 600px !important;
+  min-width: 1000px !important;
+  min-height: 800px !important;
+}
+
+.nx-popup-logo {
+  vertical-align: middle;
 }
