@@ -259,7 +259,7 @@ const handleIQServerWrapper = (purl: string, settings: Settings) => {
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  logger.logMessage('Request recieved', LogLevel.INFO, request);
+  logger.logMessage('Request received', LogLevel.INFO, request);
 
   if (request && request.type) {
     if (request.type === 'getArtifactDetailsFromPurl') {

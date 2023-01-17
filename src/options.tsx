@@ -14,7 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {faArrowLeft, faArrowRight, faLink} from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowLeft,
+  faArrowRight,
+  faCog,
+  faLink,
+  faPlay,
+  faQuestionCircle
+} from '@fortawesome/free-solid-svg-icons';
 import {
   NxGlobalSidebarFooter,
   NxGlobalSidebarNavigation,
@@ -39,18 +46,22 @@ const renderOptions = () => {
         isDefaultOpen={true}
         toggleCloseIcon={faArrowRight}
         toggleOpenIcon={faArrowLeft}
-        logoImg="images/SON_logo_turtle_no_gradient.svg"
+        logoImg="images/NexusLifecycle_Icon.svg"
         logoAltText="Nexus Chrome Extension"
         logoLink="#"
       >
         <NxGlobalSidebarNavigation>
           <NxGlobalSidebarNavigationLink
-            icon={faLink}
+            icon={faPlay}
             text="First Setup"
             href="options.html?install"
           />
-          <NxGlobalSidebarNavigationLink icon={faLink} text="Help" href="options.html?help" />
-          <NxGlobalSidebarNavigationLink icon={faLink} text="Options" href="options.html" />
+          <NxGlobalSidebarNavigationLink
+            icon={faQuestionCircle}
+            text="Help"
+            href="options.html?help"
+          />
+          <NxGlobalSidebarNavigationLink icon={faCog} text="Options" href="options.html" />
         </NxGlobalSidebarNavigation>
         <NxGlobalSidebarFooter
           supportText={`Support for ${pack.name}`}

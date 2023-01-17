@@ -21,7 +21,7 @@ import {findRepoType} from './utils/UrlParsing';
 import $ from 'cash-dom';
 
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
-  console.info('Recieved a message on content.js', event);
+  console.info('Received a message on content.js', event);
 
   if (event.type === 'changedURLOnPage') {
     console.trace('Received changedURLOnPage message on content.js');
