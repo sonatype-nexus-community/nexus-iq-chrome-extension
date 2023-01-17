@@ -229,10 +229,10 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   )}
                 </NxGrid.Column>
                 <NxGrid.Column>
-                  <img src="images/billymays.png" width={420} height={420} />
-                  <blockquote className="nx-blockquote">
-                    <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>
-                  </blockquote>
+                  {/*<img src="images/billymays.png" width={420} height={420} />*/}
+                  {/*<blockquote className="nx-blockquote">*/}
+                  {/*  <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>*/}
+                  {/*</blockquote>*/}
                   <NxH4>Current Extension Configuration</NxH4>
                   <NxList>
                     <NxList.Item>

@@ -31,10 +31,10 @@ const Install = (): JSX.Element => {
             <NxH2>Getting Started</NxH2>
           </NxTile.Header>
           <NxTile.Content>
-            <NxP>
+            <p className="nx-p nx-page-content--full-width">
               If you are using OSS Index, you are good to go and can skip this. If you want to use
               this extension with Nexus IQ Server, follow the quick setup below!
-            </NxP>
+            </p>
             <IQServerOptionsPage />
           </NxTile.Content>
         </NxTile>
