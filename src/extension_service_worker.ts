@@ -194,7 +194,10 @@ const sendNotificationAndMessage = (purl: string, details: any) => {
   } else {
     getActiveTabId()
       .then((tabId) => {
-        chrome.action.setIcon({tabId: tabId, path: '/images/NexusLifecycle_Icon-32x32.png'});
+        chrome.action.setIcon({
+          tabId: tabId,
+          path: '/images/NexusLifecycle_Icon_white_color-32x32.png'
+        });
       })
       .catch((err) => {
         logger.logMessage('Error encountered', LogLevel.ERROR, err);
