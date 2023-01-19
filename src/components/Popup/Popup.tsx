@@ -76,7 +76,7 @@ const Popup = (): JSX.Element | null => {
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
                 <NxTab>Overview</NxTab>
-                <NxTab>Remediation</NxTab>
+                {hasViolations && <NxTab>Remediation</NxTab>}
                 {hasViolations && <NxTab>Policy</NxTab>}
                 {hasSecurityIssues && <NxTab>Security</NxTab>}
                 <NxTab>Legal</NxTab>

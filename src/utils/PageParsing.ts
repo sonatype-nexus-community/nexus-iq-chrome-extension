@@ -61,6 +61,7 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       break;
     }
     case REPOS.anacondaCom: {
+      console.info('fixin to call anacondaCom: ' + url);
       return parseConda(url);
       break;
     }
