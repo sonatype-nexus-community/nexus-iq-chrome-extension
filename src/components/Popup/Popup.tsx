@@ -72,7 +72,7 @@ const Popup = (): JSX.Element | null => {
               </h2>
             </div>
           </header>
-          <div className="nx-tile-subsection nx-viewport-sized__container nx-scrollable">
+          <div className="nx-tile-subsection nx-viewport-sized__container">
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
                 <NxTab>Overview</NxTab>

@@ -25,6 +25,15 @@ export const REPOSITORY_MANAGERS = {
 
 export const DEFAULT_OSSINDEX_URL = 'https://ossindex.sonatype.org/';
 
+export const REMEDIATION_LABELS = {
+  'next-no-violations': 'Next version with no policy violation(s)',
+  'next-non-failing': 'Next version with no policy action failure(s)',
+  'next-no-violations-with-dependencies':
+    'Next version with no policy violation(s) for this component and its dependencies',
+  'next-non-failing-with-dependencies':
+    'Next version with no policy action failure(s) for this component and its dependencies'
+};
+
 export const FORMATS = {
   alpine: 'alpine',
   cargo: 'cargo', //cargo == crates == rust

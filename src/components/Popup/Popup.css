@@ -7,3 +7,19 @@
 .nx-popup-logo {
   vertical-align: middle;
 }
+
+:not(.nx-tile-subsection__header)+.nx-tile-subsection:first-of-type {
+  border-top: none !important;
+  margin-top: var(--nx-spacing-2x) !important;
+  padding-top: 0px !important;
+}
+
+.nx-policy-violation-indicator {
+  margin: 0px !important;
+  width: 125px !important;
+}
+
+.nx-policy-violation-indicator {
+  margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;
+  width: 150px !important;
+}

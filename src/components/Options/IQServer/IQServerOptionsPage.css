@@ -1,3 +1,6 @@
 .nx-btn.grant-permissions {
   margin-left: 0px !important;
 }
+.nx-list__term {
+  width: unset !important;
+}

@@ -17,6 +17,8 @@ import {VersionChange} from '@sonatype/js-sona-types';
 import {NxList, NxDescriptionList} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
+import './RemediationDetails.css';
 
 const RemediationDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -38,10 +40,12 @@ const RemediationDetails = (): JSX.Element | null => {
             versionChanges.map((change) => {
               return (
                 <NxDescriptionList.Item key={change.type}>
-                  <NxList.DescriptionTerm>{change.type}</NxList.DescriptionTerm>
-                  <NxList.Description>
+                  <NxDescriptionList.Term className={'nx-list__term__remediation'}>
+                    {REMEDIATION_LABELS[change.type]}
+                  </NxDescriptionList.Term>
+                  <NxDescriptionList.Description>
                     {change.data.component.componentIdentifier.coordinates.version}
-                  </NxList.Description>
+                  </NxDescriptionList.Description>
                 </NxDescriptionList.Item>
               );
             })}

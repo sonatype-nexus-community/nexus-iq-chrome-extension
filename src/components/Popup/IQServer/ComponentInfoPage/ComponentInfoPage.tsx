@@ -19,7 +19,8 @@ import {
   NxP,
   NxPolicyViolationIndicator,
   ThreatLevelNumber,
-  NxDescriptionList
+  NxDescriptionList,
+  NxGrid
 } from '@sonatype/react-shared-components';
 import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
@@ -27,6 +28,7 @@ import {NexusContext, NexusContextInterface} from '../../../../context/NexusCont
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat';
 import {DATA_SOURCES} from '../../../../utils/Constants';
+import './ComponentInfoPage.css';
 
 type ComponentInfoPageProps = {
   purl: PackageURL;
@@ -54,9 +56,11 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
     }
     return (
       <React.Fragment>
-        <div className="nx-grid-row">
-          <section className="nx-grid nx-grid-col--80 nx-scrollable">
-            <h3 className="nx-h3 nx-tile__section-header">{props.purl.name}</h3>
+        <NxGrid.Row>
+          <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
+            <header className="nx-grid-header">
+              <h3 className="nx-h3 nx-grid-header__title">{props.purl.name}</h3>
+            </header>
             {/*<NxH2>{props.purl.toString()}</NxH2>*/}
             {props.description && <NxP>{props.description}</NxP>}
             <NxDescriptionList>
@@ -96,8 +100,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
               )}
             </NxDescriptionList>
           </section>
-          <section>
-            {/*<section className="nx-grid-col--10">*/}
+          <section className="nx-grid-col nx-grid-col--33">
             <p className="nx-p">
               {props.policyData && getPolicyViolationIndicator(props.policyData)}
               <SecurityThreat />
@@ -106,7 +109,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
                 nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
             </p>
           </section>
-        </div>
+        </NxGrid.Row>
       </React.Fragment>
     );
   };
@@ -118,7 +121,9 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
       );
       return (
         <React.Fragment>
-          <h3 className={'nx-h3'}>Max Policy Violation</h3>
+          <header className="nx-grid-header">
+            <h3 className={'nx-h3'}>Max Policy Violation</h3>
+          </header>
           <NxPolicyViolationIndicator
             policyThreatLevel={Math.round(maxViolation) as ThreatLevelNumber}
           ></NxPolicyViolationIndicator>

@@ -50,16 +50,23 @@ const SecurityThreat = (): JSX.Element | null => {
       const maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
       return (
         <React.Fragment>
-          <NxH3>Max Security Threat</NxH3>
+          <header className="nx-grid-header">
+            <NxH3>Max Security Threat</NxH3>
+          </header>
           <NxPolicyViolationIndicator
             policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
           />
         </React.Fragment>
       );
-    }
-    if (securityData && securityData.securityIssues && securityData.securityIssues.length == 0) {
+    } else if (
+      securityData &&
+      securityData.securityIssues &&
+      securityData.securityIssues.length == 0
+    ) {
       <React.Fragment>
-        <NxH3>No Security Issues</NxH3>
+        <header className="nx-grid-header">
+          <NxH3>No Security Issues</NxH3>
+        </header>
         <NxPolicyViolationIndicator threatLevelCategory="none">Woohoo!</NxPolicyViolationIndicator>
       </React.Fragment>;
     }

@@ -24,6 +24,7 @@ import {
 import {SecurityIssue} from '../../../../../types/ArtifactMessage';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 import {useContext} from 'react';
+import '../SecurityPage.css';
 
 type SecurityItemProps = {
   securityIssue: SecurityIssue;

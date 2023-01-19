@@ -43,7 +43,9 @@ const LicenseThreat = (): JSX.Element | null => {
   const getLicenseThreat = (threatGroupLevel: number, threatGroupName: string) => {
     return (
       <React.Fragment>
-        <NxH3>Max License Threat</NxH3>
+        <header className="nx-grid-header">
+          <h3 className={'nx-h3 nx-grid-header__title'}>Max License Threat</h3>
+        </header>
         <NxPolicyViolationIndicator
           policyThreatLevel={Math.round(threatGroupLevel) as ThreatLevelNumber}
         >

@@ -17,6 +17,7 @@ import React, {useContext, useState} from 'react';
 import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {SecurityIssue, sortIssues} from '../../../../types/ArtifactMessage';
+import './SecurityPage.css';
 
 type SecurityProps = {};
 

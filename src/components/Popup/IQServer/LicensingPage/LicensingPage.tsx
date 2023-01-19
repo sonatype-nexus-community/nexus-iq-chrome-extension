@@ -18,7 +18,7 @@ import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {NxList, NxDescriptionList} from '@sonatype/react-shared-components';
+import {NxList, NxDescriptionList, NxGrid} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 
 const LicensingPage = (): JSX.Element | null => {
@@ -38,28 +38,30 @@ const LicensingPage = (): JSX.Element | null => {
       );
       return (
         <React.Fragment>
-          <section className="nx-tile nx-viewport-sized__container">
-            <div className="nx-grid-row">
-              <section className="nx-grid-col--75 nx-scrollable">
-                <h3 className={'nx-h3'}>Effective License(s)</h3>
-                {licenseData.effectiveLicenses.map((license: LicenseDetail) => {
-                  return <LicensingDisplay key={license.licenseId} licenseData={license} />;
-                })}
-                {observedLicenses && observedLicenses.length > 0 && (
-                  <React.Fragment>
-                    <h3 className={'nx-h3'}>Observed Licenses</h3>
-                    {observedLicenses.map((license: LicenseDetail) => {
-                      return <LicensingDisplay key={license.licenseId} licenseData={license} />;
-                    })}
-                  </React.Fragment>
-                )}
-              </section>
-              <section className="nx-grid-col--25">
-                <LicenseThreat />
-              </section>
-            </div>
-            <AdvancedLegalDisplay />
-          </section>
+          <NxGrid.Row>
+            <section className="nx-grid-col nx-grid-col--67">
+              <header className="nx-grid-header">
+                <h3 className="nx-h3 nx-grid-header__title">Effective License(s)</h3>
+              </header>
+              {licenseData.effectiveLicenses.map((license: LicenseDetail) => {
+                return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+              })}
+              {observedLicenses && observedLicenses.length > 0 && (
+                <React.Fragment>
+                  <header className="nx-grid-header">
+                    <h3 className={'nx-h3 nx-grid-header__title'}>Observed Licenses</h3>
+                  </header>
+                  {observedLicenses.map((license: LicenseDetail) => {
+                    return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+                  })}
+                </React.Fragment>
+              )}
+            </section>
+            <section className="nx-grid-col nx-grid-col--33">
+              <LicenseThreat />
+            </section>
+          </NxGrid.Row>
+          <AdvancedLegalDisplay />
         </React.Fragment>
       );
     }

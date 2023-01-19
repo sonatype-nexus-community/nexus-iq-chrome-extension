@@ -16,6 +16,7 @@
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import PolicyViolation from './PolicyViolation/PolicyViolation';
+import './PolicyPage.css';
 
 const PolicyPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -31,15 +32,29 @@ const PolicyPage = (): JSX.Element | null => {
     ) {
       return (
         <React.Fragment>
-          {' '}
-          {nexusContext.policyDetails.results[0].policyData.policyViolations.map((violation) => {
-            return (
-              <PolicyViolation
-                key={violation.policyId}
-                policyViolation={violation}
-              ></PolicyViolation>
-            );
-          })}
+          <table className="nx-table">
+            <thead>
+              <tr className="nx-table-row nx-table-row--header">
+                <th className="nx-cell nx-cell--header nx-cell--num">Threat</th>
+                <th className="nx-cell nx-cell--header">Policy</th>
+                <th className="nx-cell nx-cell--header">Constraint Name</th>
+                <th className="nx-cell nx-cell--header">Condition</th>
+              </tr>
+            </thead>
+            <tbody>
+              {' '}
+              {nexusContext.policyDetails.results[0].policyData.policyViolations.map(
+                (violation) => {
+                  return (
+                    <PolicyViolation
+                      key={violation.policyId}
+                      policyViolation={violation}
+                    ></PolicyViolation>
+                  );
+                }
+              )}
+            </tbody>
+          </table>
         </React.Fragment>
       );
     }
