@@ -19,6 +19,8 @@ import 'node-window-polyfill/register';
 import {IqRequestService, LogLevel, OSSIndexRequestService} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import BrowserExtensionLogger from './logger/Logger';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import localforage from 'localforage';
 
 const _browser: any = chrome ? chrome : browser;
@@ -113,11 +115,13 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
               resolve(res);
             })
             .catch((err) => {
+              console.log(err);
               throw new Error(err);
             });
         }
       })
       .catch((err) => {
+        console.log(err);
         throw new Error(err);
       });
   });
@@ -129,7 +133,6 @@ const _doRequestToIQServer = (requestService: IqRequestService, purl: string): P
       if (cookies && cookies.length > 0) {
         requestService.setXCSRFToken(cookies[0].value);
       }
-
       const purlObj = PackageURL.fromString(purl);
       requestService
         .getComponentDetails([purlObj])
@@ -137,6 +140,7 @@ const _doRequestToIQServer = (requestService: IqRequestService, purl: string): P
           resolve(details);
         })
         .catch((err) => {
+          console.log(err);
           throw new Error(err);
         });
     });
@@ -158,11 +162,11 @@ const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
 
 const sendNotificationAndMessage = (purl: string, details: any) => {
   if (
-    details.componentDetails &&
-    details.componentDetails.length > 0 &&
-    details.componentDetails[0].securityData &&
-    details.componentDetails[0].securityData.securityIssues &&
-    details.componentDetails[0].securityData.securityIssues.length > 0
+    // details.componentDetails &&
+    // details.componentDetails?.length > 0 &&
+    // details.componentDetails[0].securityData &&
+    // details.componentDetails[0].securityData.securityIssues &&
+    details.componentDetails[0].securityData.securityIssues?.length > 0
   ) {
     getActiveTabId()
       .then((tabId) => {

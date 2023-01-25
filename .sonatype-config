@@ -1,6 +1,6 @@
 ---
     iq:
-        PublicApplication: testapp
+        PublicApplication: nodegoat
         Stage: develop
         Server: http://localhost:8070
     application:

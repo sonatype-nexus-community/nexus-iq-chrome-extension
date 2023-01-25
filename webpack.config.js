@@ -196,7 +196,7 @@ const appConfig = {
     forkTsCheckerWebpackPlugin,
     copyWebpackPlugin,
     copyWebpackPluginManifest,
-    new webpack.ProvidePlugin({process: "process/browser"}),
+    new webpack.ProvidePlugin({process: "process"}),
     new NodePolyfillPlugin()
   ],
 };
@@ -280,7 +280,7 @@ const optionsConfig = {
     cspHtmlWebpackPlugin,
     miniCssExtractPlugin, 
     forkTsCheckerWebpackPlugin,
-    new webpack.ProvidePlugin({process: "process/browser"}),
+    new webpack.ProvidePlugin({process: "process"}),
     new NodePolyfillPlugin()
   ],
 
@@ -296,6 +296,7 @@ const serviceWorkerConfig = {
   },
 
   resolve: {
+    // fullySpecified: false,
     extensions: ['.tsx', '.ts', '.js', '.json'],
     fallback: { 
       "net": false,
@@ -326,7 +327,9 @@ const serviceWorkerConfig = {
     runtimeChunk: false,
   },
 
-  plugins: [new webpack.ProvidePlugin({process: "process/browser"}), new NodePolyfillPlugin()],
+  plugins: [
+    new webpack.ProvidePlugin({process: "process"}),
+    new NodePolyfillPlugin()]
 };
 
 module.exports = [ appConfig, optionsConfig, serviceWorkerConfig ]

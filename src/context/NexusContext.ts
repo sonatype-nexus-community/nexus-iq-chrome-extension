@@ -16,6 +16,7 @@
 import React from 'react';
 import {
   ComponentContainer,
+  ComponentDetails,
   ILogger,
   IqServerComponentPolicyEvaluationResult,
   IqServerComponentRemediationResult,
@@ -32,6 +33,7 @@ export interface NexusContextInterface {
   licenseDetails?: IqServerLicenseLegalMetadataResult;
   errorMessage?: string;
   componentVersions?: string[];
+  componentVersionsDetails?: ComponentDetails[];
   remediationDetails?: IqServerComponentRemediationResult;
   logger: ILogger;
   getVulnDetails?: (vulnId: string) => Promise<void>;

@@ -17,38 +17,17 @@ import {NxH3} from '@sonatype/react-shared-components';
 import React from 'react';
 import {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import RemediationDetails from './RemediationDetails/RemediationDetails';
-import AllVersionsDetails from '../AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
+import AllVersionsDetails from './AllVersionsDetails/AllVersionsDetails';
 
 const RemediationPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderRemediationPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
-      nexusContext.getRemediationDetails
-    ) {
-      if (!nexusContext.remediationDetails) {
-        nexusContext.getRemediationDetails(
-          nexusContext.policyDetails.results[0].component.packageUrl
-        );
-      }
-
+    if (nexusContext.componentVersions?.length > 0) {
       return (
         <React.Fragment>
-          <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
-              <NxH3>Recommended Versions</NxH3>
-              <RemediationDetails />
-            </section>
-            <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
-              <NxH3>All Versions</NxH3>
-              <AllVersionsDetails />
-            </section>
-          </div>
+          <NxH3>All Versions</NxH3>
+          <AllVersionsDetails />
         </React.Fragment>
       );
     }

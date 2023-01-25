@@ -23,7 +23,8 @@ import {
   IqRequestService,
   RequestService,
   ComponentDetails,
-  LogLevel
+  LogLevel,
+  ComponentContainer
 } from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import localforage from 'localforage';
@@ -42,7 +43,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.state = {
       errorMessage: undefined,
       scanType: DATA_SOURCES.OSSINDEX,
-      logger: new BrowserExtensionLogger(LogLevel.ERROR),
+      logger: new BrowserExtensionLogger(LogLevel.TRACE),
       getVulnDetails: this.getVulnDetails,
       getLicenseDetails: this.getLicenseDetails,
       getRemediationDetails: this.getRemediationDetails
@@ -208,13 +209,29 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       packageUrl
     );
 
-    this.state.logger.logMessage(
-      'Obtained all versions for component',
-      LogLevel.TRACE,
-      allVersions
-    );
+    this.state.logger.logMessage('Obtained all versions for component', LogLevel.INFO, allVersions);
+
+    const allVersionsDetails: ComponentDetails[] = [];
+
+    for (let i = 0; i < allVersions.length; i++) {
+      if (allVersions[i]) {
+        const newPurl = PackageURL.fromString(purl);
+        newPurl.version = allVersions[i];
+        try {
+          const purlComponentDetails = await (
+            this._requestService as IqRequestService
+          ).getComponentDetails([newPurl]);
+          allVersionsDetails.push(purlComponentDetails);
+        } catch (err: any) {
+          console.log('Unable to get component details for: ' + newPurl.toString());
+          console.log(err.toString());
+          continue;
+        }
+      }
+    }
 
     this.setState({componentVersions: allVersions});
+    this.setState({componentVersionsDetails: allVersionsDetails});
   };
 
   getRemediationDetails = async (purl: string): Promise<void> => {
@@ -303,6 +320,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   };
 
   doRequestForComponentDetails = (purl: PackageURL) => {
+    console.log('doRequestForComponentDetails: ' + purl);
     if (this._requestService) {
       this._requestService
         .getComponentDetails([purl])
@@ -312,6 +330,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
           }
         })
         .catch((err: any) => {
+          console.log(err);
           this.state.logger.logMessage(err, LogLevel.ERROR);
           this.setState({errorMessage: err.message});
         });

@@ -169,6 +169,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                 <NxFormGroup label={`IQ Server URL`} isRequired>
                   <NxStatefulTextInput
                     defaultValue={iqServerURL}
+                    placeholder="https://your-iq-server-url"
                     validator={nonEmptyValidator}
                     onChange={(event) => setItem(setIQServerURL, event, IQ_SERVER_URL)}
                   />

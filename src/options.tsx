@@ -18,10 +18,10 @@ import {
   faArrowLeft,
   faArrowRight,
   faCog,
-  faLink,
   faPlay,
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {
   NxGlobalSidebarFooter,
   NxGlobalSidebarNavigation,
@@ -44,24 +44,28 @@ const renderOptions = () => {
     <React.StrictMode>
       <NxStatefulGlobalSidebar
         isDefaultOpen={true}
-        toggleCloseIcon={faArrowRight}
-        toggleOpenIcon={faArrowLeft}
+        toggleCloseIcon={faArrowRight as IconDefinition}
+        toggleOpenIcon={faArrowLeft as IconDefinition}
         logoImg="images/nexus_lifecycle_sidebar.svg"
         logoAltText="Sonatype Nexus Browser Extension"
         logoLink="#"
       >
         <NxGlobalSidebarNavigation>
           <NxGlobalSidebarNavigationLink
-            icon={faPlay}
+            icon={faPlay as IconDefinition}
             text="Getting Started"
             href="options.html?install"
           />
           <NxGlobalSidebarNavigationLink
-            icon={faQuestionCircle}
+            icon={faQuestionCircle as IconDefinition}
             text="Help"
             href="options.html?help"
           />
-          <NxGlobalSidebarNavigationLink icon={faCog} text="Options" href="options.html" />
+          <NxGlobalSidebarNavigationLink
+            icon={faCog as IconDefinition}
+            text="Options"
+            href="options.html"
+          />
         </NxGlobalSidebarNavigation>
         <NxGlobalSidebarFooter
           supportText={`Request Support`}

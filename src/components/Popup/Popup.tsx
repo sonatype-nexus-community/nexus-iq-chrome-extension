@@ -32,6 +32,7 @@ import {Puff} from '@agney/react-loading';
 import './Popup.css';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 import {PackageURL} from 'packageurl-js';
+import AllVersionsPage from './IQServer/AllVersionsPage/AllVersionsPage';
 
 const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
@@ -47,6 +48,7 @@ const Popup = (): JSX.Element | null => {
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
       const results = nexusContext.policyDetails.results[0];
+      const hasVersions = nexusContext.componentVersions?.length > 0;
       const hasViolations =
         results.policyData &&
         results.policyData.policyViolations &&

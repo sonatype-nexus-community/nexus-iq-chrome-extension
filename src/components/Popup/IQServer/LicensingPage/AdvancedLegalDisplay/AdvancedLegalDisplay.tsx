@@ -15,6 +15,7 @@
  */
 import {NxButton, NxFontAwesomeIcon, NxH4, NxList} from '@sonatype/react-shared-components';
 import {faCopy} from '@fortawesome/free-solid-svg-icons';
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 
@@ -41,7 +42,7 @@ const AdvancedLegalDisplay = (): JSX.Element => {
                       variant="icon-only"
                       onClick={(event) => copyToClipboard(event, licenses.content)}
                     >
-                      <NxFontAwesomeIcon icon={faCopy} />
+                      <NxFontAwesomeIcon icon={faCopy as IconDefinition} />
                     </NxButton>
                   </NxList.Actions>
                 </NxList.Item>

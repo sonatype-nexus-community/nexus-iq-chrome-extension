@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ComponentDetails} from '@sonatype/js-sona-types';
+import {ComponentDetails, PolicyData} from '@sonatype/js-sona-types';
 import {ArtifactMessage} from './types/ArtifactMessage';
 import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 import {findRepoType} from './utils/UrlParsing';
@@ -45,6 +45,9 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
     console.trace('Received artifactDetailsFromServiceWorker message on content.js');
     if (event.componentDetails) {
       const data: ComponentDetails = event.componentDetails;
+      // const policyData: PolicyData = event.policyData;
+      //
+      // console.log('Policy Details', policyData);
 
       if (
         data.componentDetails[0] &&
