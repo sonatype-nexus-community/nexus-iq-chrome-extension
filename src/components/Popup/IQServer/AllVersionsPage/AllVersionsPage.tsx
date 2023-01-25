@@ -26,7 +26,7 @@ const RemediationPage = (): JSX.Element | null => {
     if (nexusContext.componentVersions?.length > 0) {
       return (
         <React.Fragment>
-          <NxH3>All Versions</NxH3>
+          <NxH3>All Versions({nexusContext.componentVersions.length})</NxH3>
           <AllVersionsDetails />
         </React.Fragment>
       );

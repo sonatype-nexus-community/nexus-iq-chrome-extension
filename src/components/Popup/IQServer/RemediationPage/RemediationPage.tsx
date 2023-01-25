@@ -19,6 +19,7 @@ import {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import RemediationDetails from './RemediationDetails/RemediationDetails';
 import AllVersionsDetails from '../AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
+import {ComponentDetails} from '@sonatype/js-sona-types';
 
 const RemediationPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -36,6 +37,7 @@ const RemediationPage = (): JSX.Element | null => {
           nexusContext.policyDetails.results[0].component.packageUrl
         );
       }
+      const allVersionsDetails: ComponentDetails[] = nexusContext.componentVersionsDetails;
 
       return (
         <React.Fragment>
@@ -45,7 +47,7 @@ const RemediationPage = (): JSX.Element | null => {
               <RemediationDetails />
             </section>
             <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
-              <NxH3>All Versions</NxH3>
+              <NxH3>All Versions ({allVersionsDetails?.length})</NxH3>
               <AllVersionsDetails />
             </section>
           </div>

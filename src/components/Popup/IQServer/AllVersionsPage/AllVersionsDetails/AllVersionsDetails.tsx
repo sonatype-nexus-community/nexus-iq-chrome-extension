@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {ComponentContainer, ComponentDetails, VersionChange} from '@sonatype/js-sona-types';
+import {
+  ComponentContainer,
+  ComponentDetails,
+  SecurityData,
+  VersionChange
+} from '@sonatype/js-sona-types';
 import {NxList, NxDescriptionList} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
@@ -21,34 +26,33 @@ import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
 import './AllVersionsDetails.css';
 import {PackageURL} from 'packageurl-js';
 import SecurityThreat from '../../../../Common/SecurityThreat/SecurityThreat';
+import SecurityThreatIconOnly from '../../../../Common/SecurityThreat/SecurityThreatIconOnly';
 
 const AllVersionsDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderAllVersionsDetails = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext.componentVersions?.length > 0 &&
-      nexusContext.componentVersionsDetails?.length > 0
-    ) {
-      // const versionChanges: VersionChange[] =
-      //   nexusContext.remediationDetails.remediation.versionChanges;
-      // const allVersions: string[] = nexusContext.componentVersions;
+    if (nexusContext.componentVersionsDetails?.length > 0) {
       const allVersionsDetails: ComponentDetails[] = nexusContext.componentVersionsDetails;
-
-      console.log(`Details count: ${allVersionsDetails.length}`);
-      console.log(allVersionsDetails);
 
       return (
         <NxList>
           {allVersionsDetails &&
             allVersionsDetails.map((componentDetail) => {
+              const securityData: SecurityData = componentDetail.componentDetails[0].securityData;
+              let maxSeverity = 0;
+              if (securityData.securityIssues?.length > 0) {
+                maxSeverity = Math.max(
+                  ...securityData.securityIssues.map((issue) => issue.severity)
+                );
+              }
               const purl = PackageURL.fromString(
                 componentDetail.componentDetails[0].component.packageUrl.toString()
               );
+
               return (
                 <NxList.Item key={purl.version}>
-                  {purl.version}
-                  <SecurityThreat />
+                  [{maxSeverity}] {purl.version}
                 </NxList.Item>
               );
             })}

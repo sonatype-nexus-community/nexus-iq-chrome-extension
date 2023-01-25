@@ -19,19 +19,15 @@ import {
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import {SecurityData} from '@sonatype/js-sona-types';
+import {ComponentContainer, SecurityData} from '@sonatype/js-sona-types';
 import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
 
-const SecurityThreat = (): JSX.Element | null => {
+const SecurityThreat = (securityData: SecurityData): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderSecurityThreat = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.componentDetails &&
-      nexusContext.componentDetails.securityData
-    ) {
-      return getSecurityThreat(nexusContext.componentDetails.securityData);
+    if (securityData?.securityIssues.length > 0) {
+      return getSecurityThreat(securityData);
     } else if (
       nexusContext &&
       nexusContext.policyDetails &&
@@ -48,25 +44,13 @@ const SecurityThreat = (): JSX.Element | null => {
   const getSecurityThreat = (securityData: SecurityData | undefined) => {
     if (securityData && securityData.securityIssues && securityData.securityIssues.length > 0) {
       const maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
-      return (
-        <React.Fragment>
-          <header className="nx-grid-header">
-            <NxH3>Max Security Threat</NxH3>
-          </header>
-          <NxPolicyViolationIndicator
-            policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
-          />
-        </React.Fragment>
-      );
+      return <React.Fragment>{Math.round(maxSeverity)}</React.Fragment>;
     } else if (
       securityData &&
       securityData.securityIssues &&
       securityData.securityIssues.length == 0
     ) {
       <React.Fragment>
-        <header className="nx-grid-header">
-          <NxH3>No Security Issues</NxH3>
-        </header>
         <NxPolicyViolationIndicator threatLevelCategory="none">Woohoo!</NxPolicyViolationIndicator>
       </React.Fragment>;
     }
