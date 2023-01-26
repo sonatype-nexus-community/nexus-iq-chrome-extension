@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, {useContext} from 'react';
 import Popup from './components/Popup/Popup';
 import {NexusContext, NexusContextInterface} from './context/NexusContext';
 import {DATA_SOURCES, RepoType} from './utils/Constants';

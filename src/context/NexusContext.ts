@@ -41,6 +41,7 @@ export interface NexusContextInterface {
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;
   currentVersion?: PackageURL;
+  currentUrl?: URL;
 }
 
 const initialContext: NexusContextInterface = {
@@ -53,7 +54,8 @@ const initialContext: NexusContextInterface = {
   componentVersions: undefined,
   remediationDetails: undefined,
   logger: undefined,
-  currentVersion: undefined
+  currentVersion: undefined,
+  currentUrl: undefined
 };
 
 export const NexusContext = React.createContext(initialContext);

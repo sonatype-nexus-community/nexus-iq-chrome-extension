@@ -19,9 +19,30 @@ import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
 import './RemediationDetails.css';
+import {findRepoType} from '../../../../../utils/UrlParsing';
 
 const RemediationDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
+
+  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    nexusContext.currentUrl = new URL(tabs[0].url);
+  });
+
+  const buildNextUrlAndGo = (nextUrlVersion: string) => {
+    const currentUrl = nexusContext.currentUrl.toString();
+    const repoType = findRepoType(currentUrl);
+    let newURL;
+    if (currentUrl.indexOf(nextUrlVersion) < 0 && repoType) {
+      console.log('Doing the appendVersionPath replace');
+      newURL = repoType.url + repoType.appendVersionPath.replace('{versionNumber}', nextUrlVersion);
+    } else {
+      console.log('Doing the replace');
+      // TODO: Not sure about this
+      newURL = currentUrl.replace(currentUrl.toString(), nextUrlVersion);
+    }
+    console.log('newURL', newURL);
+    return newURL;
+  };
 
   const renderRemediationDetails = (nexusContext: NexusContextInterface | undefined) => {
     if (
@@ -39,12 +60,16 @@ const RemediationDetails = (): JSX.Element | null => {
           {versionChanges &&
             versionChanges.map((change) => {
               return (
-                <NxDescriptionList.LinkItem
-                  key={change.data.component.hash}
-                  href={''}
-                  term={REMEDIATION_LABELS[change.type]}
-                  description={change.data.component.componentIdentifier.coordinates.version}
-                />
+                <>
+                  <NxDescriptionList.LinkItem
+                    key={change.data.component.hash}
+                    href={buildNextUrlAndGo(
+                      change.data.component.componentIdentifier.coordinates.version
+                    )}
+                    term={REMEDIATION_LABELS[change.type]}
+                    description={change.data.component.componentIdentifier.coordinates.version}
+                  />
+                </>
               );
             })}
         </NxDescriptionList>
