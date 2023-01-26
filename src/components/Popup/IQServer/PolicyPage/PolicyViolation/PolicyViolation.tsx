@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 import React, {useState} from 'react';
-import {NxList} from '@sonatype/react-shared-components';
+import {
+  NxList,
+  NxPolicyViolationIndicator,
+  ThreatLevelNumber
+} from '@sonatype/react-shared-components';
 import {ConstraintViolation, PolicyViolation, Reason} from '@sonatype/js-sona-types';
 import '../PolicyPage.css';
 
@@ -29,7 +33,17 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
     if (policyViolation) {
       return (
         <tr className="nx-table-row">
-          <td className="nx-cell">{policyViolation.threatLevel}</td>
+          <td className="nx-cell">
+            <NxPolicyViolationIndicator
+              style={{
+                width: '20px !important',
+                margin: 'none !important'
+              }}
+              policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}
+            >
+              {policyViolation.threatLevel.toString()}
+            </NxPolicyViolationIndicator>
+          </td>
           {policyViolation.constraintViolations &&
             policyViolation.constraintViolations.map((constraint: ConstraintViolation) => (
               <React.Fragment key={constraint.constraintName}>

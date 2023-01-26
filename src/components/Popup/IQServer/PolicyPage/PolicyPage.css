@@ -20,3 +20,12 @@
 .nx-list__text {
   font-weight: 400 !important;
 }
+
+.nx-policy-violation-indicator {
+  margin: 0px !important;
+  width: unset !important;
+}
+
+.nx-policy-violation-indicator__text {
+  font-weight: bold !important;
+}
