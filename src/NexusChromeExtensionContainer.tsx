@@ -212,26 +212,42 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.state.logger.logMessage('Obtained all versions for component', LogLevel.INFO, allVersions);
 
     const allVersionsDetails: ComponentDetails[] = [];
-
-    for (let i = 0; i < allVersions.length; i++) {
-      if (allVersions[i]) {
-        const newPurl = PackageURL.fromString(purl);
-        newPurl.version = allVersions[i];
-        try {
-          const purlComponentDetails = await (
-            this._requestService as IqRequestService
-          ).getComponentDetails([newPurl]);
-          allVersionsDetails.push(purlComponentDetails);
-        } catch (err: any) {
-          console.log('Unable to get component details for: ' + newPurl.toString());
-          console.log(err.toString());
-          continue;
-        }
-      }
+    // const allVersionsPurl: PackageURL[] = [];
+    //
+    // for (let i = 0; i < allVersions.length; i++) {
+    //   if (allVersions[i]) {
+    //     newPurl = PackageURL.fromString(purl);
+    //     newPurl.version = allVersions[i];
+    //     allVersionsPurl.push(newPurl);
+    //   }
+    // }
+    // console.log('allVersionsPurl length: ' + allVersionsPurl.length);
+    let purlComponentDetails: ComponentDetails;
+    let newPurl: PackageURL;
+    try {
+      const allVersionsPurlRequest: PackageURL[] = [];
+      allVersions.forEach((version) => {
+        newPurl = PackageURL.fromString(purl);
+        newPurl.version = version;
+        allVersionsPurlRequest.push(newPurl);
+      });
+      console.log('allVersionsPurlRequest length should be:  ' + allVersions.length);
+      console.log('allVersionsPurlRequest length:  ' + allVersionsPurlRequest.length);
+      purlComponentDetails = await (this._requestService as IqRequestService).getComponentDetails(
+        allVersionsPurlRequest
+      );
+      console.log(
+        'purlComponentDetails.componentDetails length: ' +
+          purlComponentDetails.componentDetails.length
+      );
+      console.log(purlComponentDetails);
+      console.log(purlComponentDetails.componentDetails);
+      this.setState({componentVersionsDetails: purlComponentDetails.componentDetails});
+    } catch (err: any) {
+      console.log('Unable to get component details for: ' + packageUrl.toString());
     }
 
     this.setState({componentVersions: allVersions});
-    this.setState({componentVersionsDetails: allVersionsDetails});
   };
 
   getRemediationDetails = async (purl: string): Promise<void> => {

@@ -33,7 +33,7 @@ export interface NexusContextInterface {
   licenseDetails?: IqServerLicenseLegalMetadataResult;
   errorMessage?: string;
   componentVersions?: string[];
-  componentVersionsDetails?: ComponentDetails[];
+  componentVersionsDetails?: ComponentContainer[];
   remediationDetails?: IqServerComponentRemediationResult;
   logger: ILogger;
   getVulnDetails?: (vulnId: string) => Promise<void>;

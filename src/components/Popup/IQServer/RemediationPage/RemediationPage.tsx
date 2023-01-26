@@ -19,7 +19,7 @@ import {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import RemediationDetails from './RemediationDetails/RemediationDetails';
 import AllVersionsDetails from '../AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
-import {ComponentDetails} from '@sonatype/js-sona-types';
+import {ComponentContainer, ComponentDetails} from '@sonatype/js-sona-types';
 
 const RemediationPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -37,7 +37,7 @@ const RemediationPage = (): JSX.Element | null => {
           nexusContext.policyDetails.results[0].component.packageUrl
         );
       }
-      const allVersionsDetails: ComponentDetails[] = nexusContext.componentVersionsDetails;
+      const allVersionsDetails: ComponentContainer[] = nexusContext.componentVersionsDetails;
 
       return (
         <React.Fragment>

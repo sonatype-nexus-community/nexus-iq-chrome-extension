@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {ComponentContainer, ComponentDetails, SecurityData} from '@sonatype/js-sona-types';
 import {
-  ComponentContainer,
-  ComponentDetails,
-  SecurityData,
-  VersionChange
-} from '@sonatype/js-sona-types';
-import {NxList, NxDescriptionList} from '@sonatype/react-shared-components';
+  NxList,
+  NxLoadingSpinner,
+  NxPolicyViolationIndicator,
+  ThreatLevelNumber
+} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
@@ -33,31 +33,38 @@ const AllVersionsDetails = (): JSX.Element | null => {
 
   const renderAllVersionsDetails = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext.componentVersionsDetails?.length > 0) {
-      const allVersionsDetails: ComponentDetails[] = nexusContext.componentVersionsDetails;
+      const allVersionsDetails: ComponentContainer[] = nexusContext.componentVersionsDetails;
 
       return (
         <NxList>
           {allVersionsDetails &&
             allVersionsDetails.map((componentDetail) => {
-              const securityData: SecurityData = componentDetail.componentDetails[0].securityData;
+              const securityData: SecurityData = componentDetail.securityData;
               let maxSeverity = 0;
               if (securityData.securityIssues?.length > 0) {
                 maxSeverity = Math.max(
                   ...securityData.securityIssues.map((issue) => issue.severity)
                 );
               }
-              const purl = PackageURL.fromString(
-                componentDetail.componentDetails[0].component.packageUrl.toString()
-              );
+              const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
 
               return (
                 <NxList.Item key={purl.version}>
-                  [{maxSeverity}] {purl.version}
+                  <NxList.Text>
+                    <p className="nx-p">{purl.version}</p>
+                  </NxList.Text>
+                  <NxList.Subtext>
+                    <NxPolicyViolationIndicator
+                      policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
+                    />{' '}
+                  </NxList.Subtext>
                 </NxList.Item>
               );
             })}
         </NxList>
       );
+    } else {
+      return <NxLoadingSpinner />;
     }
     return null;
   };

@@ -33,10 +33,7 @@ const SecurityThreat = (): JSX.Element | null => {
     ) {
       return getSecurityThreat(nexusContext.componentDetails.securityData);
     } else if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
+      nexusContext.policyDetails.results?.length > 0 &&
       nexusContext.policyDetails.results[0].securityData
     ) {
       return getSecurityThreat(nexusContext.policyDetails.results[0].securityData);
