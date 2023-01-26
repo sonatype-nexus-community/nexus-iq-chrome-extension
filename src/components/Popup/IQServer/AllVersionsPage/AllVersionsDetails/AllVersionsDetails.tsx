@@ -13,27 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {ComponentContainer, ComponentDetails, SecurityData} from '@sonatype/js-sona-types';
+import {ComponentContainer, SecurityData} from '@sonatype/js-sona-types';
 import {
   NxList,
   NxLoadingSpinner,
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
 import './AllVersionsDetails.css';
 import {PackageURL} from 'packageurl-js';
-import SecurityThreat from '../../../../Common/SecurityThreat/SecurityThreat';
-import SecurityThreatIconOnly from '../../../../Common/SecurityThreat/SecurityThreatIconOnly';
 
 const AllVersionsDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
+  const currentVersionRef = useRef(null);
+
+  useEffect(() => {
+    if (nexusContext.componentVersionsDetails?.length > 0) {
+      console.log(currentVersionRef.current);
+      currentVersionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+    }
+  });
+
   const renderAllVersionsDetails = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext.componentVersionsDetails?.length > 0) {
       const allVersionsDetails: ComponentContainer[] = nexusContext.componentVersionsDetails;
+      const currentPurl = nexusContext.currentVersion;
 
       return (
         <NxList>
@@ -49,16 +61,22 @@ const AllVersionsDetails = (): JSX.Element | null => {
               const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
 
               return (
-                <NxList.Item key={purl.version}>
-                  <NxList.Text>
-                    <p className="nx-p">{purl.version}</p>
-                  </NxList.Text>
-                  <NxList.Subtext>
+                <NxList.LinkItem
+                  href=""
+                  key={purl.version}
+                  selected={purl.version == currentPurl.version}
+                >
+                  <NxList.Text ref={purl.version == currentPurl.version ? currentVersionRef : null}>
+                    {/*{purl.version}*/}
+
                     <NxPolicyViolationIndicator
+                      style={{float: 'right', width: '100px !important'}}
                       policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
-                    />{' '}
-                  </NxList.Subtext>
-                </NxList.Item>
+                    >
+                      {' ' + purl.version}
+                    </NxPolicyViolationIndicator>
+                  </NxList.Text>
+                </NxList.LinkItem>
               );
             })}
         </NxList>
@@ -68,6 +86,25 @@ const AllVersionsDetails = (): JSX.Element | null => {
     }
     return null;
   };
+
+  // const scrollToCurrentVersion = () => {
+  //   // const selectedElement = document.getgetElementsByClassName('nx-list__item selected');
+  //   const selectedElement = document.querySelector('[aria-selected="true"]');
+  //   console.debug('Trying to get selected component');
+  //   // if (selectedElement && selectedElement.length > 0 && !isElementInViewport(selectedElement[0])) {
+  //   if (selectedElement?.length > 0) {
+  //     console.debug('I should be scrolling to this: ', selectedElement);
+  //     selectedElement.scrollIntoViewIfNeeded();
+  //   }
+  // };
+
+  // const isElementInViewport = (element: Element) => {
+  //   const bounding = element.getBoundingClientRect();
+  //   return (
+  //     bounding.top >= 0 &&
+  //     bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+  //   );
+  // };
 
   return renderAllVersionsDetails(nexusContext);
 };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {VersionChange} from '@sonatype/js-sona-types';
-import {NxList, NxDescriptionList} from '@sonatype/react-shared-components';
+import {NxDescriptionList, NxLoadingSpinner} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
@@ -39,20 +39,19 @@ const RemediationDetails = (): JSX.Element | null => {
           {versionChanges &&
             versionChanges.map((change) => {
               return (
-                <NxDescriptionList.Item key={change.type}>
-                  <NxDescriptionList.Term className={'nx-list__term__remediation'}>
-                    {REMEDIATION_LABELS[change.type]}
-                  </NxDescriptionList.Term>
-                  <NxDescriptionList.Description>
-                    {change.data.component.componentIdentifier.coordinates.version}
-                  </NxDescriptionList.Description>
-                </NxDescriptionList.Item>
+                <NxDescriptionList.LinkItem
+                  key={change.data.component.hash}
+                  href={''}
+                  term={REMEDIATION_LABELS[change.type]}
+                  description={change.data.component.componentIdentifier.coordinates.version}
+                />
               );
             })}
         </NxDescriptionList>
       );
+    } else {
+      return <NxLoadingSpinner />;
     }
-    return null;
   };
 
   return renderRemediationDetails(nexusContext);

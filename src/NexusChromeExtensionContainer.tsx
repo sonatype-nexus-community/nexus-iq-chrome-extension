@@ -41,6 +41,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     super(props);
 
     this.state = {
+      currentVersion: undefined,
       errorMessage: undefined,
       scanType: DATA_SOURCES.OSSINDEX,
       logger: new BrowserExtensionLogger(LogLevel.TRACE),
@@ -283,6 +284,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
         console.info('purl: fixin to get purl: ', purlString);
         const purl = PackageURL.fromString(purlString);
+        this.setState({currentVersion: purl});
 
         this.state.logger.logMessage('Parsed purl into object', LogLevel.TRACE, purl);
         console.info('Parsed purl into object', LogLevel.TRACE, purl);

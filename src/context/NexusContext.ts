@@ -24,6 +24,7 @@ import {
   IqServerVulnerabilityDetails
 } from '@sonatype/js-sona-types';
 import {DATA_SOURCES} from '../utils/Constants';
+import {PackageURL} from 'packageurl-js';
 
 export interface NexusContextInterface {
   scanType: string;
@@ -39,6 +40,7 @@ export interface NexusContextInterface {
   getVulnDetails?: (vulnId: string) => Promise<void>;
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;
+  currentVersion?: PackageURL;
 }
 
 const initialContext: NexusContextInterface = {
@@ -50,7 +52,8 @@ const initialContext: NexusContextInterface = {
   errorMessage: undefined,
   componentVersions: undefined,
   remediationDetails: undefined,
-  logger: undefined
+  logger: undefined,
+  currentVersion: undefined
 };
 
 export const NexusContext = React.createContext(initialContext);
