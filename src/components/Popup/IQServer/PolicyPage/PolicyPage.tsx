@@ -32,29 +32,33 @@ const PolicyPage = (): JSX.Element | null => {
     ) {
       return (
         <React.Fragment>
-          <table className="nx-table">
-            <thead>
-              <tr className="nx-table-row nx-table-row--header">
-                <th className="nx-cell nx-cell--header nx-cell--num">Threat</th>
-                <th className="nx-cell nx-cell--header">Policy</th>
-                <th className="nx-cell nx-cell--header">Constraint Name</th>
-                <th className="nx-cell nx-cell--header">Condition</th>
-              </tr>
-            </thead>
-            <tbody>
-              {' '}
-              {nexusContext.policyDetails.results[0].policyData.policyViolations.map(
-                (violation) => {
-                  return (
-                    <PolicyViolation
-                      key={violation.policyId}
-                      policyViolation={violation}
-                    ></PolicyViolation>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
+          <div className="nx-grid-row">
+            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
+              <table className="nx-table">
+                <thead>
+                  <tr className="nx-table-row nx-table-row--header">
+                    <th className="nx-cell nx-cell--header nx-cell--num">Threat</th>
+                    <th className="nx-cell nx-cell--header">Policy</th>
+                    <th className="nx-cell nx-cell--header">Constraint Name</th>
+                    <th className="nx-cell nx-cell--header">Condition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {' '}
+                  {nexusContext.policyDetails.results[0].policyData.policyViolations.map(
+                    (violation) => {
+                      return (
+                        <PolicyViolation
+                          key={violation.policyId}
+                          policyViolation={violation}
+                        ></PolicyViolation>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </section>
+          </div>
         </React.Fragment>
       );
     }

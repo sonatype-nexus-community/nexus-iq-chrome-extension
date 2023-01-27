@@ -52,17 +52,21 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
       return (
         <React.Fragment>
           {' '}
-          {sortedIssues.map((issue: SecurityIssue) => {
-            return (
-              <SecurityItemDisplay
-                key={issue.reference}
-                open={isOpen(issue.reference)}
-                packageUrl={purl}
-                securityIssue={issue}
-                remediationEvent={getRemediationAndOpen}
-              />
-            );
-          })}
+          <div className="nx-grid-row">
+            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
+              {sortedIssues.map((issue: SecurityIssue) => {
+                return (
+                  <SecurityItemDisplay
+                    key={issue.reference}
+                    open={isOpen(issue.reference)}
+                    packageUrl={purl}
+                    securityIssue={issue}
+                    remediationEvent={getRemediationAndOpen}
+                  />
+                );
+              })}
+            </section>
+          </div>
         </React.Fragment>
       );
     }

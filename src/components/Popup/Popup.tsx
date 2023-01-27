@@ -18,7 +18,8 @@ import {
   NxTab,
   NxTabList,
   NxTabPanel,
-  NxTabs
+  NxTabs,
+  NxFontAwesomeIcon
 } from '@sonatype/react-shared-components';
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
 import LicensingPage from './IQServer/LicensingPage/LicensingPage';
@@ -32,7 +33,14 @@ import {Puff} from '@agney/react-loading';
 import './Popup.css';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 import {PackageURL} from 'packageurl-js';
+import {
+  faAngry,
+  faExternalLinkAlt,
+  faExternalLinkSquareAlt
+} from '@fortawesome/free-solid-svg-icons';
+
 import AllVersionsPage from './IQServer/AllVersionsPage/AllVersionsPage';
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
 const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
@@ -77,10 +85,24 @@ const Popup = (): JSX.Element | null => {
           <div className="nx-tile-subsection nx-viewport-sized__container">
             <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
               <NxTabList>
-                <NxTab>Overview</NxTab>
+                <NxTab>Info</NxTab>
                 {hasViolations && <NxTab>Remediation</NxTab>}
-                {hasViolations && <NxTab>Policy</NxTab>}
-                {hasSecurityIssues && <NxTab>Security</NxTab>}
+                {hasViolations && (
+                  <NxTab>
+                    Policy
+                    <span className={'nx-counter'}>
+                      {results.policyData.policyViolations.length}
+                    </span>
+                  </NxTab>
+                )}
+                {hasSecurityIssues && (
+                  <NxTab>
+                    Security
+                    <span className={'nx-counter'}>
+                      {results.securityData.securityIssues.length}
+                    </span>
+                  </NxTab>
+                )}
                 <NxTab>Legal</NxTab>
               </NxTabList>
               <NxTabPanel>
@@ -97,16 +119,16 @@ const Popup = (): JSX.Element | null => {
               </NxTabPanel>
               {hasViolations && (
                 <NxTabPanel>
-                  <PolicyPage></PolicyPage>
+                  <PolicyPage />
                 </NxTabPanel>
               )}
               {hasSecurityIssues && (
                 <NxTabPanel>
-                  <SecurityPage></SecurityPage>
+                  <SecurityPage />
                 </NxTabPanel>
               )}
               <NxTabPanel>
-                <LicensingPage></LicensingPage>
+                <LicensingPage />
               </NxTabPanel>
             </NxTabs>
           </div>

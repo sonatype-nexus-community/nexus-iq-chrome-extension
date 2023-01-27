@@ -4,6 +4,9 @@
   min-height: 600px !important;
 }
 
+.nx-counter {
+  margin-left: var(--nx-spacing-2x) !important;
+}
 .nx-popup-logo {
   vertical-align: middle;
 }
