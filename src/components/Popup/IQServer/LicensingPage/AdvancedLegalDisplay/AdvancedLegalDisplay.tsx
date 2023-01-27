@@ -30,35 +30,43 @@ const AdvancedLegalDisplay = (): JSX.Element => {
     if (nexusContext && nexusContext.licenseDetails) {
       return (
         <React.Fragment>
-          <NxH4>License Files</NxH4>
-          <NxList>
-            {nexusContext.licenseDetails.component.licenseLegalData.licenseFiles.map((licenses) => {
-              return (
-                <NxList.Item key={licenses.id}>
-                  <NxList.Text>{licenses.relPath}</NxList.Text>
-                  <NxList.Actions>
-                    <NxButton
-                      title="Copy License Text"
-                      variant="icon-only"
-                      onClick={(event) => copyToClipboard(event, licenses.content)}
-                    >
-                      <NxFontAwesomeIcon icon={faCopy as IconDefinition} />
-                    </NxButton>
-                  </NxList.Actions>
-                </NxList.Item>
-              );
-            })}
-          </NxList>
-          <NxH4>Copyright Statements</NxH4>
-          {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map((copyrights) => {
-            return (
-              <React.Fragment key={copyrights.originalContentHash}>
-                <blockquote className="nx-blockquote nx-truncate-ellipsis">
-                  {copyrights.content}
-                </blockquote>
-              </React.Fragment>
-            );
-          })}
+          <div className="nx-grid-row">
+            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
+              <NxH4>Copy License Text</NxH4>
+              <NxList>
+                {nexusContext.licenseDetails.component.licenseLegalData.licenseFiles.map(
+                  (licenses) => {
+                    return (
+                      <NxList.Item key={licenses.id}>
+                        <NxList.Text>{licenses.relPath}</NxList.Text>
+                        <NxList.Actions>
+                          <NxButton
+                            title="Copy License Text"
+                            variant="icon-only"
+                            onClick={(event) => copyToClipboard(event, licenses.content)}
+                          >
+                            <NxFontAwesomeIcon icon={faCopy as IconDefinition} />
+                          </NxButton>
+                        </NxList.Actions>
+                      </NxList.Item>
+                    );
+                  }
+                )}
+              </NxList>
+              <NxH4>Copyright Statements</NxH4>
+              {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(
+                (copyrights) => {
+                  return (
+                    <React.Fragment key={copyrights.originalContentHash}>
+                      <blockquote className="nx-blockquote nx-truncate-ellipsis">
+                        {copyrights.content}
+                      </blockquote>
+                    </React.Fragment>
+                  );
+                }
+              )}
+            </section>
+          </div>
         </React.Fragment>
       );
     }

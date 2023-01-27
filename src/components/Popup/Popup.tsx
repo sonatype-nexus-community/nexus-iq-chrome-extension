@@ -19,6 +19,7 @@ import {
   NxTabList,
   NxTabPanel,
   NxTabs,
+  NxPageMain,
   NxFontAwesomeIcon
 } from '@sonatype/react-shared-components';
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
