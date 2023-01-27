@@ -101,13 +101,13 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
             </NxDescriptionList>
           </section>
           <section className="nx-grid-col nx-grid-col--33">
-            <p className="nx-p">
-              {props.policyData && getPolicyViolationIndicator(props.policyData)}
-              <SecurityThreat />
-              {nexusContext &&
-                nexusContext.licenseDetails &&
-                nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
-            </p>
+            {/*<p className="nx-p">*/}
+            {props.policyData && getPolicyViolationIndicator(props.policyData)}
+            <SecurityThreat />
+            {nexusContext &&
+              nexusContext.licenseDetails &&
+              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
+            {/*</p>*/}
           </section>
         </NxGrid.Row>
       </React.Fragment>
@@ -125,6 +125,7 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
             <h3 className={'nx-h3'}>Max Policy Violation</h3>
           </header>
           <NxPolicyViolationIndicator
+            style={{marginBottom: '16px !important'}}
             policyThreatLevel={Math.round(maxViolation) as ThreatLevelNumber}
           ></NxPolicyViolationIndicator>
         </React.Fragment>
@@ -134,7 +135,10 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
       return (
         <React.Fragment>
           <h3 className={'nx-h3'}>No Policy Violations</h3>
-          <NxPolicyViolationIndicator threatLevelCategory="none">
+          <NxPolicyViolationIndicator
+            style={{marginBottom: '16px !important'}}
+            threatLevelCategory="none"
+          >
             Woohoo!
           </NxPolicyViolationIndicator>
         </React.Fragment>

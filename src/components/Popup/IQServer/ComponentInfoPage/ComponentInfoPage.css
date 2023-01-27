@@ -1,3 +1,7 @@
 .nx-list__term {
   width: 150px !important;
 }
+
+.componentinfo-threat-indicator {
+  margin-bottom: var(--nx-spacing-4x) !important;
+}
