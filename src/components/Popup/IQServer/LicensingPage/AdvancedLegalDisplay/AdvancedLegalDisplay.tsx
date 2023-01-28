@@ -54,17 +54,17 @@ const AdvancedLegalDisplay = (): JSX.Element => {
                 )}
               </NxList>
               <NxH4>Copyright Statements</NxH4>
-              {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(
-                (copyrights) => {
-                  return (
-                    <React.Fragment key={copyrights.originalContentHash}>
-                      <blockquote className="nx-blockquote nx-truncate-ellipsis">
-                        {copyrights.content}
-                      </blockquote>
-                    </React.Fragment>
-                  );
-                }
-              )}
+              <NxList>
+                {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(
+                  (copyrights) => {
+                    return (
+                      <NxList.Item key={copyrights.originalContentHash}>
+                        <NxList.Text>{copyrights.content}</NxList.Text>
+                      </NxList.Item>
+                    );
+                  }
+                )}
+              </NxList>
             </section>
           </div>
         </React.Fragment>

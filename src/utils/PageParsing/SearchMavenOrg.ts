@@ -19,6 +19,7 @@ import {PackageURL} from 'packageurl-js';
 import {FORMATS} from '../Constants';
 import {generatePackageURLComplete} from './PurlUtils';
 
+// TODO: Handle the bundle extension
 //pkg:type/namespace/name@version?qualifiers#subpath
 const parseSearchMavenOrg = (url: string): PackageURL | undefined => {
   const elements = url.split('/');

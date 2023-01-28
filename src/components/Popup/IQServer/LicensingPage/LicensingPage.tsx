@@ -41,6 +41,7 @@ const LicensingPage = (): JSX.Element | null => {
       );
       return (
         <React.Fragment>
+          {/*TODO: To to render the drawer at the top level*/}
           <NxDrawer
             id="nx-drawer-legal"
             open={showDrawerLegal}

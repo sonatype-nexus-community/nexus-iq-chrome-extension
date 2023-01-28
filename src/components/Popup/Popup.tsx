@@ -53,11 +53,10 @@ const Popup = (): JSX.Element | null => {
       nexusContext &&
       nexusContext.policyDetails &&
       nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
+      nexusContext.policyDetails.results?.length > 0 &&
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
       const results = nexusContext.policyDetails.results[0];
-      const hasVersions = nexusContext.componentVersions?.length > 0;
       const hasViolations =
         results.policyData &&
         results.policyData.policyViolations &&
@@ -66,6 +65,7 @@ const Popup = (): JSX.Element | null => {
         results.securityData &&
         results.securityData.securityIssues &&
         results.securityData.securityIssues.length > 0;
+      const hasLegalResults = results.licenseData.effectiveLicenses?.length > 0;
 
       console.info('Rendering IQ Server View');
 
@@ -104,7 +104,7 @@ const Popup = (): JSX.Element | null => {
                     </span>
                   </NxTab>
                 )}
-                <NxTab>Legal</NxTab>
+                {hasLegalResults && <NxTab>Legal</NxTab>}
               </NxTabList>
               <NxTabPanel>
                 <ComponentInfoPage
@@ -115,9 +115,7 @@ const Popup = (): JSX.Element | null => {
                   catalogDate={results.catalogDate}
                 ></ComponentInfoPage>
               </NxTabPanel>
-              <NxTabPanel>
-                <RemediationPage />
-              </NxTabPanel>
+              <NxTabPanel>{hasViolations && <RemediationPage />}</NxTabPanel>
               {hasViolations && (
                 <NxTabPanel>
                   <PolicyPage />
@@ -128,9 +126,7 @@ const Popup = (): JSX.Element | null => {
                   <SecurityPage />
                 </NxTabPanel>
               )}
-              <NxTabPanel>
-                <LicensingPage />
-              </NxTabPanel>
+              <NxTabPanel>{hasLegalResults && <LicensingPage />}</NxTabPanel>
             </NxTabs>
           </div>
         </section>
