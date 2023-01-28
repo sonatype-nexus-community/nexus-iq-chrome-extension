@@ -20,7 +20,8 @@ import {
   NxPolicyViolationIndicator,
   ThreatLevelNumber,
   NxDescriptionList,
-  NxGrid
+  NxGrid,
+  NxH2
 } from '@sonatype/react-shared-components';
 import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
@@ -30,16 +31,16 @@ import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat';
 import {DATA_SOURCES} from '../../../../utils/Constants';
 import './ComponentInfoPage.css';
 
-type ComponentInfoPageProps = {
-  purl: PackageURL;
-  description?: string;
-  catalogDate?: Date;
-  matchState?: string;
-  policyData?: PolicyData;
-  hash?: string;
-};
+// type ComponentInfoPageProps = {
+//   purl: PackageURL;
+//   description?: string;
+//   catalogDate?: Date;
+//   matchState?: string;
+//   policyData?: PolicyData;
+//   hash?: string;
+// };
 
-const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null => {
+const ComponentInfoPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const formatDate = (date: Date | undefined | null): string => {
@@ -52,67 +53,89 @@ const ComponentInfoPage = (props: ComponentInfoPageProps): JSX.Element | null =>
 
   // TODO: Give the correct coordinate labels based on package type
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.getLicenseDetails && !nexusContext.licenseDetails) {
-      nexusContext.getLicenseDetails(props.purl.toString());
+    // if (nexusContext && nexusContext.getLicenseDetails && !nexusContext.licenseDetails) {
+    //   nexusContext.getLicenseDetails(props.purl.toString());
+    // }
+    if (nexusContext.componentDetails?.component) {
+      return (
+        <React.Fragment>
+          <NxGrid.Row>
+            <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
+              <header className="nx-grid-header">
+                <h3 className="nx-h3 nx-grid-header__title">
+                  {nexusContext.componentDetails.component.displayName}
+                </h3>
+              </header>
+              {nexusContext.componentDetails.component.description && (
+                <NxP>{nexusContext.componentDetails.component.description}</NxP>
+              )}
+              <NxDescriptionList>
+                {nexusContext.componentDetails.projectData?.projectMetadata.organization && (
+                  <NxDescriptionList.Item>
+                    <NxDescriptionList.Term>Project</NxDescriptionList.Term>
+                    <NxDescriptionList.Description>
+                      {nexusContext.componentDetails.projectData?.projectMetadata.organization}
+                    </NxDescriptionList.Description>
+                  </NxDescriptionList.Item>
+                )}
+                {nexusContext.componentDetails.projectData?.projectMetadata.description && (
+                  <NxDescriptionList.Item>
+                    <NxDescriptionList.Term>Description</NxDescriptionList.Term>
+                    <NxDescriptionList.Description>
+                      {nexusContext.componentDetails.projectData?.projectMetadata.description}
+                    </NxDescriptionList.Description>
+                  </NxDescriptionList.Item>
+                )}
+                {nexusContext.componentDetails.projectData?.lastReleaseDate && (
+                  <NxDescriptionList.Item>
+                    <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
+                    <NxDescriptionList.Description>
+                      {nexusContext.componentDetails.projectData?.lastReleaseDate}
+                    </NxDescriptionList.Description>
+                  </NxDescriptionList.Item>
+                )}
+                {nexusContext.componentDetails.projectData?.firstReleaseDate && (
+                  <NxDescriptionList.Item>
+                    <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
+                    <NxDescriptionList.Description>
+                      {nexusContext.componentDetails.projectData?.firstReleaseDate}
+                    </NxDescriptionList.Description>
+                  </NxDescriptionList.Item>
+                )}
+                {nexusContext.componentDetails.catalogDate && (
+                  <NxDescriptionList.Item>
+                    <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
+                    <NxDescriptionList.Description>
+                      {nexusContext.componentDetails.catalogDate}
+                    </NxDescriptionList.Description>
+                  </NxDescriptionList.Item>
+                )}
+                {nexusContext.componentDetails.component.hash && (
+                  <NxDescriptionList.Item>
+                    <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
+                    <NxDescriptionList.Description>
+                      {nexusContext.componentDetails.component.hash}
+                    </NxDescriptionList.Description>
+                  </NxDescriptionList.Item>
+                )}
+              </NxDescriptionList>
+            </section>
+            <section className="nx-grid-col nx-grid-col--33">
+              {/*<p className="nx-p">*/}
+              {nexusContext.policyDetails.results[0] &&
+                getPolicyViolationIndicator(nexusContext.policyDetails.results[0].policyData)}
+              <SecurityThreat />
+              {nexusContext &&
+                nexusContext.licenseDetails &&
+                nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
+              {/*</p>*/}
+            </section>
+          </NxGrid.Row>
+        </React.Fragment>
+      );
+    } else {
+      return null;
     }
-    return (
-      <React.Fragment>
-        <NxGrid.Row>
-          <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
-            <header className="nx-grid-header">
-              <h3 className="nx-h3 nx-grid-header__title">{props.purl.name}</h3>
-            </header>
-            {/*<NxH2>{props.purl.toString()}</NxH2>*/}
-            {props.description && <NxP>{props.description}</NxP>}
-            <NxDescriptionList>
-              {props.purl.namespace && (
-                <NxDescriptionList.Item>
-                  <NxList.DescriptionTerm>Namespace</NxList.DescriptionTerm>
-                  <NxList.Description>{props.purl.namespace}</NxList.Description>
-                </NxDescriptionList.Item>
-              )}
-              <NxDescriptionList.Item>
-                <NxDescriptionList.Term>Name</NxDescriptionList.Term>
-                <NxDescriptionList.Description>{props.purl.name}</NxDescriptionList.Description>
-              </NxDescriptionList.Item>
-              <NxDescriptionList.Item>
-                <NxDescriptionList.Term>Version</NxDescriptionList.Term>
-                <NxDescriptionList.Description>{props.purl.version}</NxDescriptionList.Description>
-              </NxDescriptionList.Item>
-              {/*{props.matchState && (*/}
-              {/*  <NxDescriptionList.Item>*/}
-              {/*    <NxList.DescriptionTerm>Match State</NxList.DescriptionTerm>*/}
-              {/*    <NxList.Description>{props.matchState}</NxList.Description>*/}
-              {/*  </NxDescriptionList.Item>*/}
-              {/*)}*/}
-              {props.catalogDate && (
-                <NxDescriptionList.Item>
-                  <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
-                  <NxDescriptionList.Description>
-                    {formatDate(props.catalogDate)}
-                  </NxDescriptionList.Description>
-                </NxDescriptionList.Item>
-              )}
-              {props.hash && (
-                <NxDescriptionList.Item>
-                  <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
-                  <NxDescriptionList.Description>{props.hash}</NxDescriptionList.Description>
-                </NxDescriptionList.Item>
-              )}
-            </NxDescriptionList>
-          </section>
-          <section className="nx-grid-col nx-grid-col--33">
-            {/*<p className="nx-p">*/}
-            {props.policyData && getPolicyViolationIndicator(props.policyData)}
-            <SecurityThreat />
-            {nexusContext &&
-              nexusContext.licenseDetails &&
-              nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
-            {/*</p>*/}
-          </section>
-        </NxGrid.Row>
-      </React.Fragment>
-    );
   };
 
   const getPolicyViolationIndicator = (policyData: PolicyData | undefined): JSX.Element | null => {

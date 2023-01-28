@@ -107,13 +107,7 @@ const Popup = (): JSX.Element | null => {
                 {hasLegalResults && <NxTab>Legal</NxTab>}
               </NxTabList>
               <NxTabPanel>
-                <ComponentInfoPage
-                  policyData={results.policyData}
-                  matchState={results.matchState}
-                  purl={PackageURL.fromString(results.component.packageUrl)}
-                  hash={results.component.hash}
-                  catalogDate={results.catalogDate}
-                ></ComponentInfoPage>
+                <ComponentInfoPage />
               </NxTabPanel>
               <NxTabPanel>{hasViolations && <RemediationPage />}</NxTabPanel>
               {hasViolations && (
@@ -156,10 +150,7 @@ const Popup = (): JSX.Element | null => {
                 {hasVulns && <NxTab>Security</NxTab>}
               </NxTabList>
               <NxTabPanel>
-                <ComponentInfoPage
-                  purl={purl}
-                  description={nexusContext.componentDetails.component.description}
-                />
+                <ComponentInfoPage />
               </NxTabPanel>
               {hasVulns && (
                 <NxTabPanel>

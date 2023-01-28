@@ -16,7 +16,6 @@
 import React from 'react';
 import {
   ComponentContainer,
-  ComponentDetails,
   ILogger,
   IqServerComponentPolicyEvaluationResult,
   IqServerComponentRemediationResult,
@@ -40,6 +39,7 @@ export interface NexusContextInterface {
   getVulnDetails?: (vulnId: string) => Promise<void>;
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;
+  getComponentDetails?: (purl: string) => void;
   currentVersion?: PackageURL;
   currentUrl?: URL;
 }

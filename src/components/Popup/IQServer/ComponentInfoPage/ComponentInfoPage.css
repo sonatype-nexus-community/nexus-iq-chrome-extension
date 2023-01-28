@@ -1,5 +1,10 @@
 .nx-list__term {
   width: 150px !important;
+  font-size: 90% !important;
+}
+
+.nx-list__description {
+  font-size: 90% !important;
 }
 
 .componentinfo-threat-indicator {

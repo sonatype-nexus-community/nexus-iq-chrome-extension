@@ -47,7 +47,8 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       logger: new BrowserExtensionLogger(LogLevel.TRACE),
       getVulnDetails: this.getVulnDetails,
       getLicenseDetails: this.getLicenseDetails,
-      getRemediationDetails: this.getRemediationDetails
+      getRemediationDetails: this.getRemediationDetails,
+      getComponentDetails: this.getComponentDetails
     };
   }
 
@@ -213,16 +214,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.state.logger.logMessage('Obtained all versions for component', LogLevel.INFO, allVersions);
 
     const allVersionsDetails: ComponentDetails[] = [];
-    // const allVersionsPurl: PackageURL[] = [];
-    //
-    // for (let i = 0; i < allVersions.length; i++) {
-    //   if (allVersions[i]) {
-    //     newPurl = PackageURL.fromString(purl);
-    //     newPurl.version = allVersions[i];
-    //     allVersionsPurl.push(newPurl);
-    //   }
-    // }
-    // console.log('allVersionsPurl length: ' + allVersionsPurl.length);
+
     let purlComponentDetails: ComponentDetails;
     let newPurl: PackageURL;
     try {
@@ -318,7 +310,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
                   );
                   console.info('Got results from Nexus IQ Server for Component Policy Eval');
                   this.setState({policyDetails: results});
-
+                  this.doRequestForComponentDetails(purl);
                   this.getAllVersions(purlString);
                 }
               );
@@ -337,6 +329,11 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       });
   };
 
+  getComponentDetails = (purl: string) => {
+    const packageUrl = PackageURL.fromString(purl);
+    this.doRequestForComponentDetails(packageUrl);
+  };
+
   doRequestForComponentDetails = (purl: PackageURL) => {
     console.log('doRequestForComponentDetails: ' + purl);
     if (this._requestService) {
@@ -344,6 +341,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
         .getComponentDetails([purl])
         .then((res: ComponentDetails) => {
           if (res) {
+            console.log('Setting componentDetails: ', res.componentDetails[0]);
             this.setState({componentDetails: res.componentDetails[0]});
           }
         })
