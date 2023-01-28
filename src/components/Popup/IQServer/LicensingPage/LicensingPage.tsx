@@ -15,19 +15,21 @@
  */
 import React, {useContext} from 'react';
 import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
-import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {NxDrawer, NxButton, NxP, NxTextLink} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 import {useToggle} from '@sonatype/react-shared-components';
+import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
 
 const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
-
   const [showDrawerLegal, toggleDrawerLegal] = useToggle(false);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
+    if (nexusContext && nexusContext.getLicenseDetails && !nexusContext.licenseDetails) {
+      nexusContext.getLicenseDetails(nexusContext.componentDetails.component.packageUrl);
+    }
     if (
       nexusContext &&
       nexusContext.policyDetails &&
@@ -41,20 +43,25 @@ const LicensingPage = (): JSX.Element | null => {
       );
       return (
         <React.Fragment>
-          {/*TODO: To to render the drawer at the top level*/}
-          <NxDrawer
-            id="nx-drawer-legal"
-            open={showDrawerLegal}
-            onClose={toggleDrawerLegal}
-            aria-labelledby="drawer-legal-title"
-          >
-            <NxDrawer.Header>
-              <NxDrawer.HeaderTitle id="drawer-legal-title">License Files</NxDrawer.HeaderTitle>
-            </NxDrawer.Header>
-            <NxDrawer.Content tabIndex={0}>
-              <AdvancedLegalDisplay />
-            </NxDrawer.Content>
-          </NxDrawer>
+          <div className="nx-grid-row">
+            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
+              <NxDrawer
+                id="nx-drawer-legal"
+                open={showDrawerLegal}
+                onClose={toggleDrawerLegal}
+                aria-labelledby="drawer-legal-title"
+              >
+                <NxDrawer.Header>
+                  <NxDrawer.HeaderTitle id="drawer-legal-title">
+                    Advanced Legal Pack
+                  </NxDrawer.HeaderTitle>
+                </NxDrawer.Header>
+                <NxDrawer.Content tabIndex={0}>
+                  <AdvancedLegalDisplay />
+                </NxDrawer.Content>
+              </NxDrawer>
+            </section>
+          </div>
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
               <header className="nx-grid-header">
@@ -77,10 +84,11 @@ const LicensingPage = (): JSX.Element | null => {
             <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
               <LicenseThreat />
             </section>
+            {/*TODO: To to render the drawer at the top level*/}
           </div>
           <hr className="nx-grid-h-keyline" />
           <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
+            <section className="nx-grid-col nx-grid-col--100">
               <NxP style={{textAlign: 'center'}}>
                 <NxButton id="nx-drawer-legal-open-button" onClick={toggleDrawerLegal}>
                   <div>

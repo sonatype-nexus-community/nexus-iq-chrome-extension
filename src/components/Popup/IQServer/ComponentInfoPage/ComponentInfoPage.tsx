@@ -53,9 +53,6 @@ const ComponentInfoPage = (): JSX.Element | null => {
 
   // TODO: Give the correct coordinate labels based on package type
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
-    // if (nexusContext && nexusContext.getLicenseDetails && !nexusContext.licenseDetails) {
-    //   nexusContext.getLicenseDetails(props.purl.toString());
-    // }
     if (nexusContext.componentDetails?.component) {
       return (
         <React.Fragment>

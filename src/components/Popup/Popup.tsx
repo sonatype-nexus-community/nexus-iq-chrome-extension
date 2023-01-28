@@ -19,8 +19,8 @@ import {
   NxTabList,
   NxTabPanel,
   NxTabs,
-  NxPageMain,
-  NxFontAwesomeIcon
+  NxDrawer,
+  useToggle
 } from '@sonatype/react-shared-components';
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
 import LicensingPage from './IQServer/LicensingPage/LicensingPage';
@@ -42,6 +42,7 @@ import {
 
 import AllVersionsPage from './IQServer/AllVersionsPage/AllVersionsPage';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
+import AdvancedLegalDisplay from './IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay';
 
 const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
@@ -70,60 +71,63 @@ const Popup = (): JSX.Element | null => {
       console.info('Rendering IQ Server View');
 
       return (
-        <section className="nx-tile nx-viewport-sized__container">
-          <header className="nx-tile-header">
-            <div className="nx-tile-header__title">
-              <h2 className="nx-h2">
-                <img
-                  src="/images/NexusLifecycle_Icon_Square_Outlined.png"
-                  className="nx-popup-logo"
-                  alt="Sonatype Nexus Lifecycle"
-                />
-                &nbsp;Sonatype Nexus Lifecycle Results
-              </h2>
-            </div>
-          </header>
-          <div className="nx-tile-subsection nx-viewport-sized__container">
-            <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-              <NxTabList>
-                <NxTab>Info</NxTab>
-                {hasViolations && <NxTab>Remediation</NxTab>}
+        <React.Fragment>
+          <section className="nx-tile nx-viewport-sized__container">
+            <header className="nx-tile-header">
+              <div className="nx-tile-header__title">
+                <h2 className="nx-h2">
+                  <img
+                    src="/images/NexusLifecycle_Icon_Square_Outlined.png"
+                    className="nx-popup-logo"
+                    alt="Sonatype Nexus Lifecycle"
+                  />
+                  &nbsp;Sonatype Nexus Lifecycle Results
+                </h2>
+              </div>
+            </header>
+
+            <div className="nx-tile-subsection nx-viewport-sized__container">
+              <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+                <NxTabList>
+                  <NxTab>Info</NxTab>
+                  {hasViolations && <NxTab>Remediation</NxTab>}
+                  {hasViolations && (
+                    <NxTab>
+                      Policy
+                      <span className={'nx-counter'}>
+                        {results.policyData.policyViolations.length}
+                      </span>
+                    </NxTab>
+                  )}
+                  {hasSecurityIssues && (
+                    <NxTab>
+                      Security
+                      <span className={'nx-counter'}>
+                        {results.securityData.securityIssues.length}
+                      </span>
+                    </NxTab>
+                  )}
+                  {hasLegalResults && <NxTab>Legal</NxTab>}
+                </NxTabList>
+                <NxTabPanel>
+                  <ComponentInfoPage />
+                </NxTabPanel>
+                <NxTabPanel>{hasViolations && <RemediationPage />}</NxTabPanel>
                 {hasViolations && (
-                  <NxTab>
-                    Policy
-                    <span className={'nx-counter'}>
-                      {results.policyData.policyViolations.length}
-                    </span>
-                  </NxTab>
+                  <NxTabPanel>
+                    <PolicyPage />
+                  </NxTabPanel>
                 )}
                 {hasSecurityIssues && (
-                  <NxTab>
-                    Security
-                    <span className={'nx-counter'}>
-                      {results.securityData.securityIssues.length}
-                    </span>
-                  </NxTab>
+                  <NxTabPanel>
+                    <SecurityPage />
+                  </NxTabPanel>
                 )}
-                {hasLegalResults && <NxTab>Legal</NxTab>}
-              </NxTabList>
-              <NxTabPanel>
-                <ComponentInfoPage />
-              </NxTabPanel>
-              <NxTabPanel>{hasViolations && <RemediationPage />}</NxTabPanel>
-              {hasViolations && (
-                <NxTabPanel>
-                  <PolicyPage />
-                </NxTabPanel>
-              )}
-              {hasSecurityIssues && (
-                <NxTabPanel>
-                  <SecurityPage />
-                </NxTabPanel>
-              )}
-              <NxTabPanel>{hasLegalResults && <LicensingPage />}</NxTabPanel>
-            </NxTabs>
-          </div>
-        </section>
+                <NxTabPanel>{hasLegalResults && <LicensingPage />}</NxTabPanel>
+              </NxTabs>
+            </div>
+          </section>
+        </React.Fragment>
       );
     } else if (
       nexusContext &&
@@ -137,29 +141,31 @@ const Popup = (): JSX.Element | null => {
         nexusContext.componentDetails.securityData.securityIssues.length > 0;
       console.info('Rendering OSS Index View');
       return (
-        <section className="nx-tile nx-viewport-sized__container">
-          <header className="nx-tile-header">
-            <div className="nx-tile-header__title">
-              <h2 className="nx-h2">Sonatype OSS Index Results</h2>
-            </div>
-          </header>
-          <div className="nx-tile-content nx-viewport-sized__container">
-            <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-              <NxTabList>
-                <NxTab>Info</NxTab>
-                {hasVulns && <NxTab>Security</NxTab>}
-              </NxTabList>
-              <NxTabPanel>
-                <ComponentInfoPage />
-              </NxTabPanel>
-              {hasVulns && (
+        <React.Fragment>
+          <section className="nx-tile nx-viewport-sized__container">
+            <header className="nx-tile-header">
+              <div className="nx-tile-header__title">
+                <h2 className="nx-h2">Sonatype OSS Index Results</h2>
+              </div>
+            </header>
+            <div className="nx-tile-content nx-viewport-sized__container">
+              <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+                <NxTabList>
+                  <NxTab>Info</NxTab>
+                  {hasVulns && <NxTab>Security</NxTab>}
+                </NxTabList>
                 <NxTabPanel>
-                  <LiteSecurityPage></LiteSecurityPage>
+                  <ComponentInfoPage />
                 </NxTabPanel>
-              )}
-            </NxTabs>
-          </div>
-        </section>
+                {hasVulns && (
+                  <NxTabPanel>
+                    <LiteSecurityPage></LiteSecurityPage>
+                  </NxTabPanel>
+                )}
+              </NxTabs>
+            </div>
+          </section>
+        </React.Fragment>
       );
     }
     if (nexusContext && nexusContext.errorMessage) {

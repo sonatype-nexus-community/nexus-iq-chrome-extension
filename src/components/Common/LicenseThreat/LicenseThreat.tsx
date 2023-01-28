@@ -16,6 +16,7 @@
 import React, {useContext} from 'react';
 import {
   NxH3,
+  NxLoadingSpinner,
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
@@ -36,6 +37,8 @@ const LicenseThreat = (): JSX.Element | null => {
         nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
           .licenseThreatGroupName
       );
+    } else {
+      return <NxLoadingSpinner />;
     }
     return null;
   };
