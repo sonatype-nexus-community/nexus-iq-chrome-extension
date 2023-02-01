@@ -33,6 +33,7 @@ const SecurityThreat = (): JSX.Element | null => {
     ) {
       return getSecurityThreat(nexusContext.componentDetails.securityData);
     } else if (
+      // TODO: when to show policy vs. componentDetails
       nexusContext.policyDetails.results?.length > 0 &&
       nexusContext.policyDetails.results[0].securityData
     ) {
@@ -48,7 +49,7 @@ const SecurityThreat = (): JSX.Element | null => {
       return (
         <React.Fragment>
           <header className="nx-grid-header">
-            <NxH3>Max Security Threat</NxH3>
+            <h3 className={'nx-h3'}>Max Security Threat</h3>
           </header>
           <NxPolicyViolationIndicator
             policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}

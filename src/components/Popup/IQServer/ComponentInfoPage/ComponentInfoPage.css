@@ -10,3 +10,7 @@
 .componentinfo-threat-indicator {
   margin-bottom: var(--nx-spacing-4x) !important;
 }
+
+#security-threat {
+  padding-top: 10px !important;
+}

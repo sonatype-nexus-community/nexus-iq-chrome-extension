@@ -16,8 +16,13 @@
 
 import {PackageURL} from 'packageurl-js';
 
-const generatePackageURL = (format: string, name: string, version: string): PackageURL => {
-  return generatePackageURLComplete(format, name, version, undefined, undefined, undefined);
+const generatePackageURL = (
+  format: string,
+  name: string,
+  version: string,
+  qualifiers?
+): PackageURL => {
+  return generatePackageURLComplete(format, name, version, undefined, qualifiers, undefined);
 };
 
 const generatePackageURLWithNamespace = (

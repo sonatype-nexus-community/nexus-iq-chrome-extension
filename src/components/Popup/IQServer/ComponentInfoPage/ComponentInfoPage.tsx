@@ -21,24 +21,14 @@ import {
   ThreatLevelNumber,
   NxDescriptionList,
   NxGrid,
-  NxH2
+  NxTooltip
 } from '@sonatype/react-shared-components';
 import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
-import {PackageURL} from 'packageurl-js';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat';
 import {DATA_SOURCES} from '../../../../utils/Constants';
 import './ComponentInfoPage.css';
-
-// type ComponentInfoPageProps = {
-//   purl: PackageURL;
-//   description?: string;
-//   catalogDate?: Date;
-//   matchState?: string;
-//   policyData?: PolicyData;
-//   hash?: string;
-// };
 
 const ComponentInfoPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -46,7 +36,8 @@ const ComponentInfoPage = (): JSX.Element | null => {
   const formatDate = (date: Date | undefined | null): string => {
     if (date) {
       const dateTime = new Date(date);
-      return dateTime.toISOString();
+      const noTime = dateTime.toUTCString().split(' ').slice(0, 4).join(' ');
+      return noTime;
     }
     return 'N/A';
   };
@@ -59,9 +50,14 @@ const ComponentInfoPage = (): JSX.Element | null => {
           <NxGrid.Row>
             <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
               <header className="nx-grid-header">
-                <h3 className="nx-h3 nx-grid-header__title">
-                  {nexusContext.componentDetails.component.displayName}
-                </h3>
+                <NxTooltip
+                  placement="top"
+                  title={<>{nexusContext.componentDetails.component.displayName}</>}
+                >
+                  <h3 className="nx-h2 nx-grid-header__title">
+                    {nexusContext.componentDetails.component.displayName}
+                  </h3>
+                </NxTooltip>
               </header>
               {nexusContext.componentDetails.component.description && (
                 <NxP>{nexusContext.componentDetails.component.description}</NxP>
@@ -87,7 +83,9 @@ const ComponentInfoPage = (): JSX.Element | null => {
                   <NxDescriptionList.Item>
                     <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
                     <NxDescriptionList.Description>
-                      {nexusContext.componentDetails.projectData?.lastReleaseDate}
+                      {formatDate(
+                        new Date(nexusContext.componentDetails.projectData?.lastReleaseDate)
+                      )}
                     </NxDescriptionList.Description>
                   </NxDescriptionList.Item>
                 )}
@@ -95,16 +93,30 @@ const ComponentInfoPage = (): JSX.Element | null => {
                   <NxDescriptionList.Item>
                     <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
                     <NxDescriptionList.Description>
-                      {nexusContext.componentDetails.projectData?.firstReleaseDate}
+                      {formatDate(
+                        new Date(nexusContext.componentDetails.projectData?.firstReleaseDate)
+                      )}
                     </NxDescriptionList.Description>
                   </NxDescriptionList.Item>
                 )}
                 {nexusContext.componentDetails.catalogDate && (
                   <NxDescriptionList.Item>
-                    <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
-                    <NxDescriptionList.Description>
-                      {nexusContext.componentDetails.catalogDate}
-                    </NxDescriptionList.Description>
+                    <NxTooltip
+                      placement="top"
+                      // className="gallery-tooltip-example"
+                      title={<>The date this component version was added to Nexus Intelligence</>}
+                    >
+                      <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
+                    </NxTooltip>
+                    <NxTooltip
+                      placement="top"
+                      // className="gallery-tooltip-example"
+                      title={<>{nexusContext.componentDetails.catalogDate}</>}
+                    >
+                      <NxDescriptionList.Description>
+                        {formatDate(new Date(nexusContext.componentDetails.catalogDate))}
+                      </NxDescriptionList.Description>
+                    </NxTooltip>
                   </NxDescriptionList.Item>
                 )}
                 {nexusContext.componentDetails.component.hash && (
@@ -118,14 +130,16 @@ const ComponentInfoPage = (): JSX.Element | null => {
               </NxDescriptionList>
             </section>
             <section className="nx-grid-col nx-grid-col--33">
-              {/*<p className="nx-p">*/}
               {nexusContext.policyDetails.results[0] &&
                 getPolicyViolationIndicator(nexusContext.policyDetails.results[0].policyData)}
-              <SecurityThreat />
+
               {nexusContext &&
                 nexusContext.licenseDetails &&
                 nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
-              {/*</p>*/}
+
+              <div id="security-threat">
+                <SecurityThreat />
+              </div>
             </section>
           </NxGrid.Row>
         </React.Fragment>

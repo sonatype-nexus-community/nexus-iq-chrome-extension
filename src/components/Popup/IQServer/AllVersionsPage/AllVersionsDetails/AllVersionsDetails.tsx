@@ -87,25 +87,6 @@ const AllVersionsDetails = (): JSX.Element | null => {
     return null;
   };
 
-  // const scrollToCurrentVersion = () => {
-  //   // const selectedElement = document.getgetElementsByClassName('nx-list__item selected');
-  //   const selectedElement = document.querySelector('[aria-selected="true"]');
-  //   console.debug('Trying to get selected component');
-  //   // if (selectedElement && selectedElement.length > 0 && !isElementInViewport(selectedElement[0])) {
-  //   if (selectedElement?.length > 0) {
-  //     console.debug('I should be scrolling to this: ', selectedElement);
-  //     selectedElement.scrollIntoViewIfNeeded();
-  //   }
-  // };
-
-  // const isElementInViewport = (element: Element) => {
-  //   const bounding = element.getBoundingClientRect();
-  //   return (
-  //     bounding.top >= 0 &&
-  //     bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-  //   );
-  // };
-
   return renderAllVersionsDetails(nexusContext);
 };
 

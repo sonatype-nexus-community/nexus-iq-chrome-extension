@@ -15,7 +15,7 @@
  */
 import React, {useContext} from 'react';
 import {
-  NxH3,
+  NxList,
   NxLoadingSpinner,
   NxPolicyViolationIndicator,
   ThreatLevelNumber
