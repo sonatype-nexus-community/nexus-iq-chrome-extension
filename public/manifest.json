@@ -94,7 +94,7 @@
         "https://search.maven.org/*",
         "https://pkg.go.dev/*",
         "https://central.sonatype.dev/*",
-        "https://central.sonatype.com/"
+        "https://central.sonatype.com/*"
       ],
       "css": ["/css/pagestyle.css"],
       "js": ["/static/js/content.js"],
