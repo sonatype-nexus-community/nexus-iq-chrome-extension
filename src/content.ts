@@ -22,7 +22,6 @@ import $ from 'cash-dom';
 
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Received a message on content.js', event);
-
   if (event.type === 'changedURLOnPage') {
     console.trace('Received changedURLOnPage message on content.js');
     console.trace(event.url);
@@ -48,7 +47,9 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
       // const policyData: PolicyData = event.policyData;
       //
       // console.log('Policy Details', policyData);
-
+      const loc = window.location.href;
+      const element = findElement(loc);
+      removeClasses(element);
       if (
         data.componentDetails[0] &&
         data.componentDetails[0].securityData &&
@@ -71,18 +72,20 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
         } else if (maxSeverity >= 2) {
           vulnClass = 'sonatype-iq-extension-vuln-low';
         }
-        const repoType = findRepoType(window.location.href);
-        if (repoType) {
-          const selector = $(repoType.titleSelector);
-          if (selector && selector.length > 0) {
-            selector.addClass(vulnClass);
-            selector.addClass('sonatype-iq-extension-vuln');
-          }
-        }
+        addClasses(vulnClass, element);
       }
     }
   }
 });
+
+const removeClasses = (element) => {
+  //remove the class
+  console.info('removing classes', element);
+  element.removeClass('sonatype-iq-extension-vuln');
+  element.removeClass('sonatype-iq-extension-vuln-severe');
+  element.removeClass('sonatype-iq-extension-vuln-high');
+  element.removeClass('sonatype-iq-extension-vuln-low');
+};
 
 const checkPage = () => {
   const repoType = findRepoType(window.location.href);
@@ -104,3 +107,22 @@ const checkPage = () => {
 };
 
 checkPage();
+
+function findElement(loc: string) {
+  console.info('findElement', loc);
+  const repoType = findRepoType(loc);
+  if (repoType) {
+    const element = $(repoType.titleSelector);
+    if (element && element.length > 0) {
+      return element;
+    }
+  }
+  return null;
+}
+function addClasses(vulnClass: string, element) {
+  console.info('addClasses', vulnClass, element);
+  if (element) {
+    element.addClass(vulnClass);
+    element.addClass('sonatype-iq-extension-vuln');
+  }
+}
