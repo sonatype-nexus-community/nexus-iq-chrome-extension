@@ -1,32 +1,32 @@
-.vuln-severe {
+.sonatype-iq-extension-vuln-severe {
   border: 3px solid hsl(348, 100%, 40%) !important;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 5px 5px 8px hsl(348, 100%, 40%);
 }
 
-.vuln-high {
+.sonatype-iq-extension-vuln-high {
   border: 3px solid hsl(348, 100%, 65%) !important;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 5px 5px 8px hsl(348, 100%, 65%);
 }
 
-.vuln-med {
+.sonatype-iq-extension-vuln-med {
   border: 3px solid orange !important;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 5px 5px 8px orange;
 }
 
-.vuln-low {
+.sonatype-iq-extension-vuln-low {
   border: 3px solid hsl(42, 100%, 75%) !important;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 5px 5px 8px hsl(42, 100%, 75%);
 }
 
-.vuln:before {
+.sonatype-iq-extension-vuln:before {
   content: url("chrome-extension://__MSG_@@extension_id__/images/NexusLifecycle_Vulnerable-32x32.png");
   vertical-align: middle;
 

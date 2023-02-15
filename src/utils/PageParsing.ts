@@ -85,6 +85,11 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       return parseCentralSonatypeDev(url);
       break;
     }
+    case REPOS.centralSonatypeCom: {
+      console.info('fixin to call parseCentralSonatypeCom: ' + url);
+      return parseCentralSonatypeDev(url);
+      break;
+    }
 
     default: {
       console.debug(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`);

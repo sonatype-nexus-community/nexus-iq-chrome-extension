@@ -61,22 +61,22 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
           })
         );
 
-        let vulnClass = 'vuln-low';
+        let vulnClass = 'sonatype-iq-extension-vuln-low';
         if (maxSeverity >= 9) {
-          vulnClass = 'vuln-severe';
+          vulnClass = 'sonatype-iq-extension-vuln-severe';
         } else if (maxSeverity >= 7) {
-          vulnClass = 'vuln-high';
+          vulnClass = 'sonatype-iq-extension-vuln-high';
         } else if (maxSeverity >= 5) {
-          vulnClass = 'vuln-med';
+          vulnClass = 'sonatype-iq-extension-vuln-med';
         } else if (maxSeverity >= 2) {
-          vulnClass = 'vuln-low';
+          vulnClass = 'sonatype-iq-extension-vuln-low';
         }
         const repoType = findRepoType(window.location.href);
         if (repoType) {
           const selector = $(repoType.titleSelector);
           if (selector && selector.length > 0) {
             selector.addClass(vulnClass);
-            selector.addClass('vuln');
+            selector.addClass('sonatype-iq-extension-vuln');
           }
         }
       }
