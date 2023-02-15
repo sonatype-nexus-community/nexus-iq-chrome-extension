@@ -13,21 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   NxList,
   NxPolicyViolationIndicator,
+  NxTextLink,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import {ConstraintViolation, PolicyViolation, Reason} from '@sonatype/js-sona-types';
 import '../PolicyPage.css';
+import Any = jasmine.Any;
+import CveUrl from '../CveUrl/CveUrl';
 
 type PolicyViolationProps = {
   policyViolation: PolicyViolation;
 };
+const IQ_SERVER_URL = 'iqServerURL';
 
 const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
   const [open, setOpen] = useState(false);
+  const [iqServerUrl, setIqServerUrl] = useState('');
+  chrome.storage.local.get('iqServerURL', function (result) {
+    console.log(`get local storage result: ${result.iqServerURL}`);
+    setIqServerUrl(result.iqServerURL);
+  });
+
+  const getNewReason = (reason): string => {
+    const newReason: string = reason.replace(
+      /((CVE|sonatype)-[0-9]{4}-[0-9]+)/,
+      `<a href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</a>"`
+      // `<NxTextLink external href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</NxTextLink>"`
+    );
+    return newReason;
+  };
 
   const printPolicyViolation = (policyViolation: PolicyViolation) => {
     if (policyViolation) {
@@ -51,14 +69,17 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
                 <td className="nx-cell">{constraint.constraintName}</td>
 
                 <td className="nx-cell">
-                  <NxList>
-                    {constraint.reasons.map((reason: Reason) => (
-                      // eslint-disable-next-line react/jsx-key
-                      <NxList.Item className="nx-list-in-cell">
-                        <NxList.Text>{reason.reason}</NxList.Text>
-                      </NxList.Item>
-                    ))}
-                  </NxList>
+                  {constraint.reasons.map((reason: Reason) => (
+                    // eslint-disable-next-line react/jsx-key
+                    <NxList>
+                      {constraint.reasons.map((reason: Reason) => (
+                        // eslint-disable-next-line react/jsx-key
+                        <NxList.Item className="nx-list-in-cell">
+                          {getNewReason(reason.reason)}
+                        </NxList.Item>
+                      ))}
+                    </NxList>
+                  ))}
                 </td>
               </React.Fragment>
             ))}

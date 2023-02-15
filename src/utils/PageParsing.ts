@@ -87,7 +87,7 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
     }
 
     default: {
-      throw new Error(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`);
+      console.debug(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`);
     }
   }
   console.trace('got here by mistake');

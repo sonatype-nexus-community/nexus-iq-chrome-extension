@@ -30,6 +30,7 @@ const RemediationDetails = (): JSX.Element | null => {
 
   const buildNextUrlAndGo = (nextUrlVersion: string) => {
     const currentUrl = nexusContext.currentUrl.toString();
+    console.log('Remediation currentUrl: ', currentUrl);
     const repoType = findRepoType(currentUrl);
     let newURL;
     if (currentUrl.indexOf(nextUrlVersion) < 0 && repoType) {

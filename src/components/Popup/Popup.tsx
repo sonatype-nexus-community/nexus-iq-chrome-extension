@@ -34,19 +34,9 @@ import {Puff} from '@agney/react-loading';
 import './Popup.css';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 import {PackageURL} from 'packageurl-js';
-import {
-  faAngry,
-  faExternalLinkAlt,
-  faExternalLinkSquareAlt
-} from '@fortawesome/free-solid-svg-icons';
-
-import AllVersionsPage from './IQServer/AllVersionsPage/AllVersionsPage';
-import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
-import AdvancedLegalDisplay from './IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay';
 
 const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
-
   const nexusContext = useContext(NexusContext);
 
   const renderPopup = (nexusContext: NexusContextInterface | undefined) => {
