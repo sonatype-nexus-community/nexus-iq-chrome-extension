@@ -31,3 +31,5 @@ SAVETEXT.txt
 
 .yarn
 .yarnrc
+
+yarn.lock
