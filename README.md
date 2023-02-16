@@ -21,14 +21,11 @@ The plugin can scan packages at the following repositories:
 
 1. .Net – NuGet – `https://www.nuget.org/`
 2. Alpine – Linux – `https://pkgs.alpinelinux.org/`
-3. Chocolatey – Windows – `https://chocolatey.org/`
-4. Clojars – Clojure – `https://clojars.org/`
 5. CocoaPods – iOS – `https://cocoapods.org/`
 6. Conan – C/C++ – `https://conan.io/center/`
 7. Conda – Python – `https://anaconda.org/anaconda/`
 8. Debian – Linux – `https://packages.debian.org/`
 9. Debian – Linux – `https://tracker.debian.org/pkg/`
-10. GitHub – releases – `https://github.com/*/releases/tag/*`
 11. Golang – Go – `https://search.gocenter.io/`
 12. Java – Maven – `https://mvnrepository.com/`
 13. Java – Maven – `https://repo.maven.apache.org/`

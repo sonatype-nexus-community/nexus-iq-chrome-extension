@@ -26,19 +26,19 @@
   "background": {
     "service_worker": "extension_service_worker.js"
   },
-  "host_permissions": [
-    "<all_urls>",
+  "optional_host_permissions":[
+    "<all_urls>"
+  ],
+  "host_permissions": [   
+    "<all_urls>", 
     "https://pkgs.alpinelinux.org/",
     "https://anaconda.org/",
-    "https://chocolatey.org/packages/",
-    "https://clojars.org/",
     "https://cocoapods.org/",
     "https://conan.io/center/",
     "https://cran.r-project.org/",
     "https://crates.io/",
     "https://packages.debian.org/",
-    "https://tracker.debian.org/pkg/",
-    "https://github.com/",
+    "https://tracker.debian.org/pkg/",    
     "https://mvnrepository.com/",
     "https://www.npmjs.com/",
     "https://www.nuget.org/",
@@ -70,15 +70,12 @@
       "matches": [
         "https://pkgs.alpinelinux.org/package/*",
         "https://anaconda.org/*",
-        "https://chocolatey.org/packages/*",
-        "https://clojars.org/*",
         "https://cocoapods.org/*",
         "https://conan.io/center/*",
         "https://cran.r-project.org/*",
         "https://crates.io/*",
         "https://packages.debian.org/*",
         "https://tracker.debian.org/pkg/*",
-        "https://github.com/*/releases/tag/*",
         "https://mvnrepository.com/*",
         "https://www.npmjs.com/*",
         "https://www.nuget.org/*",
