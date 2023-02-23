@@ -41,8 +41,8 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
   const getNewReason = (reason): string => {
     const newReason: string = reason.replace(
       /((CVE|sonatype)-[0-9]{4}-[0-9]+)/,
-      `<a href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</a>"`
-      // `<NxTextLink external href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</NxTextLink>"`
+      // `<a href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</a>"`
+      `<NxTextLink external href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</NxTextLink>"`
     );
     return newReason;
   };
@@ -75,6 +75,7 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
                       {constraint.reasons.map((reason: Reason) => (
                         // eslint-disable-next-line react/jsx-key
                         <NxList.Item className="nx-list-in-cell">
+                          {/*{reason.reason}*/}
                           {getNewReason(reason.reason)}
                         </NxList.Item>
                       ))}

@@ -65,6 +65,8 @@ describe('<LicenseThreat />', () => {
     const component = renderer.create(
       <NexusContext.Provider
         value={{
+          alpDrawerIsOpen: false,
+          toggleAlpDrawer: undefined,
           scanType: DATA_SOURCES.NEXUSIQ,
           licenseDetails: licenseDetail,
           logger: new TestLogger(LogLevel.ERROR)

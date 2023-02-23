@@ -57,6 +57,8 @@ describe('<SecurityThreat />', () => {
     const comp = renderer.create(
       <NexusContext.Provider
         value={{
+          alpDrawerIsOpen: false,
+          toggleAlpDrawer: undefined,
           logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.NEXUSIQ,
           policyDetails: policyJson
@@ -74,6 +76,8 @@ describe('<SecurityThreat />', () => {
     const comp = renderer.create(
       <NexusContext.Provider
         value={{
+          alpDrawerIsOpen: false,
+          toggleAlpDrawer: undefined,
           logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.OSSINDEX,
           componentDetails: component

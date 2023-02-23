@@ -26,6 +26,8 @@ import {DATA_SOURCES} from '../utils/Constants';
 import {PackageURL} from 'packageurl-js';
 
 export interface NexusContextInterface {
+  alpDrawerIsOpen: boolean;
+  toggleAlpDrawer: () => void;
   scanType: string;
   componentDetails?: ComponentContainer;
   policyDetails?: IqServerComponentPolicyEvaluationResult;
@@ -45,6 +47,8 @@ export interface NexusContextInterface {
 }
 
 const initialContext: NexusContextInterface = {
+  alpDrawerIsOpen: false,
+  toggleAlpDrawer: undefined,
   scanType: DATA_SOURCES.OSSINDEX,
   componentDetails: undefined,
   policyDetails: undefined,

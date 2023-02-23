@@ -29,6 +29,7 @@ import {
 import {PackageURL} from 'packageurl-js';
 import localforage from 'localforage';
 import BrowserExtensionLogger from './logger/Logger';
+import AlpDrawer from './components/AlpDrawer/AlpDrawer';
 
 const _browser = chrome ? chrome : browser;
 
@@ -41,6 +42,8 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     super(props);
 
     this.state = {
+      toggleAlpDrawer: this.toggleAlpDrawer,
+      alpDrawerIsOpen: false,
       currentVersion: undefined,
       errorMessage: undefined,
       scanType: DATA_SOURCES.OSSINDEX,
@@ -51,6 +54,10 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       getComponentDetails: this.getComponentDetails
     };
   }
+
+  toggleAlpDrawer = (): void => {
+    this.setState((state) => ({alpDrawerIsOpen: !state.alpDrawerIsOpen}));
+  };
 
   getStorageValue = (key: string, defaultValue: any): Promise<any> => {
     return new Promise((resolve) => {
@@ -356,6 +363,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   render(): JSX.Element {
     return (
       <NexusContext.Provider value={this.state}>
+        <AlpDrawer />
         <div className="nx-page-content">
           <main className="nx-page-main nx-viewport-sized">
             <Popup />
