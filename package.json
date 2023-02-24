@@ -90,8 +90,7 @@
   "jest": {
     "preset": "ts-jest",
     "transformIgnorePatterns": [
-      "node_modules/(?!@sonatype/react-shared-components)",
-      "node_modules/(?!pretty-bytes)"
+      "/node_modules/(?!@sonatype\/react-shared-components|pretty-bytes)"
     ],
     "transform": {
       "^.+\\.(ts|tsx)?$": "ts-jest",

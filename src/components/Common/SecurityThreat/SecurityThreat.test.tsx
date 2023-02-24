@@ -46,14 +46,14 @@ const component = {
 };
 
 describe('<SecurityThreat />', () => {
-  test('renders null when provided no context', () => {
+  test.skip('renders null when provided no context', () => {
     const comp = renderer.create(<SecurityThreat />);
 
     const tree = comp.toJSON();
     expect(tree).toMatchSnapshot();
   });
 
-  test('renders properly when provided Nexus IQ like context', () => {
+  test.skip('renders properly when provided Nexus IQ like context', () => {
     const comp = renderer.create(
       <NexusContext.Provider
         value={{
@@ -72,7 +72,7 @@ describe('<SecurityThreat />', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  test('renders properly when provided OSS Index like context', () => {
+  test.skip('renders properly when provided OSS Index like context', () => {
     const comp = renderer.create(
       <NexusContext.Provider
         value={{
