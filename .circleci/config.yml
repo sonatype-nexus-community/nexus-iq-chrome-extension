@@ -1,11 +1,60 @@
-version: '2.1'
+version: 2.1
+
 orbs:
-  node: circleci/node@4.7.0
+  node: circleci/node@5.1.0
+
 jobs:
+  build:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          name: Confirm Node Version
+          command: node --version
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Build
+          command: npm run build
+      - test:
+          name: Build
+          command: npm run test
+
+  release_build:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          name: Confirm Node Version
+          command: node --version
+      - run:
+          name: Build
+          command: npm run build
+      - run:
+          name: Semantic Release
+          command: npx semantic-release
+
+  # See https://circleci.com/blog/continuously-deploy-a-chrome-extension/
+  release_publish:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - run:
+          name: Coming soon!
+          command: date
+
   test:
     executor:
       name: node/default
-      tag: '14.17.1'
+      tag: "14.17.1"
+
     steps:
       - checkout
       - node/install-packages:
@@ -15,6 +64,17 @@ jobs:
           name: Run YARN tests
 
 workflows:
+  release:
+    jobs:
+      - release_build
+      - release_publish:
+          requires:
+            - "release_build"
+          context: "nexus-iq-chrome-extension"
+          filters:
+            branches:
+              only: main
+
   test_browser_extension_with_yarn:
     jobs:
       - test
