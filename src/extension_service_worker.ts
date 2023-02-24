@@ -81,7 +81,7 @@ const handleURLOSSIndex = (purl: string, settings: Settings): Promise<ComponentD
         product: manifestData.name,
         version: manifestData.version
       },
-      localforage as unknown as Storage
+      localforage as any
     );
 
     const purlObj = PackageURL.fromString(purl);
