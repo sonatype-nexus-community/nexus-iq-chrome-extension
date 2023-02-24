@@ -81,6 +81,7 @@ const handleURLOSSIndex = (purl: string, settings: Settings): Promise<ComponentD
         product: manifestData.name,
         version: manifestData.version
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       localforage as any
     );
 
