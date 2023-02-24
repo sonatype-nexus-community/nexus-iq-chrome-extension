@@ -4,7 +4,7 @@ orbs:
   node: circleci/node@5.1.0
 
 jobs:
-  build:
+  build_and_test:
     docker:
       - image: "cimg/base:stable"
     steps:
@@ -20,7 +20,7 @@ jobs:
       - run:
           name: Build
           command: npm run build
-      - test:
+      - run:
           name: Build
           command: npm run test
 
@@ -66,7 +66,10 @@ jobs:
 workflows:
   ci:
     jobs:
-      - build
+      - build_and_test:
+          filters:
+            branches:
+              ignore: main
 
   release:
     jobs:
