@@ -64,9 +64,16 @@ jobs:
           name: Run YARN tests
 
 workflows:
+  ci:
+    jobs:
+      - build
+
   release:
     jobs:
-      - release_build
+      - release_build:
+          filters:
+            branches:
+              only: main
       - release_publish:
           requires:
             - "release_build"
