@@ -30,14 +30,17 @@ const GeneralOptionsPage = (): JSX.Element | null => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[LOG_LEVEL]) {
         setLogLevel(items[LOG_LEVEL]);
       }
       setLoading(false);
     });
+    // eslint-disable-next-line
   }, [logLevel]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (func: any, event: any, key: string) => {
     console.log(event.target.value);
     func(parseInt(event.target.value));

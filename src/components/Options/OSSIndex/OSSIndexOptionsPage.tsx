@@ -25,6 +25,7 @@ const OSSIndexOptionsPage = (): JSX.Element | null => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[OSS_INDEX_USER]) {
         setOSSIndexUser(items[OSS_INDEX_USER]);
@@ -36,6 +37,7 @@ const OSSIndexOptionsPage = (): JSX.Element | null => {
     });
   }, [ossIndexUser, ossIndexToken]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (func: any, value: any, key: string) => {
     func(value);
     chrome.storage.local.set({[key]: value});
