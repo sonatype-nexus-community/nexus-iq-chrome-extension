@@ -53,6 +53,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[IQ_SERVER_URL]) {
         setIQServerURL(items[IQ_SERVER_URL]);
@@ -73,6 +74,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
     });
   }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (setter: any, value: string, key: string) => {
     setter(value);
     chrome.storage.local.set({[key]: value}, () => {

@@ -26,7 +26,7 @@ import {DATA_SOURCES} from '../utils/Constants';
 import {PackageURL} from 'packageurl-js';
 
 export interface NexusContextInterface {
-  alpDrawerIsOpen: boolean;
+  showAlpDrawer: boolean;
   toggleAlpDrawer: () => void;
   scanType: string;
   componentDetails?: ComponentContainer;
@@ -47,7 +47,7 @@ export interface NexusContextInterface {
 }
 
 const initialContext: NexusContextInterface = {
-  alpDrawerIsOpen: false,
+  showAlpDrawer: false,
   toggleAlpDrawer: undefined,
   scanType: DATA_SOURCES.OSSINDEX,
   componentDetails: undefined,

@@ -16,13 +16,19 @@
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../../context/NexusContext';
 import {NxVulnerabilityDetails} from '@sonatype/react-shared-components';
+import {IqServerVulnerabilityDetails} from '../../../../../../../../js-sona-types';
+import {VulnerabilityDetails} from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types';
 
 const VulnDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext && nexusContext.vulnDetails) {
-      return <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails as any} />;
+      return (
+        <NxVulnerabilityDetails
+          vulnerabilityDetails={nexusContext.vulnDetails as VulnerabilityDetails}
+        />
+      );
     }
     return null;
   };

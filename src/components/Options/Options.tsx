@@ -41,6 +41,7 @@ const Options = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[SCAN_TYPE]) {
         setScanType(items[SCAN_TYPE]);
@@ -48,6 +49,7 @@ const Options = (): JSX.Element | null => {
     });
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (func: any, value: any, key: string) => {
     func(value);
     chrome.storage.local.set({[key]: value});
