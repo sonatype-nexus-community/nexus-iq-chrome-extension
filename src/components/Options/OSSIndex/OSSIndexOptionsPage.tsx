@@ -51,17 +51,19 @@ const OSSIndexOptionsPage = (): JSX.Element | null => {
     if (!loading) {
       return (
         <form className="nx-form">
-          <NxFormGroup label={`OSS Index Username`} isRequired>
+          <NxFormGroup label={`Sonatype OSS Index Email Address`} isRequired>
             <NxStatefulTextInput
               defaultValue={ossIndexUser}
+              placeholder={`enter your email address`}
               aria-required={true}
               validator={validator}
               onChange={(event) => setItem(setOSSIndexUser, event, OSS_INDEX_USER)}
             />
           </NxFormGroup>
-          <NxFormGroup label={`OSS Index Token`} isRequired>
+          <NxFormGroup label={`Sonatype OSS Index API Token`} isRequired>
             <NxStatefulTextInput
               defaultValue={ossIndexToken}
+              placeholder={`enter your api token`}
               aria-required={true}
               validator={validator}
               type="password"

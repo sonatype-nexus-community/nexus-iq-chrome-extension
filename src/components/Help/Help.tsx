@@ -21,7 +21,7 @@ const Help = (): JSX.Element => {
     return (
       <React.Fragment>
         <h1>
-          <NxPageTitle>Sonatype Nexus Browser Extension Help</NxPageTitle>
+          <NxPageTitle>Sonatype Browser Extension Help</NxPageTitle>
         </h1>
         <NxTile>
           <NxTile.Header>

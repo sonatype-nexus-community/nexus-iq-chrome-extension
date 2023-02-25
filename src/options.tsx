@@ -71,7 +71,7 @@ const renderOptions = () => {
           supportText={`Request Support`}
           supportLink={pack.homepage}
           releaseText={`Release ${pack.version}`}
-          productTagLine="Powered by Nexus IQ Server and OSS Index"
+          productTagLine="Powered by Sonatype IQ Server & Sonatype OSS Index"
           showCreatedBy={true}
         />
       </NxStatefulGlobalSidebar>
