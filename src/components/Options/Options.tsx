@@ -60,23 +60,14 @@ const Options = (): JSX.Element | null => {
       return (
         <React.Fragment>
           <h1>
-            <NxPageTitle>Sonatype Nexus Browser Extension Options</NxPageTitle>
+            <NxPageTitle>Sonatype Browser Extension Options</NxPageTitle>
           </h1>
           <NxTile>
-            <NxTile.Header>
-              <NxH2>Evaluation Data Source</NxH2>
-            </NxTile.Header>
+            {/*<NxTile.Header>*/}
+            {/*  <NxH2>Connection Type</NxH2>*/}
+            {/*</NxTile.Header>*/}
             <NxTile.Content>
-              <NxFieldset label={`Selected Evaluation Type: ${scanType}`} isRequired>
-                <NxRadio
-                  name={SCAN_TYPE}
-                  value={DATA_SOURCES.OSSINDEX}
-                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
-                  isChecked={scanType === DATA_SOURCES.OSSINDEX}
-                  radioId="scanType-OSS-Index"
-                >
-                  OSS Index
-                </NxRadio>
+              <NxFieldset label="Connection Type" isRequired>
                 <NxRadio
                   name={SCAN_TYPE}
                   value={DATA_SOURCES.NEXUSIQ}
@@ -84,26 +75,35 @@ const Options = (): JSX.Element | null => {
                   isChecked={scanType === DATA_SOURCES.NEXUSIQ}
                   radioId="scanType-IQ-Server"
                 >
-                  IQ Server
+                  Sonatype IQ Server
+                </NxRadio>
+                <NxRadio
+                  name={SCAN_TYPE}
+                  value={DATA_SOURCES.OSSINDEX}
+                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
+                  isChecked={scanType === DATA_SOURCES.OSSINDEX}
+                  radioId="scanType-OSS-Index"
+                >
+                  Sonatype OSS Index
                 </NxRadio>
               </NxFieldset>
-              <NxTile.Header>
-                <NxH2>Additional Configuration</NxH2>
-              </NxTile.Header>
+              {/*<NxTile.Header>*/}
+              {/*  <NxH2>Connection Configuration</NxH2>*/}
+              {/*</NxTile.Header>*/}
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
-                  <NxTab>General</NxTab>
-                  <NxTab>Nexus IQ</NxTab>
-                  <NxTab>OSS Index</NxTab>
+                  <NxTab>Sonatype IQ Server</NxTab>
+                  <NxTab>Sonatype OSS Index</NxTab>
+                  <NxTab>General Options</NxTab>
                 </NxTabList>
-                <NxTabPanel>
-                  <GeneralOptionsPage />
-                </NxTabPanel>
                 <NxTabPanel>
                   <IQServerOptionsPage />
                 </NxTabPanel>
                 <NxTabPanel>
                   <OSSIndexOptionsPage />
+                </NxTabPanel>
+                <NxTabPanel>
+                  <GeneralOptionsPage />
                 </NxTabPanel>
               </NxTabs>
             </NxTile.Content>
