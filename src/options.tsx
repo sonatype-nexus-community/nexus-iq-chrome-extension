@@ -69,7 +69,7 @@ const renderOptions = () => {
         </NxGlobalSidebarNavigation>
         <NxGlobalSidebarFooter
           supportText={`Request Support`}
-          supportLink={pack.homepage}
+          supportLink={pack.bugs.url}
           releaseText={`Release ${pack.version}`}
           productTagLine="Powered by Nexus IQ Server and OSS Index"
           showCreatedBy={true}
