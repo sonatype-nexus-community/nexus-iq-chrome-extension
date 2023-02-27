@@ -18,13 +18,12 @@ import {
   NxAccordion,
   NxH2,
   NxH3,
-  NxH4,
-  NxList,
   NxPolicyViolationIndicator,
-  NxStatefulAccordion,
+  NxTextLink,
   NxTag,
-  NxThreatIndicator,
-  ThreatLevelNumber
+  ThreatLevelNumber,
+  NxStatefulAccordion,
+  NxDescriptionList
 } from '@sonatype/react-shared-components';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {CvssVectorExplainer, VectorDetails} from '../../../../utils/CvssVectorExplainer';
@@ -44,13 +43,8 @@ const LiteSecurityPage = (): JSX.Element | null => {
       nexusContext.componentDetails.securityData.securityIssues
     ) {
       return (
-        <section className="nx-tile">
-          <header className="nx-tile-header">
-            <div className="nx-tile-header__title">
-              <h2 className="nx-h2">Known Vulnerabilities</h2>
-            </div>
-          </header>
-          <div className="nx-tile-content nx-tile-content--accordion-container">
+        <div className="nx-grid-row">
+          <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
             {nexusContext.componentDetails.securityData.securityIssues.map(
               (issue: SecurityIssue) => {
                 const vectorExplained = CvssVectorExplainer(issue.vector.split('/'));
@@ -66,48 +60,52 @@ const LiteSecurityPage = (): JSX.Element | null => {
                     </NxAccordion.Header>
                     <NxH3>
                       Learn more at{' '}
-                      <a href={issue.url} target="_blank" rel="noreferrer">
-                        OSS Index
-                      </a>
+                      <NxTextLink external href={issue.url} target={`_new`}>
+                        Sonatype OSS Index
+                      </NxTextLink>
                     </NxH3>
-                    <NxList>
-                      <NxList.Item>
-                        <NxList.Text>Severity</NxList.Text>
-                        <NxList.Actions>
-                          <NxThreatIndicator></NxThreatIndicator>
+                    <NxDescriptionList>
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>Severity</NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
                           <NxPolicyViolationIndicator
                             policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
                           >
                             {issue.severity.toString()}
                           </NxPolicyViolationIndicator>
-                        </NxList.Actions>
-                      </NxList.Item>
-                      <NxList.Item>
-                        <NxList.DescriptionTerm>Description</NxList.DescriptionTerm>
-                        <NxList.Description>{issue.description}</NxList.Description>
-                      </NxList.Item>
-                      <NxList.Item>
-                        <NxList.DescriptionTerm>Source</NxList.DescriptionTerm>
-                        <NxList.Description>{issue.source}</NxList.Description>
-                      </NxList.Item>
-                    </NxList>
-                    <NxH4>CVSS Vector</NxH4>
-                    <React.Fragment>
-                      {vectorExplained &&
-                        Array.from(vectorExplained).map(([key, value]) => {
-                          return (
-                            <NxTag key={key} color={(value as VectorDetails).color}>{`${key} - ${
-                              (value as VectorDetails).quickExplanation
-                            } ${(value as VectorDetails).vector}`}</NxTag>
-                          );
-                        })}
-                    </React.Fragment>
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>Description</NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {issue.description}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>CVSS Vector</NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          <React.Fragment>
+                            {vectorExplained &&
+                              Array.from(vectorExplained).map(([key, value]) => {
+                                return (
+                                  <NxTag
+                                    key={key}
+                                    color={(value as VectorDetails).color}
+                                  >{`${key} - ${(value as VectorDetails).quickExplanation} ${
+                                    (value as VectorDetails).vector
+                                  }`}</NxTag>
+                                );
+                              })}
+                          </React.Fragment>
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                    </NxDescriptionList>
                   </NxStatefulAccordion>
                 );
               }
             )}
-          </div>
-        </section>
+          </section>
+        </div>
       );
     }
     return null;
