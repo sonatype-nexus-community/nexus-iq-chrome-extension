@@ -50,14 +50,26 @@ const ComponentInfoPage = (): JSX.Element | null => {
           <NxGrid.Row>
             <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
               <header className="nx-grid-header">
-                <NxTooltip
-                  placement="top"
-                  title={<>{nexusContext.componentDetails.component.displayName}</>}
-                >
-                  <h3 className="nx-h2 nx-grid-header__title">
-                    {nexusContext.componentDetails.component.displayName}
-                  </h3>
-                </NxTooltip>
+                {nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
+                  <NxTooltip
+                    placement="top"
+                    title={<>{nexusContext.componentDetails.component.displayName}</>}
+                  >
+                    <h3 className="nx-h2 nx-grid-header__title">
+                      {nexusContext.componentDetails.component.displayName}
+                    </h3>
+                  </NxTooltip>
+                )}
+                {nexusContext.scanType === DATA_SOURCES.OSSINDEX && (
+                  <NxTooltip
+                    placement="top"
+                    title={<>{nexusContext.componentDetails.component.name}</>}
+                  >
+                    <h3 className="nx-h2 nx-grid-header__title">
+                      {nexusContext.componentDetails.component.name}
+                    </h3>
+                  </NxTooltip>
+                )}
               </header>
               {nexusContext.componentDetails.component.description && (
                 <NxP>{nexusContext.componentDetails.component.description}</NxP>
@@ -130,7 +142,8 @@ const ComponentInfoPage = (): JSX.Element | null => {
               </NxDescriptionList>
             </section>
             <section className="nx-grid-col nx-grid-col--33">
-              {nexusContext.policyDetails.results[0] &&
+              {nexusContext.scanType === DATA_SOURCES.NEXUSIQ &&
+                nexusContext.policyDetails.results[0] &&
                 getPolicyViolationIndicator(nexusContext.policyDetails.results[0].policyData)}
 
               {nexusContext &&
@@ -145,6 +158,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
         </React.Fragment>
       );
     } else {
+      console.info('No component details results');
       return null;
     }
   };
