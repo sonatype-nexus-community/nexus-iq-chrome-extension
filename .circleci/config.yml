@@ -1,3 +1,16 @@
+# Copyright 2020-present Sonatype Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 version: 2.1
 
 orbs:
@@ -19,13 +32,13 @@ jobs:
           command: node --version
       - run:
           name: Lint
-          command: npm run lint
+          command: yarn run lint
       - run:
           name: Build
-          command: npm run build
+          command: yarn run build
       - run:
-          name: Build
-          command: npm run test
+          name: Test
+          command: yarn run test
 
   release_build:
     docker:
@@ -39,32 +52,17 @@ jobs:
           command: node --version
       - run:
           name: Build
-          command: npm run build
+          command: yarn run build
+      - run:
+          name: Test
+          command: yarn run test
       - run:
           name: Semantic Release
           command: npx semantic-release
-
-  # See https://circleci.com/blog/continuously-deploy-a-chrome-extension/
-  release_publish:
-    docker:
-      - image: "cimg/base:stable"
-    steps:
       - run:
-          name: Coming soon!
-          command: date
-
-  test:
-    executor:
-      name: node/default
-      tag: "14.17.1"
-
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: yarn
-      - run:
-          command: yarn test --maxWorkers=4
-          name: Run YARN tests
+          # See https://circleci.com/blog/continuously-deploy-a-chrome-extension/
+          name: Publish to Chrome Store
+          command: echo 'Coming soon...'
 
 workflows:
   ci:
@@ -80,14 +78,3 @@ workflows:
           filters:
             branches:
               only: main
-      - release_publish:
-          requires:
-            - "release_build"
-          context: "nexus-iq-chrome-extension"
-          filters:
-            branches:
-              only: main
-
-  test_browser_extension_with_yarn:
-    jobs:
-      - test
