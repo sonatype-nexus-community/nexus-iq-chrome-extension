@@ -35,7 +35,7 @@ jobs:
           command: yarn run lint
       - run:
           name: Build
-          command: yarn run build
+          command: yarn webpack --mode production --env production --no-watch
       - run:
           name: Test
           command: yarn run test
@@ -52,7 +52,7 @@ jobs:
           command: node --version
       - run:
           name: Build
-          command: yarn run build
+          command: yarn webpack --mode production --env production --no-watch
       - run:
           name: Test
           command: yarn run test
