@@ -53,6 +53,13 @@ const Options = (): JSX.Element | null => {
   const setItem = (func: any, value: any, key: string) => {
     func(value);
     chrome.storage.local.set({[key]: value});
+    if (scanType === DATA_SOURCES.NEXUSIQ) {
+      setActiveTabId(1);
+    } else if (scanType === DATA_SOURCES.OSSINDEX) {
+      setActiveTabId(0);
+    } else {
+      setActiveTabId(2);
+    }
   };
 
   const renderOptions = (nexusContext: NexusContextInterface | undefined) => {
@@ -67,7 +74,7 @@ const Options = (): JSX.Element | null => {
             {/*  <NxH2>Connection Type</NxH2>*/}
             {/*</NxTile.Header>*/}
             <NxTile.Content>
-              <NxFieldset label="Connection Type" isRequired>
+              <NxFieldset label={`Current Connection Type: ${scanType}`} isRequired>
                 <NxRadio
                   name={SCAN_TYPE}
                   value={DATA_SOURCES.NEXUSIQ}
@@ -92,9 +99,9 @@ const Options = (): JSX.Element | null => {
               {/*</NxTile.Header>*/}
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
-                  <NxTab>Sonatype IQ Server</NxTab>
-                  <NxTab>Sonatype OSS Index</NxTab>
-                  <NxTab>General Options</NxTab>
+                  <NxTab key={DATA_SOURCES.NEXUSIQ}>Sonatype IQ Server</NxTab>
+                  <NxTab key={DATA_SOURCES.OSSINDEX}>Sonatype OSS Index</NxTab>
+                  <NxTab key={`GENERAL`}>General Options</NxTab>
                 </NxTabList>
                 <NxTabPanel>
                   <IQServerOptionsPage />
