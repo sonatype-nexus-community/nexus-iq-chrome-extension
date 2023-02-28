@@ -25,6 +25,7 @@ const OSSIndexOptionsPage = (): JSX.Element | null => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[OSS_INDEX_USER]) {
         setOSSIndexUser(items[OSS_INDEX_USER]);
@@ -36,6 +37,7 @@ const OSSIndexOptionsPage = (): JSX.Element | null => {
     });
   }, [ossIndexUser, ossIndexToken]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (func: any, value: any, key: string) => {
     func(value);
     chrome.storage.local.set({[key]: value});
@@ -49,17 +51,19 @@ const OSSIndexOptionsPage = (): JSX.Element | null => {
     if (!loading) {
       return (
         <form className="nx-form">
-          <NxFormGroup label={`OSS Index Username`} isRequired>
+          <NxFormGroup label={`Sonatype OSS Index Email Address`} isRequired>
             <NxStatefulTextInput
               defaultValue={ossIndexUser}
+              placeholder={`enter your email address`}
               aria-required={true}
               validator={validator}
               onChange={(event) => setItem(setOSSIndexUser, event, OSS_INDEX_USER)}
             />
           </NxFormGroup>
-          <NxFormGroup label={`OSS Index Token`} isRequired>
+          <NxFormGroup label={`Sonatype OSS Index API Token`} isRequired>
             <NxStatefulTextInput
               defaultValue={ossIndexToken}
+              placeholder={`enter your api token`}
               aria-required={true}
               validator={validator}
               type="password"

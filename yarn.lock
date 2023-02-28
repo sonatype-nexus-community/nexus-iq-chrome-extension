@@ -1580,7 +1580,7 @@
     in-publish "^2.0.0"
     prop-types "^15.5.10"
 
-"@sonatype/react-shared-components@^12.10.8":
+"@sonatype/react-shared-components@^12.10.30":
   version "12.10.31"
   resolved "https://registry.npmjs.org/@sonatype/react-shared-components/-/react-shared-components-12.10.31.tgz#05c80e7d7575f40126ef13617636e0c3d0da4521"
   integrity sha512-1NweVFh43DZvqoU3ShS3KEquke6LekIsb7YZPcu45B5GXNFi1OdNocJXK60n6vB4V6vo6NuIHn36UdPzVD6NKg==
@@ -5902,6 +5902,11 @@ packageurl-js@^0.0.5:
   version "0.0.5"
   resolved "https://registry.npmjs.org/packageurl-js/-/packageurl-js-0.0.5.tgz#a48c9e5ca6855cd23660257ad2b0199593b3373a"
   integrity sha512-BISQVKLiu7EsWF5Qhx8OvX6K5vOfFcYuQBggFfrF2dHu+/Z2snuabilb0EyLvHZH0XXqbEz20pqFRonTt8z6QA==
+
+packageurl-js@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/packageurl-js/-/packageurl-js-1.0.0.tgz#188ed35688d44a0684476e7af5b6c6835c3c5533"
+  integrity sha512-06kNFU+yB2pjDf5JyXouQeKfwSScGP8hrZK6VgB+W4SlVy4y5yB4vl+AVmh3R0GBNd+fBt0dEiSx3HKmuchuJQ==
 
 pako@~1.0.5:
   version "1.0.11"

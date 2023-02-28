@@ -53,6 +53,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[IQ_SERVER_URL]) {
         setIQServerURL(items[IQ_SERVER_URL]);
@@ -73,6 +74,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
     });
   }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (setter: any, value: string, key: string) => {
     setter(value);
     chrome.storage.local.set({[key]: value}, () => {
@@ -152,11 +154,11 @@ const IQServerOptionsPage = (): JSX.Element | null => {
       return (
         <React.Fragment>
           <NxGrid.Row>
-            <section className="nx-grid-col nx-grid-col--67">
-              <header className="nx-grid-header">
-                <h3 className="nx-h3 nx-grid-header__title">IQ Server Quick Setup</h3>
-              </header>
-              <hr className="nx-grid-h-keyline" />
+            <section className="nx-grid-col nx-grid-col--100">
+              {/*<header className="nx-grid-header">*/}
+              {/*  <h3 className="nx-h3 nx-grid-header__title">IQ Server Quick Setup</h3>*/}
+              {/*</header>*/}
+              {/*<hr className="nx-grid-h-keyline" />*/}
               <NxForm
                 onSubmit={onSubmit}
                 submitBtnText={`Test Connectivity`}
@@ -164,9 +166,9 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                 showValidationErrors={true}
               >
                 <p className="nx-p">
-                  <strong>1)</strong> Enter the URL for Nexus IQ Server
+                  <strong>1)</strong> Enter the URL for Sonatype IQ Server
                 </p>
-                <NxFormGroup label={`IQ Server URL`} isRequired>
+                <NxFormGroup label={`URL`} isRequired>
                   <NxStatefulTextInput
                     defaultValue={iqServerURL}
                     placeholder="https://your-iq-server-url"
@@ -175,23 +177,24 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   />
                 </NxFormGroup>
                 <p className="nx-p">
-                  <strong>2)</strong> Allow the extension to communicate with Nexus IQ Server
+                  <strong>2)</strong> Allow the extension to communicate with your Sonatype IQ
+                  Server
                 </p>
                 <button className="nx-btn grant-permissions" onClick={askForPermissions}>
-                  Grant Permissions to IQ Server URL
+                  Grant Permissions to the Sonatype IQ Server URL
                 </button>
                 <p className="nx-p">
-                  <strong>3)</strong> Provide username and token for Nexus IQ Server
+                  <strong>3)</strong> Provide your username and token for the Sonatype IQ Server
                 </p>
                 <div className="nx-form-row">
-                  <NxFormGroup label={`IQ Server Username`} isRequired>
+                  <NxFormGroup label={`Username`} isRequired>
                     <NxStatefulTextInput
                       defaultValue={iqServerUser}
                       validator={nonEmptyValidator}
                       onChange={(event) => setItem(setIQServerUser, event, IQ_SERVER_USER)}
                     />
                   </NxFormGroup>
-                  <NxFormGroup label={`IQ Server Token`} isRequired>
+                  <NxFormGroup label={`Token`} isRequired>
                     <NxStatefulTextInput
                       defaultValue={iqServerToken}
                       validator={nonEmptyValidator}
@@ -201,9 +204,9 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   </NxFormGroup>
                 </div>
                 <p className="nx-p">
-                  <strong>4)</strong> Set application
+                  <strong>4)</strong> Set the Sonatype Lifecycle application
                 </p>
-                <NxFormGroup label={`IQ Server Application`} isRequired>
+                <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
                   <NxStatefulTextInput
                     defaultValue={iqServerApplication}
                     validator={nonEmptyValidator}
@@ -213,11 +216,12 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   />
                 </NxFormGroup>
                 <p className="nx-p">
-                  <strong>5)</strong> Do a quick test to ensure you can connect to Nexus IQ Server
+                  <strong>5)</strong> Do a quick test to ensure you can connect to you Sonatype IQ
+                  Server
                 </p>
                 {loggedIn && (
                   <NxStatefulSuccessAlert>
-                    Congrats! You are able to login to Nexus IQ Server!
+                    Congrats! You are able to login to your Sonatype IQ Server!
                   </NxStatefulSuccessAlert>
                 )}
                 {errorLoggingIn !== '' && (
@@ -227,21 +231,21 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                 )}
               </NxForm>
             </section>
-            <section className="nx-grid-col nx-grid-col--33">
-              {/*<img src="images/billymays.png" width={420} height={420} />*/}
-              {/*<blockquote className="nx-blockquote">*/}
-              {/*  <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>*/}
-              {/*</blockquote>*/}
-              <header className="nx-grid-header">
-                <h3 className="nx-h3 nx-grid-header__title">Current Configuration</h3>
-              </header>
-              <NxDescriptionList>
-                <NxDescriptionList.Item>
-                  <NxDescriptionList.Term>Evaluation Type</NxDescriptionList.Term>
-                  <NxDescriptionList.Description>{currentScanType}</NxDescriptionList.Description>
-                </NxDescriptionList.Item>
-              </NxDescriptionList>
-            </section>
+            {/*<section className="nx-grid-col nx-grid-col--33">*/}
+            {/*  /!*<img src="images/billymays.png" width={420} height={420} />*!/*/}
+            {/*  /!*<blockquote className="nx-blockquote">*!/*/}
+            {/*  /!*  <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>*!/*/}
+            {/*  /!*</blockquote>*!/*/}
+            {/*  <header className="nx-grid-header">*/}
+            {/*    <h3 className="nx-h3 nx-grid-header__title">Current Configuration</h3>*/}
+            {/*  </header>*/}
+            {/*  <NxDescriptionList>*/}
+            {/*    <NxDescriptionList.Item>*/}
+            {/*      <NxDescriptionList.Term>Evaluation Type</NxDescriptionList.Term>*/}
+            {/*      <NxDescriptionList.Description>{currentScanType}</NxDescriptionList.Description>*/}
+            {/*    </NxDescriptionList.Item>*/}
+            {/*  </NxDescriptionList>*/}
+            {/*</section>*/}
           </NxGrid.Row>
         </React.Fragment>
       );

@@ -24,7 +24,7 @@ const AlpDrawer = (): JSX.Element | null => {
   return (
     <NxDrawer
       id="nx-drawer-legal"
-      open={nexusContext.alpDrawerIsOpen}
+      open={nexusContext.showAlpDrawer}
       onClose={nexusContext.toggleAlpDrawer}
       aria-labelledby="drawer-legal-title"
     >

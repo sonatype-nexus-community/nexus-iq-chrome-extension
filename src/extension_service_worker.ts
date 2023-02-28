@@ -16,13 +16,19 @@
 /// <reference lib="webworker" />
 
 import 'node-window-polyfill/register';
-import {IqRequestService, LogLevel, OSSIndexRequestService} from '@sonatype/js-sona-types';
+import {
+  ComponentDetails,
+  IqRequestService,
+  LogLevel,
+  OSSIndexRequestService
+} from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import BrowserExtensionLogger from './logger/Logger';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import localforage from 'localforage';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
 
 const logger = new BrowserExtensionLogger(LogLevel.ERROR);
@@ -35,19 +41,19 @@ const IQ_SERVER_TOKEN = 'iqServerToken';
 const LOG_LEVEL = 'logLevel';
 
 interface Settings {
-  scanType: string | undefined;
-  host: string | undefined;
-  user: string | undefined;
-  token: string | undefined;
-  application: string | undefined;
-  logLevel: number | undefined;
+  scanType: Settings | undefined;
+  host: Settings | undefined;
+  user: Settings | undefined;
+  token: Settings | undefined;
+  application: Settings | undefined;
+  logLevel: Settings | undefined;
 }
 
 const getSettings = async (): Promise<Settings> => {
   const promise = new Promise<Settings>((resolve) => {
     _browser.storage.local.get(
       [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
-      (items: {[key: string]: any}) => {
+      (items: {[key: string]: Settings}) => {
         resolve({
           scanType: items[SCAN_TYPE],
           host: items[IQ_SERVER_URL],
@@ -62,19 +68,20 @@ const getSettings = async (): Promise<Settings> => {
   return await promise;
 };
 
-const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
+const handleURLOSSIndex = (purl: string, settings: Settings): Promise<ComponentDetails> => {
   const manifestData = chrome.runtime.getManifest();
   return new Promise((resolve, reject) => {
     const requestService = new OSSIndexRequestService(
       {
-        token: settings.token,
+        token: settings.token as unknown as string,
         browser: true,
-        user: settings.user,
-        application: settings.application,
+        user: settings.user as unknown as string,
+        application: settings.application as unknown as string,
         logger: logger,
         product: manifestData.name,
         version: manifestData.version
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       localforage as any
     );
 
@@ -91,15 +98,15 @@ const handleURLOSSIndex = (purl: string, settings: Settings): Promise<any> => {
   });
 };
 
-const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
+const handleURLIQServer = (purl: string, settings: Settings): Promise<ComponentDetails> => {
   const manifestData = chrome.runtime.getManifest();
   return new Promise((resolve) => {
     const requestService = new IqRequestService({
-      host: settings.host,
-      token: settings.token,
+      host: settings.host as unknown as string,
+      token: settings.token as unknown as string,
       browser: true,
-      user: settings.user,
-      application: settings.application,
+      user: settings.user as unknown as string,
+      application: settings.application as unknown as string,
       logger: logger,
       product: manifestData.name,
       version: manifestData.version
@@ -127,7 +134,10 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<any> => {
   });
 };
 
-const _doRequestToIQServer = (requestService: IqRequestService, purl: string): Promise<any> => {
+const _doRequestToIQServer = (
+  requestService: IqRequestService,
+  purl: string
+): Promise<ComponentDetails> => {
   return new Promise((resolve) => {
     chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
       if (cookies && cookies.length > 0) {
@@ -152,7 +162,6 @@ const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
     .then((componentDetails) => {
       logger.logMessage('Got back response from OSS Index', LogLevel.INFO);
       logger.logMessage('Response from OSS Index', LogLevel.TRACE, componentDetails);
-
       sendNotificationAndMessage(purl, componentDetails);
     })
     .catch((err) => {
@@ -160,7 +169,7 @@ const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
     });
 };
 
-const sendNotificationAndMessage = (purl: string, details: any) => {
+const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => {
   if (
     // details.componentDetails &&
     // details.componentDetails?.length > 0 &&
@@ -274,10 +283,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       getSettings()
         .then((settings: Settings) => {
           if (settings.logLevel) {
-            logger.setLevel(settings.logLevel);
+            logger.setLevel(settings.logLevel as unknown as LogLevel);
           }
           try {
-            if (settings.scanType === 'NEXUSIQ') {
+            if ((settings.scanType as unknown as string) === 'NEXUSIQ') {
               logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
               handleIQServerWrapper(request.purl, settings);
             } else {

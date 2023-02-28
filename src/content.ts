@@ -20,6 +20,7 @@ import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 import {findRepoType} from './utils/UrlParsing';
 import $ from 'cash-dom';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Received a message on content.js', event);
   if (event.type === 'changedURLOnPage') {
