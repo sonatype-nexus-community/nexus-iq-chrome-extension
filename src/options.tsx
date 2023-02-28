@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {
   faArrowLeft,
   faArrowRight,
@@ -21,7 +22,6 @@ import {
   faPlay,
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
-import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {
   NxGlobalSidebarFooter,
   NxGlobalSidebarNavigation,
@@ -30,57 +30,54 @@ import {
   NxStatefulGlobalSidebar
 } from '@sonatype/react-shared-components';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import NexusOptionsContainer from './NexusOptionsContainer';
+import ReactDOM from 'react-dom/client';
 import * as pack from '../package.json';
+import NexusOptionsContainer from './NexusOptionsContainer';
 
-const renderOptions = () => {
-  const search = window.location.search;
-  const params = new URLSearchParams(search);
-  const install = params.has('install');
-  const help = params.has('help');
+const container = document.getElementById('ui');
+const root = ReactDOM.createRoot(container);
+const search = window.location.search;
+const params = new URLSearchParams(search);
+const install = params.has('install');
+const help = params.has('help');
 
-  ReactDOM.render(
-    <React.StrictMode>
-      <NxStatefulGlobalSidebar
-        isDefaultOpen={true}
-        toggleCloseIcon={faArrowRight as IconDefinition}
-        toggleOpenIcon={faArrowLeft as IconDefinition}
-        logoImg="images/nexus_lifecycle_sidebar.svg"
-        logoAltText="Sonatype Nexus Browser Extension"
-        logoLink="#"
-      >
-        <NxGlobalSidebarNavigation>
-          <NxGlobalSidebarNavigationLink
-            icon={faPlay as IconDefinition}
-            text="Getting Started"
-            href="options.html?install"
-          />
-          <NxGlobalSidebarNavigationLink
-            icon={faQuestionCircle as IconDefinition}
-            text="Help"
-            href="options.html?help"
-          />
-          <NxGlobalSidebarNavigationLink
-            icon={faCog as IconDefinition}
-            text="Options"
-            href="options.html"
-          />
-        </NxGlobalSidebarNavigation>
-        <NxGlobalSidebarFooter
-          supportText={`Request Support`}
-          supportLink={pack.homepage}
-          releaseText={`Release ${pack.version}`}
-          productTagLine="Powered by Sonatype IQ Server & Sonatype OSS Index"
-          showCreatedBy={true}
+root.render(
+  <React.StrictMode>
+    <NxStatefulGlobalSidebar
+      isDefaultOpen={true}
+      toggleCloseIcon={faArrowRight as IconDefinition}
+      toggleOpenIcon={faArrowLeft as IconDefinition}
+      logoImg="images/nexus_lifecycle_sidebar.svg"
+      logoAltText="Sonatype Nexus Browser Extension"
+      logoLink="#"
+    >
+      <NxGlobalSidebarNavigation>
+        <NxGlobalSidebarNavigationLink
+          icon={faPlay as IconDefinition}
+          text="Getting Started"
+          href="options.html?install"
         />
-      </NxStatefulGlobalSidebar>
-      <NxPageMain>
-        <NexusOptionsContainer install={install} help={help} />
-      </NxPageMain>
-    </React.StrictMode>,
-    document.getElementById('ui')
-  );
-};
-
-renderOptions();
+        <NxGlobalSidebarNavigationLink
+          icon={faQuestionCircle as IconDefinition}
+          text="Help"
+          href="options.html?help"
+        />
+        <NxGlobalSidebarNavigationLink
+          icon={faCog as IconDefinition}
+          text="Options"
+          href="options.html"
+        />
+      </NxGlobalSidebarNavigation>
+      <NxGlobalSidebarFooter
+        supportText={`Request Support`}
+        supportLink={pack.homepage}
+        releaseText={`Release ${pack.version}`}
+        productTagLine="Powered by Sonatype IQ Server & Sonatype OSS Index"
+        showCreatedBy={true}
+      />
+    </NxStatefulGlobalSidebar>
+    <NxPageMain>
+      <NexusOptionsContainer install={install} help={help} />
+    </NxPageMain>
+  </React.StrictMode>
+);
