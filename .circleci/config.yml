@@ -1,20 +1,80 @@
-version: '2.1'
+# Copyright 2020-present Sonatype Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+version: 2.1
+
 orbs:
-  node: circleci/node@4.7.0
+  node: circleci/node@5.1.0
+
 jobs:
-  test:
-    executor:
-      name: node/default
-      tag: '14.17.1'
+  build_and_test:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: true
+          node-version: "18.14.2" # LTS of 18 @ 24-Feb-2023
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          name: Confirm Node Version
+          command: node --version
+      - run:
+          name: Lint
+          command: yarn run lint
+      - run:
+          name: Build
+          command: yarn webpack --mode production --env production --no-watch
+      - run:
+          name: Test
+          command: yarn run test
+
+  release_build:
+    docker:
+      - image: "cimg/base:stable"
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: yarn test --maxWorkers=4
-          name: Run YARN tests
+          name: Confirm Node Version
+          command: node --version
+      - run:
+          name: Build
+          command: yarn webpack --mode production --env production --no-watch
+      - run:
+          name: Test
+          command: yarn run test
+      - run:
+          name: Semantic Release
+          command: npx semantic-release
+      - run:
+          # See https://circleci.com/blog/continuously-deploy-a-chrome-extension/
+          name: Publish to Chrome Store
+          command: echo 'Coming soon...'
 
 workflows:
-  test_browser_extension_with_yarn:
+  ci:
     jobs:
-      - test
+      - build_and_test:
+          filters:
+            branches:
+              ignore: main
+
+  release:
+    jobs:
+      - release_build:
+          filters:
+            branches:
+              only: main

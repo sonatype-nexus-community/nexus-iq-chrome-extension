@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {NxVulnerabilityDetails} from '@sonatype/react-shared-components';
+import {VulnerabilityDetails} from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../../context/NexusContext';
-import {NxVulnerabilityDetails} from '@sonatype/react-shared-components';
-import {IqServerVulnerabilityDetails} from '../../../../../../../../js-sona-types';
-import {VulnerabilityDetails} from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types';
 
 const VulnDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
