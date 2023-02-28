@@ -1554,7 +1554,7 @@
     pascalcase "^0.1.1"
     xss-filters "^1.2.6"
 
-"@sonatype/js-sona-types@^1.0.72":
+"@sonatype/js-sona-types@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@sonatype/js-sona-types/-/js-sona-types-1.1.0.tgz#547c0ebbef790d385028d270c6248c9e587f2cf3"
   integrity sha512-k1ka6SPie8c7WjT1ncT4xvl7813Meb8Fn5uKqe4A+0peBsqvdbn8JZ6/4pF/a7f7YaBjnSqiUFE0/ti/83A+uQ==
