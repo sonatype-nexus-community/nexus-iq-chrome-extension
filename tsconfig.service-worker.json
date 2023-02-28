@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "es6",
-    "lib": ["es5", "webworker"],
+    "lib": ["es6", "webworker"],
     "moduleResolution": "node",
     "outDir": "build",
     "composite": true,
