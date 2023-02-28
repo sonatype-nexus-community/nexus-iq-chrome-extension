@@ -15,13 +15,14 @@
  */
 import React, {useContext} from 'react';
 import {
-  NxList,
+  NxTextLink,
   NxP,
   NxPolicyViolationIndicator,
   ThreatLevelNumber,
   NxDescriptionList,
   NxGrid,
-  NxTooltip
+  NxTooltip,
+  NxButton
 } from '@sonatype/react-shared-components';
 import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
@@ -45,6 +46,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
   // TODO: Give the correct coordinate labels based on package type
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext.componentDetails?.component) {
+      const purlMinusVersion = nexusContext.componentDetails.component.packageUrl.split('@')[0];
       return (
         <React.Fragment>
           <NxGrid.Row>
@@ -61,85 +63,102 @@ const ComponentInfoPage = (): JSX.Element | null => {
                   </NxTooltip>
                 )}
                 {nexusContext.scanType === DATA_SOURCES.OSSINDEX && (
-                  <NxTooltip
-                    placement="top"
-                    title={<>{nexusContext.componentDetails.component.name}</>}
-                  >
-                    <h3 className="nx-h2 nx-grid-header__title">
-                      {nexusContext.componentDetails.component.name}
-                    </h3>
-                  </NxTooltip>
+                  <React.Fragment>
+                    <NxTooltip
+                      placement="top"
+                      title={<>{nexusContext.componentDetails.component.name}</>}
+                    >
+                      <h3 className="nx-h2 nx-grid-header__title">
+                        {nexusContext.componentDetails.component.name}
+                      </h3>
+                    </NxTooltip>
+                  </React.Fragment>
                 )}
               </header>
               {nexusContext.componentDetails.component.description && (
                 <NxP>{nexusContext.componentDetails.component.description}</NxP>
               )}
-              <NxDescriptionList>
-                {nexusContext.componentDetails.projectData?.projectMetadata.organization && (
-                  <NxDescriptionList.Item>
-                    <NxDescriptionList.Term>Project</NxDescriptionList.Term>
-                    <NxDescriptionList.Description>
-                      {nexusContext.componentDetails.projectData?.projectMetadata.organization}
-                    </NxDescriptionList.Description>
-                  </NxDescriptionList.Item>
-                )}
-                {nexusContext.componentDetails.projectData?.projectMetadata.description && (
-                  <NxDescriptionList.Item>
-                    <NxDescriptionList.Term>Description</NxDescriptionList.Term>
-                    <NxDescriptionList.Description>
-                      {nexusContext.componentDetails.projectData?.projectMetadata.description}
-                    </NxDescriptionList.Description>
-                  </NxDescriptionList.Item>
-                )}
-                {nexusContext.componentDetails.projectData?.lastReleaseDate && (
-                  <NxDescriptionList.Item>
-                    <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
-                    <NxDescriptionList.Description>
-                      {formatDate(
-                        new Date(nexusContext.componentDetails.projectData?.lastReleaseDate)
-                      )}
-                    </NxDescriptionList.Description>
-                  </NxDescriptionList.Item>
-                )}
-                {nexusContext.componentDetails.projectData?.firstReleaseDate && (
-                  <NxDescriptionList.Item>
-                    <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
-                    <NxDescriptionList.Description>
-                      {formatDate(
-                        new Date(nexusContext.componentDetails.projectData?.firstReleaseDate)
-                      )}
-                    </NxDescriptionList.Description>
-                  </NxDescriptionList.Item>
-                )}
-                {nexusContext.componentDetails.catalogDate && (
-                  <NxDescriptionList.Item>
-                    <NxTooltip
-                      placement="top"
-                      // className="gallery-tooltip-example"
-                      title={<>The date this component version was added to Nexus Intelligence</>}
-                    >
-                      <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
-                    </NxTooltip>
-                    <NxTooltip
-                      placement="top"
-                      // className="gallery-tooltip-example"
-                      title={<>{nexusContext.componentDetails.catalogDate}</>}
-                    >
+              {nexusContext.scanType === DATA_SOURCES.OSSINDEX && (
+                <React.Fragment>
+                  <NxTextLink
+                    external
+                    className="nx-btn"
+                    style={{backgroundColor: '#e10486', color: 'white'}}
+                    href={`https://ossindex.sonatype.org/component/${purlMinusVersion}`}
+                  >
+                    See Package Information for: &nbsp;
+                    {nexusContext.componentDetails.component.name}
+                  </NxTextLink>
+                </React.Fragment>
+              )}
+              {nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
+                <NxDescriptionList>
+                  {nexusContext.componentDetails.projectData?.projectMetadata.organization && (
+                    <NxDescriptionList.Item>
+                      <NxDescriptionList.Term>Project</NxDescriptionList.Term>
                       <NxDescriptionList.Description>
-                        {formatDate(new Date(nexusContext.componentDetails.catalogDate))}
+                        {nexusContext.componentDetails.projectData?.projectMetadata.organization}
                       </NxDescriptionList.Description>
-                    </NxTooltip>
-                  </NxDescriptionList.Item>
-                )}
-                {nexusContext.componentDetails.component.hash && (
-                  <NxDescriptionList.Item>
-                    <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
-                    <NxDescriptionList.Description>
-                      {nexusContext.componentDetails.component.hash}
-                    </NxDescriptionList.Description>
-                  </NxDescriptionList.Item>
-                )}
-              </NxDescriptionList>
+                    </NxDescriptionList.Item>
+                  )}
+                  {nexusContext.componentDetails.projectData?.projectMetadata.description && (
+                    <NxDescriptionList.Item>
+                      <NxDescriptionList.Term>Description</NxDescriptionList.Term>
+                      <NxDescriptionList.Description>
+                        {nexusContext.componentDetails.projectData?.projectMetadata.description}
+                      </NxDescriptionList.Description>
+                    </NxDescriptionList.Item>
+                  )}
+                  {nexusContext.componentDetails.projectData?.lastReleaseDate && (
+                    <NxDescriptionList.Item>
+                      <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
+                      <NxDescriptionList.Description>
+                        {formatDate(
+                          new Date(nexusContext.componentDetails.projectData?.lastReleaseDate)
+                        )}
+                      </NxDescriptionList.Description>
+                    </NxDescriptionList.Item>
+                  )}
+                  {nexusContext.componentDetails.projectData?.firstReleaseDate && (
+                    <NxDescriptionList.Item>
+                      <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
+                      <NxDescriptionList.Description>
+                        {formatDate(
+                          new Date(nexusContext.componentDetails.projectData?.firstReleaseDate)
+                        )}
+                      </NxDescriptionList.Description>
+                    </NxDescriptionList.Item>
+                  )}
+                  {nexusContext.componentDetails.catalogDate && (
+                    <NxDescriptionList.Item>
+                      <NxTooltip
+                        placement="top"
+                        // className="gallery-tooltip-example"
+                        title={<>The date this component version was added to Nexus Intelligence</>}
+                      >
+                        <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
+                      </NxTooltip>
+                      <NxTooltip
+                        placement="top"
+                        // className="gallery-tooltip-example"
+                        title={<>{nexusContext.componentDetails.catalogDate}</>}
+                      >
+                        <NxDescriptionList.Description>
+                          {formatDate(new Date(nexusContext.componentDetails.catalogDate))}
+                        </NxDescriptionList.Description>
+                      </NxTooltip>
+                    </NxDescriptionList.Item>
+                  )}
+                  {nexusContext.componentDetails.component.hash && (
+                    <NxDescriptionList.Item>
+                      <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
+                      <NxDescriptionList.Description>
+                        {nexusContext.componentDetails.component.hash}
+                      </NxDescriptionList.Description>
+                    </NxDescriptionList.Item>
+                  )}
+                </NxDescriptionList>
+              )}
             </section>
             <section className="nx-grid-col nx-grid-col--33">
               {nexusContext.scanType === DATA_SOURCES.NEXUSIQ &&
