@@ -85,7 +85,7 @@
     "big_build": "eslint './src/**/*.{ts,tsx}' --fix && webpack --mode production --env production --progress",
     "build": "webpack --mode development --progress",
     "lint": "eslint './src/**/*.{ts,tsx}'",
-    "test": "jest"
+    "test": "jest --detectOpenHandles --forceExit"
   },
   "jest": {
     "preset": "ts-jest",
