@@ -69,7 +69,6 @@ describe('Artifact Message Test', () => {
     expect(sortedIssues[0].severity).toBe(9.8);
     expect(sortedIssues.length).toBe(5);
     expect(sortedIssues[sortedIssues.length - 1].severity).toBe(5.3);
-
-    // console.log(sortedIssues[0]);
+    
   });
 });
