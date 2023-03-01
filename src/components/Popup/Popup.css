@@ -29,3 +29,9 @@
 .nx-policy-violation-indicator {
   margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;
 }
+
+.nx-footer {
+  font-size: var(--nx-font-size-xs);
+  margin-bottom: 10px !important;
+  padding-top: 7px !important;
+}

@@ -19,7 +19,9 @@ import {
   NxTab,
   NxTabList,
   NxTabPanel,
-  NxTabs
+  NxTabs,
+    NxP,
+    NxFooter
 } from '@sonatype/react-shared-components';
 import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
@@ -113,6 +115,11 @@ const Popup = (): JSX.Element | null => {
                 <NxTabPanel>{hasLegalResults && <LicensingPage />}</NxTabPanel>
               </NxTabs>
             </div>
+            <NxFooter>
+              <NxP style={{textAlign: 'center'}}>
+                Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype IQ Server
+              </NxP>
+            </NxFooter>
           </section>
         </React.Fragment>
       );
@@ -152,6 +159,11 @@ const Popup = (): JSX.Element | null => {
                 )}
               </NxTabs>
             </div>
+            <NxFooter>
+              <NxP style={{textAlign: 'center'}}>
+                Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype OSS Index
+              </NxP>
+            </NxFooter>
           </section>
         </React.Fragment>
       );
