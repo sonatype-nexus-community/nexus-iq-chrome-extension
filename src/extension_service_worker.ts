@@ -15,7 +15,8 @@
  */
 /// <reference lib="webworker" />
 
-import 'node-window-polyfill/register';
+import 'node-window-polyfill/register'; // New line ensures this Polyfill is first!
+
 import {
   ComponentDetails,
   IqRequestService,

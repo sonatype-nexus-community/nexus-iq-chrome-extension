@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useEffect, useState} from 'react';
+import {ConstraintViolation, PolicyViolation, Reason} from '@sonatype/js-sona-types';
 import {
   NxList,
   NxPolicyViolationIndicator,
   NxTextLink,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import {ConstraintViolation, PolicyViolation, Reason} from '@sonatype/js-sona-types';
+import React, {useState} from 'react';
 import '../PolicyPage.css';
-import Any = jasmine.Any;
-import CveUrl from '../CveUrl/CveUrl';
 
 type PolicyViolationProps = {
   policyViolation: PolicyViolation;

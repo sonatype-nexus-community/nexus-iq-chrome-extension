@@ -10,6 +10,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@sonatype/js-sona-types": "^1.1.0",
     "@sonatype/react-shared-components": "^12.10.30",
+    "@types/chrome": "^0.0.218",
+    "@types/firefox-webext-browser": "^109.0.0",
     "cash-dom": "^8.1.0",
     "classnames": "^2.3.1",
     "localforage": "^1.9.0",
@@ -17,7 +19,6 @@
     "packageurl-js": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "watch": "^1.0.2",
     "web-vitals": "^1.1.1"
   },
   "devDependencies": {
@@ -26,9 +27,7 @@
     "@babel/preset-env": "^7.14.0",
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
-    "@types/chrome": "^0.0.133",
     "@types/enzyme": "^3.10.8",
-    "@types/firefox-webext-browser": "^82.0.1",
     "@types/jest": "^27.0.0",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
@@ -64,7 +63,6 @@
     "jest-svg-transformer": "^1.0.0",
     "jest-transform-stub": "^2.0.0",
     "mini-css-extract-plugin": "^1.6.0",
-    "node-fetch": "^2.6.1",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "prettier": "^2.2.1",
     "process": "^0.11.10",
@@ -78,6 +76,7 @@
     "typescript": "^4.3.5",
     "url": "^0.11.0",
     "url-loader": "^4.1.1",
+    "watch": "^1.0.2",
     "webpack": "^5.36.2",
     "webpack-cli": "^4.6.0"
   },

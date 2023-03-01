@@ -7,7 +7,11 @@
     "outDir": "build",
     "composite": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "chrome",
+      "firefox-webext-browser"
+    ]
   },
   "include": [
     "src/extension_service_worker.ts"

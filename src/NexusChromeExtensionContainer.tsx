@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext} from 'react';
+import {
+  ComponentDetails,
+  IqRequestService,
+  LogLevel,
+  OSSIndexRequestService,
+  RequestService
+} from '@sonatype/js-sona-types';
+import localforage from 'localforage';
+import {PackageURL} from 'packageurl-js';
+import React from 'react';
+import AlpDrawer from './components/AlpDrawer/AlpDrawer';
 import Popup from './components/Popup/Popup';
 import {NexusContext, NexusContextInterface} from './context/NexusContext';
+import BrowserExtensionLogger from './logger/Logger';
 import {DATA_SOURCES, RepoType} from './utils/Constants';
 import {findRepoType} from './utils/UrlParsing';
-import {
-  OSSIndexRequestService,
-  IqRequestService,
-  RequestService,
-  ComponentDetails,
-  LogLevel,
-  ComponentContainer
-} from '@sonatype/js-sona-types';
-import {PackageURL} from 'packageurl-js';
-import localforage from 'localforage';
-import BrowserExtensionLogger from './logger/Logger';
-import AlpDrawer from './components/AlpDrawer/AlpDrawer';
 
 const _browser = chrome ? chrome : browser;
 

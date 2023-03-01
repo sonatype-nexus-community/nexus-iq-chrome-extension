@@ -1649,10 +1649,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chrome@^0.0.133":
-  version "0.0.133"
-  resolved "https://registry.npmjs.org/@types/chrome/-/chrome-0.0.133.tgz#9e1d55441584ba2d5274ca84db36427da9c5dc6e"
-  integrity sha512-G8uIUdaCTBILprQvQXBWGXZxjAWbkCkFQit17cdH3zYQEwU8f/etNl8+M7e8MRz9Xj8daHaVpysneMZMx8/ldQ==
+"@types/chrome@^0.0.218":
+  version "0.0.218"
+  resolved "https://registry.npmjs.org/@types/chrome/-/chrome-0.0.218.tgz#d354cf0ac85204c17cfbe03ba7eb8f58c75d03a4"
+  integrity sha512-GC/c9B3Eo3h3l+fV5G6A9cRMEZOYo46E21mjHHfkXz+/A5uypXstMVAMk04IeGY2DJ7PxVxbn26oFBPZOa4Dkw==
   dependencies:
     "@types/filesystem" "*"
     "@types/har-format" "*"
@@ -1710,10 +1710,10 @@
   resolved "https://registry.npmjs.org/@types/filewriter/-/filewriter-0.0.29.tgz#a48795ecadf957f6c0d10e0c34af86c098fa5bee"
   integrity sha512-BsPXH/irW0ht0Ji6iw/jJaK8Lj3FJemon2gvEqHKpCdDCeemHa+rI3WBGq5z7cDMZgoLjY40oninGxqk+8NzNQ==
 
-"@types/firefox-webext-browser@^82.0.1":
-  version "82.0.1"
-  resolved "https://registry.npmjs.org/@types/firefox-webext-browser/-/firefox-webext-browser-82.0.1.tgz#197dec1d175b099eb8dac92e9c9c9a5482a5dd8a"
-  integrity sha512-odcPKiJ34N8k53clIWen3hLvl09ja7SQ9NqtUbgmqeJ/a/ZRQiF665iXSFPcnl6cBn2XQgEg2lsUUApYNiyj+g==
+"@types/firefox-webext-browser@^109.0.0":
+  version "109.0.0"
+  resolved "https://registry.npmjs.org/@types/firefox-webext-browser/-/firefox-webext-browser-109.0.0.tgz#17120057a46985ec7659dfd33589655860419929"
+  integrity sha512-tkEjBP/zZxaS5bv8MH/0kUs3WeUm8KU3Ew1B9BtQQdq5PwtG23SXvAbjxjMSQpoIzbxyWG4Yu4mi1uB2S8W7ng==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.6"

@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import NexusChromeExtensionContainer from './NexusChromeExtensionContainer';
+import {test} from '@jest/globals';
 
 test('renders learn react link', () => {
   // render(<NexusChromeExtensionContainer />);

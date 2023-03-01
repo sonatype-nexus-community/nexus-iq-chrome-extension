@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {sortIssues, SecurityData, SecurityIssue} from './ArtifactMessage';
+import {describe, expect, test} from '@jest/globals';
+import {SecurityData, SecurityIssue, sortIssues} from './ArtifactMessage';
 const securityDataRaw = `{
     "securityData": {
         "securityIssues": [

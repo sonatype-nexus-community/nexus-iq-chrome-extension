@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {describe, expect, test} from '@jest/globals';
 import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
