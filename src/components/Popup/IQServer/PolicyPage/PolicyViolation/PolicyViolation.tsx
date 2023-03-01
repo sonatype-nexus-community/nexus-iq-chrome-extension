@@ -64,7 +64,7 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
         <td className="nx-cell">
           <NxPolicyViolationIndicator
             style={{
-              width: '20px !important',
+              width: '10px !important',
               margin: 'none !important'
             }}
             policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}

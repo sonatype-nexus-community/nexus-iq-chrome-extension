@@ -44,7 +44,6 @@ const PolicyPage = (): JSX.Element | null => {
                   </tr>
                 </thead>
                 <tbody>
-                  {' '}
                   {nexusContext.policyDetails.results[0].policyData.policyViolations.map(
                     (violation) => {
                       return (

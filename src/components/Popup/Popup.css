@@ -27,11 +27,5 @@
 }
 
 .nx-policy-violation-indicator {
-  margin: 0px !important;
-  width: 125px !important;
-}
-
-.nx-policy-violation-indicator {
   margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;
-  width: 150px !important;
 }
