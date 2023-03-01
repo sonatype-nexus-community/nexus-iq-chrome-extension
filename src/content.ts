@@ -24,8 +24,7 @@ import {findRepoType} from './utils/UrlParsing';
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   console.info('Received a message on content.js', event);
   if (event.type === 'changedURLOnPage') {
-    console.trace('Received changedURLOnPage message on content.js');
-    console.trace(event.url);
+    console.debug('Received changedURLOnPage message on content.js');
     checkPage();
   }
   if (event.type === 'getArtifactDetailsFromWebpage') {
@@ -42,7 +41,6 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
     }
   }
   if (event.type === 'artifactDetailsFromServiceWorker') {
-    console.trace('Received artifactDetailsFromServiceWorker message on content.js');
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (event.componentDetails) {
       const data: ComponentDetails = event.componentDetails;
@@ -99,9 +97,7 @@ const checkPage = () => {
 
     if (purl) {
       console.debug('Obtained a valid purl: ' + purl);
-      console.trace('Attempting to send message to service worker');
       chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: purl.toString()});
-      console.trace('Message sent to service worker');
     }
   } else {
     chrome.runtime.sendMessage({type: 'togglePage', show: false});
