@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import {
   ComponentContainer,
   ILogger,
@@ -22,12 +21,13 @@ import {
   IqServerLicenseLegalMetadataResult,
   IqServerVulnerabilityDetails
 } from '@sonatype/js-sona-types';
-import {DATA_SOURCES} from '../utils/Constants';
 import {PackageURL} from 'packageurl-js';
+import React from 'react';
+import {DATA_SOURCES} from '../utils/Constants';
 
 export interface NexusContextInterface {
   showAlpDrawer: boolean;
-  toggleAlpDrawer: () => void;
+  toggleAlpDrawer?: () => void;
   scanType: string;
   componentDetails?: ComponentContainer;
   policyDetails?: IqServerComponentPolicyEvaluationResult;
@@ -37,7 +37,7 @@ export interface NexusContextInterface {
   componentVersions?: string[];
   componentVersionsDetails?: ComponentContainer[];
   remediationDetails?: IqServerComponentRemediationResult;
-  logger: ILogger;
+  logger?: ILogger;
   getVulnDetails?: (vulnId: string) => Promise<void>;
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;

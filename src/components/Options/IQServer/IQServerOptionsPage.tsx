@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useEffect, useState} from 'react';
+import {IqRequestService, LogLevel, TestLogger} from '@sonatype/js-sona-types';
 import {
   NxForm,
   NxFormGroup,
   NxGrid,
   NxStatefulErrorAlert,
   NxStatefulSuccessAlert,
-  NxStatefulTextInput,
-  NxDescriptionList
+  NxStatefulTextInput
 } from '@sonatype/react-shared-components';
-import {IqRequestService, LogLevel, TestLogger} from '@sonatype/js-sona-types';
 import classnames from 'classnames';
+import React, {useEffect, useState} from 'react';
 import {DATA_SOURCES} from '../../../utils/Constants';
 import './IQServerOptionsPage.css';
 
@@ -47,27 +46,27 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const isSubmittable =
     iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '' && iqServerApplication !== '';
 
-  const submitBtnClasses = classnames({disabled: !isSubmittable}),
-    submitTooltip = isSubmittable ? '' : 'Required fields are missing';
+  const submitBtnClasses = classnames({disabled: !isSubmittable});
+  // submitTooltip = isSubmittable ? '' : 'Required fields are missing';
 
   const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[IQ_SERVER_URL]) {
+      if (items[IQ_SERVER_URL] !== undefined) {
         setIQServerURL(items[IQ_SERVER_URL]);
       }
-      if (items[IQ_SERVER_USER]) {
+      if (items[IQ_SERVER_USER] !== undefined) {
         setIQServerUser(items[IQ_SERVER_USER]);
       }
-      if (items[IQ_SERVER_TOKEN]) {
+      if (items[IQ_SERVER_TOKEN] !== undefined) {
         setIQServerToken(items[IQ_SERVER_TOKEN]);
       }
-      if (items[IQ_SERVER_APPLICATION]) {
+      if (items[IQ_SERVER_APPLICATION] !== undefined) {
         setIQServerApplication(items[IQ_SERVER_APPLICATION]);
       }
-      if (items[SCAN_TYPE]) {
+      if (items[SCAN_TYPE] !== undefined) {
         setCurrentScanType(items[SCAN_TYPE]);
       }
       setLoading(false);

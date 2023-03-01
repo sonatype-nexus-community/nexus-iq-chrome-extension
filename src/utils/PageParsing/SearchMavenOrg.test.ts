@@ -36,7 +36,7 @@ describe('SearchMavenOrg Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar'
     );

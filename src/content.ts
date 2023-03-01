@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {ComponentDetails, PolicyData} from '@sonatype/js-sona-types';
+import {ComponentDetails} from '@sonatype/js-sona-types';
+import $, {Cash} from 'cash-dom';
 import {ArtifactMessage} from './types/ArtifactMessage';
 import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 import {findRepoType} from './utils/UrlParsing';
-import $ from 'cash-dom';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
@@ -43,6 +43,7 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
   }
   if (event.type === 'artifactDetailsFromServiceWorker') {
     console.trace('Received artifactDetailsFromServiceWorker message on content.js');
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (event.componentDetails) {
       const data: ComponentDetails = event.componentDetails;
       // const policyData: PolicyData = event.policyData;
@@ -52,9 +53,9 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
       const element = findElement(loc);
       removeClasses(element);
       if (
-        data.componentDetails[0] &&
+        // data.componentDetails[0] &&
         data.componentDetails[0].securityData &&
-        data.componentDetails[0].securityData.securityIssues &&
+        // data.componentDetails[0].securityData.securityIssues &&
         data.componentDetails[0].securityData.securityIssues.length > 0
       ) {
         const maxSeverity = Math.max(
@@ -114,13 +115,13 @@ function findElement(loc: string) {
   const repoType = findRepoType(loc);
   if (repoType) {
     const element = $(repoType.titleSelector);
-    if (element && element.length > 0) {
+    if (element.length > 0) {
       return element;
     }
   }
   return null;
 }
-function addClasses(vulnClass: string, element) {
+function addClasses(vulnClass: string, element?: Cash) {
   console.info('addClasses', vulnClass, element);
   if (element) {
     element.addClass(vulnClass);

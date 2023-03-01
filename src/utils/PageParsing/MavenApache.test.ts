@@ -36,7 +36,7 @@ describe('mavenapache Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/'
     );

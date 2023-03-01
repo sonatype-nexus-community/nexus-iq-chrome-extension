@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 import React, {useContext, useState} from 'react';
-import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {SecurityIssue, sortIssues} from '../../../../types/ArtifactMessage';
+import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
 import './SecurityPage.css';
 
-type SecurityProps = {};
+// type SecurityProps = object;
 
-const SecurityPage = (props: SecurityProps): JSX.Element | null => {
+const SecurityPage = (): JSX.Element | null => {
+  // props: SecurityProps
   const [open, setOpen] = useState('');
 
   const nexusContext = useContext(NexusContext);
@@ -42,9 +43,9 @@ const SecurityPage = (props: SecurityProps): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
-      nexusContext.policyDetails.results[0].securityData
+      // nexusContext.policyDetails.results &&
+      nexusContext.policyDetails.results.length > 0 // &&
+      // nexusContext.policyDetails.results[0].securityData
     ) {
       const purl = nexusContext.policyDetails.results[0].component.packageUrl;
       const securityData = nexusContext.policyDetails.results[0].securityData;

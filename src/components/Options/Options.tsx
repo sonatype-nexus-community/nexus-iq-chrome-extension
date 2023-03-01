@@ -15,7 +15,6 @@
  */
 import {
   NxFieldset,
-  NxH2,
   NxPageTitle,
   NxRadio,
   NxTab,
@@ -27,9 +26,9 @@ import {
 import React, {useContext, useEffect, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import {DATA_SOURCES} from '../../utils/Constants';
+import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
-import GeneralOptionsPage from './General/GeneralOptionsPage';
 
 const SCAN_TYPE = 'scanType';
 
@@ -43,7 +42,7 @@ const Options = (): JSX.Element | null => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[SCAN_TYPE]) {
+      if (items[SCAN_TYPE] !== undefined) {
         setScanType(items[SCAN_TYPE]);
       }
     });

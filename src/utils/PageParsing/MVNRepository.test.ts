@@ -36,7 +36,7 @@ describe('MVNRepository Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3'
     );

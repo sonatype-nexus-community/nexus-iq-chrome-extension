@@ -13,27 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {NxButton, NxP, NxTextLink, useToggle} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
-import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
-import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {NxDrawer, NxButton, NxP, NxTextLink} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
-import {useToggle} from '@sonatype/react-shared-components';
-import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
+import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
+import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 
 const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
   const [showDrawerLegal, toggleDrawerLegal] = useToggle(false);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.getLicenseDetails && !nexusContext.licenseDetails) {
+    if (
+      nexusContext &&
+      nexusContext.getLicenseDetails &&
+      !nexusContext.licenseDetails &&
+      nexusContext.componentDetails
+    ) {
       nexusContext.getLicenseDetails(nexusContext.componentDetails.component.packageUrl);
     }
     if (
       nexusContext &&
       nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
+      // nexusContext.policyDetails.results &&
       nexusContext.policyDetails.results.length > 0 &&
       nexusContext.getLicenseDetails
     ) {
@@ -56,7 +59,7 @@ const LicensingPage = (): JSX.Element | null => {
               {licenseData.effectiveLicenses.map((license: LicenseDetail) => {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
               })}
-              {observedLicenses && observedLicenses.length > 0 && (
+              {observedLicenses.length > 0 && (
                 <React.Fragment>
                   <header className="nx-grid-header">
                     <h3 className={'nx-h3 nx-grid-header__title'}>Observed License(s)</h3>

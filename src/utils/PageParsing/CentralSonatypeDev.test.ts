@@ -36,7 +36,7 @@ describe('CentralSonatypeDev Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://central.sonatype.dev/artifact/org.apache.logging.log4j/log4j/2.19.0'
     );

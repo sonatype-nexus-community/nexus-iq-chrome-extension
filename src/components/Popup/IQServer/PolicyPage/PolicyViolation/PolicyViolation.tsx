@@ -26,10 +26,9 @@ import '../PolicyPage.css';
 type PolicyViolationProps = {
   policyViolation: PolicyViolation;
 };
-const IQ_SERVER_URL = 'iqServerURL';
 
 const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [iqServerUrl, setIqServerUrl] = useState('');
   chrome.storage.local.get('iqServerURL', function (result) {
     console.log(`get local storage result: ${result.iqServerURL}`);
@@ -59,44 +58,42 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
   };
 
   const printPolicyViolation = (policyViolation: PolicyViolation) => {
-    if (policyViolation) {
-      return (
-        <tr className="nx-table-row">
-          <td className="nx-cell">
-            <NxPolicyViolationIndicator
-              style={{
-                width: '20px !important',
-                margin: 'none !important'
-              }}
-              policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}
-            >
-              {policyViolation.threatLevel.toString()}
-            </NxPolicyViolationIndicator>
-          </td>
-          {policyViolation.constraintViolations &&
-            policyViolation.constraintViolations.map((constraint: ConstraintViolation) => (
-              <React.Fragment key={constraint.constraintName}>
-                <td className="nx-cell">{policyViolation.policyName}</td>
-                <td className="nx-cell">{constraint.constraintName}</td>
-
-                <td className="nx-cell">
+    // if (policyViolation) {
+    return (
+      <tr className="nx-table-row">
+        <td className="nx-cell">
+          <NxPolicyViolationIndicator
+            style={{
+              width: '20px !important',
+              margin: 'none !important'
+            }}
+            policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}
+          >
+            {policyViolation.threatLevel.toString()}
+          </NxPolicyViolationIndicator>
+        </td>
+        {policyViolation.constraintViolations.map((constraint: ConstraintViolation) => (
+          <React.Fragment key={constraint.constraintName}>
+            <td className="nx-cell">{policyViolation.policyName}</td>
+            <td className="nx-cell">{constraint.constraintName}</td>
+            <td className="nx-cell">
+              {constraint.reasons.map((reason: Reason) => (
+                // eslint-disable-next-line react/jsx-key
+                <NxList>
                   {constraint.reasons.map((reason: Reason) => (
                     // eslint-disable-next-line react/jsx-key
-                    <NxList>
-                      {constraint.reasons.map((reason: Reason) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <NxList.Item className="nx-list-in-cell">
-                          <NxList.Text>{formatReason(reason.reason)}</NxList.Text>
-                        </NxList.Item>
-                      ))}
-                    </NxList>
+                    <NxList.Item className="nx-list-in-cell">
+                      <NxList.Text>{formatReason(reason.reason)}</NxList.Text>
+                    </NxList.Item>
                   ))}
-                </td>
-              </React.Fragment>
-            ))}
-        </tr>
-      );
-    }
+                </NxList>
+              ))}
+            </td>
+          </React.Fragment>
+        ))}
+      </tr>
+    );
+    // }
     return null;
   };
 

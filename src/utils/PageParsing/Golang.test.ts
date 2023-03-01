@@ -31,7 +31,7 @@ describe('Golang Page Parsing', () => {
     appendVersionPath: ''
   };
   test('Parse golang page etcd version in url', () => {
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://pkg.go.dev/github.com/etcd-io/etcd@v0.3.0'
     );
