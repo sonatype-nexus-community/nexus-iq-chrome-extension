@@ -171,8 +171,9 @@ const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
 const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => {
   if (
     // details.componentDetails &&
-    // details.componentDetails?.length > 0 &&
-    // details.componentDetails[0].securityData &&
+    details.componentDetails.length > 0 &&
+    details.componentDetails[0].securityData !== undefined &&
+    details.componentDetails[0].securityData !== null &&
     // details.componentDetails[0].securityData.securityIssues &&
     details.componentDetails[0].securityData.securityIssues?.length > 0
   ) {

@@ -119,7 +119,7 @@ function findElement(loc: string) {
       return element;
     }
   }
-  return null;
+  return undefined;
 }
 function addClasses(vulnClass: string, element?: Cash) {
   console.info('addClasses', vulnClass, element);

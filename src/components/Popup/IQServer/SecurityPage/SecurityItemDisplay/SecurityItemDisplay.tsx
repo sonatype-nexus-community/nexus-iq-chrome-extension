@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as React from 'react';
-import VulnDetails from './VulnDetails/VulnDetails';
 import {
   NxAccordion,
   NxPolicyViolationIndicator,
-  ThreatLevelNumber,
-  NxButton
+  ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import {SecurityIssue} from '../../../../../types/ArtifactMessage';
-import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import * as React from 'react';
 import {useContext} from 'react';
+import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import {SecurityIssue} from '../../../../../types/ArtifactMessage';
 import '../SecurityPage.css';
+import VulnDetails from './VulnDetails/VulnDetails';
 
 type SecurityItemProps = {
   securityIssue: SecurityIssue;
@@ -37,13 +36,15 @@ const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderSecurityItem = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.getVulnDetails) {
+    if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
       return (
         <NxAccordion
           open={props.open}
           onToggle={() => {
             props.remediationEvent(props.securityIssue.reference);
-            nexusContext.getVulnDetails(props.securityIssue.reference);
+            if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
+              nexusContext.getVulnDetails(props.securityIssue.reference);
+            }
           }}
         >
           <NxAccordion.Header>

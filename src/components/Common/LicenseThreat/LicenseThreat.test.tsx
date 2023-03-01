@@ -67,7 +67,8 @@ describe('<LicenseThreat />', () => {
       <NexusContext.Provider
         value={{
           showAlpDrawer: false,
-          toggleAlpDrawer: undefined,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          toggleAlpDrawer: () => {},
           scanType: DATA_SOURCES.NEXUSIQ,
           licenseDetails: licenseDetail,
           logger: new TestLogger(LogLevel.ERROR)

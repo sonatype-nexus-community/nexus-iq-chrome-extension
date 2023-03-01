@@ -27,7 +27,7 @@ import {DATA_SOURCES} from '../utils/Constants';
 
 export interface NexusContextInterface {
   showAlpDrawer: boolean;
-  toggleAlpDrawer?: () => void;
+  toggleAlpDrawer: () => void;
   scanType: string;
   componentDetails?: ComponentContainer;
   policyDetails?: IqServerComponentPolicyEvaluationResult;
@@ -48,7 +48,8 @@ export interface NexusContextInterface {
 
 const initialContext: NexusContextInterface = {
   showAlpDrawer: false,
-  toggleAlpDrawer: undefined,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  toggleAlpDrawer: () => {},
   scanType: DATA_SOURCES.OSSINDEX,
   componentDetails: undefined,
   policyDetails: undefined,

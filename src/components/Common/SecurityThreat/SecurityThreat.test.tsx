@@ -59,7 +59,8 @@ describe('<SecurityThreat />', () => {
       <NexusContext.Provider
         value={{
           showAlpDrawer: false,
-          toggleAlpDrawer: undefined,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          toggleAlpDrawer: () => {},
           logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.NEXUSIQ,
           policyDetails: policyJson
@@ -78,7 +79,8 @@ describe('<SecurityThreat />', () => {
       <NexusContext.Provider
         value={{
           showAlpDrawer: false,
-          toggleAlpDrawer: undefined,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          toggleAlpDrawer: () => {},
           logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.OSSINDEX,
           componentDetails: component

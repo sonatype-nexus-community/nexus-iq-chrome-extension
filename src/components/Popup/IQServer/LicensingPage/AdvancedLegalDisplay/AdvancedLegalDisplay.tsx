@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxButton, NxFontAwesomeIcon, NxH4, NxList} from '@sonatype/react-shared-components';
-import {faCopy} from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
+import {faCopy} from '@fortawesome/free-solid-svg-icons';
+import {NxButton, NxFontAwesomeIcon, NxH4, NxList} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 
@@ -70,7 +70,7 @@ const AdvancedLegalDisplay = (): JSX.Element => {
         </React.Fragment>
       );
     }
-    return null;
+    return <React.Fragment>ALP not available.</React.Fragment>;
   };
 
   return renderLegalDisplay(nexusContext);

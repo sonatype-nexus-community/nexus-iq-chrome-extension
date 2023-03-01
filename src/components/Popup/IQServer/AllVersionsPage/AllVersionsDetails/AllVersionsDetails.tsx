@@ -28,10 +28,14 @@ import './AllVersionsDetails.css';
 const AllVersionsDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
-  const currentVersionRef = useRef(null);
+  const currentVersionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (nexusContext.componentVersionsDetails && nexusContext.componentVersionsDetails.length > 0) {
+    if (
+      nexusContext.componentVersionsDetails &&
+      nexusContext.componentVersionsDetails.length > 0 &&
+      currentVersionRef.current
+    ) {
       console.log(currentVersionRef.current);
       currentVersionRef.current.scrollIntoView({
         behavior: 'smooth',
