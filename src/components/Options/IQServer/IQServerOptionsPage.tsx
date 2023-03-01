@@ -78,9 +78,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
     setter(value);
     chrome.storage.local.set({[key]: value}, () => {
       if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
-      } else {
-        console.trace('Set value', key, value);
+        console.error(chrome.runtime.lastError.message);
       }
     });
   };
@@ -106,25 +104,16 @@ const IQServerOptionsPage = (): JSX.Element | null => {
         const loggedIn = await requestService.loginViaRest();
 
         if (loggedIn) {
-          console.trace('Able to login to Nexus IQ Server');
           setErrorLoggingIn('');
-          console.trace('Set error logging in to empty');
           setLoggedIn(loggedIn);
-          console.trace('Set logged in on state to true');
           setItem(setCurrentScanType, DATA_SOURCES.NEXUSIQ, SCAN_TYPE);
         } else {
-          console.error('Unable to login to Nexus IQ Server');
           setErrorLoggingIn('Unable to login');
-          console.trace('Set error logging in to message');
           setLoggedIn(false);
-          console.trace('Set logged in on state to false');
         }
       } catch (err) {
-        console.error('Unable to login to Nexus IQ Server');
         setErrorLoggingIn(err);
-        console.trace('Set error logging in to message');
         setLoggedIn(false);
-        console.trace('Set logged in on state to false');
       }
     }
   };

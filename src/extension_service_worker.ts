@@ -115,19 +115,19 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<ComponentD
       .loginViaRest()
       .then((loggedIn) => {
         if (loggedIn) {
-          logger.logMessage('Logged in to Nexus IQ Server via service worker', LogLevel.INFO);
+          logger.logMessage('Logged in to Sonatype IQ Server via service worker', LogLevel.INFO);
           _doRequestToIQServer(requestService, purl)
             .then((res) => {
               resolve(res);
             })
             .catch((err) => {
-              console.log(err);
+              logger.logMessage('Unable to login to Sonatype IQ server via service worker', LogLevel.ERROR, err.message);
               throw new Error(err);
             });
         }
       })
       .catch((err) => {
-        console.log(err);
+        logger.logMessage('Error in requestService login', LogLevel.ERROR, err.message);
         throw new Error(err);
       });
   });
@@ -149,7 +149,7 @@ const _doRequestToIQServer = (
           resolve(details);
         })
         .catch((err) => {
-          console.log(err);
+          logger.logMessage('Error: Unable to complete request to IQ server', LogLevel.ERROR, err.message);
           throw new Error(err);
         });
     });
@@ -164,6 +164,7 @@ const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
       sendNotificationAndMessage(purl, componentDetails);
     })
     .catch((err) => {
+      logger.logMessage('Error: Unable to handle OSS Index wrapper', LogLevel.ERROR, err.message);
       throw new Error(err);
     });
 };
@@ -182,7 +183,7 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
         chrome.action.setIcon({tabId: tabId, path: '/images/NexusLifecycle_Vulnerable.png'});
       })
       .catch((err) => {
-        logger.logMessage('Error encountered', LogLevel.ERROR, err);
+        logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
       });
 
     logger.logMessage('Sending notification that component is vulnerable', LogLevel.INFO);
@@ -213,7 +214,7 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
         });
       })
       .catch((err) => {
-        logger.logMessage('Error encountered', LogLevel.ERROR, err);
+        logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
       });
   }
 
@@ -225,7 +226,7 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
       });
     })
     .catch((err) => {
-      logger.logMessage('Error encountered', LogLevel.ERROR, err);
+      logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
     });
 };
 
@@ -254,10 +255,11 @@ const toggleIcon = (show: boolean) => {
         }
       })
       .catch((err) => {
+        logger.logMessage('Unable to get active tab id', LogLevel.ERROR, err.message);
         throw new Error(err);
       });
   } catch (err) {
-    logger.logMessage('Error encountered', LogLevel.ERROR, err);
+    logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
   }
 };
 
@@ -300,11 +302,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               handleOSSIndexWrapper(request.purl, settings);
             }
           } catch (err) {
-            logger.logMessage('Error encountered', LogLevel.ERROR, err);
+            logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
           }
         })
         .catch((err) => {
-          logger.logMessage('Error encountered', LogLevel.ERROR, err);
+          logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
         });
     }
     if (request.type === 'togglePage') {
