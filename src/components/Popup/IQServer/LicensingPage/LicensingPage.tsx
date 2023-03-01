@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxButton, NxP, NxTextLink, useToggle} from '@sonatype/react-shared-components';
+import {NxButton, NxP, NxTextLink} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
@@ -22,7 +22,7 @@ import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 
 const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
-  const [showDrawerLegal, toggleDrawerLegal] = useToggle(false);
+  // const [showDrawerLegal, toggleDrawerLegal] = useToggle(false);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
     if (

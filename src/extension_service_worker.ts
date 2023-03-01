@@ -27,7 +27,7 @@ import localforage from 'localforage';
 import {PackageURL} from 'packageurl-js';
 import BrowserExtensionLogger from './logger/Logger';
 
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
 
 const logger = new BrowserExtensionLogger(LogLevel.ERROR);
@@ -277,6 +277,7 @@ const handleIQServerWrapper = (purl: string, settings: Settings) => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   logger.logMessage('Request received', LogLevel.INFO, request);
 
@@ -324,6 +325,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.url !== '') {
     chrome.tabs.sendMessage(tabId, {

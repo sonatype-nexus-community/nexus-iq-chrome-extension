@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxH2, NxP, NxPageTitle, NxTile} from '@sonatype/react-shared-components';
+import {NxH2, NxPageTitle, NxTile} from '@sonatype/react-shared-components';
 import React from 'react';
 import IQServerOptionsPage from '../Options/IQServer/IQServerOptionsPage';
 

@@ -33,6 +33,7 @@ import {findRepoType} from './utils/UrlParsing';
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 const _browser = chrome ? chrome : browser;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AppProps = any;
 
 class NexusChromeExtensionContainer extends React.Component<AppProps, NexusContextInterface> {

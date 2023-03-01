@@ -27,7 +27,7 @@ const parseCentralSonatypeDev = (url: string): PackageURL | undefined => {
     const group = encodeURIComponent(elements[4]);
     const artifact = encodeURIComponent(elements[5]);
     const version = encodeURIComponent(elements[6]);
-    let qualifiers: any;
+    let qualifiers: Record<string, string>;
     if (elements.length == 8 && elements[7] !== '') {
       qualifiers = {type: elements[7]};
     } else {

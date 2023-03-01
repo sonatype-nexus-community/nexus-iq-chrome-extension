@@ -77,17 +77,16 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
             <td className="nx-cell">{policyViolation.policyName}</td>
             <td className="nx-cell">{constraint.constraintName}</td>
             <td className="nx-cell">
-              {constraint.reasons.map((reason: Reason) => (
-                // eslint-disable-next-line react/jsx-key
-                <NxList>
-                  {constraint.reasons.map((reason: Reason) => (
-                    // eslint-disable-next-line react/jsx-key
-                    <NxList.Item className="nx-list-in-cell">
-                      <NxList.Text>{formatReason(reason.reason)}</NxList.Text>
-                    </NxList.Item>
-                  ))}
-                </NxList>
-              ))}
+              {/* {constraint.reasons.map((reason: Reason) => ( */}
+              <NxList>
+                {constraint.reasons.map((reason: Reason) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <NxList.Item className="nx-list-in-cell">
+                    <NxList.Text>{formatReason(reason.reason)}</NxList.Text>
+                  </NxList.Item>
+                ))}
+              </NxList>
+              {/* ))} */}
             </td>
           </React.Fragment>
         ))}
