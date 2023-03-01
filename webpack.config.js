@@ -7,11 +7,9 @@ const CspHtmlWebpackPlugin = require('csp-html-webpack-plugin');
 const webpack = require('webpack');
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
-const del = require('del');
+const rimraf = require('rimraf')
 
-const outputPath = path.resolve(process.cwd(), "build");
-
-del.sync([path.resolve(outputPath, "**/*")]);
+rimraf.sync(path.resolve(process.cwd(), "build"));
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
