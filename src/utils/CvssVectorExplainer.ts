@@ -35,21 +35,21 @@ const CvssVectorExplainer = (vectors: string[]): Map<string, VectorDetails> => {
   vectors.forEach((vector) => {
     switch (vector) {
       case 'AV:N':
-        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Network', color: 'default'});
+        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Network', color: 'indigo'});
         break;
       case 'AV:A':
         result.set(ATTACK_VECTOR, {
           vector: vector,
           quickExplanation: 'Adjacent Network',
-          color: 'default'
+          color: 'indigo'
         });
         break;
       case 'AV:L':
-        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Local', color: 'default'});
+        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Local', color: 'indigo'});
         break;
       case 'AV:P':
         // Hell yeah Alien Vs Predator
-        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Physical', color: 'default'});
+        result.set(ATTACK_VECTOR, {vector: vector, quickExplanation: 'Physical', color: 'indigo'});
         break;
       case 'AC:L':
         result.set(ATTACK_COMPLEXITY, {vector: vector, quickExplanation: 'Low', color: 'red'});
@@ -77,7 +77,7 @@ const CvssVectorExplainer = (vectors: string[]): Map<string, VectorDetails> => {
         });
         break;
       case 'S:U':
-        result.set(SCOPE, {vector: vector, quickExplanation: 'Unchanged', color: 'default'});
+        result.set(SCOPE, {vector: vector, quickExplanation: 'Unchanged', color: 'indigo'});
         break;
       case 'S:C':
         result.set(SCOPE, {vector: vector, quickExplanation: 'Changed', color: 'lime'});
@@ -86,7 +86,7 @@ const CvssVectorExplainer = (vectors: string[]): Map<string, VectorDetails> => {
         result.set(CONFIDENTIALITY_IMPACT, {
           vector: vector,
           quickExplanation: 'None',
-          color: 'default'
+          color: 'indigo'
         });
         break;
       case 'C:L':
@@ -104,7 +104,7 @@ const CvssVectorExplainer = (vectors: string[]): Map<string, VectorDetails> => {
         });
         break;
       case 'I:N':
-        result.set(INTEGRITY_IMPACT, {vector: vector, quickExplanation: 'None', color: 'default'});
+        result.set(INTEGRITY_IMPACT, {vector: vector, quickExplanation: 'None', color: 'indigo'});
         break;
       case 'I:L':
         result.set(INTEGRITY_IMPACT, {vector: vector, quickExplanation: 'Low', color: 'orange'});
@@ -116,7 +116,7 @@ const CvssVectorExplainer = (vectors: string[]): Map<string, VectorDetails> => {
         result.set(AVAILABILITY_IMPACT, {
           vector: vector,
           quickExplanation: 'None',
-          color: 'default'
+          color: 'indigo'
         });
         break;
       case 'A:L':

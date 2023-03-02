@@ -29,6 +29,7 @@ import {
 import {PackageURL} from 'packageurl-js';
 import localforage from 'localforage';
 import BrowserExtensionLogger from './logger/Logger';
+import AlpDrawer from './components/AlpDrawer/AlpDrawer';
 
 const _browser = chrome ? chrome : browser;
 
@@ -41,6 +42,8 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     super(props);
 
     this.state = {
+      toggleAlpDrawer: this.toggleAlpDrawer,
+      showAlpDrawer: false,
       currentVersion: undefined,
       errorMessage: undefined,
       scanType: DATA_SOURCES.OSSINDEX,
@@ -52,8 +55,15 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     };
   }
 
+  toggleAlpDrawer = (): void => {
+    this.setState((state) => ({showAlpDrawer: !state.showAlpDrawer}));
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line
   getStorageValue = (key: string, defaultValue: any): Promise<any> => {
     return new Promise((resolve) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       _browser.storage.local.get((items: {[key: string]: any}) => {
         if (items[key]) {
           resolve(items[key]);
@@ -110,11 +120,13 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
               version: '1.0.0',
               logger: this.state.logger
             },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             localforage as any
           );
 
           return;
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         this.setState({errorMessage: err.message});
         return;
@@ -125,7 +137,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   componentDidMount = (): void => {
     chrome.tabs.query({active: true, currentWindow: true}).then((tabs) => {
       if (tabs[0]) {
-        const repoType: RepoType | undefined = findRepoType(tabs[0].url!);
+        const repoType: RepoType | undefined = findRepoType(tabs[0].url);
         console.info('Found repoType' + repoType.repoFormat);
         this.state.logger.logMessage('Found repoType', LogLevel.TRACE, repoType);
 
@@ -236,8 +248,10 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       console.log(purlComponentDetails);
       console.log(purlComponentDetails.componentDetails);
       this.setState({componentVersionsDetails: purlComponentDetails.componentDetails});
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log('Unable to get component details for: ' + packageUrl.toString());
+      console.log(err.toString());
     }
 
     this.setState({componentVersions: allVersions});
@@ -315,8 +329,8 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
                 }
               );
             })
-            .catch((err: any) => {
-              this.state.logger.logMessage(err, LogLevel.ERROR);
+            .catch((err: Error) => {
+              this.state.logger.logMessage(err as unknown as string, LogLevel.ERROR);
               console.info('ERROR: ', err);
               this.setState({errorMessage: err.message});
             });
@@ -329,12 +343,12 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       });
   };
 
-  getComponentDetails = (purl: string) => {
+  getComponentDetails = (purl: string): void => {
     const packageUrl = PackageURL.fromString(purl);
     this.doRequestForComponentDetails(packageUrl);
   };
 
-  doRequestForComponentDetails = (purl: PackageURL) => {
+  doRequestForComponentDetails = (purl: PackageURL): void => {
     console.log('doRequestForComponentDetails: ' + purl);
     if (this._requestService) {
       this._requestService
@@ -345,9 +359,9 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
             this.setState({componentDetails: res.componentDetails[0]});
           }
         })
-        .catch((err: any) => {
+        .catch((err: Error) => {
           console.log(err);
-          this.state.logger.logMessage(err, LogLevel.ERROR);
+          this.state.logger.logMessage(err as unknown as string, LogLevel.ERROR);
           this.setState({errorMessage: err.message});
         });
     }
@@ -356,6 +370,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
   render(): JSX.Element {
     return (
       <NexusContext.Provider value={this.state}>
+        <AlpDrawer />
         <div className="nx-page-content">
           <main className="nx-page-main nx-viewport-sized">
             <Popup />

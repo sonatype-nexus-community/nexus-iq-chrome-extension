@@ -34,6 +34,7 @@ import {Puff} from '@agney/react-loading';
 import './Popup.css';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 import {PackageURL} from 'packageurl-js';
+import AdvancedLegalDisplay from './IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay';
 
 const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
@@ -71,7 +72,7 @@ const Popup = (): JSX.Element | null => {
                     className="nx-popup-logo"
                     alt="Sonatype Nexus Lifecycle"
                   />
-                  &nbsp;Sonatype Nexus Lifecycle Results
+                  &nbsp;Sonatype Lifecycle Results
                 </h2>
               </div>
             </header>

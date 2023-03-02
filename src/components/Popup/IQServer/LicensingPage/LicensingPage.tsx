@@ -45,21 +45,7 @@ const LicensingPage = (): JSX.Element | null => {
         <React.Fragment>
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              <NxDrawer
-                id="nx-drawer-legal"
-                open={showDrawerLegal}
-                onClose={toggleDrawerLegal}
-                aria-labelledby="drawer-legal-title"
-              >
-                <NxDrawer.Header>
-                  <NxDrawer.HeaderTitle id="drawer-legal-title">
-                    Advanced Legal Pack
-                  </NxDrawer.HeaderTitle>
-                </NxDrawer.Header>
-                <NxDrawer.Content tabIndex={0}>
-                  <AdvancedLegalDisplay />
-                </NxDrawer.Content>
-              </NxDrawer>
+              {/*Old Drawer Location*/}
             </section>
           </div>
           <div className="nx-grid-row">
@@ -90,7 +76,7 @@ const LicensingPage = (): JSX.Element | null => {
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--100">
               <NxP style={{textAlign: 'center'}}>
-                <NxButton id="nx-drawer-legal-open-button" onClick={toggleDrawerLegal}>
+                <NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>
                   <div>
                     <span>View License Files</span>
                   </div>

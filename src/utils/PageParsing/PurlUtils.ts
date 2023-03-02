@@ -20,7 +20,7 @@ const generatePackageURL = (
   format: string,
   name: string,
   version: string,
-  qualifiers?
+  qualifiers?: {[key: string]: string}
 ): PackageURL => {
   return generatePackageURLComplete(format, name, version, undefined, qualifiers, undefined);
 };

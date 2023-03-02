@@ -41,6 +41,7 @@ const Options = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[SCAN_TYPE]) {
         setScanType(items[SCAN_TYPE]);
@@ -48,9 +49,17 @@ const Options = (): JSX.Element | null => {
     });
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (func: any, value: any, key: string) => {
     func(value);
     chrome.storage.local.set({[key]: value});
+    if (scanType === DATA_SOURCES.NEXUSIQ) {
+      setActiveTabId(1);
+    } else if (scanType === DATA_SOURCES.OSSINDEX) {
+      setActiveTabId(0);
+    } else {
+      setActiveTabId(2);
+    }
   };
 
   const renderOptions = (nexusContext: NexusContextInterface | undefined) => {
@@ -58,23 +67,14 @@ const Options = (): JSX.Element | null => {
       return (
         <React.Fragment>
           <h1>
-            <NxPageTitle>Sonatype Nexus Browser Extension Options</NxPageTitle>
+            <NxPageTitle>Sonatype Browser Extension Options</NxPageTitle>
           </h1>
           <NxTile>
-            <NxTile.Header>
-              <NxH2>Evaluation Data Source</NxH2>
-            </NxTile.Header>
+            {/*<NxTile.Header>*/}
+            {/*  <NxH2>Connection Type</NxH2>*/}
+            {/*</NxTile.Header>*/}
             <NxTile.Content>
-              <NxFieldset label={`Selected Evaluation Type: ${scanType}`} isRequired>
-                <NxRadio
-                  name={SCAN_TYPE}
-                  value={DATA_SOURCES.OSSINDEX}
-                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
-                  isChecked={scanType === DATA_SOURCES.OSSINDEX}
-                  radioId="scanType-OSS-Index"
-                >
-                  OSS Index
-                </NxRadio>
+              <NxFieldset label={`Current Connection Type: ${scanType}`} isRequired>
                 <NxRadio
                   name={SCAN_TYPE}
                   value={DATA_SOURCES.NEXUSIQ}
@@ -82,26 +82,35 @@ const Options = (): JSX.Element | null => {
                   isChecked={scanType === DATA_SOURCES.NEXUSIQ}
                   radioId="scanType-IQ-Server"
                 >
-                  IQ Server
+                  Sonatype IQ Server
+                </NxRadio>
+                <NxRadio
+                  name={SCAN_TYPE}
+                  value={DATA_SOURCES.OSSINDEX}
+                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
+                  isChecked={scanType === DATA_SOURCES.OSSINDEX}
+                  radioId="scanType-OSS-Index"
+                >
+                  Sonatype OSS Index
                 </NxRadio>
               </NxFieldset>
-              <NxTile.Header>
-                <NxH2>Additional Configuration</NxH2>
-              </NxTile.Header>
+              {/*<NxTile.Header>*/}
+              {/*  <NxH2>Connection Configuration</NxH2>*/}
+              {/*</NxTile.Header>*/}
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
-                  <NxTab>General</NxTab>
-                  <NxTab>Nexus IQ</NxTab>
-                  <NxTab>OSS Index</NxTab>
+                  <NxTab key={DATA_SOURCES.NEXUSIQ}>Sonatype IQ Server</NxTab>
+                  <NxTab key={DATA_SOURCES.OSSINDEX}>Sonatype OSS Index</NxTab>
+                  <NxTab key={`GENERAL`}>General Options</NxTab>
                 </NxTabList>
-                <NxTabPanel>
-                  <GeneralOptionsPage />
-                </NxTabPanel>
                 <NxTabPanel>
                   <IQServerOptionsPage />
                 </NxTabPanel>
                 <NxTabPanel>
                   <OSSIndexOptionsPage />
+                </NxTabPanel>
+                <NxTabPanel>
+                  <GeneralOptionsPage />
                 </NxTabPanel>
               </NxTabs>
             </NxTile.Content>

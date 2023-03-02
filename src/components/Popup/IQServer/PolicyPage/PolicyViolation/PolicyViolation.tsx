@@ -38,13 +38,26 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
     setIqServerUrl(result.iqServerURL);
   });
 
-  const getNewReason = (reason): string => {
-    const newReason: string = reason.replace(
-      /((CVE|sonatype)-[0-9]{4}-[0-9]+)/,
-      `<a href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</a>"`
-      // `<NxTextLink external href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</NxTextLink>"`
+  // const getNewReason = (reason): string => {
+  //   const newReason: string = reason.replace(
+  //     /((CVE|sonatype)-[0-9]{4}-[0-9]+)/,
+  //     // `<a href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</a>"`
+  //     `<NxTextLink external href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</NxTextLink>"`
+  //   );
+  //   return newReason;
+  // };
+  const formatReason = (reason: string) => {
+    const CVERegex = /((?:CVE|sonatype)-[0-9]{4}-[0-9]+)/g;
+    return reason.split(CVERegex).map((segment) =>
+      CVERegex.exec(segment) ? (
+        // eslint-disable-next-line react/jsx-key
+        <NxTextLink external href={`${iqServerUrl}/assets/index.html#/vulnerabilities/${segment}`}>
+          {segment}
+        </NxTextLink>
+      ) : (
+        segment
+      )
     );
-    return newReason;
   };
 
   const printPolicyViolation = (policyViolation: PolicyViolation) => {
@@ -75,7 +88,7 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
                       {constraint.reasons.map((reason: Reason) => (
                         // eslint-disable-next-line react/jsx-key
                         <NxList.Item className="nx-list-in-cell">
-                          {getNewReason(reason.reason)}
+                          <NxList.Text>{formatReason(reason.reason)}</NxList.Text>
                         </NxList.Item>
                       ))}
                     </NxList>

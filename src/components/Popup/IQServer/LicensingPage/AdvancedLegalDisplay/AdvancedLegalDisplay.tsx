@@ -22,7 +22,7 @@ import {NexusContext, NexusContextInterface} from '../../../../../context/NexusC
 const AdvancedLegalDisplay = (): JSX.Element => {
   const nexusContext = useContext(NexusContext);
 
-  const copyToClipboard = (_event: any, text: string) => {
+  const copyToClipboard = (_event: React.MouseEvent, text: string) => {
     navigator.clipboard.writeText(text);
   };
 
