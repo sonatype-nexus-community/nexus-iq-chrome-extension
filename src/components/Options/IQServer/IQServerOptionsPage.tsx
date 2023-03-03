@@ -20,12 +20,17 @@ import {
   NxGrid,
   NxStatefulErrorAlert,
   NxStatefulSuccessAlert,
-  NxStatefulTextInput
+  NxStatefulTextInput,
+  NxTooltip,
+  NxFontAwesomeIcon,
+    NxButton
 } from '@sonatype/react-shared-components';
 import classnames from 'classnames';
 import React, {useEffect, useState} from 'react';
 import {DATA_SOURCES} from '../../../utils/Constants';
 import './IQServerOptionsPage.css';
+import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
+import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
 const IQ_SERVER_URL = 'iqServerURL';
 const IQ_SERVER_USER = 'iqServerUser';
@@ -155,7 +160,11 @@ const IQServerOptionsPage = (): JSX.Element | null => {
               >
                 <p className="nx-p">
                   <strong>1)</strong> Enter the URL for Sonatype IQ Server
-                </p>
+                    and allow the extension to communicate with your Sonatype IQ
+                    Server
+                  </p>
+
+                <div className="nx-form-row">
                 <NxFormGroup label={`URL`} isRequired>
                   <NxStatefulTextInput
                     defaultValue={iqServerURL}
@@ -164,15 +173,12 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                     onChange={(event) => setItem(setIQServerURL, event, IQ_SERVER_URL)}
                   />
                 </NxFormGroup>
-                <p className="nx-p">
-                  <strong>2)</strong> Allow the extension to communicate with your Sonatype IQ
-                  Server
-                </p>
                 <button className="nx-btn grant-permissions" onClick={askForPermissions}>
                   Grant Permissions to the Sonatype IQ Server URL
                 </button>
+                </div>
                 <p className="nx-p">
-                  <strong>3)</strong> Provide your username and token for the Sonatype IQ Server
+                  <strong>2)</strong> Provide your username and token for the Sonatype IQ Server
                 </p>
                 <div className="nx-form-row">
                   <NxFormGroup label={`Username`} isRequired>
@@ -192,7 +198,15 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   </NxFormGroup>
                 </div>
                 <p className="nx-p">
-                  <strong>4)</strong> Set the Sonatype Lifecycle application
+                  <strong>3)</strong> Set the Sonatype Lifecycle Application ID
+                  <NxTooltip title="The application id of the application for which policy will be applied.">
+                    <NxFontAwesomeIcon
+                        icon={faQuestionCircle as IconDefinition} />
+                  </NxTooltip>
+                  <NxTooltip title="Tooltip!">
+                    <NxButton>Hover over me for a tooltip</NxButton>
+                  </NxTooltip>
+
                 </p>
                 <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
                   <NxStatefulTextInput
@@ -204,7 +218,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   />
                 </NxFormGroup>
                 <p className="nx-p">
-                  <strong>5)</strong> Do a quick test to ensure you can connect to you Sonatype IQ
+                  <strong>4)</strong> Do a quick test to ensure you can connect to you Sonatype IQ
                   Server
                 </p>
                 {loggedIn && (
@@ -219,21 +233,6 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                 )}
               </NxForm>
             </section>
-            {/*<section className="nx-grid-col nx-grid-col--33">*/}
-            {/*  /!*<img src="images/billymays.png" width={420} height={420} />*!/*/}
-            {/*  /!*<blockquote className="nx-blockquote">*!/*/}
-            {/*  /!*  <em>&quot;Don&apos;t just clean your products, Sona-clean them&quot;</em>*!/*/}
-            {/*  /!*</blockquote>*!/*/}
-            {/*  <header className="nx-grid-header">*/}
-            {/*    <h3 className="nx-h3 nx-grid-header__title">Current Configuration</h3>*/}
-            {/*  </header>*/}
-            {/*  <NxDescriptionList>*/}
-            {/*    <NxDescriptionList.Item>*/}
-            {/*      <NxDescriptionList.Term>Evaluation Type</NxDescriptionList.Term>*/}
-            {/*      <NxDescriptionList.Description>{currentScanType}</NxDescriptionList.Description>*/}
-            {/*    </NxDescriptionList.Item>*/}
-            {/*  </NxDescriptionList>*/}
-            {/*</section>*/}
           </NxGrid.Row>
         </React.Fragment>
       );

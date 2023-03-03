@@ -21,7 +21,9 @@ import {
   NxTabList,
   NxTabPanel,
   NxTabs,
-  NxTile
+  NxTile,
+  NxButton, NxButtonBar,
+  NxFontAwesomeIcon
 } from '@sonatype/react-shared-components';
 import React, {useContext, useEffect, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
@@ -29,11 +31,14 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
+import {faClose} from "@fortawesome/free-solid-svg-icons";
+import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
 const SCAN_TYPE = 'scanType';
 
 const Options = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
+  const onClick = () => window.close();
 
   const [scanType, setScanType] = useState<string>(DATA_SOURCES.OSSINDEX);
 
@@ -68,12 +73,14 @@ const Options = (): JSX.Element | null => {
           <h1>
             <NxPageTitle>Sonatype Browser Extension Options</NxPageTitle>
           </h1>
+
           <NxTile>
-            {/*<NxTile.Header>*/}
-            {/*  <NxH2>Connection Type</NxH2>*/}
-            {/*</NxTile.Header>*/}
             <NxTile.Content>
+              {/*<NxForm.RequiredFieldNotice />*/}
+              <div className="nx-grid-row">
+              <section className="nx-grid-col nx-grid-col--66">
               <NxFieldset label={`Current Connection Type: ${scanType}`} isRequired>
+
                 <NxRadio
                   name={SCAN_TYPE}
                   value={DATA_SOURCES.NEXUSIQ}
@@ -92,10 +99,19 @@ const Options = (): JSX.Element | null => {
                 >
                   Sonatype OSS Index
                 </NxRadio>
+
               </NxFieldset>
-              {/*<NxTile.Header>*/}
-              {/*  <NxH2>Connection Configuration</NxH2>*/}
-              {/*</NxTile.Header>*/}
+              </section>
+              <section className="nx-grid-col nx-grid-col--33">
+              <NxButtonBar>
+                <NxButton
+                    onClick={onClick}>
+                  <span>Save & Close</span>
+                </NxButton>
+              </NxButtonBar>
+              </section>
+              </div>
+
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
                   <NxTab key={DATA_SOURCES.NEXUSIQ}>Sonatype IQ Server</NxTab>
