@@ -110,6 +110,32 @@ const ComponentInfoPage = (): JSX.Element | null => {
                         </NxDescriptionList.Description>
                       </NxDescriptionList.Item>
                     )}
+                  {nexusContext.componentDetails.integrityRating != null && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>
+
+                          <NxTextLink
+                              external
+                              href="https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components"
+                          >Integrity Rating
+                          </NxTextLink></NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {nexusContext.componentDetails.integrityRating}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                  )}
+                  {nexusContext.componentDetails.hygieneRating != null && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term><NxTextLink
+                            external
+                            href="https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings"
+                        >Hygiene Rating
+                        </NxTextLink></NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {nexusContext.componentDetails.hygieneRating}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                  )}
                   {nexusContext.componentDetails.projectData &&
                     nexusContext.componentDetails.projectData.lastReleaseDate && (
                       <NxDescriptionList.Item>
@@ -160,6 +186,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
                       </NxDescriptionList.Description>
                     </NxDescriptionList.Item>
                   )}
+
                 </NxDescriptionList>
               )}
             </section>

@@ -22,8 +22,7 @@ import {
   NxTabPanel,
   NxTabs,
   NxTile,
-  NxButton, NxButtonBar,
-  NxFontAwesomeIcon
+  NxButton, NxButtonBar
 } from '@sonatype/react-shared-components';
 import React, {useContext, useEffect, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
@@ -31,8 +30,6 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
-import {faClose} from "@fortawesome/free-solid-svg-icons";
-import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
 const SCAN_TYPE = 'scanType';
 
