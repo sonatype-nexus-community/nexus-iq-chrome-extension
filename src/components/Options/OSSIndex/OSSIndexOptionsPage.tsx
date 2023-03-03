@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useEffect, useState} from 'react';
 import {NxFormGroup, NxStatefulTextInput} from '@sonatype/react-shared-components';
+import React, {useEffect, useState} from 'react';
 
 const OSS_INDEX_USER = 'ossIndexUser';
 const OSS_INDEX_TOKEN = 'ossIndexToken';
@@ -27,10 +27,10 @@ const OSSIndexOptionsPage = (): JSX.Element | null => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[OSS_INDEX_USER]) {
+      if (items[OSS_INDEX_USER] !== undefined) {
         setOSSIndexUser(items[OSS_INDEX_USER]);
       }
-      if (items[OSS_INDEX_TOKEN]) {
+      if (items[OSS_INDEX_TOKEN] !== undefined) {
         setOSSIndexToken(items[OSS_INDEX_TOKEN]);
       }
       setLoading(false);

@@ -17,11 +17,7 @@
 //"purl": "pkg:maven/com.mycompany.myproduct/artifact-name@2.1.7",
 import {PackageURL} from 'packageurl-js';
 import {FORMATS} from '../Constants';
-import {
-  generatePackageURL,
-  generatePackageURLWithNamespace,
-  generatePackageURLComplete
-} from './PurlUtils';
+import {generatePackageURLComplete} from './PurlUtils';
 
 //pkg:type/namespace/name@version?qualifiers#subpath
 //Sonatype expects: "packageUrl": "pkg:maven/org.yaml/snakeyaml@1.17?type=jar"

@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 import {NxH3} from '@sonatype/react-shared-components';
-import React from 'react';
-import {useContext} from 'react';
+import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import RemediationDetails from './RemediationDetails/RemediationDetails';
 import AllVersionsDetails from '../AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
-import {ComponentContainer, ComponentDetails} from '@sonatype/js-sona-types';
+import RemediationDetails from './RemediationDetails/RemediationDetails';
 
 const RemediationPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -28,7 +26,7 @@ const RemediationPage = (): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
+      // nexusContext.policyDetails.results &&
       nexusContext.policyDetails.results.length > 0 &&
       nexusContext.getRemediationDetails
     ) {
@@ -37,7 +35,6 @@ const RemediationPage = (): JSX.Element | null => {
           nexusContext.policyDetails.results[0].component.packageUrl
         );
       }
-      const allVersionsDetails: ComponentContainer[] = nexusContext.componentVersionsDetails;
 
       return (
         <React.Fragment>
@@ -47,7 +44,7 @@ const RemediationPage = (): JSX.Element | null => {
               <RemediationDetails />
             </section>
             <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
-              <NxH3>All Versions ({allVersionsDetails?.length})</NxH3>
+              <NxH3>All Versions ({nexusContext.componentVersionsDetails?.length})</NxH3>
               <AllVersionsDetails />
             </section>
           </div>

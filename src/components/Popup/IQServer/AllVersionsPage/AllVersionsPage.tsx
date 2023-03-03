@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 import {NxH3} from '@sonatype/react-shared-components';
-import React from 'react';
-import {useContext} from 'react';
+import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import AllVersionsDetails from './AllVersionsDetails/AllVersionsDetails';
 
@@ -23,7 +22,11 @@ const RemediationPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderRemediationPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext.componentVersionsDetails?.length > 0) {
+    if (
+      nexusContext &&
+      nexusContext.componentVersionsDetails &&
+      nexusContext.componentVersionsDetails.length > 0
+    ) {
       return (
         <React.Fragment>
           <NxH3>All Versions ({nexusContext.componentVersionsDetails.length})</NxH3>
@@ -32,7 +35,11 @@ const RemediationPage = (): JSX.Element | null => {
       );
     }
 
-    return null;
+    return (
+      <React.Fragment>
+        <em>No versions</em>
+      </React.Fragment>
+    );
   };
 
   return renderRemediationPage(nexusContext);

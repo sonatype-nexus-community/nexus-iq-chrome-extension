@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('mavenapache Page Parsing', () => {
@@ -35,7 +36,7 @@ describe('mavenapache Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/'
     );

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
@@ -30,7 +31,7 @@ describe('Golang Page Parsing', () => {
     appendVersionPath: ''
   };
   test('Parse golang page etcd version in url', () => {
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://pkg.go.dev/github.com/etcd-io/etcd@v0.3.0'
     );

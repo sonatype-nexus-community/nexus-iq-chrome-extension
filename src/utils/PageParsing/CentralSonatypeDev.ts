@@ -27,8 +27,8 @@ const parseCentralSonatypeDev = (url: string): PackageURL | undefined => {
     const group = encodeURIComponent(elements[4]);
     const artifact = encodeURIComponent(elements[5]);
     const version = encodeURIComponent(elements[6]);
-    let qualifiers: {};
-    if (elements.length == 8 && elements[7]) {
+    let qualifiers: Record<string, string>;
+    if (elements.length == 8 && elements[7] !== '') {
       qualifiers = {type: elements[7]};
     } else {
       qualifiers = {type: 'jar'}; //main.js:79307 Error: Error: The following coordinates are missing for given format: [type]

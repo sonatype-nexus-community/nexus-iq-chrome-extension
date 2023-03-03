@@ -18,22 +18,23 @@ import {NxDescriptionList, NxLoadingSpinner} from '@sonatype/react-shared-compon
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
-import './RemediationDetails.css';
 import {findRepoType} from '../../../../../utils/UrlParsing';
+import './RemediationDetails.css';
 
 const RemediationDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-    nexusContext.currentUrl = new URL(tabs[0].url);
+    const tab = tabs.pop();
+    nexusContext.currentUrl = new URL(tab && tab.url !== undefined ? tab.url : '');
   });
 
   const buildNextUrlAndGo = (nextUrlVersion: string) => {
-    const currentUrl = nexusContext.currentUrl.toString();
+    const currentUrl = nexusContext.currentUrl ? nexusContext.currentUrl.toString() : '';
     console.log('Remediation currentUrl: ', currentUrl);
     const repoType = findRepoType(currentUrl);
     let newURL;
-    if (currentUrl.indexOf(nextUrlVersion) < 0 && repoType) {
+    if (currentUrl.indexOf(nextUrlVersion) < 0 && repoType && repoType.appendVersionPath != null) {
       console.log('Doing the appendVersionPath replace');
       newURL = repoType.url + repoType.appendVersionPath.replace('{versionNumber}', nextUrlVersion);
     } else {
@@ -49,8 +50,8 @@ const RemediationDetails = (): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.remediationDetails &&
-      nexusContext.remediationDetails.remediation &&
-      nexusContext.remediationDetails.remediation.versionChanges &&
+      // nexusContext.remediationDetails.remediation &&
+      // nexusContext.remediationDetails.remediation.versionChanges &&
       nexusContext.remediationDetails.remediation.versionChanges.length > 0
     ) {
       const versionChanges: VersionChange[] =
@@ -58,21 +59,26 @@ const RemediationDetails = (): JSX.Element | null => {
 
       return (
         <NxDescriptionList>
-          {versionChanges &&
-            versionChanges.map((change) => {
-              return (
-                <>
-                  <NxDescriptionList.LinkItem
-                    key={change.data.component.hash}
-                    href={buildNextUrlAndGo(
-                      change.data.component.componentIdentifier.coordinates.version
-                    )}
-                    term={REMEDIATION_LABELS[change.type]}
-                    description={change.data.component.componentIdentifier.coordinates.version}
-                  />
-                </>
-              );
-            })}
+          {versionChanges.map((change) => {
+            return (
+              <>
+                <NxDescriptionList.LinkItem
+                  key={change.data.component.hash}
+                  href={buildNextUrlAndGo(
+                    change.data.component.componentIdentifier.coordinates
+                      ? change.data.component.componentIdentifier.coordinates.version
+                      : 'UNKNOWN'
+                  )}
+                  term={REMEDIATION_LABELS[change.type]}
+                  description={
+                    change.data.component.componentIdentifier.coordinates
+                      ? change.data.component.componentIdentifier.coordinates.version
+                      : 'UNKNOWN'
+                  }
+                />
+              </>
+            );
+          })}
         </NxDescriptionList>
       );
     } else {

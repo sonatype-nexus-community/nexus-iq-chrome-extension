@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as React from 'react';
+import {SecurityIssue} from '@sonatype/js-sona-types';
 import {
   NxAccordion,
+  NxDescriptionList,
   NxH2,
   NxH3,
   NxPolicyViolationIndicator,
-  NxTextLink,
-  NxTag,
-  ThreatLevelNumber,
   NxStatefulAccordion,
-  NxDescriptionList
+  NxTag,
+  NxTextLink,
+  ThreatLevelNumber
 } from '@sonatype/react-shared-components';
+import * as React from 'react';
+import {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
 import {CvssVectorExplainer, VectorDetails} from '../../../../utils/CvssVectorExplainer';
-import {useContext} from 'react';
-import {SecurityIssue} from '@sonatype/js-sona-types';
 
 const LiteSecurityPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
@@ -39,15 +39,17 @@ const LiteSecurityPage = (): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.componentDetails &&
-      nexusContext.componentDetails.securityData &&
-      nexusContext.componentDetails.securityData.securityIssues
+      nexusContext.componentDetails.securityData // &&
+      // nexusContext.componentDetails.securityData.securityIssues
     ) {
       return (
         <div className="nx-grid-row">
           <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
             {nexusContext.componentDetails.securityData.securityIssues.map(
               (issue: SecurityIssue) => {
-                const vectorExplained = CvssVectorExplainer(issue.vector.split('/'));
+                const vectorExplained = CvssVectorExplainer(
+                  issue.vector != null ? issue.vector.split('/') : []
+                );
                 return (
                   <NxStatefulAccordion key={issue.reference}>
                     <NxAccordion.Header>
@@ -85,17 +87,16 @@ const LiteSecurityPage = (): JSX.Element | null => {
                         <NxDescriptionList.Term>CVSS Vector</NxDescriptionList.Term>
                         <NxDescriptionList.Description>
                           <React.Fragment>
-                            {vectorExplained &&
-                              Array.from(vectorExplained).map(([key, value]) => {
-                                return (
-                                  <NxTag
-                                    key={key}
-                                    color={(value as VectorDetails).color}
-                                  >{`${key} - ${(value as VectorDetails).quickExplanation} ${
-                                    (value as VectorDetails).vector
-                                  }`}</NxTag>
-                                );
-                              })}
+                            {Array.from(vectorExplained).map(([key, value]) => {
+                              return (
+                                <NxTag
+                                  key={key}
+                                  color={(value as VectorDetails).color}
+                                >{`${key} - ${(value as VectorDetails).quickExplanation} ${
+                                  (value as VectorDetails).vector
+                                }`}</NxTag>
+                              );
+                            })}
                           </React.Fragment>
                         </NxDescriptionList.Description>
                       </NxDescriptionList.Item>

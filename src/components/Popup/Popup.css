@@ -27,11 +27,11 @@
 }
 
 .nx-policy-violation-indicator {
-  margin: 0px !important;
-  width: 125px !important;
+  margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;
 }
 
-.nx-policy-violation-indicator {
-  margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;
-  width: 150px !important;
+.nx-footer {
+  font-size: var(--nx-font-size-xs);
+  margin-bottom: 10px !important;
+  padding-top: 7px !important;
 }

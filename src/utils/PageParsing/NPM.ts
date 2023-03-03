@@ -19,7 +19,7 @@ import {PackageURL} from 'packageurl-js';
 import {generatePackageURL, generatePackageURLWithNamespace} from './PurlUtils';
 
 const parseNPM = (url: string): PackageURL | undefined => {
-  if (url && url.search('/v/') > 0) {
+  if (url?.search('/v/') > 0) {
     const urlElements = url.split('/');
     const name: string = urlElements[4];
     const version: string = urlElements[6];

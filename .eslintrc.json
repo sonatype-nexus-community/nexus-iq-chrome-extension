@@ -1,55 +1,49 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
-    "react",
-    "react-hooks",
-    "eslint-plugin-import",
-    "prettier"
-  ],
-  "env": {
-    "browser": true
-  },
+  "root": true,
   "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
-  "parserOptions": {
-    "project": [
-      "tsconfig.json",
-      "tsconfig.service-worker.json"
-    ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": { 
+    "project": ["./tsconfig.json", "./tsconfig.service-worker.json"],
     "ecmaVersion": 2020,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
     }
   },
+  "plugins": [
+      "@typescript-eslint",
+      "react",
+      "react-hooks",
+      "eslint-plugin-import",
+      "prettier"
+  ],
   "rules": {
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-unused-vars": "off",
-    "react/jsx-filename-extension": [
-      "warn",
-      {
-        "extensions": [
-          ".jsx",
-          ".tsx"
-        ]
-      }
-    ],
-    "react/prop-types": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "@typescript-eslint/ban-types": [
-      "error",
-      {
-        "extendDefaults": true,
-        "types": {
-          "{}": false
+      "@typescript-eslint/strict-boolean-expressions": [
+          2
+          // {
+          //     "allowString" : false,
+          //     "allowNumber" : false
+          // }
+      ],
+      "react/jsx-filename-extension": [
+        "warn",
+        {
+          "extensions": [
+            ".jsx",
+            ".tsx"
+          ]
         }
-      }
-    ]
+      ],
+      "react/prop-types": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+  },
+  "ignorePatterns": ["src/**/*.test.ts", "src/frontend/generated/*"],
+  "env": {
+    "browser": true
   },
   "settings": {
     "react": {
