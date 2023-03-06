@@ -207,6 +207,11 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
         LogLevel.TRACE,
         licenseDetails
       );
+      console.info(
+          'Obtained license legal detail for component',
+          LogLevel.TRACE,
+          licenseDetails
+      );
 
       this.setState({licenseDetails: licenseDetails});
       return;

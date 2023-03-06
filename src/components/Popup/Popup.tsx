@@ -46,6 +46,7 @@ const Popup = (): JSX.Element | null => {
       nexusContext.policyDetails.results?.length > 0 &&
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
+
       const results = nexusContext.policyDetails.results[0];
       const hasViolations =
         // results.policyData &&
@@ -57,6 +58,7 @@ const Popup = (): JSX.Element | null => {
         results.securityData.securityIssues.length > 0;
       const hasLegalResults = results.licenseData.effectiveLicenses?.length > 0;
 
+      console.info(results.licenseData);
       console.info('Rendering IQ Server View');
 
       return (
@@ -101,7 +103,10 @@ const Popup = (): JSX.Element | null => {
                 <NxTabPanel>
                   <ComponentInfoPage />
                 </NxTabPanel>
-                <NxTabPanel>{hasViolations && <RemediationPage />}</NxTabPanel>
+                {hasViolations && (
+                    <NxTabPanel><RemediationPage /></NxTabPanel>
+                )}
+
                 {hasViolations && (
                   <NxTabPanel>
                     <PolicyPage />
@@ -112,7 +117,9 @@ const Popup = (): JSX.Element | null => {
                     <SecurityPage />
                   </NxTabPanel>
                 )}
-                <NxTabPanel>{hasLegalResults && <LicensingPage />}</NxTabPanel>
+                {hasLegalResults && (
+                    <NxTabPanel><LicensingPage /></NxTabPanel>
+                )}
               </NxTabs>
             </div>
             <NxFooter>

@@ -25,6 +25,11 @@ const LicenseThreat = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderLicenseThreat = (nexusContext: NexusContextInterface | undefined) => {
+      if (nexusContext && nexusContext.getLicenseDetails && nexusContext.componentDetails &&
+          !nexusContext.licenseDetails) {
+          nexusContext.getLicenseDetails(nexusContext.componentDetails?.component.packageUrl)
+          console.log(nexusContext.licenseDetails);
+      }
     if (nexusContext && nexusContext.licenseDetails) {
       return getLicenseThreat(
         nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
