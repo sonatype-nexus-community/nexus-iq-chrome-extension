@@ -1,1 +1,1 @@
-disableTools = [ "eslint", "JSHint" ]
+disableTools = [ "eslint", "jshint" ]
