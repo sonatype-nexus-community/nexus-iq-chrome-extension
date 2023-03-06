@@ -35,9 +35,9 @@ const AdvancedLegalDisplay = (): JSX.Element => {
               <NxH4>Copy License Text</NxH4>
               <NxList>
                 {nexusContext.licenseDetails.component.licenseLegalData.licenseFiles.map(
-                  (licenses) => {
+                  (licenses, index) => {
                     return (
-                      <NxList.Item key={licenses.id}>
+                      <NxList.Item key={`${licenses.id}_${index}`}>
                         <NxList.Text>{licenses.relPath}</NxList.Text>
                         <NxList.Actions>
                           <NxButton
