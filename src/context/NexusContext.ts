@@ -19,7 +19,7 @@ import {
   IqServerComponentPolicyEvaluationResult,
   IqServerComponentRemediationResult,
   IqServerLicenseLegalMetadataResult,
-  IqServerVulnerabilityDetails
+  IqServerVulnerabilityDetails, LicenseData
 } from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import React from 'react';
@@ -33,6 +33,7 @@ export interface NexusContextInterface {
   policyDetails?: IqServerComponentPolicyEvaluationResult;
   vulnDetails?: IqServerVulnerabilityDetails;
   licenseDetails?: IqServerLicenseLegalMetadataResult;
+  licenseData?: LicenseData;
   errorMessage?: string;
   componentVersions?: string[];
   componentVersionsDetails?: ComponentContainer[];
@@ -55,6 +56,7 @@ const initialContext: NexusContextInterface = {
   policyDetails: undefined,
   vulnDetails: undefined,
   licenseDetails: undefined,
+  licenseData: undefined,
   errorMessage: undefined,
   componentVersions: undefined,
   remediationDetails: undefined,

@@ -46,6 +46,8 @@ const ComponentInfoPage = (): JSX.Element | null => {
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
     if (nexusContext && nexusContext.componentDetails?.component) {
       const purlMinusVersion = nexusContext.componentDetails.component.packageUrl.split('@')[0];
+
+
       return (
         <React.Fragment>
           <NxGrid.Row>
@@ -196,7 +198,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
                 // nexusContext.policyDetails.results[0] &&
                 getPolicyViolationIndicator(nexusContext.policyDetails.results[0].policyData)}
 
-              {nexusContext.licenseDetails && nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
+              {nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
                 <LicenseThreat />
               )}
 

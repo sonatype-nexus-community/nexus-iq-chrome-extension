@@ -59,12 +59,14 @@ const SecurityThreat = (): JSX.Element | null => {
         </React.Fragment>
       );
     } else if (securityData && securityData.securityIssues.length == 0) {
+      return(
       <React.Fragment>
         <header className="nx-grid-header">
           <NxH3>No Security Issues</NxH3>
         </header>
         <NxPolicyViolationIndicator threatLevelCategory="none">Woohoo!</NxPolicyViolationIndicator>
-      </React.Fragment>;
+      </React.Fragment>
+    )
     }
     return null;
   };

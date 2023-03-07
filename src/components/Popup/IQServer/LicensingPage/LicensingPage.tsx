@@ -22,23 +22,15 @@ import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 
 const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
-  // const [showDrawerLegal, toggleDrawerLegal] = useToggle(false);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
+    console.log("Rendering LicensingPage");
+
     if (
       nexusContext &&
-      nexusContext.getLicenseDetails &&
-      !nexusContext.licenseDetails &&
-      nexusContext.componentDetails
-    ) {
-      nexusContext.getLicenseDetails(nexusContext.componentDetails.component.packageUrl);
-    }
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      // nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
-      nexusContext.getLicenseDetails
+      // nexusContext.policyDetails &&
+      nexusContext.policyDetails?.results &&
+      nexusContext.policyDetails.results.length > 0
     ) {
       const licenseData = nexusContext.policyDetails.results[0].licenseData;
       const observedLicenses = licenseData.observedLicenses.filter(
@@ -73,7 +65,6 @@ const LicensingPage = (): JSX.Element | null => {
             <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
               <LicenseThreat />
             </section>
-            {/*TODO: To to render the drawer at the top level*/}
           </div>
           <hr className="nx-grid-h-keyline" />
           <div className="nx-grid-row">
@@ -110,6 +101,12 @@ const LicensingPage = (): JSX.Element | null => {
           </div>
         </React.Fragment>
       );
+    } else {
+      return (
+          <React.Fragment>
+            <p>No license information available.</p>
+          </React.Fragment>
+      )
     }
     return null;
   };
