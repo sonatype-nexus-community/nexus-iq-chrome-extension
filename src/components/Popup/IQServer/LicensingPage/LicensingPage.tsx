@@ -86,7 +86,7 @@ const LicensingPage = (): JSX.Element | null => {
                     </NxTextLink>
                   </div>
                   <div>
-                    <span>A Nexus Lifecycle Add-On</span>
+                    <span>A Sonatype Lifecycle Add-On</span>
                   </div>
                 </h4>
                 <span>
