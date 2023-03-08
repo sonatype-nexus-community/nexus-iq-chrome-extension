@@ -39,6 +39,9 @@ jobs:
       - run:
           name: Test
           command: yarn run test
+      - store_artifacts:
+          path: build
+          destination: nexus-iq-chrome-plugin-build
 
   release_build:
     docker:
