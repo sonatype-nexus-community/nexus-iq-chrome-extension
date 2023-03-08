@@ -52,13 +52,14 @@ const RemediationDetails = (): JSX.Element | null => {
       nexusContext.remediationDetails &&
       // nexusContext.remediationDetails.remediation &&
       // nexusContext.remediationDetails.remediation.versionChanges &&
-      nexusContext.remediationDetails.remediation.versionChanges.length > 0
+      nexusContext.remediationDetails.remediation.versionChanges.length >= 0
     ) {
       const versionChanges: VersionChange[] =
         nexusContext.remediationDetails.remediation.versionChanges;
 
       return (
-        <NxDescriptionList>
+        <NxDescriptionList
+            emptyMessage={"No recommended versions available."}>
           {versionChanges.map((change) => {
             return (
               <>
