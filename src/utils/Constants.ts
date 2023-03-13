@@ -86,6 +86,7 @@ export interface RepoType {
   repoFormat?: string;
   repoID: string;
   titleSelector?: string;
+  versionSelector?: string;
   versionPath?: string;
   dataSource: string; //TODO: remove this as unnecessary now as we no longer switch datasources on RepoType
   appendVersionPath?: string;
@@ -290,6 +291,7 @@ export const REPO_TYPES: RepoType[] = [
     repoFormat: FORMATS.gem,
     repoID: REPOS.rubyGemsOrg,
     titleSelector: 'h1.t-display',
+    versionSelector: 'body > main > div > h1 > i',
     versionPath: '{url}/{packagename}/versions/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '/versions/{versionNumber}'
