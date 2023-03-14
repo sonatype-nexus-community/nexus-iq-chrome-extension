@@ -19,6 +19,7 @@ import $, {Cash} from 'cash-dom';
 import {ArtifactMessage} from './types/ArtifactMessage';
 import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 import {findRepoType} from './utils/UrlParsing';
+import {RepoType} from "./utils/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
@@ -27,19 +28,37 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
     console.debug('Received changedURLOnPage message on content.js');
     checkPage();
   }
+
   if (event.type === 'getArtifactDetailsFromWebpage') {
     console.info('Received getArtifactDetailsFromWebpage message on content.js');
     const data: ArtifactMessage = event;
+    const repoType = data.repoTypeInfo;
     console.info('Message says to get some artifact details from the webpage, will do boss!', data);
 
     const purl = getArtifactDetailsFromDOM(data.repoTypeInfo, data.url);
 
     if (purl) {
-      console.info('Got a purl back from scraping url or webpage', purl);
-
+      console.debug('Obtained a valid purl: ' + purl);
       respCallback(purl.toString());
+    } else {
+      const version = findVersionElement(repoType) ?? '';
+      if (version.length > 0) {
+        // TODO: This needs to be handled for the different pacakge formats
+        const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
+        const newUrl = oldUrl + "/" + version;
+        const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
+        if (newPurl) {
+          console.debug('Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
+          respCallback(newPurl.toString());
+        }
+      }
     }
+    // if (purl) {
+    //   console.info('Got a purl back from scraping url or webpage', purl);
+    //   respCallback(purl.toString());
+    // }
   }
+
   if (event.type === 'artifactDetailsFromServiceWorker') {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (event.componentDetails) {
@@ -92,12 +111,28 @@ const checkPage = () => {
 
   if (repoType) {
     chrome.runtime.sendMessage({type: 'togglePage', show: true});
-    console.debug('Found a valid repoType: ' + repoType);
+    console.debug('checkPage: Found a valid repoType: ' + repoType);
     const purl = getArtifactDetailsFromDOM(repoType, window.location.href);
 
     if (purl) {
-      console.debug('Obtained a valid purl: ' + purl);
+      console.debug('checkPage: Obtained a valid purl: ' + purl);
       chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: purl.toString()});
+    } else {
+      console.debug('checkPage: No valid purl for : ' + repoType);
+      console.debug('checkPage: building new url and retrying: ' + repoType.versionPath);
+      const version = findVersionElement(repoType) ?? '';
+      if (version.length > 0) {
+        // TODO: This needs to be handled for the different pacakge formats
+        // const newUrl = repoType.versionPath?.replace("{url}/{packagename}", window.location.href).replace("{versionNumber}", version) ?? window.location.href;
+        const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
+        const newUrl = oldUrl + "/" + version;
+        console.debug('checkPage: the new url : ' + newUrl);
+        const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
+        if (newPurl) {
+          console.debug('checkPage: Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
+          chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: newPurl.toString()});
+        }
+      }
     }
   } else {
     chrome.runtime.sendMessage({type: 'togglePage', show: false});
@@ -105,6 +140,19 @@ const checkPage = () => {
 };
 
 checkPage();
+
+function findVersionElement(repoType: RepoType) {
+
+  const element = $(repoType.versionSelector);
+  console.info('findVersionElement versionSelector: ', repoType.versionSelector);
+  if (element.length > 0) {
+    console.info('findVersionElement', element.text().trim());
+    return element.text().trim();
+  }
+  return undefined;
+
+}
+
 
 function findElement(loc: string) {
   console.info('findElement', loc);
@@ -117,6 +165,7 @@ function findElement(loc: string) {
   }
   return undefined;
 }
+
 function addClasses(vulnClass: string, element?: Cash) {
   console.info('addClasses', vulnClass, element);
   if (element) {
