@@ -23,7 +23,9 @@ const parseRuby = (url: string): PackageURL | undefined => {
     const packageId = encodeURIComponent(elements[4]);
     const version = encodeURIComponent(elements[6]);
 
-    return generatePackageURL('gem', packageId, version);
+    if (version) {
+      return generatePackageURL('gem', packageId, version);
+    }
   }
 
   return undefined;

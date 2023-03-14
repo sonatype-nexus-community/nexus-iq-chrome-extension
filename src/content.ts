@@ -45,7 +45,7 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
       if (version.length > 0) {
         // TODO: This needs to be handled for the different pacakge formats
         const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
-        const newUrl = oldUrl + "/" + version;
+        const newUrl = oldUrl + (repoType.appendVersionPath?.replace("{versionNumber}", version));
         const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
         if (newPurl) {
           console.debug('Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
@@ -125,11 +125,11 @@ const checkPage = () => {
         // TODO: This needs to be handled for the different pacakge formats
         // const newUrl = repoType.versionPath?.replace("{url}/{packagename}", window.location.href).replace("{versionNumber}", version) ?? window.location.href;
         const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
-        const newUrl = oldUrl + "/" + version;
+        const newUrl = oldUrl + (repoType.appendVersionPath?.replace("{versionNumber}", version));
         console.debug('checkPage: the new url : ' + newUrl);
         const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
         if (newPurl) {
-          console.debug('checkPage: Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
+          console.debug('checkPage: Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + newPurl);
           chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: newPurl.toString()});
         }
       }
