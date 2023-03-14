@@ -41,10 +41,11 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
       console.debug('Obtained a valid purl: ' + purl);
       respCallback(purl.toString());
     } else {
-      const version = findVersionElement(repoType)
-      if (version) {
+      const version = findVersionElement(repoType) ?? '';
+      if (version.length > 0) {
         // TODO: This needs to be handled for the different pacakge formats
-        const newUrl = repoType.versionPath?.replace("{url}/{packagename}", window.location.href).replace("{versionNumber}", version.text()) ?? window.location.href;
+        const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
+        const newUrl = oldUrl + "/" + version;
         const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
         if (newPurl) {
           console.debug('Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
@@ -114,21 +115,23 @@ const checkPage = () => {
     const purl = getArtifactDetailsFromDOM(repoType, window.location.href);
 
     if (purl) {
-      console.debug('Obtained a valid purl: ' + purl);
+      console.debug('checkPage: Obtained a valid purl: ' + purl);
       chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: purl.toString()});
     } else {
       console.debug('checkPage: No valid purl for : ' + repoType);
       console.debug('checkPage: building new url and retrying: ' + repoType.versionPath);
-      const version = findVersionElement(repoType)
-      if (version) {
-        const newUrl = repoType.versionPath?.replace("{url}/{packagename}", window.location.href).replace("{versionNumber}", version.text()) ?? window.location.href;
+      const version = findVersionElement(repoType) ?? '';
+      if (version.length > 0) {
+        // TODO: This needs to be handled for the different pacakge formats
+        // const newUrl = repoType.versionPath?.replace("{url}/{packagename}", window.location.href).replace("{versionNumber}", version) ?? window.location.href;
+        const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
+        const newUrl = oldUrl + "/" + version;
+        console.debug('checkPage: the new url : ' + newUrl);
         const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
         if (newPurl) {
-          console.debug('Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
+          console.debug('checkPage: Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
           chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: newPurl.toString()});
         }
-
-        console.debug('checkPage: the new url : ' + newUrl);
       }
     }
   } else {
@@ -142,11 +145,11 @@ function findVersionElement(repoType: RepoType) {
 
   const element = $(repoType.versionSelector);
   console.info('findVersionElement versionSelector: ', repoType.versionSelector);
-  console.info('findVersionElement: ', element);
   if (element.length > 0) {
-    console.info('findVersionElement', element.text());
-    return element;
+    console.info('findVersionElement', element.text().trim());
+    return element.text().trim();
   }
+  return undefined;
 
 }
 

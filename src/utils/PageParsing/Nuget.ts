@@ -23,8 +23,9 @@ const parseNuget = (url: string): PackageURL | undefined => {
   if (elements.length == 6) {
     const packageId = encodeURIComponent(elements[4]);
     const version = encodeURIComponent(elements[5]);
-
-    return generatePackageURL('nuget', packageId, version);
+    if (version) {
+      return generatePackageURL('nuget', packageId, version);
+    }
   }
 
   return undefined;

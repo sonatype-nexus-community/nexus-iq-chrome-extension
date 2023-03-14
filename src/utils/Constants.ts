@@ -263,6 +263,7 @@ export const REPO_TYPES: RepoType[] = [
     repoFormat: FORMATS.nuget,
     repoID: REPOS.nugetOrg,
     titleSelector: '.package-title > h1',
+    versionSelector: 'span.version-title',
     versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '/{versionNumber}'
