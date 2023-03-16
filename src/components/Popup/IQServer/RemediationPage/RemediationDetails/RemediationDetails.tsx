@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {VersionChange} from '@sonatype/js-sona-types';
+import {VersionChange} from "@sonatype/js-sona-types";
 import {NxDescriptionList, NxLoadingSpinner} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';

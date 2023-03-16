@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {IqRequestService, LogLevel, TestLogger} from "../../../../../js-sona-types";
+// import {IqRequestService, LogLevel, TestLogger} from "../../../../../js-sona-types";
+import {IqRequestService, LogLevel, TestLogger} from "@sonatype/js-sona-types";
 import {
-  NxForm,
   NxFormGroup,
   NxGrid,
   NxStatefulErrorAlert,
@@ -23,17 +23,16 @@ import {
   NxStatefulTextInput,
   NxTooltip,
   NxFontAwesomeIcon,
-    NxFormSelect,
-    nxFormSelectStateHelpers,
-    NxButton
+  NxFormSelect,
+  NxButton
 } from '@sonatype/react-shared-components';
-import classnames from 'classnames';
 import React, {useEffect, useState, FormEvent} from 'react';
 import {DATA_SOURCES} from '../../../utils/Constants';
 import './IQServerOptionsPage.css';
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
-import {IqApplicationResponse} from "../../../../../js-sona-types/src";
+// import {IqApplicationResponse} from "../../../../../js-sona-types/src";
+import {IqApplicationResponse} from "@sonatype/js-sona-types";
 
 
 const IQ_SERVER_URL = 'iqServerURL';
@@ -51,17 +50,13 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const [currentScanType, setCurrentScanType] = useState(DATA_SOURCES.OSSINDEX);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [hasPermissions, setPermissions] = useState(false);
   const [errorLoggingIn, setErrorLoggingIn] = useState('');
-
-  const [selectState, setSelectValue] = nxFormSelectStateHelpers.useNxFormSelectState<string>('', validator);
-  function validator(c: string) {
-    return c.length ? null : 'Selection Required';
-  }
 
   const isSubmittable =
     iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '' && iqServerApplication !== '';
 
-  const submitBtnClasses = classnames({disabled: !isSubmittable});
+  // const submitBtnClasses = classnames({disabled: !isSubmittable});
   // submitTooltip = isSubmittable ? '' : 'Required fields are missing';
 
   const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
@@ -124,9 +119,8 @@ const IQServerOptionsPage = (): JSX.Element | null => {
       }
     };
     if (iqServerToken && iqServerApplication && iqServerURL && iqServerUser) {
-      getApplications();
+      void getApplications();
     }
-
   },[iqServerApplication, iqServerToken, iqServerURL, iqServerUser]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -140,7 +134,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   };
 
   const onSubmit = (): void => {
-    doSubmit();
+    void doSubmit();
   };
 
   const doSubmit = async () => {
@@ -186,11 +180,26 @@ const IQServerOptionsPage = (): JSX.Element | null => {
       (granted) => {
         if (granted) {
           console.debug('Granted!!!');
+          setPermissions(true);
         } else {
           console.debug('Not granted!!');
+          setPermissions(false);
         }
       }
     );
+  };
+
+  const checkPermissions = () => {
+    console.debug('Checking chrome extension permissions.  Current iqServerUrl: ', iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`);
+    chrome.permissions.contains({
+      origins: [iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`]
+    }, (result) => {
+      if (result) {
+        console.debug('Chrome extension permissions are set.');
+        return true;
+      }
+      return false;
+    });
   };
 
   function onChange(evt: FormEvent<HTMLSelectElement>) {
@@ -205,20 +214,10 @@ const IQServerOptionsPage = (): JSX.Element | null => {
         <React.Fragment>
           <NxGrid.Row>
             <section className="nx-grid-col nx-grid-col--100">
-              {/*<header className="nx-grid-header">*/}
-              {/*  <h3 className="nx-h3 nx-grid-header__title">IQ Server Quick Setup</h3>*/}
-              {/*</header>*/}
-              {/*<hr className="nx-grid-h-keyline" />*/}
-              {/*<NxForm*/}
-              {/*  onSubmit={onSubmit}*/}
-              {/*  submitBtnText={`Test Connectivity`}*/}
-              {/*  submitBtnClasses={submitBtnClasses}*/}
-              {/*  showValidationErrors={true}*/}
-              {/*>*/}
                 <p className="nx-p">
-                  <strong>1)</strong> Enter the URL for Sonatype IQ Server
-                    and allow the extension to communicate with your Sonatype IQ
-                    Server
+                  <strong>1)</strong> Enter the URL for the Sonatype IQ Server
+                    and grant the permissions needed for the extension to communicate with the Sonatype IQ
+                    Server.
                   </p>
 
                 <div className="nx-form-row">
@@ -227,15 +226,22 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                     defaultValue={iqServerURL}
                     placeholder="https://your-iq-server-url"
                     validator={nonEmptyValidator}
-                    onChange={(event) => setItem(setIQServerURL, event, IQ_SERVER_URL)}
+                    onChange={(event) => {
+                      setItem(setIQServerURL, event, IQ_SERVER_URL);
+                      checkPermissions();
+                    }}
                   />
                 </NxFormGroup>
-                <button className="nx-btn grant-permissions" onClick={askForPermissions}>
-                  Grant Permissions to the Sonatype IQ Server URL
-                </button>
+                  {!hasPermissions && (
+                      <button className="nx-btn grant-permissions" onClick={askForPermissions}>
+                        Grant Permissions to the Sonatype IQ Server URL
+                      </button>
+                  )}
+
                 </div>
                 <p className="nx-p">
-                  <strong>2)</strong> Provide your username and token for the Sonatype IQ Server
+                  <strong>2)</strong> Provide your username and token for the Sonatype IQ Server.  Then connect to
+                  retrieve the list of applications available.
                 </p>
                 <div className="nx-form-row">
                   <NxFormGroup label={`Username`} isRequired>
@@ -255,12 +261,12 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   </NxFormGroup>
                   <NxButton
                       variant="primary"
-                  onClick={onSubmit}>Test Connection</NxButton>
+                  onClick={onSubmit}>Connect</NxButton>
 
                 </div>
                 <p className="nx-p">
-                  <strong>3)</strong> Set the Sonatype Lifecycle Application ID
-                  <NxTooltip title="The application id of the application for which policy will be applied.">
+                  <strong>3)</strong> Set the Sonatype Lifecycle Application.
+                  <NxTooltip title="The application policies that components will be evaluated against.">
                     <NxFontAwesomeIcon
                         icon={faQuestionCircle as IconDefinition} />
                   </NxTooltip>
@@ -278,28 +284,15 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                     })}
                   </NxFormSelect>
                 </NxFormGroup>
-                {/*<NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>*/}
-                {/*  <NxStatefulTextInput*/}
-                {/*    defaultValue={iqServerApplication}*/}
-                {/*    validator={nonEmptyValidator}*/}
-                {/*    onChange={(event) =>*/}
-                {/*      setItem(setIQServerApplication, event, IQ_SERVER_APPLICATION)*/}
-                {/*    }*/}
-                {/*  />*/}
-                {/*</NxFormGroup>*/}
-                {/*<p className="nx-p">*/}
-                {/*  <strong>4)</strong> Do a quick test to ensure you can connect to you Sonatype IQ*/}
-                {/*  Server*/}
-                {/*</p>*/}
                 {loggedIn && (
                   <NxStatefulSuccessAlert>
-                    Congrats! You are able to login to your Sonatype IQ Server!  If you need to choose
+                    Congrats! You are able to sign in to your Sonatype IQ Server!  If you need to choose
                     an application, do so now.
                   </NxStatefulSuccessAlert>
                 )}
                 {errorLoggingIn !== '' && (
                   <NxStatefulErrorAlert>
-                    There was an error logging in, it looks like: {errorLoggingIn}
+                    There was an error signing in, it looks like: {errorLoggingIn}
                   </NxStatefulErrorAlert>
                 )}
               {/*</NxForm>*/}
