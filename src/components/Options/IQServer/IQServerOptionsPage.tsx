@@ -54,14 +54,34 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const [errorLoggingIn, setErrorLoggingIn] = useState('');
 
   const isSubmittable =
-    iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '' && iqServerApplication !== '';
+    iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '';
+  // iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '' && iqServerApplication !== '';
 
   // const submitBtnClasses = classnames({disabled: !isSubmittable});
   // submitTooltip = isSubmittable ? '' : 'Required fields are missing';
 
   const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
 
-  useEffect(() => {
+  const checkPermissions = (): boolean => {
+    console.info('Checking chrome extension permissions.  Current iqServerUrl: ', iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`);
+    // getAllPermissions();
+    const originsUrl = iqServerURL.endsWith('/') ? `${iqServerURL}*` : `${iqServerURL}/*`
+    console.info('Checking chrome extension permissions.  originsUrl: ', originsUrl);
+    chrome.permissions.contains({
+      origins: [originsUrl]
+    }, (result) => {
+      if (result) {
+        console.info('Chrome extension permissions are set for: ', originsUrl);
+        setPermissions(true);
+        return true;
+      }
+      setPermissions(false);
+      return false;
+    });
+    return false;
+  };
+
+  const getSettings = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
       if (items[IQ_SERVER_URL] !== undefined) {
@@ -80,18 +100,33 @@ const IQServerOptionsPage = (): JSX.Element | null => {
         setCurrentScanType(items[SCAN_TYPE]);
       }
       setLoading(false);
-    });
 
+    });
+  }
+
+  useEffect(() => {
+    getSettings();
   }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
 
   useEffect(() => {
+    console.info("In useEffect that should only be called once");
+    // getAllPermissions();
+    // const permissions = checkPermissions();
+    if (iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '') {
+      console.info("In useEffect and calling getApplications.");
+      void getApplications()
+    }
+  },[iqServerURL]);
+
+  // useEffect(() => {
     const getApplications = async () => {
+      getSettings();
       try {
         const requestService = new IqRequestService({
           user: iqServerUser as string,
           token: iqServerToken,
           host: iqServerURL,
-          application: iqServerApplication,
+          application: 'sandbox-application',
           logger: new TestLogger(LogLevel.ERROR),
           product: 'nexus-chrome-extension',
           version: '1.0.0',
@@ -118,10 +153,10 @@ const IQServerOptionsPage = (): JSX.Element | null => {
         throw new Error("Unknown error in getApplications");
       }
     };
-    if (iqServerToken && iqServerApplication && iqServerURL && iqServerUser) {
-      void getApplications();
-    }
-  },[iqServerApplication, iqServerToken, iqServerURL, iqServerUser]);
+  //   if (iqServerToken && iqServerApplication && iqServerURL && iqServerUser) {
+  //     void getApplications();
+  //   }
+  // },[iqServerApplication, iqServerToken, iqServerURL, iqServerUser]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (setter: any, value: string, key: string) => {
@@ -134,29 +169,34 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   };
 
   const onSubmit = (): void => {
+    console.info("In onSubmit...");
     void doSubmit();
   };
 
   const doSubmit = async () => {
+    console.info("In doSubmit...");
     if (isSubmittable) {
       try {
         const requestService = new IqRequestService({
           user: iqServerUser as string,
           token: iqServerToken,
           host: iqServerURL,
-          application: iqServerApplication,
+          application: 'sandbox-application',
           logger: new TestLogger(LogLevel.ERROR),
           product: 'nexus-chrome-extension',
           version: '1.0.0',
           browser: true
         });
 
+        console.info("using requestService: ", requestService);
         const loggedIn = await requestService.loginViaRest();
 
         if (loggedIn) {
           setErrorLoggingIn('');
           setLoggedIn(loggedIn);
           setItem(setCurrentScanType, DATA_SOURCES.NEXUSIQ, SCAN_TYPE);
+          void getApplications();
+
         } else {
           setErrorLoggingIn('Unable to login');
           setLoggedIn(false);
@@ -189,16 +229,10 @@ const IQServerOptionsPage = (): JSX.Element | null => {
     );
   };
 
-  const checkPermissions = () => {
-    console.debug('Checking chrome extension permissions.  Current iqServerUrl: ', iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`);
-    chrome.permissions.contains({
-      origins: [iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`]
-    }, (result) => {
-      if (result) {
-        console.debug('Chrome extension permissions are set.');
-        return true;
-      }
-      return false;
+  const getAllPermissions = () => {
+    console.debug('Getting all chrome extension permissions.');
+    chrome.permissions.getAll((result) => {
+        console.debug('All chrome permissions: ', result);
     });
   };
 
@@ -227,12 +261,12 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                     placeholder="https://your-iq-server-url"
                     validator={nonEmptyValidator}
                     onChange={(event) => {
-                      setItem(setIQServerURL, event, IQ_SERVER_URL);
-                      checkPermissions();
+                      setItem(setIQServerURL, event.endsWith('/') ? event.slice(0, -1) : event, IQ_SERVER_URL);
                     }}
                   />
                 </NxFormGroup>
                   {!hasPermissions && (
+                      // {!checkPermissions() && (
                       <button className="nx-btn grant-permissions" onClick={askForPermissions}>
                         Grant Permissions to the Sonatype IQ Server URL
                       </button>
@@ -261,29 +295,36 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   </NxFormGroup>
                   <NxButton
                       variant="primary"
-                  onClick={onSubmit}>Connect</NxButton>
+                      onClick={onSubmit}>Connect
+                  </NxButton>
 
                 </div>
-                <p className="nx-p">
-                  <strong>3)</strong> Set the Sonatype Lifecycle Application.
-                  <NxTooltip title="The application policies that components will be evaluated against.">
-                    <NxFontAwesomeIcon
-                        icon={faQuestionCircle as IconDefinition} />
-                  </NxTooltip>
+              { iqServerApplications?.length > 0 && (
+                <React.Fragment>
+                  <p className="nx-p">
+                    <strong>3)</strong> Set the Sonatype Lifecycle Application.
+                    <NxTooltip title="The application policies that components will be evaluated against.">
+                      <NxFontAwesomeIcon
+                          icon={faQuestionCircle as IconDefinition} />
+                    </NxTooltip>
 
-                </p>
-                <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
+                  </p>
 
-                  <NxFormSelect value={iqServerApplication} onChange={onChange} disabled={!loggedIn} >
-                    {iqServerApplications.map((app) => {
-                      return (
-                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                          // @ts-ignore
+                  <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
+                    <NxFormSelect value={iqServerApplication} onChange={onChange} disabled={!loggedIn} >
+                      {iqServerApplications.map((app) => {
+                        return (
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
                             <option key={app.value} value={app.value}>{app.label}</option>
-                      )
-                    })}
-                  </NxFormSelect>
-                </NxFormGroup>
+                        )
+                      })}
+                    </NxFormSelect>
+                  </NxFormGroup>
+                </React.Fragment>
+              )}
+
+
                 {loggedIn && (
                   <NxStatefulSuccessAlert>
                     Congrats! You are able to sign in to your Sonatype IQ Server!  If you need to choose
