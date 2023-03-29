@@ -52,7 +52,8 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       getVulnDetails: this.getVulnDetails,
       getLicenseDetails: this.getLicenseDetails,
       getRemediationDetails: this.getRemediationDetails,
-      getComponentDetails: this.getComponentDetails
+      getComponentDetails: this.getComponentDetails,
+      getApplications: this.getApplications
     };
   }
 
@@ -290,6 +291,28 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.setState({remediationDetails: remediationDetails});
   };
 
+  getApplications = async (): Promise<void> => {
+    console.info('getApplications: in getApplications');
+
+    this.state.logger?.logMessage(
+        'Attempting to get list of applications',
+        LogLevel.TRACE
+    );
+
+    const appResponse = await (
+        this._requestService as IqRequestService
+    ).getApplications();
+    console.info('getApplications: afterResponse', appResponse);
+
+    this.state.logger?.logMessage(
+        'Got list of applications',
+        LogLevel.TRACE,
+        appResponse
+    );
+    console.info('getApplications: setting applications');
+    this.setState({applications: appResponse.applications});
+  };
+
   handleResponse = async (purlString: string): Promise<void> => {
     this.state.logger?.logMessage('Setting up request service', LogLevel.INFO);
     console.info('Setting up request service');
@@ -311,7 +334,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
           console.info('Attempting to login to Nexus IQ Server', LogLevel.INFO);
           const loggedIn = await this._requestService.loginViaRest();
           this.state.logger?.logMessage('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
-          console.info('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
+          console.info('Logged in to Nexus IQ Server', LogLevel.INFO, loggedIn);
 
           this.getCSRFTokenFromCookie()
             .then(async (token) => {

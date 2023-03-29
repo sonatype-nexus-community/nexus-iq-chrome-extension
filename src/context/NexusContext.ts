@@ -19,7 +19,8 @@ import {
   IqServerComponentPolicyEvaluationResult,
   IqServerComponentRemediationResult,
   IqServerLicenseLegalMetadataResult,
-  IqServerVulnerabilityDetails, LicenseData
+  IqServerVulnerabilityDetails, LicenseData,
+  Application
 } from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import React from 'react';
@@ -38,11 +39,13 @@ export interface NexusContextInterface {
   componentVersions?: string[];
   componentVersionsDetails?: ComponentContainer[];
   remediationDetails?: IqServerComponentRemediationResult;
+  applications?: Application[];
   logger?: ILogger;
   getVulnDetails?: (vulnId: string) => Promise<void>;
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;
   getComponentDetails?: (purl: string) => void;
+  getApplications?: () => Promise<void>;
   currentVersion?: PackageURL;
   currentUrl?: URL;
 }
@@ -60,6 +63,7 @@ const initialContext: NexusContextInterface = {
   errorMessage: undefined,
   componentVersions: undefined,
   remediationDetails: undefined,
+  applications:undefined,
   logger: undefined,
   currentVersion: undefined,
   currentUrl: undefined

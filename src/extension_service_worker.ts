@@ -141,6 +141,8 @@ const _doRequestToIQServer = (
     chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
       if (cookies.length > 0) {
         requestService.setXCSRFToken(cookies[0].value);
+      } else {
+        console.info("No CLM-CSRF=TOKEN found.");
       }
       const purlObj = PackageURL.fromString(purl);
       requestService
@@ -282,11 +284,13 @@ const handleIQServerWrapper = (purl: string, settings: Settings) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   logger.logMessage('Request received', LogLevel.INFO, request);
+  console.info('Message received: ', request);
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (request && request.type) {
     if (request.type === 'getArtifactDetailsFromPurl') {
       logger.logMessage('Getting settings', LogLevel.INFO);
+      console.info('Getting settings');
       getSettings()
         .then((settings: Settings) => {
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

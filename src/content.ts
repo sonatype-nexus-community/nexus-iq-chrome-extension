@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
     const purl = getArtifactDetailsFromDOM(data.repoTypeInfo, data.url);
 
     if (purl) {
-      console.debug('Obtained a valid purl: ' + purl);
+      console.debug('Obtained a valid purl from getArtifactDetailsFromDOM: ' + purl);
       respCallback(purl.toString());
     } else {
       const version = findVersionElement(repoType) ?? '';
