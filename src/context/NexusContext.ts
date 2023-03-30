@@ -45,7 +45,6 @@ export interface NexusContextInterface {
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;
   getComponentDetails?: (purl: string) => void;
-  getApplications?: () => Promise<void>;
   currentVersion?: PackageURL;
   currentUrl?: URL;
 }
@@ -63,7 +62,6 @@ const initialContext: NexusContextInterface = {
   errorMessage: undefined,
   componentVersions: undefined,
   remediationDetails: undefined,
-  applications:undefined,
   logger: undefined,
   currentVersion: undefined,
   currentUrl: undefined
