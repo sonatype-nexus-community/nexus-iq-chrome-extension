@@ -29,8 +29,7 @@
   "optional_host_permissions":[
     "<all_urls>"
   ],
-  "host_permissions": [   
-    "<all_urls>", 
+  "host_permissions": [
     "https://pkgs.alpinelinux.org/",
     "https://anaconda.org/",
     "https://cocoapods.org/",

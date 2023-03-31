@@ -311,7 +311,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
           console.info('Attempting to login to Nexus IQ Server', LogLevel.INFO);
           const loggedIn = await this._requestService.loginViaRest();
           this.state.logger?.logMessage('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
-          console.info('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
+          console.info('Logged in to Nexus IQ Server', LogLevel.INFO, loggedIn);
 
           this.getCSRFTokenFromCookie()
             .then(async (token) => {
