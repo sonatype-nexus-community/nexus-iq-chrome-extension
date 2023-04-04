@@ -20,7 +20,7 @@ import {
   OSSIndexRequestService,
   RequestService
 } from '@sonatype/js-sona-types';
-import localforage from 'localforage';
+import localforage, {setItem} from 'localforage';
 import {PackageURL} from 'packageurl-js';
 import React from 'react';
 import AlpDrawer from './components/AlpDrawer/AlpDrawer';
@@ -32,6 +32,8 @@ import {findRepoType} from './utils/UrlParsing';
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 const _browser = chrome ? chrome : browser;
+const X_CSRF_TOKEN = 'X-CSRF-TOKEN';
+const CSRF_COOKIE_NAME = 'CLM-CSRF-TOKEN';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AppProps = any;
@@ -72,6 +74,15 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
           resolve(defaultValue);
         }
       });
+    });
+  };
+
+  setStorageItem = (value: string, key: string) => {
+    console.info('setItem: ', key, value);
+    chrome.storage.local.set({[key]: value}, () => {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError.message);
+      }
     });
   };
 
@@ -161,14 +172,34 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     });
   };
 
-  getCSRFTokenFromCookie = (): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
-        if (cookies.length > 0) {
-          resolve(cookies[0].value);
-        } else {
-          reject('No valid cookie found');
-        }
+  getCSRFTokenFromStorage = async (): Promise<string> => {
+    console.info("getCSRFTokenFromStorage")
+    return await this.getStorageValue(CSRF_COOKIE_NAME, undefined);
+  };
+
+  // getCSRFTokenFromCookie = (): Promise<string> => {
+  //   return new Promise((resolve, reject) => {
+  //     chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
+  //       if (cookies.length > 0) {
+  //         resolve(cookies[0].value);
+  //       } else if (this.getCSRFTokenFromStorage.length > 0) {
+  //         console.info("call getCSRFTokenFromStorage from getCSRFTokenFromCookie")
+  //         resolve(this.getCSRFTokenFromStorage());
+  //       }
+  //       else {
+  //         reject('No valid cookie found');
+  //       }
+  //     });
+  //   });
+  // };
+  getCSRFTokenFromCookie = async (): Promise<string> => {
+    const host = await this.getStorageValue('iqServerURL', undefined);
+    return new Promise((resolve) => {
+      chrome.cookies.set({
+        url: host,
+        name: 'CLM-CSRF-TOKEN',
+        value: 'api'}, () => {
+          resolve('api');
       });
     });
   };
@@ -307,11 +338,11 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
         console.info('Parsed purl into object', LogLevel.TRACE, purl);
 
         if (this._requestService instanceof IqRequestService) {
-          this.state.logger?.logMessage('Attempting to login to Nexus IQ Server', LogLevel.INFO);
-          console.info('Attempting to login to Nexus IQ Server', LogLevel.INFO);
-          const loggedIn = await this._requestService.loginViaRest();
-          this.state.logger?.logMessage('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
-          console.info('Logged in to Nexus IQ Server', LogLevel.INFO, loggedIn);
+          // this.state.logger?.logMessage('Attempting to login to Nexus IQ Server', LogLevel.INFO);
+          // console.info('Attempting to login to Nexus IQ Server', LogLevel.INFO);
+          // const loggedIn = await this._requestService.loginViaRest();
+          // this.state.logger?.logMessage('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
+          // console.info('Logged in to Nexus IQ Server', LogLevel.INFO, loggedIn);
 
           this.getCSRFTokenFromCookie()
             .then(async (token) => {
