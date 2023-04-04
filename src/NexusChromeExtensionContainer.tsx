@@ -161,14 +161,16 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     });
   };
 
-  getCSRFTokenFromCookie = (): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
-        if (cookies.length > 0) {
-          resolve(cookies[0].value);
-        } else {
-          reject('No valid cookie found');
-        }
+  setCSRFTokenCookie = async (): Promise<string> => {
+    const host = await this.getStorageValue('iqServerURL', undefined);
+    console.info("getCSRFTokenFromCookie with:", host)
+    return new Promise((resolve) => {
+      chrome.cookies.set({
+        url: host,
+        name: 'CLM-CSRF-TOKEN',
+        value: 'api'}, (success) => {
+        console.log('Cookie set:', success);
+        resolve('api');
       });
     });
   };
@@ -307,37 +309,38 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
         console.info('Parsed purl into object', LogLevel.TRACE, purl);
 
         if (this._requestService instanceof IqRequestService) {
-          this.state.logger?.logMessage('Attempting to login to Nexus IQ Server', LogLevel.INFO);
-          console.info('Attempting to login to Nexus IQ Server', LogLevel.INFO);
-          const loggedIn = await this._requestService.loginViaRest();
-          this.state.logger?.logMessage('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
-          console.info('Logged in to Nexus IQ Server', LogLevel.INFO, loggedIn);
+          // this.state.logger?.logMessage('Attempting to login to Nexus IQ Server', LogLevel.INFO);
+          // console.info('Attempting to login to Nexus IQ Server', LogLevel.INFO);
+          // const loggedIn = await this._requestService.loginViaRest();
+          // this.state.logger?.logMessage('Logged in to Nexus IQ Server', LogLevel.TRACE, loggedIn);
+          // console.info('Logged in to Nexus IQ Server', LogLevel.INFO, loggedIn);
 
-          this.getCSRFTokenFromCookie()
+          this.setCSRFTokenCookie()
             .then(async (token) => {
               (this._requestService as IqRequestService).setXCSRFToken(token);
+
               const status = await (
                 this._requestService as IqRequestService
               ).getComponentEvaluatedAgainstPolicy([purl]);
 
-              (this._requestService as IqRequestService).asyncPollForResults(
-                `/${status.resultsUrl}`,
-                (e) => {
-                  throw new Error(e);
-                },
-                (results) => {
-                  this.state.logger?.logMessage(
-                    'Got results from Nexus IQ Server for Component Policy Eval',
-                    LogLevel.TRACE,
-                    {
-                      results: results
-                    }
-                  );
-                  console.info('Got results from Nexus IQ Server for Component Policy Eval');
-                  this.setState({policyDetails: results});
-                  this.doRequestForComponentDetails(purl);
-                  this.getAllVersions(purlString);
-                }
+              await (this._requestService as IqRequestService).asyncPollForResults(
+                  `/${status.resultsUrl}`,
+                  (e) => {
+                    throw new Error(e);
+                  },
+                  (results) => {
+                    this.state.logger?.logMessage(
+                        'Got results from Nexus IQ Server for Component Policy Eval',
+                        LogLevel.TRACE,
+                        {
+                          results: results
+                        }
+                    );
+                    console.info('Got results from Nexus IQ Server for Component Policy Eval');
+                    this.setState({policyDetails: results});
+                    this.doRequestForComponentDetails(purl);
+                    this.getAllVersions(purlString);
+                  }
               );
             })
             .catch((err: Error) => {

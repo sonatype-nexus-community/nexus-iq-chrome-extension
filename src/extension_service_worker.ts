@@ -49,6 +49,7 @@ interface Settings {
 }
 
 const getSettings = async (): Promise<Settings> => {
+  console.log("getSettings in extension_service_worker");
   const promise = new Promise<Settings>((resolve) => {
     _browser.storage.local.get(
       [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
@@ -111,8 +112,7 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<ComponentD
       version: manifestData.version
     });
 
-    requestService
-      .loginViaRest()
+      requestService.loginViaRest()
       .then((loggedIn) => {
         if (loggedIn) {
           logger.logMessage('Logged in to Sonatype IQ Server via service worker', LogLevel.INFO);
@@ -122,8 +122,11 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<ComponentD
             })
             .catch((err) => {
               logger.logMessage('Unable to login to Sonatype IQ server via service worker', LogLevel.ERROR, err.message);
+              console.error('Unable to login to Sonatype IQ server via service worker', err.message);
               throw new Error(err);
             });
+        } else {
+          console.error('Unable to login to Sonatype IQ server via service worker: ', settings);
         }
       })
       .catch((err) => {
@@ -133,27 +136,38 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<ComponentD
   });
 };
 
-const _doRequestToIQServer = (
-  requestService: IqRequestService,
-  purl: string
-): Promise<ComponentDetails> => {
+const setCSRFTokenCookie = async (host: string): Promise<string> => {
+  console.info('setting csrf token cookie: ', host);
   return new Promise((resolve) => {
-    chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
-      if (cookies.length > 0) {
-        requestService.setXCSRFToken(cookies[0].value);
-      } else {
-        console.info("No CLM-CSRF=TOKEN found.");
-      }
-      const purlObj = PackageURL.fromString(purl);
-      requestService
-        .getComponentDetails([purlObj])
-        .then((details) => {
-          resolve(details);
-        })
-        .catch((err) => {
-          logger.logMessage('Error: Unable to complete request to IQ server', LogLevel.ERROR, err.message);
-          throw new Error(err);
-        });
+    chrome.cookies.set({
+      url: host,
+      name: 'CLM-CSRF-TOKEN',
+      value: 'api'}, (success) => {
+      console.log('Cookie set:', success);
+      resolve('api');
+    });
+  });
+};
+
+const _doRequestToIQServer = (requestService: IqRequestService, purl: string): Promise<ComponentDetails> => {
+  return new Promise((resolve) => {
+    logger.logMessage('Calling setCSRFTokenCookie with: ', LogLevel.ERROR, requestService.options.host as string);
+
+    setCSRFTokenCookie(requestService.options.host as string)
+        .then(async (token) => {
+          requestService.setXCSRFToken('api');
+
+    const purlObj = PackageURL.fromString(purl);
+
+    requestService
+      .getComponentDetails([purlObj])
+      .then((details) => {
+        resolve(details);
+      })
+      .catch((err) => {
+        logger.logMessage('Error: Unable to complete request to IQ server', LogLevel.ERROR, err.message);
+        throw new Error(err);
+      });
     });
   });
 };
@@ -289,11 +303,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (request && request.type) {
     if (request.type === 'getArtifactDetailsFromPurl') {
-      logger.logMessage('Getting settings', LogLevel.INFO);
-      console.info('Getting settings');
+      logger.logMessage('Getting settings in getArtifactDetailsFromPurl', LogLevel.INFO);
+      console.info('Getting settings in getArtifactDetailsFromPurl');
       getSettings()
         .then((settings: Settings) => {
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
+            console.error('Unable to get settings need to make IQ connection: ', settings);
+          }
           if (settings.logLevel) {
             logger.setLevel(settings.logLevel as unknown as LogLevel);
           }
@@ -307,10 +324,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
           } catch (err) {
             logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
+            console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
+
           }
         })
         .catch((err) => {
           logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
+          console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
         });
     }
     if (request.type === 'togglePage') {
@@ -321,7 +341,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    chrome.tabs.create({url: 'options.html?install'});
+    chrome.tabs.create({url: 'options.html?install'})
   } else if (details.reason === 'update') {
     /* empty */
   } else if (details.reason === 'chrome_update') {
