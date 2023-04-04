@@ -149,16 +149,16 @@ const setCSRFTokenCookie = async (host: string): Promise<string> => {
   });
 };
 
-const _doRequestToIQServer = (
-  requestService: IqRequestService,
-  purl: string
-): Promise<ComponentDetails> => {
+const _doRequestToIQServer = (requestService: IqRequestService, purl: string): Promise<ComponentDetails> => {
   return new Promise((resolve) => {
+    logger.logMessage('Calling setCSRFTokenCookie with: ', LogLevel.ERROR, requestService.options.host as string);
+
     setCSRFTokenCookie(requestService.options.host as string)
         .then(async (token) => {
           requestService.setXCSRFToken('api');
-        });
+
     const purlObj = PackageURL.fromString(purl);
+
     requestService
       .getComponentDetails([purlObj])
       .then((details) => {
@@ -169,7 +169,7 @@ const _doRequestToIQServer = (
         throw new Error(err);
       });
     });
-  // });
+  });
 };
 
 const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
