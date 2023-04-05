@@ -15,7 +15,7 @@
  */
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 import {faCopy} from '@fortawesome/free-solid-svg-icons';
-import {NxButton, NxFontAwesomeIcon, NxH4, NxList} from '@sonatype/react-shared-components';
+import {NxButton, NxFontAwesomeIcon, NxH3, NxList} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 
@@ -32,7 +32,7 @@ const AdvancedLegalDisplay = (): JSX.Element => {
         <React.Fragment>
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              <NxH4>Copy License Text</NxH4>
+              <NxH3>Copy License Text</NxH3>
               <NxList>
                 {nexusContext.licenseDetails.component.licenseLegalData.licenseFiles.map(
                   (licenses, index) => {
@@ -53,7 +53,7 @@ const AdvancedLegalDisplay = (): JSX.Element => {
                   }
                 )}
               </NxList>
-              <NxH4>Copyright Statements</NxH4>
+              <NxH3>Copyright Statements</NxH3>
               <NxList>
                 {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(
                   (copyrights) => {

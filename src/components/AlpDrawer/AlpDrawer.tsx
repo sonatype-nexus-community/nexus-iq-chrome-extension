@@ -29,7 +29,15 @@ const AlpDrawer = (): JSX.Element | null => {
       aria-labelledby="drawer-legal-title"
     >
       <NxDrawer.Header>
-        <NxDrawer.HeaderTitle id="drawer-legal-title">Advanced Legal Pack</NxDrawer.HeaderTitle>
+        <NxDrawer.HeaderTitle id="drawer-legal-title">
+          <span>
+                  <img
+                      src="/images/add-on-sonatype-icon-logoblue.png"
+                      className="nx-popup-logo"
+                      alt="Powered by Advanced Legal Pack"
+                  />
+                </span>
+          <span>&nbsp;&nbsp;Advanced Legal Pack</span></NxDrawer.HeaderTitle>
       </NxDrawer.Header>
       <NxDrawer.Content tabIndex={0}>
         <AdvancedLegalDisplay />

@@ -68,7 +68,7 @@ const Options = (): JSX.Element | null => {
       return (
         <React.Fragment>
           <h1>
-            <NxPageTitle>Sonatype Browser Extension Options</NxPageTitle>
+            <NxPageTitle>Extension Options</NxPageTitle>
           </h1>
 
           <NxTile>

@@ -68,11 +68,11 @@ const Popup = (): JSX.Element | null => {
               <div className="nx-tile-header__title">
                 <h2 className="nx-h2">
                   <img
-                    src="/images/NexusLifecycle_Icon_Square_Outlined.png"
+                    src="/images/sonatype-lifecycle-icon-48x48.png"
                     className="nx-popup-logo"
-                    alt="Sonatype Nexus Lifecycle"
+                    alt="Sonatype Lifecycle - Component Details"
                   />
-                  &nbsp;Sonatype Lifecycle Results
+                  &nbsp;Sonatype Lifecycle - Component Details
                 </h2>
               </div>
             </header>
