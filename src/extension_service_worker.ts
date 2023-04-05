@@ -195,7 +195,7 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
   ) {
     getActiveTabId()
       .then((tabId) => {
-        chrome.action.setIcon({tabId: tabId, path: '/images/NexusLifecycle_Vulnerable.png'});
+        chrome.action.setIcon({tabId: tabId, path: '/images/sonatype-lifecycle-icon_Vulnerable.png'});
       })
       .catch((err) => {
         logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
@@ -205,7 +205,7 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
     chrome.notifications.create(
       {
         title: `Sonatype Scan Results - ${purl}`,
-        iconUrl: '/images/NexusLifecycle_Vulnerable.png',
+        iconUrl: '/images/sonatype-lifecycle-icon_Vulnerable.png',
         type: 'basic',
         message: 'Vulnerabilities have been found in this version',
         priority: 1,
@@ -225,7 +225,7 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
       .then((tabId) => {
         chrome.action.setIcon({
           tabId: tabId,
-          path: '/images/NexusLifecycle_Icon_white_color-32x32.png'
+          path: '/images/sonatype-lifecycle-icon-white-32x32'
         });
       })
       .catch((err) => {

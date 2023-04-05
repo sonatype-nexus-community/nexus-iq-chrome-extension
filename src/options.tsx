@@ -47,8 +47,8 @@ root.render(
       isDefaultOpen={true}
       toggleCloseIcon={faArrowRight as IconDefinition}
       toggleOpenIcon={faArrowLeft as IconDefinition}
-      logoImg="images/nexus_lifecycle_sidebar.svg"
-      logoAltText="Sonatype Nexus Browser Extension"
+      logoImg="images/sonatype-lifecycle-logo-nav-white.svg"
+      logoAltText="Sonatype Browser Extension"
       logoLink="#"
     >
       <NxGlobalSidebarNavigation>

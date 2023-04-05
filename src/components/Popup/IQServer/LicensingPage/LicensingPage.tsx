@@ -91,7 +91,7 @@ const LicensingPage = (): JSX.Element | null => {
                 </h4>
                 <span>
                   <img
-                    src="/images/Lifecycle_add_on_icon@2x.png"
+                    src="/images/add-on-sonatype-icon-logoblue.png"
                     className="nx-popup-logo"
                     alt="Powered by Advanced Legal Pack"
                   />
