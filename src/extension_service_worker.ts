@@ -225,7 +225,7 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
       .then((tabId) => {
         chrome.action.setIcon({
           tabId: tabId,
-          path: '/images/sonatype-lifecycle-icon-white-32x32'
+          path: '/images/sonatype-lifecycle-icon-white-32x32.png'
         });
       })
       .catch((err) => {
