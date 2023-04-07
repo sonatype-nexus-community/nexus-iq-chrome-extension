@@ -1,33 +1,33 @@
 .sonatype-iq-extension-vuln-severe {
-  border: 3px solid hsl(348, 100%, 40%) !important;
+  border: 3px solid var(--nx-color-threat-critical) !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 5px 8px hsl(348, 100%, 40%);
+  box-shadow: 5px 5px 8px var(--nx-color-threat-critical);
 }
 
 .sonatype-iq-extension-vuln-high {
-  border: 3px solid hsl(348, 100%, 65%) !important;
+  border: 3px solid var(--nx-color-threat-severe) !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 5px 8px hsl(348, 100%, 65%);
+  box-shadow: 5px 5px 8px var(--nx-color-threat-severe);
 }
 
 .sonatype-iq-extension-vuln-med {
-  border: 3px solid orange !important;
+  border: 3px solid var(--nx-color-threat-severe) !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 5px 8px orange;
+  box-shadow: 5px 5px 8px var(--nx-color-threat-severe);
 }
 
 .sonatype-iq-extension-vuln-low {
-  border: 3px solid hsl(42, 100%, 75%) !important;
+  border: 3px solid var(--nx-color-threat-moderate) !important;
   border-radius: 10px;
   padding: 5px;
-  box-shadow: 5px 5px 8px hsl(42, 100%, 75%);
+  box-shadow: 5px 5px 8px var(--nx-color-threat-moderate);
 }
 
 .sonatype-iq-extension-vuln:before {
-  content: url("chrome-extension://__MSG_@@extension_id__/images/NexusLifecycle_Vulnerable-32x32.png");
+  content: url("chrome-extension://__MSG_@@extension_id__/images/sonatype-lifecycle-icon_Vulnerable-32x32.png");
   vertical-align: middle;
 
 }
