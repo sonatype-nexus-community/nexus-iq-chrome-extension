@@ -81,14 +81,17 @@ const Popup = (): JSX.Element | null => {
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
                   <NxTab>Info</NxTab>
-                  {hasViolations && <NxTab>Remediation</NxTab>}
+                  <NxTab>
+                    {hasViolations ? 'Remediation' : 'Versions'}
+                  </NxTab>
+
                   {hasViolations && (
-                    <NxTab>
-                      Policy
-                      <span className={'nx-counter'}>
+                      <NxTab>
+                        Policy
+                        <span className={'nx-counter'}>
                         {results.policyData.policyViolations.length}
                       </span>
-                    </NxTab>
+                      </NxTab>
                   )}
                   {hasSecurityIssues && (
                     <NxTab>
@@ -103,9 +106,10 @@ const Popup = (): JSX.Element | null => {
                 <NxTabPanel>
                   <ComponentInfoPage />
                 </NxTabPanel>
-                {hasViolations && (
-                    <NxTabPanel><RemediationPage /></NxTabPanel>
-                )}
+                {/*{hasViolations && (*/}
+                {/*    <NxTabPanel><RemediationPage /></NxTabPanel>*/}
+                {/*)}*/}
+                <NxTabPanel><RemediationPage /></NxTabPanel>
 
                 {hasViolations && (
                   <NxTabPanel>
