@@ -25,7 +25,6 @@ const parseMVNRepository = (url: string): PackageURL | undefined => {
   const repoType = REPO_TYPES.find(e => e.repoID == REPOS.mvnRepositoryCom)
   console.debug('*** REPO TYPE: ', repoType)
   if (repoType) {
-    console.debug('*** CHECKING URL: ', url.replace(repoType.url, ''), repoType?.pathRegex)
     if (repoType.pathRegex) {
       const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
       console.debug(pathResult?.groups)      
@@ -36,6 +35,8 @@ const parseMVNRepository = (url: string): PackageURL | undefined => {
         );
       }
     }
+  } else {
+    console.error('Unable to determine REPO TYPE.')
   }
   
   return undefined;

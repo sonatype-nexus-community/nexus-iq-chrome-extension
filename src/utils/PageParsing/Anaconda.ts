@@ -16,21 +16,28 @@
 
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
+import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 
 /*
   https://anaconda.org/conda-forge/numpy
 */
 const parseConda = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  const name = elements[4];
-
-  const version = $('small.subheader').text().trim();
-  if (typeof version !== 'undefined') {
-    return generatePackageURL(FORMATS.conda, name, version);
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.anacondaCom)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)      
+      if (pathResult && pathResult.groups && repoType.versionDomPath) {
+        const version = $(repoType.versionDomPath).text().trim();
+        return generatePackageURL(FORMATS.conda, encodeURIComponent(pathResult.groups.artifactId), version)
+      }
+    }
+  } else {
+    console.error('Unable to determine REPO TYPE.')
   }
-
+  
   return undefined;
 };
 

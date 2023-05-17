@@ -45,4 +45,30 @@ describe('Alpine Page Parsing', () => {
     expect(PackageURL?.name).toBe('openssl');
     expect(PackageURL?.version).toBe('1.1.1k-r0');
   });
+
+  test('Should parse a valid Alpine page with query string', () => {
+    const html = readFileSync(join(__dirname, 'testdata/alpine.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const rt: RepoType = {
+      url: '',
+      repoFormat: FORMATS.alpine,
+      repoID: REPOS.alpineLinux,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.OSSINDEX,
+      appendVersionPath: ''
+    };
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      rt,
+      'https://pkgs.alpinelinux.org/package/edge/main/x86/openssl?something=else'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe('alpine');
+    expect(PackageURL?.name).toBe('openssl');
+    expect(PackageURL?.version).toBe('1.1.1k-r0');
+  });
 });

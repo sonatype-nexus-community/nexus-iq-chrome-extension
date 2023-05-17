@@ -42,4 +42,27 @@ describe('Anaconda Page Parsing', () => {
     expect(PackageURL?.name).toBe('numpy');
     expect(PackageURL?.version).toBe('1.20.2');
   });
+
+  test('should parse a valid Anaconda page with query string', () => {
+    const html = readFileSync(join(__dirname, 'testdata/anaconda.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const rt: RepoType = {
+      url: '',
+      repoFormat: FORMATS.conda,
+      repoID: REPOS.anacondaCom,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.OSSINDEX,
+      appendVersionPath: ''
+    };
+
+    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://anaconda.org/conda-forge/numpy?something=else');
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe(FORMATS.conda);
+    expect(PackageURL?.name).toBe('numpy');
+    expect(PackageURL?.version).toBe('1.20.2');
+  });
 });

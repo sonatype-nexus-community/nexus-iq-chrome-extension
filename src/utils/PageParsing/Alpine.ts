@@ -16,15 +16,25 @@
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
 import {generatePackageURL} from './PurlUtils';
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants';
 
 const parseAlpine = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  let name = elements[7];
-  name = name.replace('#', '');
-
-  const version = $('#package > tbody > tr:nth-child(2) > td > strong > a').text().trim();
-
-  return generatePackageURL('alpine', name, version);
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.alpineLinux)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)      
+      if (pathResult && pathResult.groups && repoType.versionDomPath) {
+        const version = $(repoType.versionDomPath).text().trim();
+        return generatePackageURL(FORMATS.alpine, encodeURIComponent(pathResult.groups.artifactId), version)
+      }
+    }
+  } else {
+    console.error('Unable to determine REPO TYPE.')
+  }
+  
+  return undefined;
 };
 
 export {parseAlpine};

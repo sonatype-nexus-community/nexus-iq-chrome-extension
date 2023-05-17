@@ -91,6 +91,7 @@ export interface RepoType {
   dataSource: string; //TODO: remove this as unnecessary now as we no longer switch datasources on RepoType
   appendVersionPath?: string;
   pathRegex?: RegExp;
+  versionDomPath?: string;
 }
 
 export const REPO_TYPES: RepoType[] = [
@@ -101,7 +102,9 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'th.header ~ td',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: ''
+    appendVersionPath: '',
+    pathRegex: /^(?<releaseName>[^/]*)\/(?<releaseFeed>[^/]*)\/(?<architecture>[^/]*)\/(?<artifactId>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/,
+    versionDomPath: '#package > tbody > tr:nth-child(2) > td > strong > a'
   },
   {
     url: 'https://anaconda.org/',
@@ -110,7 +113,9 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'span.long-breadcrumb',
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: ''
+    appendVersionPath: '',
+    pathRegex: /^(?<channel>[^/]*)\/(?<artifactId>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/,
+    versionDomPath: 'small.subheader'
   },
   {
     url: 'https://chocolatey.org/packages/',
@@ -237,7 +242,8 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'h1',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: ''
+    appendVersionPath: '',
+    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/
   },
   {
     url: 'https://mvnrepository.com/artifact/',
