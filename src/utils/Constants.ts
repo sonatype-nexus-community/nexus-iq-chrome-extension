@@ -102,7 +102,7 @@ export const REPO_TYPES: RepoType[] = [
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '',
-    pathRegex: /^(?<releaseName>[^/]*)\/(?<releaseFeed>[^/]*)\/(?<architecture>[^/]*)\/(?<artifactId>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/,
+    pathRegex: /^(?<releaseName>[^/]*)\/(?<releaseFeed>[^/]*)\/(?<architecture>[^/]*)\/(?<artifactId>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
     versionDomPath: '#package > tbody > tr:nth-child(2) > td > strong > a'
   },
   {
@@ -113,7 +113,7 @@ export const REPO_TYPES: RepoType[] = [
     versionPath: '',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '',
-    pathRegex: /^(?<channel>[^/]*)\/(?<artifactId>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/,
+    pathRegex: /^(?<channel>[^/]*)\/(?<artifactId>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
     versionDomPath: 'small.subheader'
   },
   {
@@ -158,7 +158,9 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'h2', //"h2.title",?
     versionPath: '',
     appendVersionPath: '',
-    dataSource: DATA_SOURCES.NEXUSIQ
+    dataSource: DATA_SOURCES.NEXUSIQ,
+    pathRegex: /^web\/packages\/(?<artifactId>[^/]*)\/index\.html(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+    versionDomPath: 'table tr:nth-child(1) td:nth-child(2)'
   },
   {
     repoID: REPOS.cratesIo,
@@ -196,7 +198,8 @@ export const REPO_TYPES: RepoType[] = [
       'body > main > header > div.go-Main-headerContent > div.go-Main-headerTitle.js-stickyHeader > h1',
     versionPath: '{url}/{packagename}/@{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: '@{versionNumber}'
+    appendVersionPath: '@{versionNumber}',
+    pathRegex: /^(?<groupId>.+)\/(?<artifactId>[^/]*)\/(?<version>v[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
   },
   {
     url: 'https://repo1.maven.org/maven2/',
@@ -233,7 +236,7 @@ export const REPO_TYPES: RepoType[] = [
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '',
-    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/
+    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
   },
   {
     url: 'https://mvnrepository.com/artifact/',
@@ -243,7 +246,7 @@ export const REPO_TYPES: RepoType[] = [
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '',
-    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/
+    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
   },
   {
     url: 'https://www.npmjs.com/package/',
