@@ -47,4 +47,31 @@ describe('MVNRepository Page Parsing', () => {
     expect(packageURL?.name).toBe('struts2-core');
     expect(packageURL?.version).toBe('2.2.3');
   });
+
+  test('should parse a valid MVNRepository page with fragment', () => {
+    const html = readFileSync(join(__dirname, 'testdata/MVNRepository.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const rt: RepoType = {
+      repoID: REPOS.mvnRepositoryCom,
+      url: '',
+      repoFormat: FORMATS.maven,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.NEXUSIQ,
+      appendVersionPath: ''
+    };
+
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
+      rt,
+      'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3#ivy'
+    );
+
+    expect(packageURL).toBeDefined();
+    expect(packageURL?.type).toBe('maven');
+    expect(packageURL?.namespace).toBe('org.apache.struts');
+    expect(packageURL?.name).toBe('struts2-core');
+    expect(packageURL?.version).toBe('2.2.3');
+  });
 });

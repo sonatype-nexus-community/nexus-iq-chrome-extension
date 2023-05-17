@@ -90,6 +90,7 @@ export interface RepoType {
   versionPath?: string;
   dataSource: string; //TODO: remove this as unnecessary now as we no longer switch datasources on RepoType
   appendVersionPath?: string;
+  pathRegex?: RegExp;
 }
 
 export const REPO_TYPES: RepoType[] = [
@@ -245,7 +246,8 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'h2.im-title',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: ''
+    appendVersionPath: '',
+    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\?(?<query>(.*)))?(#(?<fragment>(.*)))?$/
   },
   {
     url: 'https://www.npmjs.com/package/',
