@@ -20,8 +20,8 @@ import {FORMATS} from '../Constants';
 import {generatePackageURLComplete} from './PurlUtils';
 
 //pkg:type/namespace/name@version?qualifiers#subpath
-const parseCentralSonatypeDev = (url: string): PackageURL | undefined => {
-  console.info('Parsing CentralSonatypeDev');
+const parseCentralSonatypeCom = (url: string): PackageURL | undefined => {
+  console.info('Parsing CentralSonatypeCom');
   const elements = url.split('/');
   if (elements.length >= 7) {
     const group = encodeURIComponent(elements[4]);
@@ -43,4 +43,4 @@ const parseCentralSonatypeDev = (url: string): PackageURL | undefined => {
   return undefined;
 };
 
-export {parseCentralSonatypeDev};
+export {parseCentralSonatypeCom};
