@@ -77,7 +77,6 @@ export const REPOS = {
   repoMavenApacheOrg: 'repoMavenApacheOrg',
   searchMavenOrg: 'searchMavenOrg',
   repo1MavenOrg: 'repo1MavenOrg',
-  centralSonatypeDev: 'centralSonatypeDev',
   centralSonatypeCom: 'centralSonatypeCom'
 };
 
@@ -222,15 +221,6 @@ export const REPO_TYPES: RepoType[] = [
     repoFormat: FORMATS.maven,
     repoID: REPOS.searchMavenOrg,
     titleSelector: '.artifact-title',
-    versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
-    dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: ''
-  },
-  {
-    url: 'https://central.sonatype.dev/artifact/',
-    repoFormat: FORMATS.maven,
-    repoID: REPOS.centralSonatypeDev,
-    titleSelector: 'h1',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: ''
