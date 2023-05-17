@@ -25,7 +25,7 @@ const parseAlpine = (url: string): PackageURL | undefined => {
     if (repoType.pathRegex) {
       const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
       console.debug(pathResult?.groups)      
-      if (pathResult && pathResult.groups && repoType.versionDomPath) {
+      if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
         const version = $(repoType.versionDomPath).text().trim();
         return generatePackageURL(FORMATS.alpine, encodeURIComponent(pathResult.groups.artifactId), version)
       }
