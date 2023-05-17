@@ -257,7 +257,8 @@ export const REPO_TYPES: RepoType[] = [
     // titleSelector: ".package-name-redundant",
     versionPath: '{url}/{packagename}/v/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: '/v/{versionNumber}'
+    appendVersionPath: '/v/{versionNumber}',
+    pathRegex: /^((?<groupId>@[^/]*)\/)?(?<artifactId>[^/?#]*)(\/v\/(?<version>[^?#]*))?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
   },
   {
     // https://www.nuget.org/packages/LibGit2Sharp/0.20.1
