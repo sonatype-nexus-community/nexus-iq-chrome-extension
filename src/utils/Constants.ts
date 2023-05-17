@@ -217,7 +217,8 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'h1',
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: ''
+    appendVersionPath: '',
+    pathRegex: /(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)\/?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?/
   },
   {
     url: 'https://search.maven.org/artifact/',
@@ -236,7 +237,7 @@ export const REPO_TYPES: RepoType[] = [
     versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}/{extension}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '',
-    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
+    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)(\/[^#?]*)?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
   },
   {
     url: 'https://mvnrepository.com/artifact/',
