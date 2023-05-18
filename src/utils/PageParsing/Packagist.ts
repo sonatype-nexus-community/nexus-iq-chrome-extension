@@ -16,27 +16,32 @@
 
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants';
 import {generatePackageURLWithNamespace} from './PurlUtils';
 
 const parsePackagist = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  const namespace = elements[4];
-  const name = elements[5];
-  const versionInURLPosition = elements[5].search('#');
-  //is the version number in the URL? if so get that, else get it from the HTML
-  if (versionInURLPosition > -1) {
-    return generatePackageURLWithNamespace(
-      'composer',
-      name.substr(0, versionInURLPosition),
-      name.substr(versionInURLPosition + 1),
-      namespace
-    );
-  } else {
-    const versionHTML = $('span.version-number').first().text();
-    if (typeof versionHTML !== 'undefined') {
-      return generatePackageURLWithNamespace('composer', name, versionHTML.trim(), namespace);
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.packagistOrg)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)      
+      if (pathResult && pathResult.groups) {
+        console.debug($(repoType.versionDomPath))
+        const pageVersion = $(repoType.versionDomPath).text().trim()
+        console.debug(`URL Version: ${pathResult.groups.version}, Page Version: ${pageVersion}`)
+        return generatePackageURLWithNamespace(
+          FORMATS.composer, 
+          encodeURIComponent(pathResult.groups.artifactId), 
+          (pathResult.groups.version !== undefined ? pathResult.groups.version : pageVersion), 
+          encodeURIComponent(pathResult.groups.groupId)
+        );
+      }
     }
+  } else {
+    console.error('Unable to determine REPO TYPE.')
   }
+  
   return undefined;
 };
 

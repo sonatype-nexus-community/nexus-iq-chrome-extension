@@ -273,7 +273,6 @@ export const REPO_TYPES: RepoType[] = [
     pathRegex: /^(?<artifactId>[^/?#]*)(\/(?<version>[^?#]*))?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
     versionDomPath: 'span.version-title'
   },
-
   {
     url: 'https://packagist.org/packages/',
     repoFormat: FORMATS.composer,
@@ -281,7 +280,9 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'h2.title',
     versionPath: '{url}/{packagename}#{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: '#{versionNumber}'
+    appendVersionPath: '#{versionNumber}',
+    pathRegex: /^(?<groupId>[^/]*)\/(?<artifactId>[^/?#]*)(\?(?<query>([^#]*)))?(#(?<version>(.*)))?$/,
+    versionDomPath: '#view-package-page .versions-section .title .version-number'
   },
   {
     url: 'https://pypi.org/project/',
