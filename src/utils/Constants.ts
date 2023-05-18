@@ -269,7 +269,9 @@ export const REPO_TYPES: RepoType[] = [
     versionSelector: 'span.version-title',
     versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: '/{versionNumber}'
+    appendVersionPath: '/{versionNumber}',
+    pathRegex: /^(?<artifactId>[^/?#]*)(\/(?<version>[^?#]*))?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+    versionDomPath: 'span.version-title'
   },
 
   {

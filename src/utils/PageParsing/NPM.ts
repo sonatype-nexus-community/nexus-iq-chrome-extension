@@ -27,7 +27,7 @@ const parseNPM = (url: string): PackageURL | undefined => {
       const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
       console.debug(pathResult?.groups)
       if (pathResult && pathResult.groups) {
-        let pageVersion: string = ''
+        let pageVersion = ''
         if (pathResult.groups.version === undefined) {
           pageVersion = $('h2').next('span').text().trim().split(' ')[0]
         }
