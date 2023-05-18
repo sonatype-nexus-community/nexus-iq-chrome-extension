@@ -16,48 +16,48 @@
 import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, REPO_TYPES} from '../Constants';
+import {ensure} from '../Helpers'
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('PyPI Page Parsing', () => {
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.pypiOrg)
+  expect(repoType).toBeDefined()
+
   test('should parse a valid PyPI page', () => {
     const html = readFileSync(join(__dirname, 'testdata/pypi.html'));
 
     window.document.body.innerHTML = html.toString();
 
-    const rt: RepoType = {
-      url: '',
-      repoFormat: FORMATS.pypi,
-      repoID: REPOS.pypiOrg,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
-      appendVersionPath: ''
-    };
-
-    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pypi.org/project/Django/');
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType), 'https://pypi.org/project/Django/'
+    )
 
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.type).toBe(FORMATS.pypi);
     expect(PackageURL?.name).toBe('Django');
-    expect(PackageURL?.version).toBe('3.2.2');
+    expect(PackageURL?.version).toBe('4.2.1');
   });
 
   test('should parse valid PyPI page with the version', () => {
-    const rt: RepoType = {
-      url: '',
-      repoFormat: FORMATS.pypi,
-      repoID: REPOS.pypiOrg,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
-      appendVersionPath: ''
-    };
-    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://pypi.org/project/jake/0.2.70/');
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType), 'https://pypi.org/project/Django/4.2/'
+    )
 
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.type).toBe(FORMATS.pypi);
-    expect(PackageURL?.name).toBe('jake');
-    expect(PackageURL?.version).toBe('0.2.70');
+    expect(PackageURL?.name).toBe('Django');
+    expect(PackageURL?.version).toBe('4.2');
+  });
+
+  test('should parse valid PyPI page with the version, query string and fragment', () => {
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType), 'https://pypi.org/project/Django/4.2/?some=thing#else'
+    )
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe(FORMATS.pypi);
+    expect(PackageURL?.name).toBe('Django');
+    expect(PackageURL?.version).toBe('4.2');
   });
 });

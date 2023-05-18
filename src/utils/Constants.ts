@@ -291,7 +291,9 @@ export const REPO_TYPES: RepoType[] = [
     titleSelector: 'h1.package-header__name',
     versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
-    appendVersionPath: '{versionNumber}'
+    appendVersionPath: '{versionNumber}',
+    pathRegex: /^(?<artifactId>[^/?#]*)\/((?<version>[^?#]*)\/)?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+    versionDomPath: '#content > div.banner > div > div.package-header__left > h1'
   },
   {
     url: 'https://rubygems.org/gems/',
