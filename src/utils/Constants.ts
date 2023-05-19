@@ -259,7 +259,8 @@ export const REPO_TYPES: RepoType[] = [
     versionPath: '{url}/{packagename}/v/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '/v/{versionNumber}',
-    pathRegex: /^((?<groupId>@[^/]*)\/)?(?<artifactId>[^/?#]*)(\/v\/(?<version>[^?#]*))?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
+    pathRegex: /^((?<groupId>@[^/]*)\/)?(?<artifactId>[^/?#]*)(\/v\/(?<version>[^?#]*))?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+    versionDomPath: 'h2 + span'
   },
   {
     url: 'https://www.nuget.org/packages/',

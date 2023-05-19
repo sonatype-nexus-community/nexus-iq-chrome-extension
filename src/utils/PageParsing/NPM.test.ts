@@ -125,4 +125,21 @@ describe('NPM Page Parsing', () => {
     expect(PackageURL?.name).toBe('test')
     expect(PackageURL?.version).toBe('1.2.3')
   });
+
+  test('should parse a valid NPM page: @sonatype/policy-demo', () => {
+    const html = readFileSync(join(__dirname, 'testdata/npm2.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType),
+      'https://www.npmjs.com/package/@sonatype/policy-demo'
+    );
+
+    expect(PackageURL).toBeDefined()
+    expect(PackageURL?.type).toBe(FORMATS.npm)
+    expect(PackageURL?.namespace).toBe('@sonatype')
+    expect(PackageURL?.name).toBe('policy-demo')
+    expect(PackageURL?.version).toBe('2.3.0')
+  });
 });

@@ -18,6 +18,7 @@ import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
 import {generatePackageURLWithNamespace} from './PurlUtils';
 import { FORMATS, REPOS, REPO_TYPES } from '../Constants';
+import {stripHtmlComments} from '../Helpers'
 
 const parseNPM = (url: string): PackageURL | undefined => {
   const repoType = REPO_TYPES.find(e => e.repoID == REPOS.npmJs)
@@ -27,10 +28,8 @@ const parseNPM = (url: string): PackageURL | undefined => {
       const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
       console.debug(pathResult?.groups)
       if (pathResult && pathResult.groups) {
-        let pageVersion = ''
-        if (pathResult.groups.version === undefined) {
-          pageVersion = $('h2').next('span').text().trim().split(' ')[0]
-        }
+        console.debug(`"${stripHtmlComments($(repoType.versionDomPath).text())}"`)
+        const pageVersion = stripHtmlComments($(repoType.versionDomPath).text()).split('•')[0].trim()
 
         return generatePackageURLWithNamespace(
           FORMATS.npm,
