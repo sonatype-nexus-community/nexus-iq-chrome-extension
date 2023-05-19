@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// import {IqRequestService, LogLevel, TestLogger} from "../../../../../js-sona-types";
+
 import {IqApplicationResponse, IqRequestService, LogLevel, TestLogger} from "@sonatype/js-sona-types";
 import {
   NxFormGroup,
@@ -241,7 +241,6 @@ const IQServerOptionsPage = (): JSX.Element | null => {
 
   function onChange(evt: FormEvent<HTMLSelectElement>) {
     console.info("Setting iqServerApplication: ", evt.currentTarget.value);
-    // setIQServerApplication(evt.currentTarget.value);
     setItem(setIQServerApplication, evt.currentTarget.value, IQ_SERVER_APPLICATION)
   }
 

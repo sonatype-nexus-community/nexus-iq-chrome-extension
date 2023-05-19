@@ -1531,10 +1531,10 @@
     pascalcase "^0.1.1"
     xss-filters "^1.2.6"
 
-"@sonatype/js-sona-types@^1.2.0":
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/@sonatype/js-sona-types/-/js-sona-types-1.2.1.tgz#1f69ab1056060e8e32b840d835358ebf1c84c903"
-  integrity sha512-ARfuGW3MzecY+S4pspXwK7eVgzl/3bzDvn+072/I69wsxagzjaVlmUQI2ydauWHh3ZUmE4Nays7zmXSyO9/cZQ==
+"@sonatype/js-sona-types@^1.2.2":
+  version "1.2.2"
+  resolved "https://repo.phorton.eu.ngrok.io/repository/npm-proxy/@sonatype/js-sona-types/-/js-sona-types-1.2.2.tgz#576dd4611bdcec077cf44cabca0093ced85b175e"
+  integrity sha512-n1hjpEx0jMnAWLuxaFdLkPqWCO6pqsN1ThPa21RBVVAmoDsr5dLs0fnNOtIGpqaEJa5QpI+8XIBbO2YHJi4SdA==
   dependencies:
     browser-cookies "^1.2.0"
     cross-fetch "3.1.5"
