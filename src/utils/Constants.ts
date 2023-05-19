@@ -262,7 +262,6 @@ export const REPO_TYPES: RepoType[] = [
     pathRegex: /^((?<groupId>@[^/]*)\/)?(?<artifactId>[^/?#]*)(\/v\/(?<version>[^?#]*))?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/
   },
   {
-    // https://www.nuget.org/packages/LibGit2Sharp/0.20.1
     url: 'https://www.nuget.org/packages/',
     repoFormat: FORMATS.nuget,
     repoID: REPOS.nugetOrg,
@@ -271,7 +270,7 @@ export const REPO_TYPES: RepoType[] = [
     versionPath: '{url}/{packagename}/{versionNumber}',
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '/{versionNumber}',
-    pathRegex: /^(?<artifactId>[^/?#]*)(\/(?<version>[^?#]*))?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+    pathRegex: /^(?<artifactId>[^/?#]*)(\/(?<version>[^/?#]*)\/?)?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
     versionDomPath: 'span.version-title'
   },
   {
