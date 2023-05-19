@@ -103,7 +103,7 @@ export const REPO_TYPES: RepoType[] = [
     dataSource: DATA_SOURCES.NEXUSIQ,
     appendVersionPath: '',
     pathRegex: /^(?<releaseName>[^/]*)\/(?<releaseFeed>[^/]*)\/(?<architecture>[^/]*)\/(?<artifactId>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
-    versionDomPath: '#package > tbody > tr:nth-child(2) > td > strong > a'
+    versionDomPath: '#package > tbody > tr:nth-child(2) > td'
   },
   {
     url: 'https://anaconda.org/',

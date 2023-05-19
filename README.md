@@ -22,13 +22,13 @@ To allow you to inspect a package before you download it. The plugin requires a 
 The plugin works on the following open source registry sites.
 
 
-| Registry       | Language Group | URL            | Sonatype Lifecycle |Sonatype OSS Index |
+| Registry       | Language Group | URL            | Sonatype Lifecycle | Sonatype OSS Index |
 |----------------|----------------|----------------|----------------|----------------|
-| a | b | c | | |
+| Alpine Linux | Alpine Linux | `https://pkgs.alpinelinux.org/` | ✅ | ❌ |
+| NuGet Gallery | .NET | `https://www.nuget.org/` | ✅ | ✅ |
 
- 
-1. .Net – NuGet – `https://www.nuget.org/`
-2. Alpine – Linux – `https://pkgs.alpinelinux.org/`
+
+
 5. CocoaPods – iOS – `https://cocoapods.org/`
 6. Conan – C/C++ – `https://conan.io/center/`
 7. Conda – Python – `https://anaconda.org/anaconda/`

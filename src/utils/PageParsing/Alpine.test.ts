@@ -16,32 +16,26 @@
 import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
+import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
+import {ensure} from '../Helpers'
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('Alpine Page Parsing', () => {
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.alpineLinux)
+  expect(repoType).toBeDefined()
+
   test('should parse a valid Alpine page', () => {
     const html = readFileSync(join(__dirname, 'testdata/alpine.html'));
 
-    window.document.body.innerHTML = html.toString();
-
-    const rt: RepoType = {
-      url: '',
-      repoFormat: FORMATS.alpine,
-      repoID: REPOS.alpineLinux,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
-      appendVersionPath: ''
-    };
+    window.document.body.innerHTML = html.toString()
 
     const PackageURL = getArtifactDetailsFromDOM(
-      rt,
+      ensure(repoType),
       'https://pkgs.alpinelinux.org/package/edge/main/x86/openssl'
     );
 
     expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe('alpine');
+    expect(PackageURL?.type).toBe(FORMATS.alpine);
     expect(PackageURL?.name).toBe('openssl');
     expect(PackageURL?.version).toBe('1.1.1k-r0');
   });
@@ -51,24 +45,30 @@ describe('Alpine Page Parsing', () => {
 
     window.document.body.innerHTML = html.toString();
 
-    const rt: RepoType = {
-      url: '',
-      repoFormat: FORMATS.alpine,
-      repoID: REPOS.alpineLinux,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
-      appendVersionPath: ''
-    };
-
     const PackageURL = getArtifactDetailsFromDOM(
-      rt,
+      ensure(repoType),
       'https://pkgs.alpinelinux.org/package/edge/main/x86/openssl?something=else'
     );
 
     expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe('alpine');
+    expect(PackageURL?.type).toBe(FORMATS.alpine);
     expect(PackageURL?.name).toBe('openssl');
     expect(PackageURL?.version).toBe('1.1.1k-r0');
+  });
+
+  test('Should parse v3.15/main/x86/busybox', () => {
+    const html = readFileSync(join(__dirname, 'testdata/alpine-old.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType),
+      'https://pkgs.alpinelinux.org/package/v3.15/main/x86/busybox?something=else'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe(FORMATS.alpine);
+    expect(PackageURL?.name).toBe('busybox');
+    expect(PackageURL?.version).toBe('1.34.1-r7');
   });
 });
