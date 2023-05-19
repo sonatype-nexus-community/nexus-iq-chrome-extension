@@ -30,6 +30,7 @@ The plugin works on the following open source registry sites.
 | NuGet Gallery | .NET | `https://www.nuget.org/` | ✅ | ✅ |
 | Packagist | PHP | `https://packagist.org/` | ✅ | ✅ |
 | PyPI | Python | `https://pypi.org/` | ✅ | ✅ |
+| RubGems | Ruby | `https://rubygems.org/` | ✅ | ✅ |
 
 
 
