@@ -25,6 +25,7 @@ The plugin works on the following open source registry sites.
 | Registry       | Language Group | URL            | Sonatype Lifecycle | Sonatype OSS Index |
 |----------------|----------------|----------------|----------------|----------------|
 | Alpine Linux | Alpine Linux | `https://pkgs.alpinelinux.org/` | ✅ | ❌ |
+| Maven Central | Java | `https://central.sonatype.com/` | ✅ | ✅ |
 | NPM JS | Javascript | `https://www.npmjs.com/` | ✅ | ✅ |
 | NuGet Gallery | .NET | `https://www.nuget.org/` | ✅ | ✅ |
 | Packagist | PHP | `https://packagist.org/` | ✅ | ✅ |
