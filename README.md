@@ -27,6 +27,7 @@ The plugin works on the following open source registry sites.
 | Alpine Linux | Alpine Linux | `https://pkgs.alpinelinux.org/` | ✅ | ❌ |
 | NPM JS | Javascript | `https://www.npmjs.com/` | ✅ | ✅ |
 | NuGet Gallery | .NET | `https://www.nuget.org/` | ✅ | ✅ |
+| PyPI | Python | `https://pypi.org/` | ✅ | ✅ |
 
 
 
@@ -43,7 +44,6 @@ The plugin works on the following open source registry sites.
 16. Java – Maven – `https://search.maven.org/`
 17. JavaScript/Node – npm – `https://www.npmjs.com/`
 18. PHP – Packagist/composer – `https://packagist.org/`
-19. Python – PyPI – `https://pypi.org/`
 20. R – CRAN – `https://cran.r–project.org/`
 21. Ruby – RubyGems – `https://rubygems.org/`
 22. Rust – Crates – `https://crates.io/`
