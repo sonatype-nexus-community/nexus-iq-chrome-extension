@@ -27,11 +27,15 @@ const parseMVNRepository = (url: string): PackageURL | undefined => {
   if (repoType) {
     if (repoType.pathRegex) {
       const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-      console.debug(pathResult?.groups)      
+      console.debug(pathResult?.groups)
       if (pathResult && pathResult.groups) {
         return generatePackageURLComplete(
-          FORMATS.maven, encodeURIComponent(pathResult.groups.artifactId), encodeURIComponent(pathResult.groups.version), 
-          encodeURIComponent(pathResult.groups.groupId), {type: 'jar'}, undefined
+          FORMATS.maven, 
+          encodeURIComponent(pathResult.groups.artifactId), 
+          encodeURIComponent(pathResult.groups.version), 
+          encodeURIComponent(pathResult.groups.groupId), 
+          {type: 'jar'}, 
+          undefined
         );
       }
     }

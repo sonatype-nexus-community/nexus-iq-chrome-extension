@@ -17,27 +17,21 @@ import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, REPO_TYPES} from '../Constants';
+import {ensure} from '../Helpers'
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('MVNRepository Page Parsing', () => {
-  test('should parse a valid MVNRepository page', () => {
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.mvnRepositoryCom)
+  expect(repoType).toBeDefined()
+  
+  test('should parse a valid MVNRepository page with version', () => {
     const html = readFileSync(join(__dirname, 'testdata/MVNRepository.html'));
 
     window.document.body.innerHTML = html.toString();
 
-    const rt: RepoType = {
-      repoID: REPOS.mvnRepositoryCom,
-      url: '',
-      repoFormat: FORMATS.maven,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.NEXUSIQ,
-      appendVersionPath: ''
-    };
-
     const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
-      rt,
+      ensure(repoType),
       'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3'
     );
 
@@ -53,18 +47,8 @@ describe('MVNRepository Page Parsing', () => {
 
     window.document.body.innerHTML = html.toString();
 
-    const rt: RepoType = {
-      repoID: REPOS.mvnRepositoryCom,
-      url: '',
-      repoFormat: FORMATS.maven,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.NEXUSIQ,
-      appendVersionPath: ''
-    };
-
     const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
-      rt,
+      ensure(repoType),
       'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3#ivy'
     );
 

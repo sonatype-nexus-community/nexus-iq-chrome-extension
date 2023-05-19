@@ -17,7 +17,7 @@ import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, REPO_TYPES} from '../Constants';
+import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
 import {ensure} from '../Helpers'
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
