@@ -27,6 +27,7 @@ The plugin works on the following open source registry sites.
 | Alpine Linux | Alpine Linux | `https://pkgs.alpinelinux.org/` | ✅ | ❌ |
 | CRAN | R | `https://cran.r-project.org` | ✅ | ❌ |
 | Maven Central | Java | `https://central.sonatype.com/` | ✅ | ✅ |
+| Maven Central (old) | Java | `https://search.maven.org/` | ✅ | ✅ |
 | MVN Repository | Java | `https://mvnrepository.com/` | ✅ | ✅ |
 | NPM JS | Javascript | `https://www.npmjs.com/` | ✅ | ✅ |
 | NuGet Gallery | .NET | `https://www.nuget.org/` | ✅ | ✅ |
@@ -45,11 +46,10 @@ The plugin works on the following open source registry sites.
 13. Java – Maven – `https://repo.maven.apache.org/`
 14. Java – Maven – `https://repo.spring.io/list/`
 15. Java – Maven – `https://repo1.maven.org/`
-16. Java – Maven – `https://search.maven.org/`
-18. Rust – Crates – `https://crates.io/`
-19. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-20. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
-21. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+16. Rust – Crates – `https://crates.io/`
+17. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+18. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+19. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Development
 
