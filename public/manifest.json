@@ -52,7 +52,6 @@
     "https://search.gocenter.io/",
     "https://search.maven.org/",
     "https://pkg.go.dev/",
-    "https://central.sonatype.dev/",
     "https://central.sonatype.com/"
   ],
   "permissions": [
