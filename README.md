@@ -15,10 +15,18 @@
 
 ## Purpose
 
-To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin, but will use Sonatype's OSS Index if you do not!
+To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, or you can use Sonatype's OSS Index for free if you do not have access to a licensed installation of [Sonatype Lifecycle](https://www.sonatype.com/nexus-lifecycle).
 
-The plugin can scan packages at the following repositories:
+## Package Ecosystem Support
 
+The plugin works on the following open source registry sites.
+
+
+| Registry       | Language Group | URL            | Sonatype Lifecycle |Sonatype OSS Index |
+|----------------|----------------|----------------|----------------|----------------|
+| a | b | c | | |
+
+ 
 1. .Net – NuGet – `https://www.nuget.org/`
 2. Alpine – Linux – `https://pkgs.alpinelinux.org/`
 5. CocoaPods – iOS – `https://cocoapods.org/`
