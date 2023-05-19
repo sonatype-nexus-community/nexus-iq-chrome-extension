@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,12 +10,9 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="shortcut icon" href="/favicon.ico?v=1620329792" />
+        <link rel="shortcut icon" href="/favicon.ico?v=1683464082" />
 
-        <link rel="stylesheet" href="/libs/bootstrap-3.3.5/css/bootstrap.min.css?v=1620329792" />
-        <link rel="stylesheet" href="/libs/bootstrap-3.3.5/css/bootstrap-theme.min.css?v=1620329792" />
-        <link rel="stylesheet" href="/css/main.css?v=1620329792" />
-        <link rel="stylesheet" href="/css/humane/jackedup.css?v=1620329792" />
+        <link rel="stylesheet" href="/build/app.css?v=1683464082" />
         
             <link rel="alternate" type="application/rss+xml" title="New Releases - fomvasss/laravel-its-lte" href="https://packagist.org/feeds/package.fomvasss/laravel-its-lte.rss" />
     <link rel="alternate" type="application/rss+xml" title="New Releases - fomvasss" href="https://packagist.org/feeds/vendor.fomvasss.rss" />
@@ -24,10 +20,10 @@
         <link rel="alternate" type="application/rss+xml" title="New Releases - Packagist" href="https://packagist.org/feeds/releases.rss" />
         
 
-        <link rel="search" type="application/opensearchdescription+xml" href="/search.osd?v=1620329792" title="Packagist" />
+        <link rel="search" type="application/opensearchdescription+xml" href="/search.osd?v=1683464082" title="Packagist" />
 
         
-            <link rel="stylesheet" href="/css/github/markdown.css?v=1620329792">
+            <link rel="stylesheet" href="/css/github/markdown.css?v=1683464082">
         </head>
 
     <body>
@@ -35,7 +31,6 @@
         <header class="navbar-wrapper navbar-fixed-top">
             <nav class="container">
                 <div class="navbar" role="navigation">
-                    <div class="v2highlight"><a href="https://getcomposer.org/2">🎉🎊 Composer 2 is available! 🚀🥳</a></div>
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="sr-only">Toggle navigation</span>
@@ -63,7 +58,7 @@
                                     <section class="signin-box">
                                         <form action="/login/" method="POST" id="nav_login">
                                             <div class="input-group">
-                                                <input class="form-control" type="text" id="_username" name="_username" placeholder="Username">
+                                                <input class="form-control" type="text" id="_username" name="_username" placeholder="Username / Email">
                                                 <span class="input-group-addon"><span class="icon-user"></span></span>
                                             </div>
                                             <div class="input-group">
@@ -73,11 +68,11 @@
 
                                             <div class="checkbox">
                                                 <label for="_remember_me">
-                                                    <input type="checkbox" id="_remember_me" name="_remember_me" value="on" checked="checked" />Remember me
+                                                    <input type="checkbox" id="_remember_me" name="_remember_me" value="on" checked="checked" /> Remember me
                                                 </label>
-                                            </div>                                                <input type="hidden" name="_target_path" value="https://packagist.org/explore/" />
+                                            </div>
                                             <div class="signin-box-buttons">
-                                                <a href="https://packagist.org/login/github" class="pull-right btn btn-primary btn-github"><span class="icon-github"></span>Use Github</a>
+                                                <a href="/login/github" class="pull-right btn btn-primary btn-github"><span class="icon-github"></span>Use Github</a>
                                                 <button type="submit" class="btn btn-success" id="_submit_mini" name="_submit">Log in</button>
                                             </div>
                                         </form>
@@ -96,13 +91,12 @@
         <section class="wrapper wrapper-search">
     <div class="container ">
         <form name="search_query" method="get" action="/search/" id="search-form" autocomplete="off">
-    <div class="sortable row">
-        <div class="col-xs-12 js-search-field-wrapper col-md-9">
-            <input type="search" id="search_query_query" name="search_query[query]" required="required" autocomplete="off" placeholder="Search packages..." tabindex="1" class=" form-control" value="" />
-        </div>
-    </div>
-</form>
-    </div>
+            <div class="sortable row">
+                <div class="col-xs-12 js-search-field-wrapper col-md-9">
+                                                            <input type="search" id="search_query_query" name="query" required="required" autocomplete="off" placeholder="Search packages..." tabindex="1" class=" form-control" value="" />
+                </div>
+            </div>
+        </form>    </div>
 </section>
 
 
@@ -124,7 +118,7 @@
                         <div class="row">
                             <div class="col-md-9">
                                 <div id="powered-by">
-                                    Search by <a href="https://www.algolia.com/"><img src="/img/algolia-logo-light.svg?v=1620329792"></a>
+                                    Search by <a href="https://www.algolia.com/"><img src="/img/algolia-logo-light.svg?v=1683464082"></a>
                                 </div>
                                 <div id="pagination-container">
                                     <div class="pagination"></div>
@@ -133,7 +127,7 @@
                         </div>
                     </div>
                 
-                    <div class="row">
+                    <div class="row" id="view-package-page">
         <div class="col-xs-12 package">
             <div class="package-header">
 
@@ -163,16 +157,16 @@
                             <h5>Maintainers</h5>
                             <p class="maintainers">
                                 <a href="/users/fomvasss/"><img width="48" height="48" title="fomvasss" src="https://www.gravatar.com/avatar/4498649bb5f0779b2da3bd553d00df95?s=48&amp;d=identicon" srcset="https://www.gravatar.com/avatar/4498649bb5f0779b2da3bd553d00df95?s=96&amp;d=identicon 2x"></a>
-                                                                                            </p>
+                                                                                                                            </p>
 
                             <h5>Details</h5>
                                                         <p class="canonical">
                                 <a href="https://github.com/fomvasss/laravel-its-lte" title="Canonical Repository URL">github.com/fomvasss/laravel-its-lte</a>
                             </p>
 
-                                                                                        <p><a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss/laravel-its-lte/tree/4.8.0">Source</a></p>
+                                                                                        <p><a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss/laravel-its-lte/tree/master">Source</a></p>
                                                                                         <p><a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss/laravel-its-lte/issues">Issues</a></p>
-                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                            </div>
 
                         
                         <div class="facts col-xs-12 col-sm-6 col-md-12">
@@ -180,7 +174,7 @@
                                 <span>
                                     <a href="/packages/fomvasss/laravel-its-lte/stats" rel="nofollow">Installs</a>:
                                 </span>
-                                N/A                            </p>
+                                714                            </p>
                                                             <p>
                                     <span>
                                         <a href="/packages/fomvasss/laravel-its-lte/dependents?order_by=downloads" rel="nofollow">Dependents</a>:
@@ -208,7 +202,7 @@
                                                                                         <p>
                                     <span>
                                         <a href="https://github.com/fomvasss/laravel-its-lte/watchers">Watchers</a>:
-                                    </span> 1
+                                    </span> 2
                                 </p>
                                                                                         <p>
                                     <span>
@@ -220,28 +214,55 @@
                                     <span>
                                         <a rel="nofollow noopener external noindex ugc" href="https://github.com/fomvasss/laravel-its-lte/issues">Open Issues</a>:
                                     </span>
-                                    10
+                                    27
                                 </p>
-                                                                                        <p><span>Language:</span>Blade</p>
+                                                                                        <p><span>Language:</span>JavaScript</p>
                                                                                 </div>
                     </div>
                 </div>
             </div>
 
+                            <div class="row">
+                                            <form name="add_maintainer_form" method="post" action="/packages/fomvasss/laravel-its-lte/maintainers/" id="add-maintainer-form" class="col-sm-6 col-md-3 col-md-offset-9 hidden">
+                            <div>
+                                <h4>Add Maintainer</h4>
+                                <p>
+                                    <label for="add_maintainer_form_user">Username</label>
+                                    
+                                    <input type="text" id="add_maintainer_form_user" name="add_maintainer_form[user]" class="form-control" />
+                                </p>
+                                <input type="hidden" id="add_maintainer_form__token" name="add_maintainer_form[_token]" value="fc3c0add89a84caf7e00e1d4914.urPJt3enb81HjVscnwaHQRYpjox0K9BatFgiOQcNaZU.yMSC507vOp833zZw3H_OCUlcussiW5oC7W91a1BVXOL1_6XfWuA9tXLeOA" />
+                                <input class="btn btn-block btn-success btn-lg" type="submit" value="Add Maintainer" />
+                            </div>
+                        </form>
+                    
+                                            <form name="remove_maintainer_form" method="post" action="/packages/fomvasss/laravel-its-lte/maintainers/delete" id="remove-maintainer-form" class="col-sm-6 col-md-3 col-md-offset-9 hidden">
+                            <div>
+                                <h4>Remove Maintainer</h4>
+                                <p>
+                                    <label for="remove_maintainer_form_user" class="required">Username</label>
+                                    
+                                    <select id="remove_maintainer_form_user" name="remove_maintainer_form[user]"><option value="139000">fomvasss</option></select>
+                                </p>
+                                <input type="hidden" id="remove_maintainer_form__token" name="remove_maintainer_form[_token]" value="2.gDKKQdsot7Lvuzfib-JHf60pCIVPY0lnAJIb_zBjM1s.8mDVJbdM4vWezAWnWrcNNNVuRbJ4MwEIR6siz3M5QBXrRf0DhGHR2rnSAw" />
+                                <input class="btn btn-block btn-danger btn-lg" type="submit" value="Remove Maintainer" />
+                            </div>
+                        </form>
+                                    </div>
             
                             <div class="row versions-section">
                     <div class="version-details col-md-9">
                                                     <div class="title">
-    <span class="version-number">4.8.0</span>
+    <span class="version-number">4.23.0</span>
 
-    <span class="release-date">2021-05-05 19:50 UTC</span>
+    <span class="release-date">2023-04-09 10:31 UTC</span>
 </div>
 
 <div class="clearfix package-links">
             <div class="row">
                             <div class="clearfix visible-sm-block"></div>                <div class="clearfix visible-md-block visible-lg-block"></div>                <div class="requires col-sm-6 col-md-4 ">
                     <p class="link-type">Requires</p>
-                                            <ul><li><a href="/packages/illuminate/http">illuminate/http</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/routing">illuminate/routing</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/session">illuminate/session</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/support">illuminate/support</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/illuminate/view">illuminate/view</a>: ^6.0|^7.0|^8.0</li><li><a href="/packages/laravelcollective/html">laravelcollective/html</a>: ^6.0</li></ul>
+                                            <ul><li><a href="/packages/illuminate/http">illuminate/http</a>: ^6.0|^7.0|^8.0|^9.0|^10.0</li><li><a href="/packages/illuminate/routing">illuminate/routing</a>: ^6.0|^7.0|^8.0|^9.0|^10.0</li><li><a href="/packages/illuminate/session">illuminate/session</a>: ^6.0|^7.0|^8.0|^9.0|^10.0</li><li><a href="/packages/illuminate/support">illuminate/support</a>: ^6.0|^7.0|^8.0|^9.0|^10.0</li><li><a href="/packages/illuminate/view">illuminate/view</a>: ^6.0|^7.0|^8.0|^9.0|^10.0</li><li><a href="/packages/laravelcollective/html">laravelcollective/html</a>: ^6.0</li></ul>
                                     </div>
                                                             <div class="devRequires col-sm-6 col-md-4 hidden-xs">
                     <p class="link-type">Requires (Dev)</p>
@@ -267,7 +288,7 @@
     </div>
 
 <div class="metadata">
-    <p class="license"><i class="glyphicon glyphicon-copyright-mark" title="License"></i> MIT <span class="source-reference"><i class="glyphicon glyphicon-bookmark" title="Source Reference"></i> 06b8fedaf684bdf9eae23ecaa3714d1cf755c8ed</span></p>
+    <p class="license"><i class="glyphicon glyphicon-copyright-mark" title="License"></i> MIT <span class="source-reference"><i class="glyphicon glyphicon-bookmark" title="Source Reference"></i> f653e2e3359c16d8d84d344b6acc4c0920c3f3cf</span></p>
 
             <i class="glyphicon glyphicon-user" title="Authors"></i>
         <ul class="authors">
@@ -277,7 +298,7 @@
     
             <p class="tags">
             <i class="glyphicon glyphicon-tag" title="Tags"></i>
-            <a href="https://packagist.org/search?tags=admin">admin</a><a href="https://packagist.org/search?tags=control">control</a><a href="https://packagist.org/search?tags=panel">panel</a><a href="https://packagist.org/search?tags=dashboard">dashboard</a><a href="https://packagist.org/search?tags=fields">fields</a><a href="https://packagist.org/search?tags=lte">lte</a></p>
+            <a href="https://packagist.org/search/?tags=admin">admin</a><a href="https://packagist.org/search/?tags=control">control</a><a href="https://packagist.org/search/?tags=panel">panel</a><a href="https://packagist.org/search/?tags=dashboard">dashboard</a><a href="https://packagist.org/search/?tags=fields">fields</a><a href="https://packagist.org/search/?tags=lte">lte</a></p>
     </div>
                                             </div>
                     <div class="col-md-3 no-padding">
@@ -293,7 +314,202 @@
 
                 
                             </li>
-                                <li class="details-toggler version open" data-version-id="4.8.0" data-load-more="/versions/5172469.json">
+                                <li class="details-toggler version open" data-version-id="4.23.0" data-load-more="/versions/7106048.json">
+                <a href="#4.23.0" class="version-number">4.23.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.22.2" data-load-more="/versions/7080623.json">
+                <a href="#4.22.2" class="version-number">4.22.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.22.1" data-load-more="/versions/7045117.json">
+                <a href="#4.22.1" class="version-number">4.22.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.22" data-load-more="/versions/7023729.json">
+                <a href="#4.22" class="version-number">4.22</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.21.0" data-load-more="/versions/6948182.json">
+                <a href="#4.21.0" class="version-number">4.21.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.20.0" data-load-more="/versions/6947507.json">
+                <a href="#4.20.0" class="version-number">4.20.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.19.0" data-load-more="/versions/6828631.json">
+                <a href="#4.19.0" class="version-number">4.19.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.18.4" data-load-more="/versions/6677251.json">
+                <a href="#4.18.4" class="version-number">4.18.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.18.3" data-load-more="/versions/6566151.json">
+                <a href="#4.18.3" class="version-number">4.18.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.18.2" data-load-more="/versions/6421587.json">
+                <a href="#4.18.2" class="version-number">4.18.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.18.1" data-load-more="/versions/6322910.json">
+                <a href="#4.18.1" class="version-number">4.18.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.18.0" data-load-more="/versions/5972570.json">
+                <a href="#4.18.0" class="version-number">4.18.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.17.2" data-load-more="/versions/5323701.json">
+                <a href="#4.17.2" class="version-number">4.17.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.17.1" data-load-more="/versions/5260798.json">
+                <a href="#4.17.1" class="version-number">4.17.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.17.0" data-load-more="/versions/5260663.json">
+                <a href="#4.17.0" class="version-number">4.17.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.16.4" data-load-more="/versions/5248968.json">
+                <a href="#4.16.4" class="version-number">4.16.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.16.3" data-load-more="/versions/5228665.json">
+                <a href="#4.16.3" class="version-number">4.16.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.16.2" data-load-more="/versions/5222338.json">
+                <a href="#4.16.2" class="version-number">4.16.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.16.1" data-load-more="/versions/5219832.json">
+                <a href="#4.16.1" class="version-number">4.16.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.16.0" data-load-more="/versions/5219256.json">
+                <a href="#4.16.0" class="version-number">4.16.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.15.4" data-load-more="/versions/5217516.json">
+                <a href="#4.15.4" class="version-number">4.15.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.15.3" data-load-more="/versions/5207739.json">
+                <a href="#4.15.3" class="version-number">4.15.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.15.2" data-load-more="/versions/5207663.json">
+                <a href="#4.15.2" class="version-number">4.15.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.15.1" data-load-more="/versions/5207466.json">
+                <a href="#4.15.1" class="version-number">4.15.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.15.0" data-load-more="/versions/5205933.json">
+                <a href="#4.15.0" class="version-number">4.15.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.14.1" data-load-more="/versions/5205526.json">
+                <a href="#4.14.1" class="version-number">4.14.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.14.0" data-load-more="/versions/5204725.json">
+                <a href="#4.14.0" class="version-number">4.14.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.13.4" data-load-more="/versions/5204080.json">
+                <a href="#4.13.4" class="version-number">4.13.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.13.3" data-load-more="/versions/5201674.json">
+                <a href="#4.13.3" class="version-number">4.13.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.13.2" data-load-more="/versions/5199826.json">
+                <a href="#4.13.2" class="version-number">4.13.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.13.1" data-load-more="/versions/5199652.json">
+                <a href="#4.13.1" class="version-number">4.13.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.13.0" data-load-more="/versions/5199639.json">
+                <a href="#4.13.0" class="version-number">4.13.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.12.0" data-load-more="/versions/5198217.json">
+                <a href="#4.12.0" class="version-number">4.12.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.11.0" data-load-more="/versions/5198031.json">
+                <a href="#4.11.0" class="version-number">4.11.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.10.1" data-load-more="/versions/5196226.json">
+                <a href="#4.10.1" class="version-number">4.10.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.10.0" data-load-more="/versions/5196056.json">
+                <a href="#4.10.0" class="version-number">4.10.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.9.2" data-load-more="/versions/5195533.json">
+                <a href="#4.9.2" class="version-number">4.9.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.9.1" data-load-more="/versions/5194442.json">
+                <a href="#4.9.1" class="version-number">4.9.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.9.0" data-load-more="/versions/5180190.json">
+                <a href="#4.9.0" class="version-number">4.9.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="4.8.0" data-load-more="/versions/5172469.json">
                 <a href="#4.8.0" class="version-number">4.8.0</a>
 
                 
@@ -518,6 +734,96 @@
 
                 
                             </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/minimist-and-mkdirp-1.2.8" data-load-more="/versions/7004282.json">
+                <a href="#dev-dependabot/npm_and_yarn/minimist-and-mkdirp-1.2.8" class="version-number">dev-dependabot/npm_and_yarn/minimist-and-mkdirp-1.2.8</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/global-modules-path-and-webpack-cli--removed" data-load-more="/versions/6863821.json">
+                <a href="#dev-dependabot/npm_and_yarn/global-modules-path-and-webpack-cli--removed" class="version-number">dev-dependabot/npm_and_yarn/global-modules-path-and-webpack-cli--removed</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/json5-1.0.2" data-load-more="/versions/6833275.json">
+                <a href="#dev-dependabot/npm_and_yarn/json5-1.0.2" class="version-number">dev-dependabot/npm_and_yarn/json5-1.0.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/qs-and-express-6.11.0" data-load-more="/versions/6775981.json">
+                <a href="#dev-dependabot/npm_and_yarn/qs-and-express-6.11.0" class="version-number">dev-dependabot/npm_and_yarn/qs-and-express-6.11.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/express-4.18.2" data-load-more="/versions/6775670.json">
+                <a href="#dev-dependabot/npm_and_yarn/express-4.18.2" class="version-number">dev-dependabot/npm_and_yarn/express-4.18.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/decode-uri-component-0.2.2" data-load-more="/versions/6759612.json">
+                <a href="#dev-dependabot/npm_and_yarn/decode-uri-component-0.2.2" class="version-number">dev-dependabot/npm_and_yarn/decode-uri-component-0.2.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/loader-utils-1.4.2" data-load-more="/versions/6705032.json">
+                <a href="#dev-dependabot/npm_and_yarn/loader-utils-1.4.2" class="version-number">dev-dependabot/npm_and_yarn/loader-utils-1.4.2</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/css-what-2.1.3" data-load-more="/versions/6609895.json">
+                <a href="#dev-dependabot/npm_and_yarn/css-what-2.1.3" class="version-number">dev-dependabot/npm_and_yarn/css-what-2.1.3</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/eventsource-1.1.1" data-load-more="/versions/6301087.json">
+                <a href="#dev-dependabot/npm_and_yarn/eventsource-1.1.1" class="version-number">dev-dependabot/npm_and_yarn/eventsource-1.1.1</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/url-parse-1.5.10" data-load-more="/versions/6009441.json">
+                <a href="#dev-dependabot/npm_and_yarn/url-parse-1.5.10" class="version-number">dev-dependabot/npm_and_yarn/url-parse-1.5.10</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/tar-4.4.19" data-load-more="/versions/5972579.json">
+                <a href="#dev-dependabot/npm_and_yarn/tar-4.4.19" class="version-number">dev-dependabot/npm_and_yarn/tar-4.4.19</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/color-string-1.9.0" data-load-more="/versions/5972578.json">
+                <a href="#dev-dependabot/npm_and_yarn/color-string-1.9.0" class="version-number">dev-dependabot/npm_and_yarn/color-string-1.9.0</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/follow-redirects-1.14.8" data-load-more="/versions/5963085.json">
+                <a href="#dev-dependabot/npm_and_yarn/follow-redirects-1.14.8" class="version-number">dev-dependabot/npm_and_yarn/follow-redirects-1.14.8</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/ajv-6.12.6" data-load-more="/versions/5962501.json">
+                <a href="#dev-dependabot/npm_and_yarn/ajv-6.12.6" class="version-number">dev-dependabot/npm_and_yarn/ajv-6.12.6</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/path-parse-1.0.7" data-load-more="/versions/5433334.json">
+                <a href="#dev-dependabot/npm_and_yarn/path-parse-1.0.7" class="version-number">dev-dependabot/npm_and_yarn/path-parse-1.0.7</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/dns-packet-1.3.4" data-load-more="/versions/5242014.json">
+                <a href="#dev-dependabot/npm_and_yarn/dns-packet-1.3.4" class="version-number">dev-dependabot/npm_and_yarn/dns-packet-1.3.4</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/browserslist-4.16.6" data-load-more="/versions/5233800.json">
+                <a href="#dev-dependabot/npm_and_yarn/browserslist-4.16.6" class="version-number">dev-dependabot/npm_and_yarn/browserslist-4.16.6</a>
+
+                
+                            </li>
+                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/lodash-4.17.21" data-load-more="/versions/5187259.json">
+                <a href="#dev-dependabot/npm_and_yarn/lodash-4.17.21" class="version-number">dev-dependabot/npm_and_yarn/lodash-4.17.21</a>
+
+                
+                            </li>
                                 <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/ssri-6.0.2" data-load-more="/versions/5124872.json">
                 <a href="#dev-dependabot/npm_and_yarn/ssri-6.0.2" class="version-number">dev-dependabot/npm_and_yarn/ssri-6.0.2</a>
 
@@ -540,11 +846,6 @@
                             </li>
                                 <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/http-proxy-1.18.1" data-load-more="/versions/4440400.json">
                 <a href="#dev-dependabot/npm_and_yarn/http-proxy-1.18.1" class="version-number">dev-dependabot/npm_and_yarn/http-proxy-1.18.1</a>
-
-                
-                            </li>
-                                <li class="details-toggler version" data-version-id="dev-dependabot/npm_and_yarn/lodash-4.17.19" data-load-more="/versions/4279232.json">
-                <a href="#dev-dependabot/npm_and_yarn/lodash-4.17.19" class="version-number">dev-dependabot/npm_and_yarn/lodash-4.17.19</a>
 
                 
                             </li>
@@ -576,7 +877,7 @@
 
     <div class="last-update">
                     <p class="auto-update-success">This package is auto-updated.</p>
-                <p>Last update: 2021-05-06 21:27:57 UTC </p>
+                <p>Last update: 2023-05-09 10:41:54 UTC </p>
             </div>
                     </div>
                 </div>
@@ -619,11 +920,11 @@
 
 <span class="pl-k">return</span> [
 
-    <span class="pl-s">'title'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'APP_NAME'</span>, <span class="pl-s">''</span>) . <span class="pl-s">' - Dashboard'</span>,
+    <span class="pl-s">'title'</span> =&gt; env(<span class="pl-s">'APP_NAME'</span>, <span class="pl-s">''</span>) . <span class="pl-s">' - Dashboard'</span>,
 
-    <span class="pl-s">'logo'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'LTE_LOGO'</span>, <span class="pl-s">'&lt;b&gt;ITS&lt;/b&gt;LTE'</span>),
+    <span class="pl-s">'logo'</span> =&gt; env(<span class="pl-s">'LTE_LOGO'</span>, <span class="pl-s">'&lt;b&gt;ITS&lt;/b&gt;LTE'</span>),
 
-    <span class="pl-s">'logo_mini'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'LTE_LOGO_MINI'</span>, <span class="pl-s">'&lt;b&gt;IT&lt;/b&gt;LT'</span>),
+    <span class="pl-s">'logo_mini'</span> =&gt; env(<span class="pl-s">'LTE_LOGO_MINI'</span>, <span class="pl-s">'&lt;b&gt;IT&lt;/b&gt;LT'</span>),
 
     <span class="pl-c">/*</span>
 <span class="pl-c">     * Dashboard home page path</span>
@@ -685,8 +986,8 @@
 <span class="pl-c">         */</span>
         <span class="pl-s">'aside_menu'</span> =&gt; [
             <span class="pl-s">'static'</span> =&gt; <span class="pl-c1">false</span>,
-            <span class="pl-s">'static_example'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'APP_ENV'</span>) !== <span class="pl-s">'production'</span>,
-            <span class="pl-s">'lte'</span> =&gt; <span class="pl-en">env</span>(<span class="pl-s">'APP_ENV'</span>) !== <span class="pl-s">'production'</span>,
+            <span class="pl-s">'static_example'</span> =&gt; env(<span class="pl-s">'APP_ENV'</span>) !== <span class="pl-s">'production'</span>,
+            <span class="pl-s">'lte'</span> =&gt; env(<span class="pl-s">'APP_ENV'</span>) !== <span class="pl-s">'production'</span>,
         ],
 
         <span class="pl-s">'aside_auth_user_info'</span> =&gt; <span class="pl-c1">false</span>,
@@ -699,7 +1000,7 @@
     ],
 ];</pre>
 <p>In dashboard used Bootstrap styles and for correct show pagination links, set next in service provider</p>
-<pre><code>    public function boot()
+<pre class="notranslate"><code>    public function boot()
     {
         //...
         Paginator::useBootstrap();
@@ -707,7 +1008,7 @@
     }
 </code></pre>
 <p>For correct work navigation in dashboard, apply next middleware for routes to dashboard:</p>
-<pre><code>\Fomvasss\ItsLte\Http\Middleware\ApplyRequestOptions::class,
+<pre class="notranslate"><code>\Fomvasss\ItsLte\Http\Middleware\ApplyRequestOptions::class,
 </code></pre>
 <h2><a id="user-content-structure" class="anchor" href="#user-content-structure" rel="nofollow noindex noopener external ugc"></a>Structure</h2>
 <p>After installation, you can work with the following files:</p>
@@ -729,12 +1030,10 @@
 <h3><a id="user-content-laravel-file-manager-v2" class="anchor" href="#user-content-laravel-file-manager-v2" rel="nofollow noindex noopener external ugc"></a>Laravel File Manager (v2)</h3>
 <p>If needed, install <a href="https://github.com/UniSharp/laravel-filemanager" rel="nofollow noindex noopener external ugc">LFM</a>:</p>
 <pre>composer require unisharp/laravel-filemanager</pre>
-<p>Publish LFM files:</p>
-<ul>
-<li><code>config/lfm.php</code></li>
-<li><code>public/vendor/laravel-filemanager</code>
-Recommend set LFM paths <code>config/lfm.php</code>:</li>
-</ul>
+<p>Publish LFM files: <code>config/lfm.php</code>, <code>public/vendor/laravel-filemanager</code>:</p>
+<pre>php artisan vendor:publish --tag=lfm_config
+php artisan vendor:publish --tag=lfm_public</pre>
+<p>Recommend set LFM paths <code>config/lfm.php</code>:</p>
 <pre>    <span class="pl-s">'shared_folder_name'</span> =&gt; <span class="pl-s">'shares'</span>,
     <span class="pl-c">//...</span>
     <span class="pl-s">'folder_categories'</span> =&gt; [
@@ -805,25 +1104,14 @@ Recommend set LFM paths <code>config/lfm.php</code>:</li>
             </nav>
         </footer>
 
-        <script>
+        <script nonce="pxjeRmkVWOo6q2YZ5i7EYw==">
             var algoliaConfig = {"app_id":"M58222SH95","search_key":"5ae4d03c98685bd7364c2e0fd819af05","index_name":"packagist"};
+                        window.process = {
+                env: { DEBUG: undefined },
+            };
         </script>
+        
+        <script nonce="pxjeRmkVWOo6q2YZ5i7EYw==" src="/build/app.js?v=1683464082"></script>
 
-        <script src="/libs/jquery-2.1.4.min.js?v=1620329792"></script>
-        <script src="/libs/humane-3.2.2.min.js?v=1620329792"></script>
-        <script src="/js/layout.js?v=1620329792"></script>
-        <script src="/libs/bootstrap-3.3.5/js/bootstrap.min.js?v=1620329792"></script>
-        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.7.4/dist/instantsearch.min.js"></script>
-        <script src="/js/search.js?v=1620329792"></script>        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('set', 'anonymizeIp', true);
-            ga('create', 'UA-26723099-1', 'auto');
-            ga('send', 'pageview');
-        </script>
-            <script src="/js/view.js?v=1620329792"></script>
-    </body>
+            </body>
 </html>

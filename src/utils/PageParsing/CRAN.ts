@@ -16,42 +16,28 @@
 
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
+import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 /*
-  https://ossindex.sonatype.org/api/v3/component-report/cran%3AA3%400.0.1
   https://cran.r-project.org/
   https://cran.r-project.org/web/packages/latte/index.html
-  https://cran.r-project.org/package=clustcurv
 */
 const parseCRAN = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  let name;
-  let version;
-  if (elements.length > 5) {
-    name = elements[5];
-  } else if (elements.length > 3) {
-    const pckg = 'package=';
-    name = elements[3];
-    if (name.search(pckg) >= 0) {
-      name = name.substr(pckg.length);
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.cranRProject)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)      
+      if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
+        const version = $(repoType.versionDomPath).first().text().trim();
+        return generatePackageURL(FORMATS.cran, encodeURIComponent(pathResult.groups.artifactId), version)
+      }
     }
   } else {
-    name = $('h2').text();
-    if (name.search(':') >= 0) {
-      name = name.substring(0, name.search(':'));
-    }
+    console.error('Unable to determine REPO TYPE.')
   }
-
-  const found = $('table tr:nth-child(1) td:nth-child(2)').first().text();
-  if (typeof found !== 'undefined') {
-    version = found.trim();
-    name = encodeURIComponent(name);
-    version = encodeURIComponent(version);
-
-    return generatePackageURL(FORMATS.cran, name, version);
-  }
-
+  
   return undefined;
 };
 

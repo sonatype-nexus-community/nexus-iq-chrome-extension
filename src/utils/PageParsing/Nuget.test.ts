@@ -16,33 +16,75 @@
 import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
+import {REPOS, REPO_TYPES} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
+import {ensure} from '../Helpers';
 
 describe('Nuget Page Parsing', () => {
-  test('should parse a valid Nuget page', () => {
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.nugetOrg)
+  expect(repoType).toBeDefined()
+
+  test('Should parse Nuget page /Newtonsoft.Json', () => {
     const html = readFileSync(join(__dirname, 'testdata/nuget.html'));
 
     window.document.body.innerHTML = html.toString();
 
-    const rt: RepoType = {
-      url: '',
-      repoFormat: FORMATS.nuget,
-      repoID: REPOS.nugetOrg,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
-      appendVersionPath: ''
-    };
-
     const PackageURL = getArtifactDetailsFromDOM(
-      rt,
-      'https://www.nuget.org/packages/Newtonsoft.Json/13.0.1'
+      ensure(repoType),
+      'https://www.nuget.org/packages/Newtonsoft.Json'
     );
 
     expect(PackageURL).toBeDefined();
     expect(PackageURL?.type).toBe('nuget');
     expect(PackageURL?.name).toBe('Newtonsoft.Json');
     expect(PackageURL?.version).toBe('13.0.1');
+  });
+
+  test('Should parse Nuget page /Newtonsoft.Json/13.0.3', () => {
+    const html = readFileSync(join(__dirname, 'testdata/nuget.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType),
+      'https://www.nuget.org/packages/Newtonsoft.Json/13.0.3'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe('nuget');
+    expect(PackageURL?.name).toBe('Newtonsoft.Json');
+    expect(PackageURL?.version).toBe('13.0.3');
+  });
+
+  test('Should parse Nuget page /Newtonsoft.Json/13.0.3/', () => {
+    const html = readFileSync(join(__dirname, 'testdata/nuget.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType),
+      'https://www.nuget.org/packages/Newtonsoft.Json/13.0.3/'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe('nuget');
+    expect(PackageURL?.name).toBe('Newtonsoft.Json');
+    expect(PackageURL?.version).toBe('13.0.3');
+  });
+
+  test('Should parse Nuget page /Newtonsoft.Json/12.0.0?query#fragment', () => {
+    const html = readFileSync(join(__dirname, 'testdata/nuget.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      ensure(repoType),
+      'https://www.nuget.org/packages/Newtonsoft.Json/12.0.0'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe('nuget');
+    expect(PackageURL?.name).toBe('Newtonsoft.Json');
+    expect(PackageURL?.version).toBe('12.0.0');
   });
 });

@@ -45,4 +45,56 @@ describe('CRAN Page Parsing', () => {
     expect(PackageURL?.name).toBe('oysteR');
     expect(PackageURL?.version).toBe('0.1.1');
   });
+
+  test('should parse a valid CRAN page with query string', () => {
+    const html = readFileSync(join(__dirname, 'testdata/cran.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const rt: RepoType = {
+      url: '',
+      repoFormat: FORMATS.cran,
+      repoID: REPOS.cranRProject,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.OSSINDEX,
+      appendVersionPath: ''
+    };
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      rt,
+      'https://cran.r-project.org/web/packages/oysteR/index.html?something=else'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe(FORMATS.cran);
+    expect(PackageURL?.name).toBe('oysteR');
+    expect(PackageURL?.version).toBe('0.1.1');
+  });
+  
+  test('should parse a valid CRAN page with query string and fragment', () => {
+    const html = readFileSync(join(__dirname, 'testdata/cran.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const rt: RepoType = {
+      url: '',
+      repoFormat: FORMATS.cran,
+      repoID: REPOS.cranRProject,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.OSSINDEX,
+      appendVersionPath: ''
+    };
+
+    const PackageURL = getArtifactDetailsFromDOM(
+      rt,
+      'https://cran.r-project.org/web/packages/oysteR/index.html?something=else#anchor'
+    );
+
+    expect(PackageURL).toBeDefined();
+    expect(PackageURL?.type).toBe(FORMATS.cran);
+    expect(PackageURL?.name).toBe('oysteR');
+    expect(PackageURL?.version).toBe('0.1.1');
+  });
 });

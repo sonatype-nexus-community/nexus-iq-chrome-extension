@@ -16,31 +16,33 @@
 //https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar
 //"purl": "pkg:maven/org.apache.struts/struts2-core/2.3.30/jar",
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
+import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
 import {generatePackageURLComplete} from './PurlUtils';
 
 //pkg:type/namespace/name@version?qualifiers#subpath
-const parseCentralSonatypeDev = (url: string): PackageURL | undefined => {
-  console.info('Parsing CentralSonatypeDev');
-  const elements = url.split('/');
-  if (elements.length >= 7) {
-    const group = encodeURIComponent(elements[4]);
-    const artifact = encodeURIComponent(elements[5]);
-    const version = encodeURIComponent(elements[6]);
-    let qualifiers: Record<string, string>;
-    if (elements.length == 8 && elements[7] !== '') {
-      qualifiers = {type: elements[7]};
-    } else {
-      qualifiers = {type: 'jar'}; //main.js:79307 Error: Error: The following coordinates are missing for given format: [type]
+const parseCentralSonatypeCom = (url: string): PackageURL | undefined => {
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.centralSonatypeCom)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)      
+      if (pathResult && pathResult.groups) {
+        return generatePackageURLComplete(
+          FORMATS.maven, 
+          encodeURIComponent(pathResult.groups.artifactId), 
+          encodeURIComponent(pathResult.groups.version), 
+          encodeURIComponent(pathResult.groups.groupId), 
+          {type: 'jar'}, 
+          undefined
+        )
+      }
     }
-    const subpath = undefined;
-    const format: string = FORMATS.maven;
-    const purl = generatePackageURLComplete(format, artifact, version, group, qualifiers, subpath);
-    console.info('Generated PURL: ' + purl);
-    return purl;
+  } else {
+    console.error('Unable to determine REPO TYPE.')
   }
-
+  
   return undefined;
 };
 
-export {parseCentralSonatypeDev};
+export {parseCentralSonatypeCom};
