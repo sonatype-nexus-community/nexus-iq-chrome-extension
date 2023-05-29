@@ -16,59 +16,35 @@
 
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import {generatePackageURL, generatePackageURLWithNamespace} from './PurlUtils';
+import {generatePackageURLWithNamespace} from './PurlUtils';
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants';
+import {stripHtmlComments} from '../Helpers'
 
 const parseNPM = (url: string): PackageURL | undefined => {
-  if (url && url.search('/v/') > 0) {
-    const urlElements = url.split('/');
-    const name: string = urlElements[4];
-    const version: string = urlElements[6];
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.npmJs)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)
+      if (pathResult && pathResult.groups) {
+        console.debug(`"${stripHtmlComments($(repoType.versionDomPath).text())}"`)
+        const pageVersion = stripHtmlComments($(repoType.versionDomPath).text()).split('•')[0].trim()
 
-    return npmNameOrNamespace(name, version);
-  } else {
-    const found = $('h2 span');
-
-    if (typeof found !== 'undefined') {
-      const name = found.text().trim();
-
-      const newV = $('h2').next('span');
-
-      if (typeof newV !== 'undefined') {
-        const newVText = newV.text().trim();
-
-        const findnbsp = newVText.search(' ');
-
-        if (findnbsp >= 0) {
-          return npmNameOrNamespace(name, newVText.substring(0, findnbsp));
-        }
-
-        const findNbsp = newVText.search(String.fromCharCode(160));
-
-        if (findNbsp >= 0) {
-          return npmNameOrNamespace(name, newVText.substring(0, findNbsp));
-        }
-
-        return npmNameOrNamespace(name, newVText);
+        return generatePackageURLWithNamespace(
+          FORMATS.npm,
+          pathResult.groups.artifactId,
+          (pathResult.groups.version !== undefined ? pathResult.groups.version : pageVersion),
+          pathResult.groups.groupId
+        )
       }
     }
+  } else {
+    console.error('Unable to determine REPO TYPE.')
   }
-
+  
   return undefined;
-};
 
-const npmNameOrNamespace = (name: string, version: string): PackageURL => {
-  if (name.includes('/')) {
-    const namespaceAndName = name.split('/');
-
-    return generatePackageURLWithNamespace(
-      'npm',
-      namespaceAndName[1],
-      version,
-      namespaceAndName[0]
-    );
-  }
-
-  return generatePackageURL('npm', name, version);
 };
 
 export {parseNPM};

@@ -15,32 +15,41 @@
 
 ## Purpose
 
-To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Nexus Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, which means you must be licensed to use this plugin, but will use Sonatype's OSS Index if you do not!
+To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, or you can use Sonatype's OSS Index for free if you do not have access to a licensed installation of [Sonatype Lifecycle](https://www.sonatype.com/nexus-lifecycle).
 
-The plugin can scan packages at the following repositories:
+## Package Ecosystem Support
 
-1. .Net – NuGet – `https://www.nuget.org/`
-2. Alpine – Linux – `https://pkgs.alpinelinux.org/`
+The plugin works on the following open source registry sites.
+
+
+| Registry       | Language Group | URL            | Sonatype Lifecycle | Sonatype OSS Index |
+|----------------|----------------|----------------|----------------|----------------|
+| Alpine Linux | Alpine Linux | `https://pkgs.alpinelinux.org/` | ✅ | ❌ |
+| CRAN | R | `https://cran.r-project.org` | ✅ | ❌ |
+| Maven Central | Java | `https://central.sonatype.com/` | ✅ | ✅ |
+| Maven Central (old) | Java | `https://search.maven.org/` | ✅ | ✅ |
+| MVN Repository | Java | `https://mvnrepository.com/` | ✅ | ✅ |
+| NPM JS | Javascript | `https://www.npmjs.com/` | ✅ | ✅ |
+| NuGet Gallery | .NET | `https://www.nuget.org/` | ✅ | ✅ |
+| Packagist | PHP | `https://packagist.org/` | ✅ | ✅ |
+| PyPI | Python | `https://pypi.org/` | ✅ | ✅ |
+| RubGems | Ruby | `https://rubygems.org/` | ✅ | ✅ |
+
+
+
 5. CocoaPods – iOS – `https://cocoapods.org/`
 6. Conan – C/C++ – `https://conan.io/center/`
 7. Conda – Python – `https://anaconda.org/anaconda/`
 8. Debian – Linux – `https://packages.debian.org/`
 9. Debian – Linux – `https://tracker.debian.org/pkg/`
 11. Golang – Go – `https://search.gocenter.io/`
-12. Java – Maven – `https://mvnrepository.com/`
 13. Java – Maven – `https://repo.maven.apache.org/`
 14. Java – Maven – `https://repo.spring.io/list/`
 15. Java – Maven – `https://repo1.maven.org/`
-16. Java – Maven – `https://search.maven.org/`
-17. JavaScript/Node – npm – `https://www.npmjs.com/`
-18. PHP – Packagist/composer – `https://packagist.org/`
-19. Python – PyPI – `https://pypi.org/`
-20. R – CRAN – `https://cran.r–project.org/`
-21. Ruby – RubyGems – `https://rubygems.org/`
-22. Rust – Crates – `https://crates.io/`
-23. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-24. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
-25. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+16. Rust – Crates – `https://crates.io/`
+17. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+18. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+19. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Development
 

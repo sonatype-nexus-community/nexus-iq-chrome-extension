@@ -13,31 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar
-//"purl": "pkg:maven/org.apache.struts/struts2-core/2.3.30/jar",
+
+import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
+import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
 import {generatePackageURLComplete} from './PurlUtils';
 
 // TODO: Handle the bundle extension
 //pkg:type/namespace/name@version?qualifiers#subpath
 const parseSearchMavenOrg = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  if (elements.length >= 7) {
-    const group = encodeURIComponent(elements[4]);
-    const artifact = encodeURIComponent(elements[5]);
-    const version = encodeURIComponent(elements[6]);
-    let qualifiers: {};
-    if (elements.length == 8 && elements[7]) {
-      qualifiers = {type: elements[7]};
-    } else {
-      qualifiers = {type: 'jar'}; //main.js:79307 Error: Error: The following coordinates are missing for given format: [type]
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.searchMavenOrg)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)      
+      if (pathResult && pathResult.groups) {
+        console.debug($(repoType.versionDomPath))
+        const pageVersion = $(repoType.versionDomPath).text().trim()
+        console.debug(`URL Version: ${pathResult.groups.version}, Page Version: ${pageVersion}`)
+        return generatePackageURLComplete(
+          FORMATS.maven,
+          encodeURIComponent(pathResult.groups.artifactId),
+          (pathResult.groups.version !== undefined ? pathResult.groups.version : pageVersion),
+          encodeURIComponent(pathResult.groups.groupId),
+          {
+            type:  (pathResult.groups.type !== undefined ? pathResult.groups.type : 'jar')
+          },
+          undefined
+        )
+      }
     }
-    const subpath = undefined;
-    const format: string = FORMATS.maven;
-    return generatePackageURLComplete(format, artifact, version, group, qualifiers, subpath);
+  } else {
+    console.error('Unable to determine REPO TYPE.')
   }
-
+  
   return undefined;
 };
 

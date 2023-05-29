@@ -35,7 +35,7 @@ SAVETEXT.txt
 yarn.lock
 
 # Sonatype IQ Config
-#.sonatype-config
+.sonatype-config
 
 
 # CI (local config)

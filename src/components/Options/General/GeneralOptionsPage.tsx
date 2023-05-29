@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useEffect, useState} from 'react';
+import {LogLevel} from '@sonatype/js-sona-types';
 import {
   NxFormGroup,
   NxFormSelect,
   nxFormSelectStateHelpers
 } from '@sonatype/react-shared-components';
-import {LogLevel} from '@sonatype/js-sona-types';
+import React, {useEffect, useState} from 'react';
 
 const LOG_LEVEL = 'logLevel';
 
@@ -32,7 +32,7 @@ const GeneralOptionsPage = (): JSX.Element | null => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[LOG_LEVEL]) {
+      if (items[LOG_LEVEL] !== undefined) {
         setLogLevel(items[LOG_LEVEL]);
       }
       setLoading(false);

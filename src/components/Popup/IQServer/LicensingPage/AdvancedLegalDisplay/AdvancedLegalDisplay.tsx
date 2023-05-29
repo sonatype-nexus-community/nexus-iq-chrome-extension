@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxButton, NxFontAwesomeIcon, NxH4, NxList} from '@sonatype/react-shared-components';
-import {faCopy} from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
+import {faCopy} from '@fortawesome/free-solid-svg-icons';
+import {NxButton, NxFontAwesomeIcon, NxH3, NxList} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
 
@@ -32,12 +32,12 @@ const AdvancedLegalDisplay = (): JSX.Element => {
         <React.Fragment>
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              <NxH4>Copy License Text</NxH4>
+              <NxH3>Copy License Text</NxH3>
               <NxList>
                 {nexusContext.licenseDetails.component.licenseLegalData.licenseFiles.map(
-                  (licenses) => {
+                  (licenses, index) => {
                     return (
-                      <NxList.Item key={licenses.id}>
+                      <NxList.Item key={`${licenses.id}_${index}`}>
                         <NxList.Text>{licenses.relPath}</NxList.Text>
                         <NxList.Actions>
                           <NxButton
@@ -53,7 +53,7 @@ const AdvancedLegalDisplay = (): JSX.Element => {
                   }
                 )}
               </NxList>
-              <NxH4>Copyright Statements</NxH4>
+              <NxH3>Copyright Statements</NxH3>
               <NxList>
                 {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(
                   (copyrights) => {
@@ -70,7 +70,7 @@ const AdvancedLegalDisplay = (): JSX.Element => {
         </React.Fragment>
       );
     }
-    return null;
+    return <React.Fragment>ALP not available.</React.Fragment>;
   };
 
   return renderLegalDisplay(nexusContext);

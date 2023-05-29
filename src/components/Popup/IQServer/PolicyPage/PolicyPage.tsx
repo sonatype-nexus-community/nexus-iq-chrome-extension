@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import PolicyViolation from './PolicyViolation/PolicyViolation';
 import './PolicyPage.css';
+import PolicyViolation from './PolicyViolation/PolicyViolation';
 
 const PolicyPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
+
+  const [iqServerUrl, setIqServerUrl] = useState('');
+
+  useEffect(() => {
+    chrome.storage.local.get('iqServerURL', function (result) {
+      console.log(`get local storage result: ${result.iqServerURL}`);
+      setIqServerUrl(result.iqServerURL);
+    });
+  });
 
   const renderPolicyViolation = (nexusContext: NexusContextInterface | undefined) => {
     if (
       nexusContext &&
       nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
-      nexusContext.policyDetails.results[0].policyData &&
-      nexusContext.policyDetails.results[0].policyData.policyViolations
+      nexusContext.policyDetails.results.length > 0
     ) {
       return (
         <React.Fragment>
@@ -44,13 +50,13 @@ const PolicyPage = (): JSX.Element | null => {
                   </tr>
                 </thead>
                 <tbody>
-                  {' '}
                   {nexusContext.policyDetails.results[0].policyData.policyViolations.map(
-                    (violation) => {
+                    (violation,index) => {
                       return (
                         <PolicyViolation
-                          key={violation.policyId}
+                          key={`violation${index}`}
                           policyViolation={violation}
+                          iqServerUrl={iqServerUrl}
                         ></PolicyViolation>
                       );
                     }

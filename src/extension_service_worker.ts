@@ -15,20 +15,19 @@
  */
 /// <reference lib="webworker" />
 
-import 'node-window-polyfill/register';
+import 'node-window-polyfill/register'; // New line ensures this Polyfill is first!
+
 import {
   ComponentDetails,
   IqRequestService,
   LogLevel,
   OSSIndexRequestService
 } from '@sonatype/js-sona-types';
+import localforage from 'localforage';
 import {PackageURL} from 'packageurl-js';
 import BrowserExtensionLogger from './logger/Logger';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import localforage from 'localforage';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
 
 const logger = new BrowserExtensionLogger(LogLevel.ERROR);
@@ -50,6 +49,7 @@ interface Settings {
 }
 
 const getSettings = async (): Promise<Settings> => {
+  console.log("getSettings in extension_service_worker");
   const promise = new Promise<Settings>((resolve) => {
     _browser.storage.local.get(
       [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
@@ -112,47 +112,61 @@ const handleURLIQServer = (purl: string, settings: Settings): Promise<ComponentD
       version: manifestData.version
     });
 
-    requestService
-      .loginViaRest()
+      requestService.loginViaRest()
       .then((loggedIn) => {
         if (loggedIn) {
-          logger.logMessage('Logged in to Nexus IQ Server via service worker', LogLevel.INFO);
+          logger.logMessage('Logged in to Sonatype IQ Server via service worker', LogLevel.INFO);
           _doRequestToIQServer(requestService, purl)
             .then((res) => {
               resolve(res);
             })
             .catch((err) => {
-              console.log(err);
+              logger.logMessage('Unable to login to Sonatype IQ server via service worker', LogLevel.ERROR, err.message);
+              console.error('Unable to login to Sonatype IQ server via service worker', err.message);
               throw new Error(err);
             });
+        } else {
+          console.error('Unable to login to Sonatype IQ server via service worker: ', settings);
         }
       })
       .catch((err) => {
-        console.log(err);
+        logger.logMessage('Error in requestService login', LogLevel.ERROR, err.message);
         throw new Error(err);
       });
   });
 };
 
-const _doRequestToIQServer = (
-  requestService: IqRequestService,
-  purl: string
-): Promise<ComponentDetails> => {
+const setCSRFTokenCookie = async (host: string): Promise<string> => {
+  console.info('setting csrf token cookie: ', host);
   return new Promise((resolve) => {
-    chrome.cookies.getAll({name: 'CLM-CSRF-TOKEN'}, (cookies) => {
-      if (cookies && cookies.length > 0) {
-        requestService.setXCSRFToken(cookies[0].value);
-      }
-      const purlObj = PackageURL.fromString(purl);
-      requestService
-        .getComponentDetails([purlObj])
-        .then((details) => {
-          resolve(details);
-        })
-        .catch((err) => {
-          console.log(err);
-          throw new Error(err);
-        });
+    chrome.cookies.set({
+      url: host,
+      name: 'CLM-CSRF-TOKEN',
+      value: 'api'}, (success) => {
+      console.log('Cookie set:', success);
+      resolve('api');
+    });
+  });
+};
+
+const _doRequestToIQServer = (requestService: IqRequestService, purl: string): Promise<ComponentDetails> => {
+  return new Promise((resolve) => {
+
+    setCSRFTokenCookie(requestService.options.host as string)
+        .then(async (token) => {
+          requestService.setXCSRFToken(token);
+
+    const purlObj = PackageURL.fromString(purl);
+
+    requestService
+      .getComponentDetails([purlObj])
+      .then((details) => {
+        resolve(details);
+      })
+      .catch((err) => {
+        logger.logMessage('Error: Unable to complete request to IQ server', LogLevel.ERROR, err.message);
+        throw new Error(err);
+      });
     });
   });
 };
@@ -165,6 +179,7 @@ const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
       sendNotificationAndMessage(purl, componentDetails);
     })
     .catch((err) => {
+      logger.logMessage('Error: Unable to handle OSS Index wrapper', LogLevel.ERROR, err.message);
       throw new Error(err);
     });
 };
@@ -172,24 +187,25 @@ const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
 const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => {
   if (
     // details.componentDetails &&
-    // details.componentDetails?.length > 0 &&
-    // details.componentDetails[0].securityData &&
+    details.componentDetails.length > 0 &&
+    details.componentDetails[0].securityData !== undefined &&
+    details.componentDetails[0].securityData !== null &&
     // details.componentDetails[0].securityData.securityIssues &&
     details.componentDetails[0].securityData.securityIssues?.length > 0
   ) {
     getActiveTabId()
       .then((tabId) => {
-        chrome.action.setIcon({tabId: tabId, path: '/images/NexusLifecycle_Vulnerable.png'});
+        chrome.action.setIcon({tabId: tabId, path: '/images/sonatype-lifecycle-icon_Vulnerable.png'});
       })
       .catch((err) => {
-        logger.logMessage('Error encountered', LogLevel.ERROR, err);
+        logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
       });
 
     logger.logMessage('Sending notification that component is vulnerable', LogLevel.INFO);
     chrome.notifications.create(
       {
         title: `Sonatype Scan Results - ${purl}`,
-        iconUrl: '/images/NexusLifecycle_Vulnerable.png',
+        iconUrl: '/images/sonatype-lifecycle-icon_Vulnerable.png',
         type: 'basic',
         message: 'Vulnerabilities have been found in this version',
         priority: 1,
@@ -209,11 +225,11 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
       .then((tabId) => {
         chrome.action.setIcon({
           tabId: tabId,
-          path: '/images/NexusLifecycle_Icon_white_color-32x32.png'
+          path: '/images/sonatype-lifecycle-icon-white-32x32.png'
         });
       })
       .catch((err) => {
-        logger.logMessage('Error encountered', LogLevel.ERROR, err);
+        logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
       });
   }
 
@@ -225,15 +241,17 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
       });
     })
     .catch((err) => {
-      logger.logMessage('Error encountered', LogLevel.ERROR, err);
+      logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
     });
 };
 
 const getActiveTabId = (): Promise<number> => {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      if (tabs && tabs.length > 0 && tabs[0].id) {
-        resolve(tabs[0].id);
+      const tab = tabs.length > 0 ? tabs[0] : undefined;
+      const tabId = tab?.id !== undefined ? tab.id : undefined;
+      if (tab !== undefined && tabId !== undefined) {
+        resolve(tabId);
       } else {
         reject('No valid tab');
       }
@@ -252,14 +270,16 @@ const toggleIcon = (show: boolean) => {
         }
       })
       .catch((err) => {
+        logger.logMessage('Unable to get active tab id', LogLevel.ERROR, err.message);
         throw new Error(err);
       });
   } catch (err) {
-    logger.logMessage('Error encountered', LogLevel.ERROR, err);
+    logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
   }
 };
 
 const handleIQServerWrapper = (purl: string, settings: Settings) => {
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (settings.host && settings.token && settings.application && settings.user) {
     logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
 
@@ -274,14 +294,22 @@ const handleIQServerWrapper = (purl: string, settings: Settings) => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   logger.logMessage('Request received', LogLevel.INFO, request);
+  console.info('Message received: ', request);
 
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (request && request.type) {
     if (request.type === 'getArtifactDetailsFromPurl') {
-      logger.logMessage('Getting settings', LogLevel.INFO);
+      logger.logMessage('Getting settings in getArtifactDetailsFromPurl', LogLevel.INFO);
+      console.info('Getting settings in getArtifactDetailsFromPurl');
       getSettings()
         .then((settings: Settings) => {
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
+            console.error('Unable to get settings need to make IQ connection: ', settings);
+          }
           if (settings.logLevel) {
             logger.setLevel(settings.logLevel as unknown as LogLevel);
           }
@@ -294,11 +322,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               handleOSSIndexWrapper(request.purl, settings);
             }
           } catch (err) {
-            logger.logMessage('Error encountered', LogLevel.ERROR, err);
+            logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
+            console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
+
           }
         })
         .catch((err) => {
-          logger.logMessage('Error encountered', LogLevel.ERROR, err);
+          logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
+          console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
         });
     }
     if (request.type === 'togglePage') {
@@ -309,15 +340,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    chrome.tabs.create({url: 'options.html?install'});
+    chrome.tabs.create({url: 'options.html?install'})
   } else if (details.reason === 'update') {
+    /* empty */
   } else if (details.reason === 'chrome_update') {
+    /* empty */
   } else if (details.reason === 'shared_module_update') {
+    /* empty */
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url) {
+  if (changeInfo.url !== '') {
     chrome.tabs.sendMessage(tabId, {
       type: 'changedURLOnPage',
       url: changeInfo.url

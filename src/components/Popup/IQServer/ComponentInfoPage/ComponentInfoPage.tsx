@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext} from 'react';
+import {PolicyData} from '@sonatype/js-sona-types';
 import {
-  NxTextLink,
-  NxP,
-  NxPolicyViolationIndicator,
-  ThreatLevelNumber,
   NxDescriptionList,
   NxGrid,
+  NxP,
+  NxPolicyViolationIndicator,
+  NxTextLink,
   NxTooltip,
-  NxButton
+  ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import {PolicyData, SecurityData} from '@sonatype/js-sona-types';
+import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {DATA_SOURCES} from '../../../../utils/Constants';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat';
-import {DATA_SOURCES} from '../../../../utils/Constants';
 import './ComponentInfoPage.css';
 
 const ComponentInfoPage = (): JSX.Element | null => {
@@ -45,8 +44,10 @@ const ComponentInfoPage = (): JSX.Element | null => {
 
   // TODO: Give the correct coordinate labels based on package type
   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext.componentDetails?.component) {
+    if (nexusContext && nexusContext.componentDetails?.component) {
       const purlMinusVersion = nexusContext.componentDetails.component.packageUrl.split('@')[0];
+
+
       return (
         <React.Fragment>
           <NxGrid.Row>
@@ -75,7 +76,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
                   </React.Fragment>
                 )}
               </header>
-              {nexusContext.componentDetails.component.description && (
+              {nexusContext.componentDetails.component.description != null && (
                 <NxP>{nexusContext.componentDetails.component.description}</NxP>
               )}
               {nexusContext.scanType === DATA_SOURCES.OSSINDEX && (
@@ -93,43 +94,73 @@ const ComponentInfoPage = (): JSX.Element | null => {
               )}
               {nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
                 <NxDescriptionList>
-                  {nexusContext.componentDetails.projectData?.projectMetadata.organization && (
-                    <NxDescriptionList.Item>
-                      <NxDescriptionList.Term>Project</NxDescriptionList.Term>
-                      <NxDescriptionList.Description>
-                        {nexusContext.componentDetails.projectData?.projectMetadata.organization}
-                      </NxDescriptionList.Description>
-                    </NxDescriptionList.Item>
+                  {nexusContext.componentDetails.projectData &&
+                    nexusContext.componentDetails.projectData.projectMetadata.organization && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>Project</NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {nexusContext.componentDetails.projectData?.projectMetadata.organization}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                    )}
+                  {nexusContext.componentDetails.projectData &&
+                    nexusContext.componentDetails.projectData.projectMetadata.description && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>Description</NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {nexusContext.componentDetails.projectData?.projectMetadata.description}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                    )}
+                  {nexusContext.componentDetails.integrityRating != null && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>
+
+                          <NxTextLink
+                              external
+                              href="https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components"
+                          >Integrity Rating
+                          </NxTextLink></NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {nexusContext.componentDetails.integrityRating}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
                   )}
-                  {nexusContext.componentDetails.projectData?.projectMetadata.description && (
-                    <NxDescriptionList.Item>
-                      <NxDescriptionList.Term>Description</NxDescriptionList.Term>
-                      <NxDescriptionList.Description>
-                        {nexusContext.componentDetails.projectData?.projectMetadata.description}
-                      </NxDescriptionList.Description>
-                    </NxDescriptionList.Item>
+                  {nexusContext.componentDetails.hygieneRating != null && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term><NxTextLink
+                            external
+                            href="https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings"
+                        >Hygiene Rating
+                        </NxTextLink></NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {nexusContext.componentDetails.hygieneRating}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
                   )}
-                  {nexusContext.componentDetails.projectData?.lastReleaseDate && (
-                    <NxDescriptionList.Item>
-                      <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
-                      <NxDescriptionList.Description>
-                        {formatDate(
-                          new Date(nexusContext.componentDetails.projectData?.lastReleaseDate)
-                        )}
-                      </NxDescriptionList.Description>
-                    </NxDescriptionList.Item>
-                  )}
-                  {nexusContext.componentDetails.projectData?.firstReleaseDate && (
-                    <NxDescriptionList.Item>
-                      <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
-                      <NxDescriptionList.Description>
-                        {formatDate(
-                          new Date(nexusContext.componentDetails.projectData?.firstReleaseDate)
-                        )}
-                      </NxDescriptionList.Description>
-                    </NxDescriptionList.Item>
-                  )}
-                  {nexusContext.componentDetails.catalogDate && (
+                  {nexusContext.componentDetails.projectData &&
+                    nexusContext.componentDetails.projectData.lastReleaseDate && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {formatDate(
+                            new Date(nexusContext.componentDetails.projectData?.lastReleaseDate)
+                          )}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                    )}
+                  {nexusContext.componentDetails.projectData &&
+                    nexusContext.componentDetails.projectData.firstReleaseDate && (
+                      <NxDescriptionList.Item>
+                        <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
+                        <NxDescriptionList.Description>
+                          {formatDate(
+                            new Date(nexusContext.componentDetails.projectData?.firstReleaseDate)
+                          )}
+                        </NxDescriptionList.Description>
+                      </NxDescriptionList.Item>
+                    )}
+                  {nexusContext.componentDetails.catalogDate != null && (
                     <NxDescriptionList.Item>
                       <NxTooltip
                         placement="top"
@@ -149,7 +180,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
                       </NxTooltip>
                     </NxDescriptionList.Item>
                   )}
-                  {nexusContext.componentDetails.component.hash && (
+                  {nexusContext.componentDetails.component.hash != null && (
                     <NxDescriptionList.Item>
                       <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
                       <NxDescriptionList.Description>
@@ -157,17 +188,19 @@ const ComponentInfoPage = (): JSX.Element | null => {
                       </NxDescriptionList.Description>
                     </NxDescriptionList.Item>
                   )}
+
                 </NxDescriptionList>
               )}
             </section>
             <section className="nx-grid-col nx-grid-col--33">
               {nexusContext.scanType === DATA_SOURCES.NEXUSIQ &&
-                nexusContext.policyDetails.results[0] &&
+                nexusContext.policyDetails &&
+                // nexusContext.policyDetails.results[0] &&
                 getPolicyViolationIndicator(nexusContext.policyDetails.results[0].policyData)}
 
-              {nexusContext &&
-                nexusContext.licenseDetails &&
-                nexusContext.scanType === DATA_SOURCES.NEXUSIQ && <LicenseThreat />}
+              {nexusContext.scanType === DATA_SOURCES.NEXUSIQ && (
+                <LicenseThreat />
+              )}
 
               <div id="security-threat">
                 <SecurityThreat />
@@ -183,7 +216,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
   };
 
   const getPolicyViolationIndicator = (policyData: PolicyData | undefined): JSX.Element | null => {
-    if (policyData && policyData.policyViolations && policyData.policyViolations.length > 0) {
+    if (policyData && policyData.policyViolations.length > 0) {
       const maxViolation = Math.max(
         ...policyData.policyViolations.map((violation) => violation.threatLevel)
       );
@@ -199,7 +232,7 @@ const ComponentInfoPage = (): JSX.Element | null => {
         </React.Fragment>
       );
     }
-    if (policyData && policyData.policyViolations && policyData.policyViolations.length == 0) {
+    if (policyData && policyData.policyViolations.length == 0) {
       return (
         <React.Fragment>
           <h3 className={'nx-h3'}>No Policy Violations</h3>

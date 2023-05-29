@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Puff} from '@agney/react-loading';
 import {
   NxStatefulErrorAlert,
   NxTab,
   NxTabList,
   NxTabPanel,
   NxTabs,
-  NxDrawer,
-  useToggle
+    NxP,
+    NxFooter
 } from '@sonatype/react-shared-components';
-import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
-import LicensingPage from './IQServer/LicensingPage/LicensingPage';
-import SecurityPage from './IQServer/SecurityPage/SecurityPage';
-import RemediationPage from './IQServer/RemediationPage/RemediationPage';
 import React, {useContext, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import {DATA_SOURCES} from '../../utils/Constants';
-import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
-import {Puff} from '@agney/react-loading';
-import './Popup.css';
+import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
+import LicensingPage from './IQServer/LicensingPage/LicensingPage';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
-import {PackageURL} from 'packageurl-js';
-import AdvancedLegalDisplay from './IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay';
+import RemediationPage from './IQServer/RemediationPage/RemediationPage';
+import SecurityPage from './IQServer/SecurityPage/SecurityPage';
+import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
+import './Popup.css';
 
 const Popup = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
@@ -44,21 +42,23 @@ const Popup = (): JSX.Element | null => {
     if (
       nexusContext &&
       nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
+      // nexusContext.policyDetails.results &&
       nexusContext.policyDetails.results?.length > 0 &&
       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
     ) {
+
       const results = nexusContext.policyDetails.results[0];
       const hasViolations =
-        results.policyData &&
-        results.policyData.policyViolations &&
+        // results.policyData &&
+        // results.policyData.policyViolations &&
         results.policyData.policyViolations.length > 0;
       const hasSecurityIssues =
-        results.securityData &&
-        results.securityData.securityIssues &&
+        // results.securityData &&
+        // results.securityData.securityIssues &&
         results.securityData.securityIssues.length > 0;
       const hasLegalResults = results.licenseData.effectiveLicenses?.length > 0;
 
+      console.info(results.licenseData);
       console.info('Rendering IQ Server View');
 
       return (
@@ -68,11 +68,11 @@ const Popup = (): JSX.Element | null => {
               <div className="nx-tile-header__title">
                 <h2 className="nx-h2">
                   <img
-                    src="/images/NexusLifecycle_Icon_Square_Outlined.png"
+                    src="/images/sonatype-lifecycle-icon-48x48.png"
                     className="nx-popup-logo"
-                    alt="Sonatype Nexus Lifecycle"
+                    alt="Sonatype Lifecycle - Component Details"
                   />
-                  &nbsp;Sonatype Lifecycle Results
+                  &nbsp;Sonatype Lifecycle - Component Details
                 </h2>
               </div>
             </header>
@@ -81,14 +81,17 @@ const Popup = (): JSX.Element | null => {
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
                   <NxTab>Info</NxTab>
-                  {hasViolations && <NxTab>Remediation</NxTab>}
+                  <NxTab>
+                    {hasViolations ? 'Remediation' : 'Versions'}
+                  </NxTab>
+
                   {hasViolations && (
-                    <NxTab>
-                      Policy
-                      <span className={'nx-counter'}>
+                      <NxTab>
+                        Policy
+                        <span className={'nx-counter'}>
                         {results.policyData.policyViolations.length}
                       </span>
-                    </NxTab>
+                      </NxTab>
                   )}
                   {hasSecurityIssues && (
                     <NxTab>
@@ -103,7 +106,11 @@ const Popup = (): JSX.Element | null => {
                 <NxTabPanel>
                   <ComponentInfoPage />
                 </NxTabPanel>
-                <NxTabPanel>{hasViolations && <RemediationPage />}</NxTabPanel>
+                {/*{hasViolations && (*/}
+                {/*    <NxTabPanel><RemediationPage /></NxTabPanel>*/}
+                {/*)}*/}
+                <NxTabPanel><RemediationPage /></NxTabPanel>
+
                 {hasViolations && (
                   <NxTabPanel>
                     <PolicyPage />
@@ -114,9 +121,16 @@ const Popup = (): JSX.Element | null => {
                     <SecurityPage />
                   </NxTabPanel>
                 )}
-                <NxTabPanel>{hasLegalResults && <LicensingPage />}</NxTabPanel>
+                {hasLegalResults && (
+                    <NxTabPanel><LicensingPage /></NxTabPanel>
+                )}
               </NxTabs>
             </div>
+            <NxFooter>
+              <NxP style={{textAlign: 'center'}}>
+                Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype IQ Server
+              </NxP>
+            </NxFooter>
           </section>
         </React.Fragment>
       );
@@ -125,11 +139,12 @@ const Popup = (): JSX.Element | null => {
       nexusContext.componentDetails &&
       nexusContext.scanType === DATA_SOURCES.OSSINDEX
     ) {
-      const purl = PackageURL.fromString(nexusContext.componentDetails.component.packageUrl);
+      // const purl = PackageURL.fromString(nexusContext.componentDetails.component.packageUrl);
       const hasVulns =
         nexusContext.componentDetails.securityData &&
-        nexusContext.componentDetails.securityData.securityIssues &&
-        nexusContext.componentDetails.securityData.securityIssues.length > 0;
+        nexusContext.componentDetails.securityData.securityIssues.length > 0
+          ? true
+          : false;
       console.info('Rendering OSS Index View');
       return (
         <React.Fragment>
@@ -155,11 +170,16 @@ const Popup = (): JSX.Element | null => {
                 )}
               </NxTabs>
             </div>
+            <NxFooter>
+              <NxP style={{textAlign: 'center'}}>
+                Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype OSS Index
+              </NxP>
+            </NxFooter>
           </section>
         </React.Fragment>
       );
     }
-    if (nexusContext && nexusContext.errorMessage) {
+    if (nexusContext && nexusContext.errorMessage != null) {
       return <NxStatefulErrorAlert>{nexusContext.errorMessage}</NxStatefulErrorAlert>;
     }
     return <Puff />;

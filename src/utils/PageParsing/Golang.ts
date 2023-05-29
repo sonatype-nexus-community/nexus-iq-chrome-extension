@@ -30,7 +30,7 @@ import {generatePackageURLWithNamespace} from './PurlUtils';
 const PKG_GO_DEV_VERSION_SELECTOR =
   'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
 const GO_PKG_IN_V1 = /^gopkg.in\/([^.]+).*/;
-const GO_PKG_IN_V2 = /^gopkg.in\/([^\/]+)\/([^.]+).*/;
+const GO_PKG_IN_V2 = /^gopkg.in\/([^/]+)\/([^.]+).*/;
 
 const parseGolang = (url: string): PackageURL | undefined => {
   return parsePkgGoDevURLIntoPackageURL(url);
@@ -55,7 +55,7 @@ const parsePkgGoDevURLIntoPackageURL = (url: string): PackageURL | undefined => 
     }
   }
 
-  if (nameAndNamespace && version) {
+  if (nameAndNamespace && version != null) {
     return generatePackageURLWithNamespace(
       FORMATS.golang,
       nameAndNamespace.name,

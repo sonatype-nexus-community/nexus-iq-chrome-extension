@@ -13,15 +13,15 @@
     "default_popup": "popup.html",
     "default_title": "View the details of this OSS component",
     "default_icon": {
-      "16": "images/NexusLifecycle_Icon_white_color-16x16.png",
-      "32": "images/NexusLifecycle_Icon_white_color-32x32.png"
+      "16": "images/sonatype-lifecycle-icon-16x16.png",
+      "32": "images/sonatype-lifecycle-icon-32x32.png"
     }
   },
   "icons": {
-    "16": "images/NexusLifecycle_Icon.png",
-    "32": "images/NexusLifecycle_Icon-32x32.png",
-    "48": "images/NexusLifecycle_Icon-48x48.png",
-    "128": "images/NexusLifecycle_Icon-128x128.png"
+    "16": "images/sonatype-lifecycle-icon-16x16.png",
+    "32": "images/sonatype-lifecycle-icon-32x32.png",
+    "48": "images/sonatype-lifecycle-icon-48x48.png",
+    "128": "images/sonatype-lifecycle-icon-128x128.png"
   },
   "background": {
     "service_worker": "extension_service_worker.js"
@@ -29,8 +29,7 @@
   "optional_host_permissions":[
     "<all_urls>"
   ],
-  "host_permissions": [   
-    "<all_urls>", 
+  "host_permissions": [
     "https://pkgs.alpinelinux.org/",
     "https://anaconda.org/",
     "https://cocoapods.org/",
@@ -53,7 +52,6 @@
     "https://search.gocenter.io/",
     "https://search.maven.org/",
     "https://pkg.go.dev/",
-    "https://central.sonatype.dev/",
     "https://central.sonatype.com/"
   ],
   "permissions": [

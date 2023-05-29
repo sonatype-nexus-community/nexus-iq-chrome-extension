@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {NxDrawer} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {NexusContext} from '../../context/NexusContext';
-import {NxDrawer} from '@sonatype/react-shared-components';
 import AdvancedLegalDisplay from '../Popup/IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay';
 
 const AlpDrawer = (): JSX.Element | null => {
@@ -29,7 +29,15 @@ const AlpDrawer = (): JSX.Element | null => {
       aria-labelledby="drawer-legal-title"
     >
       <NxDrawer.Header>
-        <NxDrawer.HeaderTitle id="drawer-legal-title">Advanced Legal Pack</NxDrawer.HeaderTitle>
+        <NxDrawer.HeaderTitle id="drawer-legal-title">
+          <span>
+                  <img
+                      src="/images/add-on-sonatype-icon-logoblue.png"
+                      className="nx-popup-logo"
+                      alt="Powered by Advanced Legal Pack"
+                  />
+                </span>
+          <span>&nbsp;&nbsp;Advanced Legal Pack</span></NxDrawer.HeaderTitle>
       </NxDrawer.Header>
       <NxDrawer.Content tabIndex={0}>
         <AdvancedLegalDisplay />

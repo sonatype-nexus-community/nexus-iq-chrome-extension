@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {NxButton, NxP, NxTextLink} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
-import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
-import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {NxDrawer, NxButton, NxP, NxTextLink} from '@sonatype/react-shared-components';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
-import {useToggle} from '@sonatype/react-shared-components';
-import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay';
+import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
+import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 
 const LicensingPage = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
-  const [showDrawerLegal, toggleDrawerLegal] = useToggle(false);
 
   const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.getLicenseDetails && !nexusContext.licenseDetails) {
-      nexusContext.getLicenseDetails(nexusContext.componentDetails.component.packageUrl);
-    }
+    console.log("Rendering LicensingPage");
+
     if (
       nexusContext &&
-      nexusContext.policyDetails &&
-      nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
-      nexusContext.getLicenseDetails
+      // nexusContext.policyDetails &&
+      nexusContext.policyDetails?.results &&
+      nexusContext.policyDetails.results.length > 0
     ) {
       const licenseData = nexusContext.policyDetails.results[0].licenseData;
       const observedLicenses = licenseData.observedLicenses.filter(
@@ -56,7 +51,7 @@ const LicensingPage = (): JSX.Element | null => {
               {licenseData.effectiveLicenses.map((license: LicenseDetail) => {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
               })}
-              {observedLicenses && observedLicenses.length > 0 && (
+              {observedLicenses.length > 0 && (
                 <React.Fragment>
                   <header className="nx-grid-header">
                     <h3 className={'nx-h3 nx-grid-header__title'}>Observed License(s)</h3>
@@ -70,7 +65,6 @@ const LicensingPage = (): JSX.Element | null => {
             <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
               <LicenseThreat />
             </section>
-            {/*TODO: To to render the drawer at the top level*/}
           </div>
           <hr className="nx-grid-h-keyline" />
           <div className="nx-grid-row">
@@ -92,12 +86,12 @@ const LicensingPage = (): JSX.Element | null => {
                     </NxTextLink>
                   </div>
                   <div>
-                    <span>A Nexus Lifecycle Add-On</span>
+                    <span>A Sonatype Lifecycle Add-On</span>
                   </div>
                 </h4>
                 <span>
                   <img
-                    src="/images/Lifecycle_add_on_icon@2x.png"
+                    src="/images/add-on-sonatype-icon-logoblue.png"
                     className="nx-popup-logo"
                     alt="Powered by Advanced Legal Pack"
                   />
@@ -107,6 +101,12 @@ const LicensingPage = (): JSX.Element | null => {
           </div>
         </React.Fragment>
       );
+    } else {
+      return (
+          <React.Fragment>
+            <p>No license information available.</p>
+          </React.Fragment>
+      )
     }
     return null;
   };

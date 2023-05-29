@@ -20,19 +20,22 @@ import {
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
+import {PackageURL} from 'packageurl-js';
 import React, {useContext, useEffect, useRef} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
-import {REMEDIATION_LABELS} from '../../../../../utils/Constants';
 import './AllVersionsDetails.css';
-import {PackageURL} from 'packageurl-js';
 
 const AllVersionsDetails = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
-  const currentVersionRef = useRef(null);
+  const currentVersionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (nexusContext.componentVersionsDetails?.length > 0) {
+    if (
+      nexusContext.componentVersionsDetails &&
+      nexusContext.componentVersionsDetails.length > 0 &&
+      currentVersionRef.current
+    ) {
       console.log(currentVersionRef.current);
       currentVersionRef.current.scrollIntoView({
         behavior: 'smooth',
@@ -43,42 +46,49 @@ const AllVersionsDetails = (): JSX.Element | null => {
   });
 
   const renderAllVersionsDetails = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext.componentVersionsDetails?.length > 0) {
+    if (
+      nexusContext &&
+      nexusContext.componentVersionsDetails &&
+      nexusContext.componentVersionsDetails.length > 0
+    ) {
       const allVersionsDetails: ComponentContainer[] = nexusContext.componentVersionsDetails;
       const currentPurl = nexusContext.currentVersion;
 
       return (
         <NxList>
-          {allVersionsDetails &&
-            allVersionsDetails.map((componentDetail) => {
-              const securityData: SecurityData = componentDetail.securityData;
-              let maxSeverity = 0;
-              if (securityData.securityIssues?.length > 0) {
-                maxSeverity = Math.max(
-                  ...securityData.securityIssues.map((issue) => issue.severity)
-                );
-              }
-              const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
+          {allVersionsDetails.map((componentDetail) => {
+            const securityData: SecurityData | null = componentDetail.securityData
+              ? componentDetail.securityData
+              : null;
+            let maxSeverity = 0;
+            if (securityData && securityData.securityIssues?.length > 0) {
+              maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
+            }
+            const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
 
-              return (
-                <NxList.LinkItem
-                  href=""
-                  key={purl.version}
-                  selected={purl.version == currentPurl.version}
+            return (
+              <NxList.LinkItem
+                href=""
+                key={purl.version}
+                selected={currentPurl && purl.version == currentPurl.version}
+              >
+                <NxList.Text
+                  ref={
+                    currentPurl && purl.version == currentPurl.version ? currentVersionRef : null
+                  }
                 >
-                  <NxList.Text ref={purl.version == currentPurl.version ? currentVersionRef : null}>
-                    {/*{purl.version}*/}
+                  {/*{purl.version}*/}
 
-                    <NxPolicyViolationIndicator
-                      style={{float: 'right', width: '100px !important'}}
-                      policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
-                    >
-                      {' ' + purl.version}
-                    </NxPolicyViolationIndicator>
-                  </NxList.Text>
-                </NxList.LinkItem>
-              );
-            })}
+                  <NxPolicyViolationIndicator
+                    style={{float: 'right', width: '100px !important'}}
+                    policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
+                  >
+                    {' ' + purl.version}
+                  </NxPolicyViolationIndicator>
+                </NxList.Text>
+              </NxList.LinkItem>
+            );
+          })}
         </NxList>
       );
     } else {

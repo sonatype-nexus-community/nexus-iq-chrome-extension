@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import {
   ComponentContainer,
   ILogger,
   IqServerComponentPolicyEvaluationResult,
   IqServerComponentRemediationResult,
   IqServerLicenseLegalMetadataResult,
-  IqServerVulnerabilityDetails
+  IqServerVulnerabilityDetails, LicenseData,
+  Application
 } from '@sonatype/js-sona-types';
-import {DATA_SOURCES} from '../utils/Constants';
 import {PackageURL} from 'packageurl-js';
+import React from 'react';
+import {DATA_SOURCES} from '../utils/Constants';
 
 export interface NexusContextInterface {
   showAlpDrawer: boolean;
@@ -33,11 +34,13 @@ export interface NexusContextInterface {
   policyDetails?: IqServerComponentPolicyEvaluationResult;
   vulnDetails?: IqServerVulnerabilityDetails;
   licenseDetails?: IqServerLicenseLegalMetadataResult;
+  licenseData?: LicenseData;
   errorMessage?: string;
   componentVersions?: string[];
   componentVersionsDetails?: ComponentContainer[];
   remediationDetails?: IqServerComponentRemediationResult;
-  logger: ILogger;
+  applications?: Application[];
+  logger?: ILogger;
   getVulnDetails?: (vulnId: string) => Promise<void>;
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;
@@ -48,12 +51,14 @@ export interface NexusContextInterface {
 
 const initialContext: NexusContextInterface = {
   showAlpDrawer: false,
-  toggleAlpDrawer: undefined,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  toggleAlpDrawer: () => {},
   scanType: DATA_SOURCES.OSSINDEX,
   componentDetails: undefined,
   policyDetails: undefined,
   vulnDetails: undefined,
   licenseDetails: undefined,
+  licenseData: undefined,
   errorMessage: undefined,
   componentVersions: undefined,
   remediationDetails: undefined,

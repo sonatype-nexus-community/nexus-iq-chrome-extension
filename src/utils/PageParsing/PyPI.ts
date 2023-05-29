@@ -15,25 +15,34 @@
  */
 import $ from 'cash-dom';
 import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
+import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
 import {generatePackageURL} from './PurlUtils';
 
 // https://pypi.org/project/Django/
 const parsePyPIURL = (url: string): PackageURL | undefined => {
-  const elements = url.split('/');
-  const qualifiers = {extension: 'tar.gz'};
-
-  const name = elements[4];
-  if (elements.length > 6) {
-    return generatePackageURL(FORMATS.pypi, name, elements[5], qualifiers);
-  }
-  const version = $('#content > div.banner > div > div.package-header__left > h1 ').text().trim();
-  if (typeof version !== 'undefined') {
-    const versionArray = version.split(' ');
-    if (versionArray.length > 0) {
-      return generatePackageURL(FORMATS.pypi, name, versionArray[1], qualifiers);
+  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.pypiOrg)
+  console.debug('*** REPO TYPE: ', repoType)
+  if (repoType) {
+    if (repoType.pathRegex) {
+      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+      console.debug(pathResult?.groups)      
+      if (pathResult && pathResult.groups) {
+        console.debug($(repoType.versionDomPath))
+        const pageVersion = $(repoType.versionDomPath).text().trim().split(' ')[1]
+        console.debug(`URL Version: ${pathResult.groups.version}, Page Version: ${pageVersion}`)
+        return generatePackageURL(
+          FORMATS.pypi, 
+          pathResult.groups.artifactId,
+          (pathResult.groups.version !== undefined ? pathResult.groups.version : pageVersion),
+          {extension: 'tar.gz'}
+        )
+      }
     }
+  } else {
+    console.error('Unable to determine REPO TYPE.')
   }
+  
   return undefined;
 };
+
 export {parsePyPIURL};

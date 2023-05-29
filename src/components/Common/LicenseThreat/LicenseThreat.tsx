@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext} from 'react';
 import {
-  NxList,
   NxLoadingSpinner,
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
+import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
 
 const LicenseThreat = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   const renderLicenseThreat = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext.licenseDetails &&
-      nexusContext.licenseDetails.component &&
-      nexusContext.licenseDetails.component.licenseLegalData
-    ) {
+      if (nexusContext && nexusContext.getLicenseDetails && nexusContext.componentDetails &&
+          !nexusContext.licenseDetails) {
+          nexusContext.getLicenseDetails(nexusContext.componentDetails?.component.packageUrl)
+          console.log(nexusContext.licenseDetails);
+      }
+    if (nexusContext && nexusContext.licenseDetails) {
       return getLicenseThreat(
         nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
           .licenseThreatGroupLevel,

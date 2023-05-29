@@ -27,7 +27,7 @@ import {parsePackagist} from './PageParsing/Packagist';
 import {parseMVNRepository} from './PageParsing/MVNRepository';
 import {parseMavenApache} from './PageParsing/MavenApache';
 import {parseSearchMavenOrg} from './PageParsing/SearchMavenOrg';
-import {parseCentralSonatypeDev} from './PageParsing/CentralSonatypeDev';
+import {parseCentralSonatypeCom} from './PageParsing/CentralSonatypeCom';
 
 const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
   console.info('getArtifactDetailsFromDOM: repoFormat, url ', repoFormat, url);
@@ -80,14 +80,9 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       return parseSearchMavenOrg(url);
       break;
     }
-    case REPOS.centralSonatypeDev: {
-      console.info('fixin to call parseCentralSonatypeDev: ' + url);
-      return parseCentralSonatypeDev(url);
-      break;
-    }
     case REPOS.centralSonatypeCom: {
-      console.info('fixin to call parseCentralSonatypeCom: ' + url);
-      return parseCentralSonatypeDev(url);
+      console.info('fixin to call parseCentralSonatypCom: ' + url);
+      return parseCentralSonatypeCom(url);
       break;
     }
 
@@ -95,7 +90,6 @@ const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageUR
       console.debug(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`);
     }
   }
-  console.trace('got here by mistake');
   return undefined;
 };
 

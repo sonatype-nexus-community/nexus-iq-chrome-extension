@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {describe, expect, test} from '@jest/globals';
 import {readFileSync} from 'fs';
 import {PackageURL} from 'packageurl-js';
 import {join} from 'path';
-import {DATA_SOURCES, FORMATS, RepoType, REPOS} from '../Constants';
+import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
 import {getArtifactDetailsFromDOM} from '../PageParsing';
 
 describe('mavenapache Page Parsing', () => {
@@ -35,9 +36,36 @@ describe('mavenapache Page Parsing', () => {
       appendVersionPath: ''
     };
 
-    const packageURL: PackageURL = getArtifactDetailsFromDOM(
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
       rt,
       'https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/'
+    );
+    // console.trace("packageURL", packageURL);
+    expect(packageURL).toBeDefined();
+    expect(packageURL?.type).toBe('maven');
+    expect(packageURL?.namespace).toBe('commons-collections');
+    expect(packageURL?.name).toBe('commons-collections');
+    expect(packageURL?.version).toBe('3.2.1');
+  });
+
+  test('should parse a valid mavenapache page with query string and fragment', () => {
+    const html = readFileSync(join(__dirname, 'testdata/mavenapache.html'));
+
+    window.document.body.innerHTML = html.toString();
+
+    const rt: RepoType = {
+      repoID: REPOS.repoMavenApacheOrg,
+      url: '',
+      repoFormat: FORMATS.maven,
+      titleSelector: '',
+      versionPath: '',
+      dataSource: DATA_SOURCES.NEXUSIQ,
+      appendVersionPath: ''
+    };
+
+    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
+      rt,
+      'https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/?some=thing#anchor'
     );
     // console.trace("packageURL", packageURL);
     expect(packageURL).toBeDefined();

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext} from 'react';
+import {SecurityData} from '@sonatype/js-sona-types';
 import {
   NxH3,
   NxPolicyViolationIndicator,
   ThreatLevelNumber
 } from '@sonatype/react-shared-components';
-import {SecurityData} from '@sonatype/js-sona-types';
+import React, {useContext} from 'react';
 import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
 
 const SecurityThreat = (): JSX.Element | null => {
@@ -34,8 +34,10 @@ const SecurityThreat = (): JSX.Element | null => {
       return getSecurityThreat(nexusContext.componentDetails.securityData);
     } else if (
       // TODO: when to show policy vs. componentDetails
-      nexusContext.policyDetails.results?.length > 0 &&
-      nexusContext.policyDetails.results[0].securityData
+      nexusContext &&
+      nexusContext.policyDetails &&
+      nexusContext.policyDetails.results?.length > 0 // &&
+      // nexusContext.policyDetails.results[0].securityData
     ) {
       return getSecurityThreat(nexusContext.policyDetails.results[0].securityData);
     } else {
@@ -44,7 +46,7 @@ const SecurityThreat = (): JSX.Element | null => {
   };
 
   const getSecurityThreat = (securityData: SecurityData | undefined) => {
-    if (securityData && securityData.securityIssues && securityData.securityIssues.length > 0) {
+    if (securityData && securityData.securityIssues.length > 0) {
       const maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
       return (
         <React.Fragment>
@@ -56,17 +58,15 @@ const SecurityThreat = (): JSX.Element | null => {
           />
         </React.Fragment>
       );
-    } else if (
-      securityData &&
-      securityData.securityIssues &&
-      securityData.securityIssues.length == 0
-    ) {
+    } else if (securityData && securityData.securityIssues.length == 0) {
+      return(
       <React.Fragment>
         <header className="nx-grid-header">
           <NxH3>No Security Issues</NxH3>
         </header>
         <NxPolicyViolationIndicator threatLevelCategory="none">Woohoo!</NxPolicyViolationIndicator>
-      </React.Fragment>;
+      </React.Fragment>
+    )
     }
     return null;
   };
