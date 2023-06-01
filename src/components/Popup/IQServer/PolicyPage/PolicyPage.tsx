@@ -36,6 +36,11 @@ const PolicyPage = (): JSX.Element | null => {
       nexusContext.policyDetails &&
       nexusContext.policyDetails.results.length > 0
     ) {
+      const pv = nexusContext.policyDetails.results[0].policyData.policyViolations.sort(
+        (a, b) => b.threatLevel - a.threatLevel
+      );
+      // const ascMap = pv
+      // console.log( pv, ascMap);
       return (
         <React.Fragment>
           <div className="nx-grid-row">
@@ -50,17 +55,15 @@ const PolicyPage = (): JSX.Element | null => {
                   </tr>
                 </thead>
                 <tbody>
-                  {nexusContext.policyDetails.results[0].policyData.policyViolations.map(
-                    (violation,index) => {
-                      return (
-                        <PolicyViolation
-                          key={`violation${index}`}
-                          policyViolation={violation}
-                          iqServerUrl={iqServerUrl}
-                        ></PolicyViolation>
-                      );
-                    }
-                  )}
+                  {pv.map((violation, index) => {
+                    return (
+                      <PolicyViolation
+                        key={`violation${index}`}
+                        policyViolation={violation}
+                        iqServerUrl={iqServerUrl}
+                      ></PolicyViolation>
+                    );
+                  })}
                 </tbody>
               </table>
             </section>
