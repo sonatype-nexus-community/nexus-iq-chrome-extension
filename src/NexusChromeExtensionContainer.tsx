@@ -30,6 +30,13 @@ import BrowserExtensionLogger from './logger/Logger';
 import {DATA_SOURCES, RepoType} from './utils/Constants';
 import {findRepoType} from './utils/UrlParsing';
 
+import { 
+  Configuration as OssIndexConfiguration,
+  ComponentVulnerabilityReportsApi as OssIndexComponentVulnerabilityReportsApi, 
+  ComponentVulnerabilityReportsApi
+} from '@sonatype/ossindex-api-client'
+import { UserAgentHelper } from './utils/UserAgentHelper';
+
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 const _browser = chrome ? chrome : browser;
 
@@ -45,7 +52,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
     this.state = {
       toggleAlpDrawer: this.toggleAlpDrawer,
       showAlpDrawer: false,
-      currentVersion: undefined,
+      currentComponentPurl: undefined,
       errorMessage: undefined,
       scanType: DATA_SOURCES.OSSINDEX,
       logger: new BrowserExtensionLogger(LogLevel.TRACE),
@@ -112,18 +119,37 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
           const ossIndexUser = await this.getStorageValue('ossIndexUser', undefined);
           const ossIndexToken = await this.getStorageValue('ossIndexToken', undefined);
 
-          this._requestService = new OSSIndexRequestService(
-            {
-              user: ossIndexUser,
-              token: ossIndexToken,
-              browser: true,
-              product: 'chrome-extension',
-              version: '1.0.0',
-              logger: this.state.logger
-            },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            localforage as any
-          );
+          /**
+           * @todo Get Version from package.json
+           */
+          const apiConfiguration = new OssIndexConfiguration({
+            basePath: 'https://ossindex.sonatype.org',
+            username: await this.getStorageValue('ossIndexUser', undefined),
+            password: await this.getStorageValue('ossIndexToken', undefined),
+            headers: {
+              'User-Agent':  await UserAgentHelper.getUserAgent(
+                true,
+                'chrome-extension',
+                '1.0.0',
+              )
+            }
+          })
+          const apiClient = new ComponentVulnerabilityReportsApi(apiConfiguration)
+
+
+
+          // this._requestService = new OSSIndexRequestService(
+          //   {
+          //     user: ossIndexUser,
+          //     token: ossIndexToken,
+          //     browser: true,
+          //     product: 'chrome-extension',
+          //     version: '1.0.0',
+          //     logger: this.state.logger
+          //   },
+          //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          //   localforage as any
+          // );
 
           return;
         }
@@ -303,7 +329,7 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
 
         console.info('purl: fixin to get purl: ', purlString);
         const purl = PackageURL.fromString(purlString);
-        this.setState({currentVersion: purl});
+        this.setState({currentComponentPurl: purl});
 
         this.state.logger?.logMessage('Parsed purl into object', LogLevel.TRACE, purl);
         console.info('Parsed purl into object', LogLevel.TRACE, purl);

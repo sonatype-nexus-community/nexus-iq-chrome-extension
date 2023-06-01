@@ -52,7 +52,7 @@ const AllVersionsDetails = (): JSX.Element | null => {
       nexusContext.componentVersionsDetails.length > 0
     ) {
       const allVersionsDetails: ComponentContainer[] = nexusContext.componentVersionsDetails;
-      const currentPurl = nexusContext.currentVersion;
+      const currentPurl = nexusContext.currentComponentPurl;
 
       return (
         <NxList>
