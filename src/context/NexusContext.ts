@@ -39,14 +39,15 @@ export interface NexusContextInterface {
   componentVersions?: string[];
   componentVersionsDetails?: ComponentContainer[];
   remediationDetails?: IqServerComponentRemediationResult;
-  applications?: Application[];
+  // applications?: Application[];
+  applications: Set<Application>;
   logger?: ILogger;
   getVulnDetails?: (vulnId: string) => Promise<void>;
   getLicenseDetails?: (purl: string) => Promise<void>;
   getRemediationDetails?: (purl: string) => Promise<void>;
   getComponentDetails?: (purl: string) => void;
-  currentVersion?: PackageURL;
-  currentUrl?: URL;
+  currentComponentPurl?: PackageURL;
+  currentUrl: URL;
 }
 
 const initialContext: NexusContextInterface = {
@@ -63,8 +64,9 @@ const initialContext: NexusContextInterface = {
   componentVersions: undefined,
   remediationDetails: undefined,
   logger: undefined,
-  currentVersion: undefined,
-  currentUrl: undefined
+  currentComponentPurl: undefined,
+  currentUrl: new URL('about:blank'),
+  applications: new Set<Application>()
 };
 
 export const NexusContext = React.createContext(initialContext);
