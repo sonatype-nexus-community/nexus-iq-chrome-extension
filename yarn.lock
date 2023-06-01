@@ -1587,6 +1587,11 @@
     ssri "^8.0.1"
     xmlbuilder2 "^2.4.1"
 
+"@sonatype/ossindex-api-client@^2023.5.2":
+  version "2023.5.2"
+  resolved "https://registry.npmjs.org/@sonatype/ossindex-api-client/-/ossindex-api-client-2023.5.2.tgz#4d919faa1da4a42d2d606c6c094eca4819da3bd5"
+  integrity sha512-kTj76pHH3TGNHCEwTH3BHUDckhEEmbdi2rq4s9b5NtaT9gKwqi/FFwpS6zqza0np6tpdBh19koT1PVV9LOMQNw==
+
 "@sonatype/react-commonmark@^3.0.1":
   version "3.0.1"
   resolved "https://registry.npmjs.org/@sonatype/react-commonmark/-/react-commonmark-3.0.1.tgz#a78851614c63b5b10106b7e01b925e67b243ae60"
