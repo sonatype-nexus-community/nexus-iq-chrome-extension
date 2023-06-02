@@ -30,7 +30,7 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
-import CVSSExplained2 from '../Popup/IQServer/SecurityPage/SecurityItemDisplay/VulnDetails/CVSSExplained2';
+
 
 const SCAN_TYPE = 'scanType';
 
@@ -128,7 +128,7 @@ const Options = (): JSX.Element | null => {
               </NxTabs>
             </NxTile.Content>
           </NxTile>
-          <CVSSExplained2 />
+          
         </React.Fragment>
       );
     }
