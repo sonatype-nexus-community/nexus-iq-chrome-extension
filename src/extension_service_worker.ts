@@ -27,6 +27,8 @@ import localforage from 'localforage';
 import {PackageURL} from 'packageurl-js';
 import BrowserExtensionLogger from './logger/Logger';
 
+import { MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
+
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
 
@@ -337,6 +339,29 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
   }
 });
+
+/**
+ * New listener for messages received by Service Worker.
+ * 
+ */
+_browser.runtime.onMessage.addListener(handle_message_received)
+
+/**
+ * New (asynchronous) handler for processing messages received.
+ * 
+ * This always returns True to cause handling to be asynchronous.
+ */
+function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
+  console.debug('Service Worker - Handle Received Message', request.type)
+
+  const response: MessageResponse = {
+    "status": MESSAGE_RESPONSE_STATUS.SUCCESS
+  }
+
+  sendResponse(response)
+
+  return true
+}
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {

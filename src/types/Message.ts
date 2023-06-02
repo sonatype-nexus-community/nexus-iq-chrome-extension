@@ -47,3 +47,7 @@ export interface MessageResponse {
     status_detail?: object,
     data?: object
 }
+
+export type MessageResponseFunction = {
+    (response: MessageResponse): void
+}
