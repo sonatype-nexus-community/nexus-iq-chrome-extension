@@ -18,6 +18,11 @@ export const DATA_SOURCES = {
   OSSINDEX: 'OSSINDEX'
 };
 
+export enum DATA_SOURCE {
+  NEXUSIQ = 'Sonatype IQ Server',
+  OSSINDEX = 'Sonatype OSS Index'
+}
+
 export const REPOSITORY_MANAGERS = {
   NEXUS: 'nexus',
   ARTIFACTORY: 'artifactory'

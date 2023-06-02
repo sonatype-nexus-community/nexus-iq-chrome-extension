@@ -25,9 +25,10 @@ import {
 } from '@sonatype/js-sona-types';
 import localforage from 'localforage';
 import {PackageURL} from 'packageurl-js';
-import BrowserExtensionLogger from './logger/Logger';
+import { BrowserExtensionLogger } from './logger/Logger';
 
-import { MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
+import { getApplications } from './messages/IqMessages'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -354,8 +355,17 @@ _browser.runtime.onMessage.addListener(handle_message_received)
 function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
   console.debug('Service Worker - Handle Received Message', request.type)
 
-  const response: MessageResponse = {
-    "status": MESSAGE_RESPONSE_STATUS.SUCCESS
+  let response: MessageResponse = {
+    "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR,
+    "status_detail": {
+      "mesage": "Default Error"
+    }
+  }
+
+  switch (request.type) {
+    case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
+      response = getApplications(request)
+      break
   }
 
   sendResponse(response)

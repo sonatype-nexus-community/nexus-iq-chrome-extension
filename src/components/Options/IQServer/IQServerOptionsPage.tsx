@@ -32,6 +32,10 @@ import './IQServerOptionsPage.css';
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
+import { MessageRequest, MESSAGE_REQUEST_TYPE } from "../../../types/Message";
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser;
 
 const IQ_SERVER_URL = 'iqServerURL';
 const IQ_SERVER_USER = 'iqServerUser';
@@ -170,6 +174,10 @@ const IQServerOptionsPage = (): JSX.Element | null => {
 
   const onSubmit = (): void => {
     console.info("In onSubmit...");
+    const response = _browser.runtime.sendMessage({
+      type: MESSAGE_REQUEST_TYPE.GET_APPLICATIONS
+    })
+    console.info("RESPONSE: ", response)
     void doSubmit();
   };
 

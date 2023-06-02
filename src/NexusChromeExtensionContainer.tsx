@@ -27,16 +27,16 @@ import React from 'react';
 import AlpDrawer from './components/AlpDrawer/AlpDrawer';
 import Popup from './components/Popup/Popup';
 import {NexusContext, NexusContextInterface} from './context/NexusContext';
-import BrowserExtensionLogger from './logger/Logger';
+import { BrowserExtensionLogger } from './logger/Logger';
 import {DATA_SOURCES, RepoType} from './utils/Constants';
 import {findRepoType} from './utils/UrlParsing';
 
-import { 
-  Configuration as OssIndexConfiguration,
-  ComponentVulnerabilityReportsApi as OssIndexComponentVulnerabilityReportsApi, 
-  ComponentVulnerabilityReportsApi
-} from '@sonatype/ossindex-api-client'
-import { UserAgentHelper } from './utils/UserAgentHelper';
+// import { 
+//   Configuration as OssIndexConfiguration,
+//   ComponentVulnerabilityReportsApi as OssIndexComponentVulnerabilityReportsApi, 
+//   ComponentVulnerabilityReportsApi
+// } from '@sonatype/ossindex-api-client'
+// import { UserAgentHelper } from './utils/UserAgentHelper';
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 const _browser = chrome ? chrome : browser;
@@ -122,37 +122,18 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
           const ossIndexUser = await this.getStorageValue('ossIndexUser', undefined);
           const ossIndexToken = await this.getStorageValue('ossIndexToken', undefined);
 
-          /**
-           * @todo Get Version from package.json
-           */
-          const apiConfiguration = new OssIndexConfiguration({
-            basePath: 'https://ossindex.sonatype.org',
-            username: await this.getStorageValue('ossIndexUser', undefined),
-            password: await this.getStorageValue('ossIndexToken', undefined),
-            headers: {
-              'User-Agent':  await UserAgentHelper.getUserAgent(
-                true,
-                'chrome-extension',
-                '1.0.0',
-              )
-            }
-          })
-          const apiClient = new ComponentVulnerabilityReportsApi(apiConfiguration)
-
-
-
-          // this._requestService = new OSSIndexRequestService(
-          //   {
-          //     user: ossIndexUser,
-          //     token: ossIndexToken,
-          //     browser: true,
-          //     product: 'chrome-extension',
-          //     version: '1.0.0',
-          //     logger: this.state.logger
-          //   },
-          //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          //   localforage as any
-          // );
+          this._requestService = new OSSIndexRequestService(
+            {
+              user: ossIndexUser,
+              token: ossIndexToken,
+              browser: true,
+              product: 'chrome-extension',
+              version: '1.0.0',
+              logger: this.state.logger
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            localforage as any
+          );
 
           return;
         }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {describe, expect, test} from '@jest/globals';
-import {IqServerLicenseLegalMetadataResult, LogLevel, TestLogger} from '@sonatype/js-sona-types';
+import {IqServerLicenseLegalMetadataResult, LogLevel, TestLogger, Application} from '@sonatype/js-sona-types';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {NexusContext} from '../../../context/NexusContext';
@@ -71,7 +71,9 @@ describe('<LicenseThreat />', () => {
           toggleAlpDrawer: () => {},
           scanType: DATA_SOURCES.NEXUSIQ,
           licenseDetails: licenseDetail,
-          logger: new TestLogger(LogLevel.ERROR)
+          logger: new TestLogger(LogLevel.ERROR),
+          applications: new Set<Application>(),
+          currentUrl: new URL('about:blank')
         }}
       >
         <LicenseThreat />

@@ -15,6 +15,7 @@
     "allowSyntheticDefaultImports": true,
     "types": [
       "chrome",
+      "node",
       "firefox-webext-browser"
     ]
   },

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import {describe, expect, test} from '@jest/globals';
-import {LogLevel, SecurityData, TestLogger} from '@sonatype/js-sona-types';
+import {Application, LogLevel, SecurityData, TestLogger} from '@sonatype/js-sona-types';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {NexusContext} from '../../../context/NexusContext';
@@ -63,7 +63,9 @@ describe('<SecurityThreat />', () => {
           toggleAlpDrawer: () => {},
           logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.NEXUSIQ,
-          policyDetails: policyJson
+          policyDetails: policyJson,
+          applications: new Set<Application>(),
+          currentUrl: new URL('about:blank')
         }}
       >
         <SecurityThreat />
@@ -83,7 +85,9 @@ describe('<SecurityThreat />', () => {
           toggleAlpDrawer: () => {},
           logger: new TestLogger(LogLevel.ERROR),
           scanType: DATA_SOURCES.OSSINDEX,
-          componentDetails: component
+          componentDetails: component,
+          applications: new Set<Application>(),
+          currentUrl: new URL('about:blank')
         }}
       >
         <SecurityThreat />

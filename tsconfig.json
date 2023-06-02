@@ -21,6 +21,7 @@
 
     "types": [
       "chrome",
+      "node",
       "firefox-webext-browser"
     ]
   },

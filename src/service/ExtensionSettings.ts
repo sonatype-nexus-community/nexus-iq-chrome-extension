@@ -31,26 +31,26 @@ export interface ExtensionSettings {
     host?: string;
     user?: string;
     token?: string;
-    application: Settings | undefined;
+    iqApplicationId?: string;
     logLevel: string;
 }
 
-export const getSettings = async (): Promise<ExtensionSettings> => {
-  console.log("getSettings in extension_service_worker");
-  const promise = new Promise<ExtensionSettings>((resolve) => {
-    _browser.storage.local.get(
-      [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
-      (items: {[key: string]: any}) => {
-        resolve({
-            dataSource: DATA_SOURCE[items[SCAN_TYPE]],
-            host: items[IQ_SERVER_URL],
-            user: items[IQ_SERVER_USER],
-            token: items[IQ_SERVER_TOKEN],
-            application: items[IQ_SERVER_APPLICATION],
-            logLevel: items[LOG_LEVEL]
-        });
-      }
-    );
-  });
-  return await promise;
-};
+export async function getSettings(): Promise<ExtensionSettings> {
+    console.log("getSettings in extension_service_worker");
+    const promise = new Promise<ExtensionSettings>((resolve) => {
+        _browser.storage.local.get(
+            [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
+            (items: {[key: string]: string}) => {
+                resolve({
+                    dataSource: DATA_SOURCE[items[SCAN_TYPE]],
+                    host: items[IQ_SERVER_URL],
+                    user: items[IQ_SERVER_USER],
+                    token: items[IQ_SERVER_TOKEN],
+                    iqApplicationId: items[IQ_SERVER_APPLICATION],
+                    logLevel: items[LOG_LEVEL]
+                });
+            }
+        );
+    });
+    return await promise
+}

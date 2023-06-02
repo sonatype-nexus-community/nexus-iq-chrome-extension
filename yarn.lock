@@ -1587,6 +1587,11 @@
     ssri "^8.0.1"
     xmlbuilder2 "^2.4.1"
 
+"@sonatype/nexus-iq-api-client@^0.156.1":
+  version "0.156.1"
+  resolved "https://registry.npmjs.org/@sonatype/nexus-iq-api-client/-/nexus-iq-api-client-0.156.1.tgz#543165c299500e186912deeced01fd94654c2351"
+  integrity sha512-5a0DfYWnJutJ7npVFpBoHUS/ogBSsamD7i4rsQ75RFx30btfbF754wHSt/3W+n4QRTNB4zo0IGvHAGVfZ7WrIg==
+
 "@sonatype/ossindex-api-client@^2023.5.2":
   version "2023.5.2"
   resolved "https://registry.npmjs.org/@sonatype/ossindex-api-client/-/ossindex-api-client-2023.5.2.tgz#4d919faa1da4a42d2d606c6c094eca4819da3bd5"
@@ -1763,7 +1768,7 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/node@*":
+"@types/node@*", "@types/node@^20.2.5":
   version "20.2.5"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.2.5.tgz#26d295f3570323b2837d322180dfbf1ba156fefb"
   integrity sha512-JJulVEQXmiY9Px5axXHeYGLSjhkZEnD+MDPDGbCbIAbMslkKwmygtZFy1X6s/075Yo94sf8GuSlFfPzysQrWZQ==

@@ -21,10 +21,13 @@ import {
 } from '@sonatype/nexus-iq-api-client'
 import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
 import { getSettings, ExtensionSettings } from '../service/ExtensionSettings'
+
+import { InvalidConfigurationError } from '../error/ExtensionError'
 import { 
     MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
 } from "../types/Message";
 import { DATA_SOURCE } from '../utils/Constants';
+import { UserAgentHelper } from '../utils/UserAgentHelper';
 
 const logger = new BrowserExtensionLogger(LogLevel.ERROR);
 
@@ -33,35 +36,70 @@ const logger = new BrowserExtensionLogger(LogLevel.ERROR);
  * Sonatype IQ Server.
  */
 
-function getApplications(request: MessageRequest): MessageResponse {
+export function getApplications(request: MessageRequest): MessageResponse {
     const response: MessageResponse = {
         "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
     }
 
-    try {
-        const apiConfig = _get_iq_api_configuration()
-    } catch (err) {
-        if (err instanceof InvalidConfigurationError) {
-            response.status = MESSAGE_RESPONSE_STATUS.FAILURE
-            response.status_detail = {
-                "message": "Invalid Extension Configuration - see Error Log"
+     _get_iq_api_configuration().then((apiConfig) => {
+        return new ApplicationsApi(apiConfig)
+    }).then((apiClient) => {
+        apiClient.getApplicationsRaw({}).then((apiResponse) => {
+            switch(apiResponse.raw.status) {
+                case 200:
+                case 204:
+                    response.status = MESSAGE_RESPONSE_STATUS.SUCCESS
+                    response.data = apiResponse.value
+                    break
+    
+                case 401:
+                case 403:
+                    response.status = MESSAGE_RESPONSE_STATUS.AUTH_ERROR
+                    response.status_detail = {
+                        message: apiResponse.raw.statusText
+                    }
+                    break
+    
+                default:
+                    response.status = MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
+                    response.status_detail = {
+                        message: `${apiResponse.raw.status}: ${apiResponse.raw.statusText}`
+                    }
+                    break
             }
-        }
-    }
+            return response
+        }).catch((err) => {
+            if (err instanceof InvalidConfigurationError) {
+                response.status = MESSAGE_RESPONSE_STATUS.FAILURE
+                response.status_detail = {
+                    "message": "Invalid Extension Configuration - see Error Log"
+                }
+            } else {
+                response.status = MESSAGE_RESPONSE_STATUS.FAILURE
+                response.status_detail = {
+                    "message": "Unknown Error - see Error Log"
+                }
+            }
+        })
+    })
 
     return response
 }
 
-function _get_iq_api_configuration(): Configuration {
-    const 
-    getSettings().then((settings: ExtensionSettings) => {
+function _get_iq_api_configuration(): Promise<Configuration> {
+    return getSettings().then(async (settings: ExtensionSettings) => {
         if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
-            logger.logMessage('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ', LogLevel.ERROR)
+            logger.logMessage('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ', LogLevel.ERROR, settings)
             throw new InvalidConfigurationError('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
         }
 
         return new Configuration({
             basePath: settings.host,
+            username: settings.user,
+            password: settings.token,
+            headers: {
+                'User-Agent': await UserAgentHelper.getUserAgent(true, 'nexus-iq-chrome-extension', '2.0.0')
+            }
         })
         
 
@@ -85,7 +123,7 @@ function _get_iq_api_configuration(): Configuration {
         // console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
 
         // }
+    }).catch((err) => {
+        throw err
     })
-        
-    return config
 }
