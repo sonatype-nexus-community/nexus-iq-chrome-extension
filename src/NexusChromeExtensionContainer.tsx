@@ -18,7 +18,8 @@ import {
   IqRequestService,
   LogLevel,
   OSSIndexRequestService,
-  RequestService
+  RequestService,
+  Application
 } from '@sonatype/js-sona-types';
 import localforage from 'localforage';
 import {PackageURL} from 'packageurl-js';
@@ -59,7 +60,9 @@ class NexusChromeExtensionContainer extends React.Component<AppProps, NexusConte
       getVulnDetails: this.getVulnDetails,
       getLicenseDetails: this.getLicenseDetails,
       getRemediationDetails: this.getRemediationDetails,
-      getComponentDetails: this.getComponentDetails
+      getComponentDetails: this.getComponentDetails,
+      currentUrl: new URL('about:blank'),
+      applications: new Set<Application>()
     };
   }
 

@@ -39,7 +39,6 @@ export interface NexusContextInterface {
   componentVersions?: string[];
   componentVersionsDetails?: ComponentContainer[];
   remediationDetails?: IqServerComponentRemediationResult;
-  // applications?: Application[];
   applications: Set<Application>;
   logger?: ILogger;
   getVulnDetails?: (vulnId: string) => Promise<void>;
