@@ -48,6 +48,10 @@ export interface MessageResponse {
     data?: object
 }
 
+export type MessageHandlerFunction = {
+    (request: MessageRequest): MessageResponse
+}
+
 export type MessageResponseFunction = {
     (response: MessageResponse): void
 }
