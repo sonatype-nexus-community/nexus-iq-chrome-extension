@@ -30,6 +30,9 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
+import {
+  MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS
+} from "../../types/Message";
 
 const SCAN_TYPE = 'scanType';
 
@@ -40,6 +43,13 @@ const Options = (): JSX.Element | null => {
   const [scanType, setScanType] = useState<string>(DATA_SOURCES.OSSINDEX);
 
   const nexusContext = useContext(NexusContext);
+
+  (async () => {
+    const response = await chrome.runtime.sendMessage({"type": "getApplications"});
+    // do something with response here, not outside the function
+    console.log("New getApplications")
+    console.log(response);
+  })();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,7 +78,7 @@ const Options = (): JSX.Element | null => {
       return (
         <React.Fragment>
           <h1>
-            <NxPageTitle>Extension Options</NxPageTitle>
+            <NxPageTitle>Maury  Options</NxPageTitle>
           </h1>
 
           <NxTile>
