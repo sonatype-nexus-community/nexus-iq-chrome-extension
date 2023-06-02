@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { logger, LogLevel } from "../logger/Logger"
 import { DATA_SOURCE } from "../utils/Constants";
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
@@ -36,7 +37,8 @@ export interface ExtensionSettings {
 }
 
 export async function getSettings(): Promise<ExtensionSettings> {
-    console.log("getSettings in extension_service_worker");
+    logger.logMessage('getSettings loading from local storage', LogLevel.TRACE)
+
     const promise = new Promise<ExtensionSettings>((resolve) => {
         _browser.storage.local.get(
             [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
@@ -52,5 +54,6 @@ export async function getSettings(): Promise<ExtensionSettings> {
             }
         );
     });
+    
     return await promise
 }
