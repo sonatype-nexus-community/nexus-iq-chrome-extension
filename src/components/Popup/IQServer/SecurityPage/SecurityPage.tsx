@@ -57,13 +57,16 @@ const SecurityPage = (): JSX.Element | null => {
             <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
               {sortedIssues.map((issue: SecurityIssue) => {
                 return (
-                  <SecurityItemDisplay
-                    key={issue.reference}
-                    open={isOpen(issue.reference)}
-                    packageUrl={purl}
-                    securityIssue={issue}
-                    remediationEvent={getRemediationAndOpen}
-                  />
+                  <React.Fragment>
+                    <SecurityItemDisplay
+                      key={issue.reference}
+                      open={isOpen(issue.reference)}
+                      packageUrl={purl}
+                      securityIssue={issue}
+                      remediationEvent={getRemediationAndOpen}
+                    />
+                    <hr />
+                  </React.Fragment>
                 );
               })}
             </section>

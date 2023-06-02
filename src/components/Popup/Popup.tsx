@@ -81,17 +81,15 @@ const Popup = (): JSX.Element | null => {
               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                 <NxTabList>
                   <NxTab>Info</NxTab>
-                  <NxTab>
-                    {hasViolations ? 'Remediation' : 'Versions'}
-                  </NxTab>
+                  <NxTab>{hasViolations ? 'Remediation' : 'Versions'}</NxTab>
 
                   {hasViolations && (
-                      <NxTab>
-                        Policy
-                        <span className={'nx-counter'}>
+                    <NxTab>
+                      Policy
+                      <span className={'nx-counter'}>
                         {results.policyData.policyViolations.length}
                       </span>
-                      </NxTab>
+                    </NxTab>
                   )}
                   {hasSecurityIssues && (
                     <NxTab>
@@ -109,7 +107,9 @@ const Popup = (): JSX.Element | null => {
                 {/*{hasViolations && (*/}
                 {/*    <NxTabPanel><RemediationPage /></NxTabPanel>*/}
                 {/*)}*/}
-                <NxTabPanel><RemediationPage /></NxTabPanel>
+                <NxTabPanel>
+                  <RemediationPage />
+                </NxTabPanel>
 
                 {hasViolations && (
                   <NxTabPanel>
@@ -122,7 +122,9 @@ const Popup = (): JSX.Element | null => {
                   </NxTabPanel>
                 )}
                 {hasLegalResults && (
-                    <NxTabPanel><LicensingPage /></NxTabPanel>
+                  <NxTabPanel>
+                    <LicensingPage />
+                  </NxTabPanel>
                 )}
               </NxTabs>
             </div>
@@ -132,6 +134,7 @@ const Popup = (): JSX.Element | null => {
               </NxP>
             </NxFooter>
           </section>
+          
         </React.Fragment>
       );
     } else if (
