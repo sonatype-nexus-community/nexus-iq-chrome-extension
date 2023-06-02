@@ -2,9 +2,82 @@
 
 This document catalogues the message types and purposes passed between our UI and Service Worker.
 
-## Message Format
+Message types should be named according to the following rules:
+- Domain-oriented 
+- Aligned to a CRUD operation
+  
+e.g. readComponentDetails; updateExtensionConfiguration; readExtensionConfiguration
 
-## Message Types
+## General Message Format
+
+Every message must comply with the following format rules.
+
+### Request Format
+
+```
+{
+    "type": <MESSAGE_TYPE>,
+    "params: {
+        <UNBOUND PARAMETERS>
+    }
+}
+```
+
+### Response Format
+
+```
+    "status": <SUCCESS|AUTH_ERROR|FAILURE|UNKNOWN_ERROR>,
+    "status_detail": {
+        "message": "A message can go here"
+    }
+    "data": {
+        <UNBOUND RESPONSE DATA>
+    }
+```
+
+
+## NEW: Messages Received by Service Worker
+
+### Get Applications
+
+**Type:** getApplications  
+**Parameters:** *None*  
+**Response Returned:** Yes  
+**Description:** Get a list of Applications that the User has access to in Sonatype IQ Server  
+
+Example request:
+```
+{
+    "type": "getApplications"
+}
+```
+
+Response (SUCCESS):
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        "applications": [
+            ...
+        ]
+    }
+}
+```
+
+Response (AUTH_ERROR)
+```
+{
+    "status": "AUTH_ERROR",
+    "status_detail": {
+        "message": "Unable to authenticate with supplied credentials."
+    }
+}
+```
+
+## NEW: Messages Received by Content
+
+
+## Existing Messages (to be depracated)
 
 ### artifactDetailsFromServiceWorker
 
