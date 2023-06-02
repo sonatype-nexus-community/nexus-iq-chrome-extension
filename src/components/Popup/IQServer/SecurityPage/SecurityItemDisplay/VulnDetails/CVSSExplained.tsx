@@ -18,12 +18,12 @@ import {CvssVectorExplainer, VectorDetails} from '../../../../../../utils/CvssVe
 import {  
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { NxButton, NxButtonBar, NxFontAwesomeIcon, NxH3 } from '@sonatype/react-shared-components';
+import { NxButton, NxButtonBar, NxFontAwesomeIcon, NxH3, NxTooltip } from '@sonatype/react-shared-components';
 
 const CVSSExplained = ({ vector }): JSX.Element | null => {
   function getByValue(map, searchValue) {
     // console.log("getByValue", map, searchValue);
-    for (let [key, value] of map.entries()) {
+    for (const [key, value] of map.entries()) {
       if (key === searchValue) return value;
     }
   }
@@ -35,85 +35,78 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
     
     return (
       <React.Fragment>
-        <div className="nx-grid-row">
-          <div className="nx-grid-col"></div>
-          <div className="nx-grid-col">
-            <NxH3 className={'nx-h3'}>CVSS Explained</NxH3>
-            <dl>
-              <dt>Attack Complexity</dt>
-              <dd>
-                {getByValue(elements, 'AC').quickExplanation}
-                {/* according to this document icon-only should generate a tool tip https://gallery.sonatype.dev/#/pages/Button */}
-                {/* {getByValue(elements, 'AC').tooltip} */}
-                
-                  <NxButton
-                    variant="icon-only"
-                    title="this should be the AC Tooltip, this should be the AC Tooltip, this should be the AC Tooltip, this should be the AC Tooltip, this should be the AC Tooltip, this should be the AC Tooltip, this should be the AC Tooltip, this should be the AC Tooltip, this should be the AC Tooltip"
-                  >
+        <div className="nx-vulnerability-details">
+          <div className="nx-grid-row">
+            <div className="nx-grid-col">
+              <dl className={'nx-read-only'}>
+                <dt></dt>
+                <dd>
+                  <span>{'\xa0'.repeat(29)}</span>
+                </dd>
+              </dl>
+            </div>
+
+            <div className="nx-grid-col">
+              <NxH3>CVSS Explained</NxH3>
+              <dl className={'nx-read-only'}>
+                <dt>
+                  Attack Complexity: {getByValue(elements, 'AC').quickExplanation}
+                  {/* according to this document icon-only should generate a tool tip https://gallery.sonatype.dev/#/pages/Button */}
+                  {/* not working at the moment and it's a bit of react magic which I can't work out */}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'AC').tooltip}>
                     <NxFontAwesomeIcon icon={faQuestionCircle} />
                   </NxButton>
-                
-              </dd>
+                </dt>
 
-              <dt>Confidentiality</dt>
-              <dd>
-                {getByValue(elements, 'C').quickExplanation}
-                <NxButton variant="icon-only" title={getByValue(elements, 'C').tooltip}>
-                  <NxFontAwesomeIcon icon={faQuestionCircle} />
-                </NxButton>
-              </dd>
+                <dt>
+                  Confidentiality: {getByValue(elements, 'C').quickExplanation}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'C').tooltip}>
+                    <NxFontAwesomeIcon icon={faQuestionCircle} />
+                  </NxButton>
+                </dt>
 
-              <dt>Integrity</dt>
-              <dd>
-                {getByValue(elements, 'I').quickExplanation}
-                <NxButton variant="icon-only" title={getByValue(elements, 'I').tooltip}>
-                  <NxFontAwesomeIcon icon={faQuestionCircle} />
-                </NxButton>
-              </dd>
-              <dt>Availability</dt>
-              <dd>
-                {' '}
-                {getByValue(elements, 'A').quickExplanation}
-                <NxButton variant="icon-only" title={getByValue(elements, 'A').tooltip}>
-                  <NxFontAwesomeIcon icon={faQuestionCircle} />
-                </NxButton>
-              </dd>
+                <dt>
+                  Integrity: {getByValue(elements, 'I').quickExplanation}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'I').tooltip}>
+                    <NxFontAwesomeIcon icon={faQuestionCircle} />
+                  </NxButton>
+                </dt>
+                <dt>
+                  Availability: {getByValue(elements, 'A').quickExplanation}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'A').tooltip}>
+                    <NxFontAwesomeIcon icon={faQuestionCircle} />
+                  </NxButton>
+                </dt>
 
-              <dt>Attack Vector</dt>
-              <dd>
-                {getByValue(elements, 'AV').quickExplanation}
-                <NxButton variant="icon-only" title={getByValue(elements, 'AV').tooltip}>
-                  <NxFontAwesomeIcon icon={faQuestionCircle} />
-                </NxButton>
-              </dd>
+                <dt>
+                  Attack Vector: {getByValue(elements, 'AV').quickExplanation}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'AV').tooltip}>
+                    <NxFontAwesomeIcon icon={faQuestionCircle} />
+                  </NxButton>
+                </dt>
 
-              <dt>Privileges Required</dt>
-              <dd>
-                {' '}
-                {getByValue(elements, 'PR').quickExplanation}
-                <NxButton variant="icon-only" title={getByValue(elements, 'PR').tooltip}>
-                  <NxFontAwesomeIcon icon={faQuestionCircle} />
-                </NxButton>
-              </dd>
+                <dt>
+                  Privileges Required: {getByValue(elements, 'PR').quickExplanation}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'PR').tooltip}>
+                    <NxFontAwesomeIcon icon={faQuestionCircle} />
+                  </NxButton>
+                </dt>
 
-              <dt>User Interaction</dt>
-              <dd>
-                {' '}
-                {getByValue(elements, 'UI').quickExplanation}
-                <NxButton variant="icon-only" title={getByValue(elements, 'UI').tooltip}>
-                  <NxFontAwesomeIcon icon={faQuestionCircle} />
-                </NxButton>
-              </dd>
+                <dt>
+                  User Interaction: {getByValue(elements, 'UI').quickExplanation}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'UI').tooltip}>
+                    <NxFontAwesomeIcon icon={faQuestionCircle} />
+                  </NxButton>
+                </dt>
 
-              <dt>Scope</dt>
-              <dd>
-                {' '}
-                {getByValue(elements, 'S').quickExplanation}
-                <NxButton variant="icon-only" title={getByValue(elements, 'S').tooltip}>
-                  <NxFontAwesomeIcon icon={faQuestionCircle} />
-                </NxButton>
-              </dd>
-            </dl>
+                <dt>
+                  Scope: {getByValue(elements, 'S').quickExplanation}
+                  <NxButton variant="icon-only" title={getByValue(elements, 'S').tooltip}>
+                    <NxFontAwesomeIcon icon={faQuestionCircle} />
+                  </NxButton>
+                </dt>
+              </dl>
+            </div>
           </div>
         </div>
       </React.Fragment>

@@ -58,9 +58,9 @@ const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
             />
             {/*</div>*/}
           </NxAccordion.Header>
-          <p className="nx-p">
+          
             <VulnDetails />
-          </p>          
+                   
           
         </NxAccordion>
       );
