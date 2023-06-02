@@ -20,7 +20,7 @@ import {
     DefaultConfig
 } from '@sonatype/nexus-iq-api-client'
 import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
-import { getSettings, Settings } from '../service/ExtensionSettings'
+import { getSettings, ExtensionSettings } from '../service/ExtensionSettings'
 import { 
     MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
 } from "../types/Message";
@@ -53,33 +53,38 @@ function getApplications(request: MessageRequest): MessageResponse {
 }
 
 function _get_iq_api_configuration(): Configuration {
-    const config = DefaultConfig
-    getSettings().then((settings: Settings) => {
+    const 
+    getSettings().then((settings: ExtensionSettings) => {
         if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
             logger.logMessage('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ', LogLevel.ERROR)
-            throw new ExtensionError('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
+            throw new InvalidConfigurationError('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
         }
+
+        return new Configuration({
+            basePath: settings.host,
+        })
+        
 
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
-            console.error('Unable to get settings need to make IQ connection: ', settings);
-        }
-        if (settings.logLevel) {
-        logger.setLevel(settings.logLevel as unknown as LogLevel);
-        }
-        try {
-        if ((settings.scanType as unknown as string) === 'NEXUSIQ') {
-            logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
-            handleIQServerWrapper(request.purl, settings);
-        } else {
-            logger.logMessage('Attempting to call OSS Index', LogLevel.INFO);
-            handleOSSIndexWrapper(request.purl, settings);
-        }
-        } catch (err) {
-        logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-        console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
+        // if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
+        //     console.error('Unable to get settings need to make IQ connection: ', settings);
+        // }
+        // if (settings.logLevel) {
+        // logger.setLevel(settings.logLevel as unknown as LogLevel);
+        // }
+        // try {
+        // if ((settings.scanType as unknown as string) === 'NEXUSIQ') {
+        //     logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
+        //     handleIQServerWrapper(request.purl, settings);
+        // } else {
+        //     logger.logMessage('Attempting to call OSS Index', LogLevel.INFO);
+        //     handleOSSIndexWrapper(request.purl, settings);
+        // }
+        // } catch (err) {
+        // logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
+        // console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
 
-        }
+        // }
     })
         
     return config
