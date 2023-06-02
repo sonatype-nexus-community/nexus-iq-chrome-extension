@@ -17,7 +17,7 @@ Every message must comply with the following format rules.
 ```
 {
     "type": <MESSAGE_TYPE>,
-    "params: {
+    "params": {
         <UNBOUND PARAMETERS>
     }
 }
@@ -26,6 +26,7 @@ Every message must comply with the following format rules.
 ### Response Format
 
 ```
+{
     "status": <SUCCESS|AUTH_ERROR|FAILURE|UNKNOWN_ERROR>,
     "status_detail": {
         "message": "A message can go here"
@@ -33,6 +34,7 @@ Every message must comply with the following format rules.
     "data": {
         <UNBOUND RESPONSE DATA>
     }
+}
 ```
 
 
@@ -70,6 +72,57 @@ Response (AUTH_ERROR)
     "status": "AUTH_ERROR",
     "status_detail": {
         "message": "Unable to authenticate with supplied credentials."
+    }
+}
+```
+
+### Get Extension Configuration
+
+**Type:** getExtensionConfiguration  
+**Parameters:** *None*  
+**Response Returned:** Yes  
+**Description:** Get current Extension Configuration from local storage.  
+
+Example request:
+```
+{
+    "type": "getConfiguration"
+}
+```
+
+Response (SUCCESS):
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        dataSource: DATA_SOURCE
+        host?: string;
+        user?: string;
+        token?: string;
+        iqApplicationId?: string;
+        logLevel: string;
+    }
+}
+```
+
+### Update Extension Configuration
+
+**Type:** updateExtensionConfiguration  
+**Parameters:** *None*  
+**Response Returned:** No  
+**Description:** Update current Extension Configuration in local storage.  
+
+Example request:
+```
+{
+    "type": "updateConfiguration",
+    "params": {
+        dataSource: DATA_SOURCE
+        host?: string;
+        user?: string;
+        token?: string;
+        iqApplicationId?: string;
+        logLevel: string;
     }
 }
 ```
