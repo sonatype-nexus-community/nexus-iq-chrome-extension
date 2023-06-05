@@ -54,8 +54,17 @@ const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
             </NxAccordion.Title>
             {/*<div className="nx-btn-bar">*/}
             <NxPolicyViolationIndicator
-              policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
-            />
+                style={{
+                  width: '10px !important',
+                  margin: 'none !important'
+                }}
+                policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
+            >
+              {props.securityIssue.severity.toString()}
+            </NxPolicyViolationIndicator>
+            {/*<NxPolicyViolationIndicator*/}
+            {/*  policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}*/}
+            {/*/>*/}
             {/*</div>*/}
           </NxAccordion.Header>
           <p className="nx-p">
