@@ -51,8 +51,7 @@ const CvssVectorExplainer = (vectors: string[]): Map<string, VectorDetails> => {
           vectorName: ATTACK_VECTOR_NAME,
           quickExplanation: 'Network',
           color: 'indigo',
-          tooltip:
-            'The vulnerable component is bound to the network stack and the set of possible attackers extends beyond the other options listed below, up to and including the entire Internet. Such a vulnerability is often termed “remotely exploitable” and can be thought of as an attack being exploitable <em>at the protocol level</em> one or more network hops away (e.g., across one or more routers). An example of a network attack is an attacker causing a denial of service (DoS) by sending a specially crafted TCP packet across a wide area network (e.g., CVE‑2004‑0230).'
+          tooltip: `The vulnerable component is bound to the network stack and the set of possible attackers extends beyond the other options listed below, up to and including the entire Internet. Such a vulnerability is often termed “remotely exploitable” and can be thought of as an attack being exploitable at the protocol level one or more network hops away (e.g., across one or more routers). An example of a network attack is an attacker causing a denial of service (DoS) by sending a specially crafted TCP packet across a wide area network (e.g., CVE‑2004‑0230).`
         });
         break;
       case 'AV:A':
