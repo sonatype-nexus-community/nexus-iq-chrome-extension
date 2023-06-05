@@ -53,7 +53,7 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
                   Attack Complexity: {getByValue(elements, 'AC').quickExplanation}
                   {/* according to this document icon-only should generate a tool tip https://gallery.sonatype.dev/#/pages/Button */}
                   {/* not working at the moment and it's a bit of react magic which I can't work out */}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'AC').tooltip}>
+                  <NxButton variant="icon-only"  title={getByValue(elements, 'AC').tooltip}>
                     <NxFontAwesomeIcon icon={faQuestionCircle} />
                   </NxButton>
                 </dt>
