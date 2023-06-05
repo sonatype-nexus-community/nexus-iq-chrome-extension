@@ -18,7 +18,12 @@ import {CvssVectorExplainer, VectorDetails} from '../../../../../../utils/CvssVe
 import {  
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { NxButton, NxButtonBar, NxFontAwesomeIcon, NxH3, NxTooltip } from '@sonatype/react-shared-components';
+import {
+  NxButton,
+  NxTable,
+  NxFontAwesomeIcon,
+  NxH3
+} from '@sonatype/react-shared-components';
 
 const CVSSExplained = ({ vector }): JSX.Element | null => {
   function getByValue(map, searchValue) {
@@ -47,65 +52,87 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
             </div>
 
             <div className="nx-grid-col">
-              <NxH3>CVSS Explained</NxH3>
-              <dl className={'nx-read-only'}>
-                <dt>
-                  Attack Complexity: {getByValue(elements, 'AC').quickExplanation}
-                  {/* according to this document icon-only should generate a tool tip https://gallery.sonatype.dev/#/pages/Button */}
-                  {/* not working at the moment and it's a bit of react magic which I can't work out */}
-                  <NxButton variant="icon-only"  title={getByValue(elements, 'AC').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-
-                <dt>
-                  Confidentiality: {getByValue(elements, 'C').quickExplanation}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'C').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-
-                <dt>
-                  Integrity: {getByValue(elements, 'I').quickExplanation}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'I').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-                <dt>
-                  Availability: {getByValue(elements, 'A').quickExplanation}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'A').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-
-                <dt>
-                  Attack Vector: {getByValue(elements, 'AV').quickExplanation}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'AV').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-
-                <dt>
-                  Privileges Required: {getByValue(elements, 'PR').quickExplanation}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'PR').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-
-                <dt>
-                  User Interaction: {getByValue(elements, 'UI').quickExplanation}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'UI').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-
-                <dt>
-                  Scope: {getByValue(elements, 'S').quickExplanation}
-                  <NxButton variant="icon-only" title={getByValue(elements, 'S').tooltip}>
-                    <NxFontAwesomeIcon icon={faQuestionCircle} />
-                  </NxButton>
-                </dt>
-              </dl>
+              <NxTable>
+                <NxTable.Head>
+                  <NxH3>CVSS Explained</NxH3>
+                </NxTable.Head>
+                <NxTable.Body>
+                  <NxTable.Row>
+                    <NxTable.Cell>Attack Complexity:</NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'AC').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      {/* according to this document icon-only should generate a tool tip https://gallery.sonatype.dev/#/pages/Button */}
+                      {/* not working at the moment and it's a bit of react magic which I can't work out */}
+                      <NxButton variant="icon-only" title={getByValue(elements, 'AC').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>                                          
+                  </NxTable.Row>
+                  <NxTable.Row>
+                    <NxTable.Cell>Confidentiality:</NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'C').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      <NxButton variant="icon-only" title={getByValue(elements, 'C').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>
+                  </NxTable.Row>
+                  <NxTable.Row>
+                    <NxTable.Cell>Integrity:</NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'I').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      <NxButton variant="icon-only" title={getByValue(elements, 'I').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>
+                  </NxTable.Row>
+                  <NxTable.Row>
+                    <NxTable.Cell>Availability: </NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'A').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      <NxButton variant="icon-only" title={getByValue(elements, 'A').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>
+                  </NxTable.Row>
+                  <NxTable.Row>
+                    <NxTable.Cell>Attack Vector:</NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'AV').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      <NxButton variant="icon-only" title={getByValue(elements, 'AV').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>
+                  </NxTable.Row>
+                  <NxTable.Row>
+                    <NxTable.Cell>Privileges Required:</NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'PR').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      <NxButton variant="icon-only" title={getByValue(elements, 'PR').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>
+                  </NxTable.Row>
+                  <NxTable.Row>
+                    <NxTable.Cell>User Interaction:</NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'UI').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      <NxButton variant="icon-only" title={getByValue(elements, 'UI').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>
+                  </NxTable.Row>
+                  <NxTable.Row>
+                    <NxTable.Cell>Scope:</NxTable.Cell>
+                    <NxTable.Cell>{getByValue(elements, 'S').quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                      <NxButton variant="icon-only" title={getByValue(elements, 'S').tooltip}>
+                        <NxFontAwesomeIcon icon={faQuestionCircle} />
+                      </NxButton>
+                    </NxTable.Cell>
+                  </NxTable.Row>
+                </NxTable.Body>
+              </NxTable>
             </div>
           </div>
         </div>
