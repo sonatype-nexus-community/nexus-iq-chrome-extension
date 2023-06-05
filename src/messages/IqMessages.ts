@@ -89,8 +89,8 @@ export function getApplications(request: MessageRequest): MessageResponse {
 function _get_iq_api_configuration(): Promise<Configuration> {
     return getSettings().then(async (settings: ExtensionSettings) => {
         if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
-            logger.logMessage('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ', LogLevel.ERROR, settings)
-            throw new InvalidConfigurationError('Attempt to get connetion configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
+            logger.logMessage('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ', LogLevel.ERROR, settings)
+            throw new InvalidConfigurationError('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
         }
 
         return new Configuration({
