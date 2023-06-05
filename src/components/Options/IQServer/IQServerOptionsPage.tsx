@@ -27,12 +27,14 @@ import {
   NxButton
 } from '@sonatype/react-shared-components';
 import React, {useEffect, useState, FormEvent} from 'react';
-import {DATA_SOURCES} from '../../../utils/Constants';
+import {DATA_SOURCE, DATA_SOURCES} from '../../../utils/Constants';
 import './IQServerOptionsPage.css';
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
 import { MessageRequest, MESSAGE_REQUEST_TYPE } from "../../../types/Message";
+import { getSettings, updateSettings } from '../../../messages/SettingsMessages'
+import { ExtensionSettings } from "../../../service/ExtensionSettings";
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -55,6 +57,10 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [hasPermissions, setPermissions] = useState(false);
   const [errorLoggingIn, setErrorLoggingIn] = useState('');
+
+  // const [iqConfiguration, setIqConfiguration] = useState({
+  //   dataSource: DATA_SOURCE.NEXUSIQ,
+  // })
 
   const isSubmittable =
     iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '';
@@ -83,32 +89,32 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   //   return false;
   // };
 
-  const getSettings = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[IQ_SERVER_URL] !== undefined) {
-        setIQServerURL(items[IQ_SERVER_URL]);
-      }
-      if (items[IQ_SERVER_USER] !== undefined) {
-        setIQServerUser(items[IQ_SERVER_USER]);
-      }
-      if (items[IQ_SERVER_TOKEN] !== undefined) {
-        setIQServerToken(items[IQ_SERVER_TOKEN]);
-      }
-      if (items[IQ_SERVER_APPLICATION] !== undefined) {
-        setIQServerApplication(items[IQ_SERVER_APPLICATION]);
-      }
-      if (items[SCAN_TYPE] !== undefined) {
-        setCurrentScanType(items[SCAN_TYPE]);
-      }
-      setLoading(false);
+  // const getSettings = () => {
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   chrome.storage.local.get((items: {[key: string]: any}) => {
+  //     if (items[IQ_SERVER_URL] !== undefined) {
+  //       setIQServerURL(items[IQ_SERVER_URL]);
+  //     }
+  //     if (items[IQ_SERVER_USER] !== undefined) {
+  //       setIQServerUser(items[IQ_SERVER_USER]);
+  //     }
+  //     if (items[IQ_SERVER_TOKEN] !== undefined) {
+  //       setIQServerToken(items[IQ_SERVER_TOKEN]);
+  //     }
+  //     if (items[IQ_SERVER_APPLICATION] !== undefined) {
+  //       setIQServerApplication(items[IQ_SERVER_APPLICATION]);
+  //     }
+  //     if (items[SCAN_TYPE] !== undefined) {
+  //       setCurrentScanType(items[SCAN_TYPE]);
+  //     }
+  //     setLoading(false);
 
-    });
-  }
+  //   });
+  // }
 
-  useEffect(() => {
-    getSettings();
-  }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
+  // useEffect(() => {
+  //   getSettings();
+  // }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
 
   // useEffect(() => {
   //   console.info("In useEffect that should only be called once");
@@ -120,56 +126,68 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   //   }
   // },[iqServerURL]);
 
-  useEffect(() => {
-    const getApplications = async () => {
-      getSettings();
-      try {
-        const requestService = new IqRequestService({
-          user: iqServerUser as string,
-          token: iqServerToken,
-          host: iqServerURL,
-          application: 'sandbox-application',
-          logger: new TestLogger(LogLevel.ERROR),
-          product: 'nexus-chrome-extension',
-          version: '1.0.0',
-          browser: true
-        });
+  // useEffect(() => {
+  //   const getApplications = async () => {
+  //     getSettings();
+  //     try {
+  //       const requestService = new IqRequestService({
+  //         user: iqServerUser as string,
+  //         token: iqServerToken,
+  //         host: iqServerURL,
+  //         application: 'sandbox-application',
+  //         logger: new TestLogger(LogLevel.ERROR),
+  //         product: 'nexus-chrome-extension',
+  //         version: '1.0.0',
+  //         browser: true
+  //       });
 
-        console.info("getApplications: Using requestService: ", requestService);
-        const response: IqApplicationResponse = await requestService.getApplications();
+  //       console.info("getApplications: Using requestService: ", requestService);
+  //       const response: IqApplicationResponse = await requestService.getApplications();
 
-        if (response.applications.length > 0) {
-          const opts = [];
-          response.applications.map((app) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return opts.push({value: app.publicId, label: app.name});
-          });
-          setIQServerApplications(opts)
-          console.info("Select options: ", opts);
-        }
-      } catch (err) {
-        console.info("getApplication in catch");
-        if (err instanceof Error) {
-          throw new Error(err.message);
-        }
-        throw new Error("Unknown error in getApplications");
-      }
-    };
-    if (loggedIn) {
-      void getApplications();
-    }
-  },[loggedIn]);
+  //       if (response.applications.length > 0) {
+  //         const opts = [];
+  //         response.applications.map((app) => {
+  //           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //           // @ts-ignore
+  //           return opts.push({value: app.publicId, label: app.name});
+  //         });
+  //         setIQServerApplications(opts)
+  //         console.info("Select options: ", opts);
+  //       }
+  //     } catch (err) {
+  //       console.info("getApplication in catch");
+  //       if (err instanceof Error) {
+  //         throw new Error(err.message);
+  //       }
+  //       throw new Error("Unknown error in getApplications");
+  //     }
+  //   };
+  //   if (loggedIn) {
+  //     void getApplications();
+  //   }
+  // },[loggedIn]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (setter: any, value: string, key: string) => {
     console.info('setItem: ', key, value);
-    setter(value);
-    chrome.storage.local.set({[key]: value}, () => {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError.message);
+    
+    _browser.runtime.sendMessage({
+      type: MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
+      params: {
+        dataSource: DATA_SOURCE.NEXUSIQ,
+        host: iqServerURL,
+        user: iqServerUser,
+        token: iqServerToken,
+        iqApplicationId: iqServerApplication
       }
-    });
+    })
+    
+    // setter(value);
+    // chrome.storage.local.set({[key]: value}, () => {
+    //   if (chrome.runtime.lastError) {
+    //     console.error(chrome.runtime.lastError.message);
+    //   }
+    // });
   };
 
   const onSubmit = (): void => {

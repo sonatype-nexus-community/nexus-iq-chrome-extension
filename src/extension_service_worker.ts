@@ -29,6 +29,10 @@ import { BrowserExtensionLogger } from './logger/Logger';
 
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
 import { getApplications } from './messages/IqMessages'
+import { 
+  getSettings as getExtensionSettings,
+  updateSettings as updateExtensionSettings 
+} from './messages/SettingsMessages'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -365,6 +369,12 @@ function handle_message_received(request: MessageRequest, sender: chrome.runtime
   switch (request.type) {
     case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
       response = getApplications(request)
+      break
+    case MESSAGE_REQUEST_TYPE.GET_SETTINGS:
+      response = getExtensionSettings(request)
+      break
+    case MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS:
+      response = updateExtensionSettings(request)
       break
   }
 
