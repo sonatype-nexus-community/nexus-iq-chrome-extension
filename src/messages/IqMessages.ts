@@ -26,7 +26,7 @@ import { InvalidConfigurationError } from '../error/ExtensionError'
 import { 
     MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
 } from "../types/Message";
-import { DATA_SOURCE } from '../utils/Constants';
+import { DATA_SOURCES } from '../utils/Constants';
 import { UserAgentHelper } from '../utils/UserAgentHelper';
 
 const logger = new BrowserExtensionLogger(LogLevel.ERROR);
@@ -82,13 +82,13 @@ export function getApplications(request: MessageRequest): MessageResponse {
             }
         })
     })
-
+    console.log("getApplications returning response", response)
     return response
 }
 
 function _get_iq_api_configuration(): Promise<Configuration> {
     return getSettings().then(async (settings: ExtensionSettings) => {
-        if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
+        if (settings.dataSource !== DATA_SOURCES.NEXUSIQ) {
             logger.logMessage('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ', LogLevel.ERROR, settings)
             throw new InvalidConfigurationError('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
         }

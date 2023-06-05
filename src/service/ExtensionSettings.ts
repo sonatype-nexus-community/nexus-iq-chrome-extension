@@ -15,7 +15,7 @@
  */
 
 import { logger, LogLevel } from "../logger/Logger"
-import { DATA_SOURCE } from "../utils/Constants";
+import { DATA_SOURCES } from "../utils/Constants";
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -30,7 +30,7 @@ const IQ_SERVER_TOKEN = 'iqServerToken';
 const LOG_LEVEL = 'logLevel';
 
 export interface ExtensionSettings {
-    dataSource: DATA_SOURCE
+    dataSource: string;
     host?: string;
     user?: string;
     token?: string;

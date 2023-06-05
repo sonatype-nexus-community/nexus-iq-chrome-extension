@@ -26,10 +26,12 @@ import {
 } from '@sonatype/react-shared-components';
 import React, {useContext, useEffect, useState} from 'react';
 import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
-import {DATA_SOURCES} from '../../utils/Constants';
+import {DATA_SOURCE, DATA_SOURCES} from '../../utils/Constants';
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
+import { getSettings, updateSettings, ExtensionSettings } from '../../../src/service/ExtensionSettings';
+
 // import {
 //   MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS
 // } from "../../types/Message";
@@ -53,11 +55,20 @@ const Options = (): JSX.Element | null => {
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[SCAN_TYPE] !== undefined) {
-        setScanType(items[SCAN_TYPE]);
-      }
-    });
+    // chrome.storage.local.get((items: {[key: string]: any}) => {
+    //   if (items[SCAN_TYPE] !== undefined) {
+    //     setScanType(items[SCAN_TYPE]);
+    //   }
+    // });
+    // todo: hard coded the setting to test
+      updateSettings({
+        dataSource: DATA_SOURCES.NEXUSIQ,
+        host: 'http://lcoalhost:8070',
+        user: 'admin',
+        token: 'Nexus!23',
+        iqApplicationId: 'aspnet-6',
+        logLevel: 'DEBUG'
+      })
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
