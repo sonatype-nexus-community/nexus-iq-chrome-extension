@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React  from 'react';
-import {CvssVectorExplainer} from '../../../../../../utils/CvssVectorExplainer';
+import {CvssVectorExplainer, VectorDetails} from '../../../../../../utils/CvssVectorExplainer';
 import { Icon } from '@fortawesome/fontawesome-svg-core';
 
 import {
@@ -37,9 +37,6 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
   }
   
   const renderCVSS = (vector) => {    
-    const cvssElements = vector.split('/');
-    const elements = CvssVectorExplainer(cvssElements);
-    console.log('vector', vector, cvssElements, elements);
     
     return (
       <React.Fragment>
@@ -60,14 +57,14 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
                   <NxH3>CVSS Explained</NxH3>
                 </NxTable.Head>
                 <NxTable.Body>
-                  {renderCVSSVectorRow('AC')}
-                  {renderCVSSVectorRow('C')}
-                  {renderCVSSVectorRow('I')}
-                  {renderCVSSVectorRow('A')}
-                  {renderCVSSVectorRow('AV')}
-                  {renderCVSSVectorRow('PR')}
-                  {renderCVSSVectorRow('UI')}
-                  {renderCVSSVectorRow('S')}
+                  {renderCVSSVectorRow('AC', vector)}
+                  {renderCVSSVectorRow('C', vector)}
+                  {renderCVSSVectorRow('I', vector)}
+                  {renderCVSSVectorRow('A', vector)}
+                  {renderCVSSVectorRow('AV', vector)}
+                  {renderCVSSVectorRow('PR', vector)}
+                  {renderCVSSVectorRow('UI', vector)}
+                  {renderCVSSVectorRow('S', vector)}
                 </NxTable.Body>
               </NxTable>
             </div>
@@ -78,13 +75,17 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
     
 
 
-    function renderCVSSVectorRow(key) {
+    function renderCVSSVectorRow(key, vector) {
+      const cvssElements = vector.split('/');
+      const elements = CvssVectorExplainer(cvssElements);
+      const vectorDetails: VectorDetails = getByValue(elements, key);
+      // console.log('vector', vector, vectorDetails, cvssElements, elements);
       return (
         <NxTable.Row key={key}>
-          <NxTable.Cell>Scope:</NxTable.Cell>
-          <NxTable.Cell>{getByValue(elements, key).quickExplanation}</NxTable.Cell>
+          <NxTable.Cell>{vectorDetails.vectorName}:</NxTable.Cell>
+          <NxTable.Cell align="right">{vectorDetails.quickExplanation}</NxTable.Cell>
           <NxTable.Cell>
-            <NxTooltip title={getByValue(elements, key).tooltip} placement="top">
+            <NxTooltip title={vectorDetails.tooltip} placement="top">
               <NxFontAwesomeIcon icon={faQuestionCircle as Icon} color="rgb(4, 89, 200)" />
             </NxTooltip>
           </NxTable.Cell>
