@@ -15,7 +15,8 @@
  */
 import React  from 'react';
 import {CvssVectorExplainer} from '../../../../../../utils/CvssVectorExplainer';
-import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
+import { Icon } from '@fortawesome/fontawesome-svg-core';
+
 import {
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
@@ -26,7 +27,6 @@ import {
   NxH3,
   NxTooltip
 } from '@sonatype/react-shared-components';
-
 
 const CVSSExplained = ({ vector }): JSX.Element | null => {
   function getByValue(map, searchValue) {
@@ -60,108 +60,14 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
                   <NxH3>CVSS Explained</NxH3>
                 </NxTable.Head>
                 <NxTable.Body>
-                  <NxTable.Row key="AC" clickAccessibleLabel={getByValue(elements, 'AC').tooltip}>
-                    <NxTable.Cell>Attack Complexity:</NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'AC').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      {/* according to this document icon-only should generate a tool tip https://gallery.sonatype.dev/#/pages/Button */}
-                      {/* not working at the moment and it's a bit of react magic which I can't work out */}
-                      <NxTooltip
-                        title={getByValue(elements, 'AC').tooltip}
-                        placement="top"
-                        className={''}
-                      >
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
-                  <NxTable.Row key="C">
-                    <NxTable.Cell>Confidentiality:</NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'C').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      <NxTooltip title={getByValue(elements, 'C').tooltip} placement="top">
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
-                  <NxTable.Row key="I">
-                    <NxTable.Cell>Integrity:</NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'I').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      <NxTooltip title={getByValue(elements, 'I').tooltip} placement="top">
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
-                  <NxTable.Row key="A">
-                    <NxTable.Cell>Availability: </NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'A').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      <NxTooltip title={getByValue(elements, 'A').tooltip} placement="top">
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
-                  <NxTable.Row key="AV">
-                    <NxTable.Cell>Attack Vector:</NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'AV').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      <NxTooltip title={getByValue(elements, 'AV').tooltip} placement="top">
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
-                  <NxTable.Row key="PR">
-                    <NxTable.Cell>Privileges Required:</NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'PR').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      <NxTooltip title={getByValue(elements, 'PR').tooltip} placement="top">
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
-                  <NxTable.Row key="UI">
-                    <NxTable.Cell>User Interaction:</NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'UI').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      <NxTooltip title={getByValue(elements, 'UI').tooltip} placement="top">
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
-                  <NxTable.Row key="S">
-                    <NxTable.Cell>Scope:</NxTable.Cell>
-                    <NxTable.Cell>{getByValue(elements, 'S').quickExplanation}</NxTable.Cell>
-                    <NxTable.Cell>
-                      <NxTooltip title={getByValue(elements, 'S').tooltip} placement="top">
-                        <NxFontAwesomeIcon
-                          icon={faQuestionCircle as IconDefinition}
-                          color="rgb(4, 89, 200)"
-                        />
-                      </NxTooltip>
-                    </NxTable.Cell>
-                  </NxTable.Row>
+                  {renderCVSSVectorRow('AC')}
+                  {renderCVSSVectorRow('C')}
+                  {renderCVSSVectorRow('I')}
+                  {renderCVSSVectorRow('A')}
+                  {renderCVSSVectorRow('AV')}
+                  {renderCVSSVectorRow('PR')}
+                  {renderCVSSVectorRow('UI')}
+                  {renderCVSSVectorRow('S')}
                 </NxTable.Body>
               </NxTable>
             </div>
@@ -170,6 +76,21 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
       </React.Fragment>
     );    
     
+
+
+    function renderCVSSVectorRow(key) {
+      return (
+        <NxTable.Row key={key}>
+          <NxTable.Cell>Scope:</NxTable.Cell>
+          <NxTable.Cell>{getByValue(elements, key).quickExplanation}</NxTable.Cell>
+          <NxTable.Cell>
+            <NxTooltip title={getByValue(elements, key).tooltip} placement="top">
+              <NxFontAwesomeIcon icon={faQuestionCircle as Icon} color="rgb(4, 89, 200)" />
+            </NxTooltip>
+          </NxTable.Cell>
+        </NxTable.Row>
+      );
+    }
   };
 
   return renderCVSS(vector);
