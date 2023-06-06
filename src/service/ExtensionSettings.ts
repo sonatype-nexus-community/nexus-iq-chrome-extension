@@ -38,11 +38,13 @@ export interface ExtensionSettings {
     logLevel: string;
 }
 
-export async function getSettings(): Promise<ExtensionSettings> {
+export async function   getSettings(): Promise<ExtensionSettings> {
     logger.logMessage('getSettings loading from local storage', LogLevel.TRACE)
 
     const promise = new Promise<ExtensionSettings>((resolve) => {
         _browser.storage.local.get([SETTINGS_STORAGE_KEY]).then((settings: ExtensionSettings) => {
+            logger.logMessage('Got Settings', LogLevel.INFO, settings)
+            console.log('Got settings', settings)
             resolve(settings)
         })
 

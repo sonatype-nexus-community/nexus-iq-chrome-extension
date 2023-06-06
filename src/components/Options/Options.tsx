@@ -46,13 +46,6 @@ const Options = (): JSX.Element | null => {
 
   const nexusContext = useContext(NexusContext);
 
-  (async () => {
-    const response = await chrome.runtime.sendMessage({"type": "getApplications"});
-    // do something with response here, not outside the function
-    console.log("New getApplications")
-    console.log(response);
-  })();
-
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // chrome.storage.local.get((items: {[key: string]: any}) => {
@@ -70,6 +63,13 @@ const Options = (): JSX.Element | null => {
         logLevel: 'DEBUG'
       })
   }, []);
+
+  (async () => {
+    const response = await chrome.runtime.sendMessage({"type": "getApplications"});
+    // do something with response here, not outside the function
+    console.log("New getApplications")
+    console.log(response);
+  })();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (func: any, value: any, key: string) => {
