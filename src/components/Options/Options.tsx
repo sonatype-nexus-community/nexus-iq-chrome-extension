@@ -30,7 +30,9 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
-import { MESSAGE_REQUEST_TYPE } from '../../types/Message';
+import {MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS} from '../../types/Message';
+import {ExtensionSettings} from "../../service/ExtensionSettings";
+import {getSettings} from "../../messages/SettingsMessages";
 // import {
 //   MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS
 // } from "../../types/Message";
@@ -41,31 +43,57 @@ const Options = (): JSX.Element | null => {
   const [activeTabId, setActiveTabId] = useState(0);
   const onClick = () => window.close();
 
-  const [scanType, setScanType] = useState<string>(DATA_SOURCES.OSSINDEX);
-
+  const [scanType, setScanType] = useState<string>(DATA_SOURCES.NEXUSIQ);
+  const [extSettings, setExtSettings] = useState<ExtensionSettings>();
   const nexusContext = useContext(NexusContext);
 
-  (async () => {
-    console.log("New Extension Settings")
-    await chrome.runtime.sendMessage({"type": MESSAGE_REQUEST_TYPE.GET_SETTINGS}, (response) => {
-      console.log(response);
-    });
+  const firstTimeLoadSettings = () => {
+    getSettings().then((settings) => {
+      if (settings.status == MESSAGE_RESPONSE_STATUS.SUCCESS && settings.data) {
+        console.log('Got Extension Settings in Top-Level Options Page: ', settings)
+        setExtSettings(settings.data['settings'] as ExtensionSettings)
+      }
+    })
+  }
+
+  useEffect(() => {
+    firstTimeLoadSettings();
+  }, []);
+
+  //
+  // useEffect(() => {
+  //   async () => {
+  //     console.log("New Extension Settings")
+  //     await chrome.runtime.sendMessage({"type": MESSAGE_REQUEST_TYPE.GET_SETTINGS}, (response) => {
+  //       console.log(response);
+  //       setExtSettings(response.data);
+  //     });
+  //   };
+  // }, []);
+
+
+  // (async () => {
+  //   console.log("New Extension Settings")
+  //   await chrome.runtime.sendMessage({"type": MESSAGE_REQUEST_TYPE.GET_SETTINGS}, (response) => {
+  //     console.log(response);
+  //     setExtSettings(response);
+  //   });
 
     // console.log("New getApplications")
     // await chrome.runtime.sendMessage({"type": "getApplications"}, (response) => {
     //   console.log(response);
     // });
     // do something with response here, not outside the function    
-  })();
+  // })();
 
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[SCAN_TYPE] !== undefined) {
-        setScanType(items[SCAN_TYPE]);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   chrome.storage.local.get((items: {[key: string]: any}) => {
+  //     if (items[SCAN_TYPE] !== undefined) {
+  //       setScanType(items[SCAN_TYPE]);
+  //     }
+  //   });
+  // }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setItem = (func: any, value: any, key: string) => {
@@ -85,7 +113,7 @@ const Options = (): JSX.Element | null => {
       return (
         <React.Fragment>
           <h1>
-            <NxPageTitle>Maury  Options</NxPageTitle>
+            <NxPageTitle>Options</NxPageTitle>
           </h1>
 
           <NxTile>
@@ -93,6 +121,7 @@ const Options = (): JSX.Element | null => {
               {/*<NxForm.RequiredFieldNotice />*/}
               <div className="nx-grid-row">
               <section className="nx-grid-col nx-grid-col--66">
+                <strong>SETTINGS: {extSettings?.host}</strong>
               <NxFieldset label={`Current Connection Type: ${scanType}`} isRequired>
 
                 <NxRadio
@@ -133,13 +162,13 @@ const Options = (): JSX.Element | null => {
                   <NxTab key={`GENERAL`}>General Options</NxTab>
                 </NxTabList>
                 <NxTabPanel>
-                  <IQServerOptionsPage />
+                  <IQServerOptionsPage extSettings = {extSettings}/>
                 </NxTabPanel>
                 <NxTabPanel>
-                  <OSSIndexOptionsPage />
+                  <OSSIndexOptionsPage extSettings = {extSettings} />
                 </NxTabPanel>
                 <NxTabPanel>
-                  <GeneralOptionsPage />
+                  <GeneralOptionsPage extSettings = {extSettings}/>
                 </NxTabPanel>
               </NxTabs>
             </NxTile.Content>

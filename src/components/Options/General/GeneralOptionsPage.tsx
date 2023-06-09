@@ -23,7 +23,7 @@ import React, {useEffect, useState} from 'react';
 
 const LOG_LEVEL = 'logLevel';
 
-const GeneralOptionsPage = (): JSX.Element | null => {
+const GeneralOptionsPage = (extSettings): JSX.Element | null => {
   const [logLevel, setLogLevel] = nxFormSelectStateHelpers.useNxFormSelectState<number>(
     LogLevel.ERROR
   );

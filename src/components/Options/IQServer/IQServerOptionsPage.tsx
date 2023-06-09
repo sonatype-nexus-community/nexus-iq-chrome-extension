@@ -45,15 +45,15 @@ const IQ_SERVER_TOKEN = 'iqServerToken';
 const IQ_SERVER_APPLICATION = 'iqServerApplication';
 const SCAN_TYPE = 'scanType';
 
-const IQServerOptionsPage = (): JSX.Element | null => {
+const IQServerOptionsPage = (extSettings): JSX.Element | null => {
 
-  const [iqServerURL, setIQServerURL] = useState('');
-  const [iqServerUser, setIQServerUser] = useState('');
-  const [iqServerToken, setIQServerToken] = useState('');
-  const [iqServerApplication, setIQServerApplication] = useState('');
+  // const [iqServerURL, setIQServerURL] = useState(extSettings.host);
+  // const [iqServerUser, setIQServerUser] = useState(extSettings.user);
+  // const [iqServerToken, setIQServerToken] = useState(extSettings.token);
+  // const [iqServerApplication, setIQServerApplication] = useState(extSettings.iqApplicationId);
   const [iqServerApplications, setIQServerApplications] = useState([]);
-  const [currentScanType, setCurrentScanType] = useState(DATA_SOURCE.NEXUSIQ);
-  const [loading, setLoading] = useState(true);
+  // const [currentScanType, setCurrentScanType] = useState(extSettings.dataSource);
+  const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [hasPermissions, setPermissions] = useState(false);
   const [errorLoggingIn, setErrorLoggingIn] = useState('');
@@ -62,9 +62,9 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   //   dataSource: DATA_SOURCE.NEXUSIQ,
   // })
 
-  const isSubmittable =
-    iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '';
-  // iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '' && iqServerApplication !== '';
+  // const isSubmittable =
+  //   iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '';
+  // // iqServerURL !== '' && iqServerUser !== '' && iqServerToken !== '' && iqServerApplication !== '';
 
   // const submitBtnClasses = classnames({disabled: !isSubmittable});
   // submitTooltip = isSubmittable ? '' : 'Required fields are missing';
@@ -112,18 +112,6 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   //   });
   // }
 
-  const firstTimeLoadSettings = () => {
-    getSettings().then((settings) => {
-      if (settings.status == MESSAGE_RESPONSE_STATUS.SUCCESS && settings.data) {
-        console.log('Got Extension Settings in Options Page: ', settings)
-        // setIQServerURL(settings.data)
-      }
-    })
-  }
-
-  useEffect(() => {
-    firstTimeLoadSettings();
-  }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
 
   // useEffect(() => {
   //   console.info("In useEffect that should only be called once");
@@ -183,11 +171,11 @@ const IQServerOptionsPage = (): JSX.Element | null => {
     _browser.runtime.sendMessage({
       type: MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
       params: {
-        dataSource: DATA_SOURCE.NEXUSIQ,
-        host: iqServerURL,
-        user: iqServerUser,
-        token: iqServerToken,
-        iqApplicationId: iqServerApplication
+        // dataSource: DATA_SOURCE.NEXUSIQ,
+        // host: iqServerURL,
+        // user: iqServerUser,
+        // token: iqServerToken,
+        // iqApplicationId: iqServerApplication
       }
     })
     
@@ -210,61 +198,61 @@ const IQServerOptionsPage = (): JSX.Element | null => {
 
   const doSubmit = async () => {
     console.info("In doSubmit...");
-    if (isSubmittable) {
-      try {
-        const requestService = new IqRequestService({
-          user: iqServerUser as string,
-          token: iqServerToken,
-          host: iqServerURL,
-          application: 'sandbox-application',
-          logger: new TestLogger(LogLevel.ERROR),
-          product: 'nexus-chrome-extension',
-          version: '1.0.0',
-          browser: true
-        });
-
-        console.info("doSubmit using requestService: ", requestService);
-        const loggedIn = await requestService.loginViaRest();
-
-        if (loggedIn) {
-          setErrorLoggingIn('');
-          setLoggedIn(loggedIn);
-          console.info("doSubmit loggedIn: ", loggedIn);
-          setItem(setCurrentScanType, DATA_SOURCES.NEXUSIQ, SCAN_TYPE);
-          setItem(setIQServerURL, iqServerURL, IQ_SERVER_URL);
-          setItem(setIQServerUser, iqServerUser, IQ_SERVER_USER);
-          setItem(setIQServerToken, iqServerToken, IQ_SERVER_TOKEN);
-
-        } else {
-          setErrorLoggingIn('Unable to login');
-          setLoggedIn(false);
-        }
-      } catch (err) {
-        setErrorLoggingIn(err);
-        setLoggedIn(false);
-      }
-    }
+    // if (isSubmittable) {
+    //   try {
+    //     const requestService = new IqRequestService({
+    //       user: iqServerUser as string,
+    //       token: iqServerToken,
+    //       host: iqServerURL,
+    //       application: 'sandbox-application',
+    //       logger: new TestLogger(LogLevel.ERROR),
+    //       product: 'nexus-chrome-extension',
+    //       version: '1.0.0',
+    //       browser: true
+    //     });
+    //
+    //     console.info("doSubmit using requestService: ", requestService);
+    //     const loggedIn = await requestService.loginViaRest();
+    //
+    //     if (loggedIn) {
+    //       setErrorLoggingIn('');
+    //       setLoggedIn(loggedIn);
+    //       console.info("doSubmit loggedIn: ", loggedIn);
+    //       setItem(setCurrentScanType, DATA_SOURCES.NEXUSIQ, SCAN_TYPE);
+    //       setItem(setIQServerURL, iqServerURL, IQ_SERVER_URL);
+    //       setItem(setIQServerUser, iqServerUser, IQ_SERVER_USER);
+    //       setItem(setIQServerToken, iqServerToken, IQ_SERVER_TOKEN);
+    //
+    //     } else {
+    //       setErrorLoggingIn('Unable to login');
+    //       setLoggedIn(false);
+    //     }
+    //   } catch (err) {
+    //     setErrorLoggingIn(err);
+    //     setLoggedIn(false);
+    //   }
+    // }
   };
 
   const askForPermissions = (event: React.MouseEvent<HTMLButtonElement>) => {
     console.log(event);
-
-    console.info('grantOriginsPermissions');
-
-    chrome.permissions.request(
-      {
-        origins: [iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`]
-      },
-      (granted) => {
-        if (granted) {
-          console.debug('Granted!!!');
-          setPermissions(true);
-        } else {
-          console.debug('Not granted!!');
-          setPermissions(false);
-        }
-      }
-    );
+    //
+    // console.info('grantOriginsPermissions');
+    //
+    // chrome.permissions.request(
+    //   {
+    //     origins: [iqServerURL.endsWith('/') ? iqServerURL : `${iqServerURL}/`]
+    //   },
+    //   (granted) => {
+    //     if (granted) {
+    //       console.debug('Granted!!!');
+    //       setPermissions(true);
+    //     } else {
+    //       console.debug('Not granted!!');
+    //       setPermissions(false);
+    //     }
+    //   }
+    // );
   };
   //
   // const getAllPermissions = () => {
@@ -276,7 +264,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
 
   function onChange(evt: FormEvent<HTMLSelectElement>) {
     console.info("Setting iqServerApplication: ", evt.currentTarget.value);
-    setItem(setIQServerApplication, evt.currentTarget.value, IQ_SERVER_APPLICATION)
+    // setItem(setIQServerApplication, evt.currentTarget.value, IQ_SERVER_APPLICATION)
   }
 
   const renderOptions = () => {
@@ -286,6 +274,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
         <React.Fragment>
           <NxGrid.Row>
             <section className="nx-grid-col nx-grid-col--100">
+              <strong>HOST: {extSettings.host}</strong>
                 <p className="nx-p">
                   <strong>1)</strong> Enter the URL for the Sonatype IQ Server
                     and grant the permissions needed for the extension to communicate with the Sonatype IQ
@@ -295,11 +284,11 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                 <div className="nx-form-row">
                 <NxFormGroup label={`URL`} isRequired>
                   <NxStatefulTextInput
-                    defaultValue={iqServerURL}
+                    defaultValue={extSettings.host}
                     placeholder="https://your-iq-server-url"
-                    validator={nonEmptyValidator}
+                    // validator={nonEmptyValidator}
                     onChange={(event) => {
-                      setItem(setIQServerURL, event.endsWith('/') ? event.slice(0, -1) : event, IQ_SERVER_URL);
+                      // setItem(setIQServerURL, event.endsWith('/') ? event.slice(0, -1) : event, IQ_SERVER_URL);
                     }}
                   />
                 </NxFormGroup>
@@ -318,17 +307,18 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                 <div className="nx-form-row">
                   <NxFormGroup label={`Username`} isRequired>
                     <NxStatefulTextInput
-                      defaultValue={iqServerUser}
-                      validator={nonEmptyValidator}
-                      onChange={(event) => setItem(setIQServerUser, event, IQ_SERVER_USER)}
+                      defaultValue={extSettings.user}
+                      // validator={nonEmptyValidator}
+                      // onChange={
+                      // (event) => setItem(setIQServerUser, event, IQ_SERVER_USER)}
                     />
                   </NxFormGroup>
                   <NxFormGroup label={`Token`} isRequired>
                     <NxStatefulTextInput
-                      defaultValue={iqServerToken}
-                      validator={nonEmptyValidator}
+                      defaultValue={extSettings.token}
+                      // validator={nonEmptyValidator}
                       type="password"
-                      onChange={(event) => setItem(setIQServerToken, event, IQ_SERVER_TOKEN)}
+                      // onChange={(event) => setItem(setIQServerToken, event, IQ_SERVER_TOKEN)}
                     />
                   </NxFormGroup>
                   <NxButton
@@ -339,6 +329,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                 </div>
 
               { loggedIn && iqServerApplications.length > 0 && (
+
                 <React.Fragment>
                   <p className="nx-p">
                     <strong>3)</strong> Set the Sonatype Lifecycle Application.
@@ -350,14 +341,13 @@ const IQServerOptionsPage = (): JSX.Element | null => {
                   </p>
 
                   <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
-                    <NxFormSelect value={iqServerApplication} onChange={onChange} disabled={!loggedIn} >
-                      {iqServerApplications.map((app) => {
-                        return (
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            <option key={app.value} value={app.value}>{app.label}</option>
-                        )
-                      })}
+                    <NxFormSelect value={extSettings.iqApplicationId} onChange={onChange} disabled={!loggedIn} >
+                      {/*{iqServerApplications.map((app) => {*/}
+                      {/*  return (*/}
+                      {/*      // eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
+                      {/*      <option key={app.value} value={app.value}>{app.label}</option>*/}
+                      {/*  )*/}
+                      {/*})}*/}
                     </NxFormSelect>
                   </NxFormGroup>
                 </React.Fragment>

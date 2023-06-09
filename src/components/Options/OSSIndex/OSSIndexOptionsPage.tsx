@@ -19,7 +19,7 @@ import React, {useEffect, useState} from 'react';
 const OSS_INDEX_USER = 'ossIndexUser';
 const OSS_INDEX_TOKEN = 'ossIndexToken';
 
-const OSSIndexOptionsPage = (): JSX.Element | null => {
+const OSSIndexOptionsPage = (extSettings): JSX.Element | null => {
   const [ossIndexUser, setOSSIndexUser] = useState('');
   const [ossIndexToken, setOSSIndexToken] = useState('');
   const [loading, setLoading] = useState(true);
