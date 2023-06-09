@@ -30,6 +30,7 @@ import {DATA_SOURCES} from '../../utils/Constants';
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
+import { MESSAGE_REQUEST_TYPE } from '../../types/Message';
 // import {
 //   MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS
 // } from "../../types/Message";
@@ -45,10 +46,16 @@ const Options = (): JSX.Element | null => {
   const nexusContext = useContext(NexusContext);
 
   (async () => {
-    const response = await chrome.runtime.sendMessage({"type": "getApplications"});
-    // do something with response here, not outside the function
-    console.log("New getApplications")
-    console.log(response);
+    console.log("New Extension Settings")
+    await chrome.runtime.sendMessage({"type": MESSAGE_REQUEST_TYPE.GET_SETTINGS}, (response) => {
+      console.log(response);
+    });
+
+    // console.log("New getApplications")
+    // await chrome.runtime.sendMessage({"type": "getApplications"}, (response) => {
+    //   console.log(response);
+    // });
+    // do something with response here, not outside the function    
   })();
 
   useEffect(() => {

@@ -33,11 +33,12 @@ import {
   getSettings as getExtensionSettings,
   updateSettings as updateExtensionSettings 
 } from './messages/SettingsMessages'
+import { DATA_SOURCE } from './utils/Constants';
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
 
-const logger = new BrowserExtensionLogger(LogLevel.ERROR);
+const logger = new BrowserExtensionLogger(LogLevel.TRACE);
 
 const SCAN_TYPE = 'scanType';
 const IQ_SERVER_URL = 'iqServerURL';
@@ -371,21 +372,37 @@ function handle_message_received(request: MessageRequest, sender: chrome.runtime
       response = getApplications(request)
       break
     case MESSAGE_REQUEST_TYPE.GET_SETTINGS:
-      response = getExtensionSettings(request)
+      getExtensionSettings().then((response) => {
+        response.status_detail = {
+          'message': "Proving this is where the response comes from!"
+        }
+        sendResponse(response)
+      })
       break
     case MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS:
-      response = updateExtensionSettings(request)
+      updateExtensionSettings(request)
       break
   }
-
-  sendResponse(response)
 
   return true
 }
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    chrome.tabs.create({url: 'options.html?install'})
+    /*
+    Upon first installation, force some initial settings into Local Storage
+    before we open the Options Tab.
+     */
+    updateExtensionSettings({
+      "type": MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
+      "params": {
+        "dataSource": DATA_SOURCE.NEXUSIQ,
+        "logLevel": LogLevel.TRACE
+      }
+    }).then((response) => {
+      chrome.tabs.create({url: 'options.html?install'})
+    })
+    
   } else if (details.reason === 'update') {
     /* empty */
   } else if (details.reason === 'chrome_update') {

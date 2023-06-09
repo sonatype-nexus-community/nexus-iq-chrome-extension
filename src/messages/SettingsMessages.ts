@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ExtensionError } from '../error/ExtensionError';
 import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
 import { 
     getSettings as getExtensionSettings, 
@@ -24,35 +25,40 @@ import {
     MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
 } from "../types/Message";
 
+const SETTINGS_STORAGE_KEY = 'settings'
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser;
+
 /**
  * This file contains handlers for processing messages that relate to manging this Extensions
  * settings.
  */
 
-export function getSettings(request: MessageRequest): MessageResponse {
-    const response: MessageResponse = {
-        "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
-    }
+const logger = new BrowserExtensionLogger(LogLevel.DEBUG);
 
-    getExtensionSettings().then((settings: ExtensionSettings) => {
-        response.status = MESSAGE_RESPONSE_STATUS.SUCCESS
-        response.data = settings
+export async function getSettings(): Promise<MessageResponse> {
+    return _browser.storage.local.get([SETTINGS_STORAGE_KEY]).then((settings: ExtensionSettings) => {
+        logger.logMessage('Read Extension Settings from Local Storage', LogLevel.DEBUG, settings)
+        return {
+            "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
+            "data": settings
+        }
+    }).catch((err) => {
+        return {
+            "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
+        }
     })
-
-    return response
 }
 
-export function updateSettings(request: MessageRequest): MessageResponse {
-    const response: MessageResponse = {
-        "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
-    }
-
+export async function updateSettings(request: MessageRequest): Promise<MessageResponse> {
     if (request.params) {
-        updateExtensionSettings(request.params as ExtensionSettings).then((settings) => {
-            response.status = MESSAGE_RESPONSE_STATUS.SUCCESS
-            response.data = settings
+        return _browser.storage.local.set({[SETTINGS_STORAGE_KEY]: request.params}).then(() => {
+            logger.logMessage('Set Extension Settings in Local Storage', LogLevel.DEBUG)
+            return getSettings()
         })
+    } else {
+        logger.logMessage('Unable to store Extension Settings', LogLevel.ERROR, request)
+        throw new ExtensionError('Unable to process updateSetting request')
     }
-
-    return response
 }

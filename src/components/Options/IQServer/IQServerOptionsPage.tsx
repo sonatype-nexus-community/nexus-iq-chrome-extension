@@ -32,7 +32,7 @@ import './IQServerOptionsPage.css';
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
-import { MessageRequest, MESSAGE_REQUEST_TYPE } from "../../../types/Message";
+import { MessageRequest, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../../types/Message";
 import { getSettings, updateSettings } from '../../../messages/SettingsMessages'
 import { ExtensionSettings } from "../../../service/ExtensionSettings";
 
@@ -52,7 +52,7 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   const [iqServerToken, setIQServerToken] = useState('');
   const [iqServerApplication, setIQServerApplication] = useState('');
   const [iqServerApplications, setIQServerApplications] = useState([]);
-  const [currentScanType, setCurrentScanType] = useState(DATA_SOURCES.OSSINDEX);
+  const [currentScanType, setCurrentScanType] = useState(DATA_SOURCE.NEXUSIQ);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [hasPermissions, setPermissions] = useState(false);
@@ -112,9 +112,18 @@ const IQServerOptionsPage = (): JSX.Element | null => {
   //   });
   // }
 
-  // useEffect(() => {
-  //   getSettings();
-  // }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
+  const firstTimeLoadSettings = () => {
+    getSettings().then((settings) => {
+      if (settings.status == MESSAGE_RESPONSE_STATUS.SUCCESS && settings.data) {
+        console.log('Got Extension Settings in Options Page: ', settings)
+        // setIQServerURL(settings.data)
+      }
+    })
+  }
+
+  useEffect(() => {
+    firstTimeLoadSettings();
+  }, [iqServerApplication, iqServerToken, iqServerURL, iqServerUser, currentScanType]);
 
   // useEffect(() => {
   //   console.info("In useEffect that should only be called once");
