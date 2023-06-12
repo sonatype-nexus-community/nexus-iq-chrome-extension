@@ -109,14 +109,29 @@ Response (SUCCESS):
 
 **Type:** updateExtensionConfiguration  
 **Parameters:** *None*  
-**Response Returned:** No  
-**Description:** Update current Extension Configuration in local storage.  
+**Response Returned:** Yes  
+**Description:** Update current Extension Configuration in local storage and then return current settings
 
 Example request:
 ```
 {
     "type": "updateConfiguration",
     "params": {
+        dataSource: DATA_SOURCE
+        host?: string;
+        user?: string;
+        token?: string;
+        iqApplicationId?: string;
+        logLevel: string;
+    }
+}
+```
+
+Response (SUCCESS):
+```
+{
+    "status": "SUCCESS",
+    "data": {
         dataSource: DATA_SOURCE
         host?: string;
         user?: string;
