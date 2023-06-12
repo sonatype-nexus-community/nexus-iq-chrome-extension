@@ -18,25 +18,12 @@ import Options from './components/Options/Options';
 import Install from './components/Install/Install';
 import Help from './components/Help/Help';
 
-type OptionsProps = {
-  install: boolean;
-  help: boolean;
-};
-
-class NexusOptionsContainer extends React.Component<OptionsProps> {
-  constructor(props: OptionsProps) {
-    super(props);
-  }
-
-  render(): JSX.Element {
-    return (
-      <React.Fragment>
-        {this.props.help && <Help />}
-        {this.props.install && <Install />}
-        {!this.props.help && !this.props.install && <Options />}
-      </React.Fragment>
-    );
-  }
+export default function NexusOptionsContainer({install, help}) {
+  return (
+    <React.Fragment>
+      {help && <Help />}
+      {install && <Install />}
+      {!help && !install && <Options />}
+    </React.Fragment>
+  )
 }
-
-export default NexusOptionsContainer;
