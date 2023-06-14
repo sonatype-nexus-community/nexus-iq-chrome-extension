@@ -24,7 +24,9 @@ import {
 } from '@sonatype/js-sona-types';
 import {PackageURL} from 'packageurl-js';
 import React from 'react';
-import {DATA_SOURCES} from '../utils/Constants';
+import {DATA_SOURCE, DATA_SOURCES} from '../utils/Constants';
+import { ExtensionSettings } from '../service/ExtensionSettings';
+import { LogLevel } from '../logger/Logger';
 
 export interface NexusContextInterface {
   showAlpDrawer: boolean;
@@ -69,3 +71,8 @@ const initialContext: NexusContextInterface = {
 };
 
 export const NexusContext = React.createContext(initialContext);
+
+export const ExtensionContext = React.createContext<ExtensionSettings>({
+  "dataSource": DATA_SOURCE.NEXUSIQ,
+  "logLevel": LogLevel.ERROR
+})

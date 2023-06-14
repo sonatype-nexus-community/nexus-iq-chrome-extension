@@ -14,12 +14,41 @@
  * limitations under the License.
  */
 import {NxH2, NxPageTitle, NxTile} from '@sonatype/react-shared-components';
-import React from 'react';
+import React, {useState} from 'react';
 import IQServerOptionsPage from '../Options/IQServer/IQServerOptionsPage';
+import { DEFAULT_EXTENSION_SETTINGS, ExtensionSettings } from '../../service/ExtensionSettings';
+import { ExtensionContext } from '../../context/NexusContext';
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from '../../types/Message';
+import { updateExtensionConfiguration } from '../../messages/SettingsMessages';
 
-const Install = (): JSX.Element => {
-  const render = () => {
-    return (
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser;
+
+function Install() {
+  const [extensionConfig, setExtensionConfig] = useState<ExtensionSettings>(DEFAULT_EXTENSION_SETTINGS)
+
+  function handleNewExtensionConfig(settings: ExtensionSettings) {
+    console.log(`Install handleNewExtensionConfig`, settings)
+    // _browser.runtime.sendMessage({
+    //   'type': MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
+    //   'params': settings
+    // }, (response) => {
+    //   console.log('Install Response', response)
+    //   if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+    //     setExtensionConfig((response.data as ExtensionSettings))
+    //   }
+    // })
+    updateExtensionConfiguration(settings).then((response) => {
+      console.log('Install Response', response)
+      if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+        console.log('Install Set Extension Response:', response)
+        setExtensionConfig((response.data as ExtensionSettings))
+      }
+    })
+  }
+
+  return (
+    <ExtensionContext.Provider value={extensionConfig}>
       <React.Fragment>
         <h1>
           <NxPageTitle>
@@ -35,14 +64,12 @@ const Install = (): JSX.Element => {
               If you are using OSS Index, you are good to go and can skip this. If you want to use
               this extension with Nexus IQ Server, follow the quick setup below!
             </p>
-            <IQServerOptionsPage />
+            <IQServerOptionsPage setExtensionConfig={handleNewExtensionConfig}/>
           </NxTile.Content>
         </NxTile>
       </React.Fragment>
-    );
-  };
-
-  return render();
-};
+    </ExtensionContext.Provider>
+  )
+}
 
 export default Install;

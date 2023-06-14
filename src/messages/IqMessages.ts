@@ -17,17 +17,20 @@
 import {
     Configuration,
     ApplicationsApi,
-    DefaultConfig
+    ResponseError
 } from '@sonatype/nexus-iq-api-client'
 import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
-import { getSettings, ExtensionSettings } from '../service/ExtensionSettings'
-
+import { readExtensionConfiguration } from '../messages/SettingsMessages'
+import { ExtensionSettings } from '../service/ExtensionSettings';
 import { InvalidConfigurationError } from '../error/ExtensionError'
 import { 
-    MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
+    MessageRequest, MessageResponse, MESSAGE_RESPONSE_STATUS 
 } from "../types/Message";
 import { DATA_SOURCE } from '../utils/Constants';
 import { UserAgentHelper } from '../utils/UserAgentHelper';
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser;
 
 const logger = new BrowserExtensionLogger(LogLevel.ERROR);
 
@@ -36,93 +39,78 @@ const logger = new BrowserExtensionLogger(LogLevel.ERROR);
  * Sonatype IQ Server.
  */
 
-export function getApplications(request: MessageRequest): MessageResponse {
-    const response: MessageResponse = {
-        "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
-    }
+export function getApplications(request: MessageRequest): Promise<MessageResponse> { 
+    return _get_iq_api_configuration().then((apiConfig) => {
+        return apiConfig
+    }).catch((err) => { 
+        throw err
+    }).then((apiConfig) => {
+        logger.logMessage('API Configiration', LogLevel.INFO, apiConfig)
+        const apiClient = new ApplicationsApi(apiConfig)
 
-     _get_iq_api_configuration().then((apiConfig) => {
-        return new ApplicationsApi(apiConfig)
-    }).then((apiClient) => {
-        apiClient.getApplicationsRaw({}).then((apiResponse) => {
-            switch(apiResponse.raw.status) {
-                case 200:
-                case 204:
-                    response.status = MESSAGE_RESPONSE_STATUS.SUCCESS
-                    response.data = apiResponse.value
-                    break
-    
-                case 401:
-                case 403:
-                    response.status = MESSAGE_RESPONSE_STATUS.AUTH_ERROR
-                    response.status_detail = {
-                        message: apiResponse.raw.statusText
-                    }
-                    break
-    
-                default:
-                    response.status = MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
-                    response.status_detail = {
-                        message: `${apiResponse.raw.status}: ${apiResponse.raw.statusText}`
-                    }
-                    break
+        return apiClient.getApplications({}).then((applications) => {
+            return {
+                "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
+                "data": applications
             }
-            return response
         }).catch((err) => {
-            if (err instanceof InvalidConfigurationError) {
-                response.status = MESSAGE_RESPONSE_STATUS.FAILURE
-                response.status_detail = {
-                    "message": "Invalid Extension Configuration - see Error Log"
+            if (err instanceof ResponseError) {
+                if (err.response.status > 400 && err.response.status < 404) {
+                    return {
+                        "status": MESSAGE_RESPONSE_STATUS.AUTH_ERROR
+                    }
+                } else {
+                    return {
+                        "status": MESSAGE_RESPONSE_STATUS.FAILURE,
+                        "status_detail": {
+                            "message": "Failed to call Sonatype IQ Server",
+                            "detail": `${err.response.status}: ${err.message}`
+                        }
+                    }
                 }
-            } else {
-                response.status = MESSAGE_RESPONSE_STATUS.FAILURE
-                response.status_detail = {
-                    "message": "Unknown Error - see Error Log"
+            }
+            return {
+                "status": MESSAGE_RESPONSE_STATUS.FAILURE,
+                "status_detail": {
+                    "message": "Failed to call Sonatype IQ Server",
+                    "detail": err
                 }
             }
         })
     })
-
-    return response
 }
 
 function _get_iq_api_configuration(): Promise<Configuration> {
-    return getSettings().then(async (settings: ExtensionSettings) => {
-        if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
-            logger.logMessage('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ', LogLevel.ERROR, settings)
-            throw new InvalidConfigurationError('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
+    return readExtensionConfiguration().then((response) => {
+        if (chrome.runtime.lastError) {
+            console.log('Error _get_iq_api_configuration', chrome.runtime.lastError.message)
         }
-
-        return new Configuration({
-            basePath: settings.host,
-            username: settings.user,
-            password: settings.token,
-            headers: {
-                'User-Agent': await UserAgentHelper.getUserAgent(true, 'nexus-iq-chrome-extension', '2.0.0')
+        if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+            const settings = response.data as ExtensionSettings
+            if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
+                logger.logMessage(`Attempt to get connection configuration for ${DATA_SOURCE.NEXUSIQ}, but DATA_SOURCE is ${settings.dataSource}`, LogLevel.ERROR, settings)
+                throw new InvalidConfigurationError('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
             }
-        })
-        
 
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        // if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
-        //     console.error('Unable to get settings need to make IQ connection: ', settings);
-        // }
-        // if (settings.logLevel) {
-        // logger.setLevel(settings.logLevel as unknown as LogLevel);
-        // }
-        // try {
-        // if ((settings.scanType as unknown as string) === 'NEXUSIQ') {
-        //     logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
-        //     handleIQServerWrapper(request.purl, settings);
-        // } else {
-        //     logger.logMessage('Attempting to call OSS Index', LogLevel.INFO);
-        //     handleOSSIndexWrapper(request.purl, settings);
-        // }
-        // } catch (err) {
-        // logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-        // console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
-
-        // }
+            if (settings.host === undefined) {
+                logger.logMessage(`Host is not set for IQ Server`, LogLevel.WARN)
+                throw new InvalidConfigurationError('Host is not set for IQ Server')
+            }
+    
+            /**
+             * @todo - FIX USER AGENT CODE
+             */
+            return new Configuration({
+                basePath: (settings.host.endsWith('/') ? settings.host.slice(0, -1) : settings.host),
+                username: settings.user,
+                password: settings.token,
+                headers: {
+                    'User-Agent': 'nexus-iq-chrome-extension/2.x.x' //await UserAgentHelper.getUserAgent(true, 'nexus-iq-chrome-extension', '2.0.0')
+                }
+            })
+        } else {
+            throw new InvalidConfigurationError('Unable to get Extension Configuration')
+        }
     }).catch((err) => {
         throw err
     })

@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-import { ExtensionError } from '../error/ExtensionError';
 import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
-import { 
-    getSettings as getExtensionSettings, 
-    updateSettings as updateExtensionSettings, 
-    ExtensionSettings 
-} from '../service/ExtensionSettings'
+import { ExtensionSettings } from '../service/ExtensionSettings'
 import { 
     MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
 } from "../types/Message";
@@ -37,12 +32,13 @@ const _browser: any = chrome ? chrome : browser;
 
 const logger = new BrowserExtensionLogger(LogLevel.DEBUG);
 
-export async function getSettings(): Promise<MessageResponse> {
-    return _browser.storage.local.get([SETTINGS_STORAGE_KEY]).then((settings: ExtensionSettings) => {
-        logger.logMessage('Read Extension Settings from Local Storage', LogLevel.DEBUG, settings)
+export async function readExtensionConfiguration(): Promise<MessageResponse> {
+    return _browser.storage.local.get([SETTINGS_STORAGE_KEY]).then((result) => {
+        if (chrome.runtime.lastError) console.error('Failed reading local storage')
+        logger.logMessage('Read Extension Settings from Local Storage', LogLevel.DEBUG, result)
         return {
             "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
-            "data": settings
+            "data": result.settings
         }
     }).catch((err) => {
         return {
@@ -51,14 +47,17 @@ export async function getSettings(): Promise<MessageResponse> {
     })
 }
 
-export async function updateSettings(request: MessageRequest): Promise<MessageResponse> {
-    if (request.params) {
-        return _browser.storage.local.set({[SETTINGS_STORAGE_KEY]: request.params}).then(() => {
-            logger.logMessage('Set Extension Settings in Local Storage', LogLevel.DEBUG)
-            return getSettings()
-        })
-    } else {
-        logger.logMessage('Unable to store Extension Settings', LogLevel.ERROR, request)
-        throw new ExtensionError('Unable to process updateSetting request')
-    }
+export async function updateExtensionConfiguration(settings: ExtensionSettings): Promise<MessageResponse> {
+    return _browser.storage.local.set({[SETTINGS_STORAGE_KEY]: settings}).then(() => {
+        if (chrome.runtime.lastError) console.error('Failed writing local storage')
+        logger.logMessage('Set Extension Settings in Local Storage', LogLevel.DEBUG, settings, chrome.runtime.lastError)
+        return readExtensionConfiguration()
+    }).catch((err) => {
+        return {
+            "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR,
+            "status_detail": {
+                "message": `Error storing in local storage: ${chrome.runtime.lastError?.message}`
+            }
+        }
+    })
 }

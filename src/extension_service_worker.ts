@@ -29,11 +29,9 @@ import { BrowserExtensionLogger } from './logger/Logger';
 
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
 import { getApplications } from './messages/IqMessages'
-import { 
-  getSettings as getExtensionSettings,
-  updateSettings as updateExtensionSettings 
-} from './messages/SettingsMessages'
+import { readExtensionConfiguration, updateExtensionConfiguration } from './messages/SettingsMessages'
 import { DATA_SOURCE } from './utils/Constants';
+import { ExtensionSettings } from './service/ExtensionSettings';
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -246,6 +244,10 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
       chrome.tabs.sendMessage(tabId, {
         type: 'artifactDetailsFromServiceWorker',
         componentDetails: details
+      }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('Error in getActiveTabId 1') 
+        }
       });
     })
     .catch((err) => {
@@ -256,6 +258,10 @@ const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => 
 const getActiveTabId = (): Promise<number> => {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+      if (chrome.runtime.lastError) {
+        console.error('Error in getActiveTabId 2') 
+      }
+
       const tab = tabs.length > 0 ? tabs[0] : undefined;
       const tabId = tab?.id !== undefined ? tab.id : undefined;
       if (tab !== undefined && tabId !== undefined) {
@@ -303,48 +309,48 @@ const handleIQServerWrapper = (purl: string, settings: Settings) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  logger.logMessage('Request received', LogLevel.INFO, request);
-  console.info('Message received: ', request);
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   logger.logMessage('Request received', LogLevel.INFO, request);
+//   console.info('Message received: ', request);
 
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (request && request.type) {
-    if (request.type === 'getArtifactDetailsFromPurl') {
-      logger.logMessage('Getting settings in getArtifactDetailsFromPurl', LogLevel.INFO);
-      console.info('Getting settings in getArtifactDetailsFromPurl');
-      getSettings()
-        .then((settings: Settings) => {
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
-            console.error('Unable to get settings need to make IQ connection: ', settings);
-          }
-          if (settings.logLevel) {
-            logger.setLevel(settings.logLevel as unknown as LogLevel);
-          }
-          try {
-            if ((settings.scanType as unknown as string) === 'NEXUSIQ') {
-              logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
-              handleIQServerWrapper(request.purl, settings);
-            } else {
-              logger.logMessage('Attempting to call OSS Index', LogLevel.INFO);
-              handleOSSIndexWrapper(request.purl, settings);
-            }
-          } catch (err) {
-            logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-            console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
+//   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+//   if (request && request.type) {
+//     if (request.type === 'getArtifactDetailsFromPurl') {
+//       logger.logMessage('Getting settings in getArtifactDetailsFromPurl', LogLevel.INFO);
+//       console.info('Getting settings in getArtifactDetailsFromPurl');
+//       getSettings()
+//         .then((settings: Settings) => {
+//           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+//           if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
+//             console.error('Unable to get settings need to make IQ connection: ', settings);
+//           }
+//           if (settings.logLevel) {
+//             logger.setLevel(settings.logLevel as unknown as LogLevel);
+//           }
+//           try {
+//             if ((settings.scanType as unknown as string) === 'NEXUSIQ') {
+//               logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
+//               handleIQServerWrapper(request.purl, settings);
+//             } else {
+//               logger.logMessage('Attempting to call OSS Index', LogLevel.INFO);
+//               handleOSSIndexWrapper(request.purl, settings);
+//             }
+//           } catch (err) {
+//             logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
+//             console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
 
-          }
-        })
-        .catch((err) => {
-          logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-          console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
-        });
-    }
-    if (request.type === 'togglePage') {
-      toggleIcon(request.show);
-    }
-  }
-});
+//           }
+//         })
+//         .catch((err) => {
+//           logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
+//           console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
+//         });
+//     }
+//     if (request.type === 'togglePage') {
+//       toggleIcon(request.show);
+//     }
+//   }
+// });
 
 /**
  * New listener for messages received by Service Worker.
@@ -369,19 +375,18 @@ function handle_message_received(request: MessageRequest, sender: chrome.runtime
 
   switch (request.type) {
     case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
-      response = getApplications(request)
-      break
-    case MESSAGE_REQUEST_TYPE.GET_SETTINGS:
-      getExtensionSettings().then((response) => {
-        response.status_detail = {
-          'message': "Proving this is where the response comes from!"
-        }
+      getApplications(request).then((response) => {
         sendResponse(response)
       })
       break
-    case MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS:
-      updateExtensionSettings(request)
-      break
+    // case MESSAGE_REQUEST_TYPE.GET_SETTINGS:
+    //   readExtensionConfiguration().then((response) => {
+    //     response.status_detail = {
+    //       'message': "Proving this is where the response comes from!"
+    //     }
+    //     sendResponse(response)
+    //   })
+    //   break
   }
 
   return true
@@ -393,14 +398,19 @@ chrome.runtime.onInstalled.addListener((details) => {
     Upon first installation, force some initial settings into Local Storage
     before we open the Options Tab.
      */
-    updateExtensionSettings({
-      "type": MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
-      "params": {
-        "dataSource": DATA_SOURCE.NEXUSIQ,
-        "logLevel": LogLevel.TRACE
+    // console.log('Installing default extension settings...')
+    // _browser.runtime.sendMessage({
+    //   "type": "extensionInstall"
+    // }, () => {
+    //   if (chrome.runtime.lastError) {
+    //     console.log('Error installing default Extension Settings', chrome.runtime.lastError.message)
+    //   }
+    // })
+    
+    chrome.tabs.create({url: 'options.html?install'}, (tab) => {
+      if (chrome.runtime.lastError) {
+        console.error('Error in install handler opening tab')
       }
-    }).then((response) => {
-      chrome.tabs.create({url: 'options.html?install'})
     })
     
   } else if (details.reason === 'update') {
@@ -412,12 +422,20 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 });
 
+/**
+ * this is fired for every tab on every update - we should filter before sending a message - this is carnage!
+ */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.url !== '') {
-    chrome.tabs.sendMessage(tabId, {
-      type: 'changedURLOnPage',
-      url: changeInfo.url
-    });
-  }
-});
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//   console.log('changedURLOnPage', tabId, changeInfo, tab)
+//   if (changeInfo.status == 'complete' && tab.url !== '') {
+//     chrome.tabs.sendMessage(tabId, {
+//       type: 'changedURLOnPage',
+//       url: tab.url
+//     }, (response) => {
+//       if (chrome.runtime.lastError) {
+//         console.error('Error in changeInfo', chrome.runtime.lastError.message)
+//       }
+//     });
+//   }
+// });

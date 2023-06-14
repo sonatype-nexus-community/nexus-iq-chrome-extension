@@ -43,6 +43,7 @@ Every message must comply with the following format rules.
 ### Get Applications
 
 **Type:** getApplications  
+**Handled By:** Service Worker
 **Parameters:** *None*  
 **Response Returned:** Yes  
 **Description:** Get a list of Applications that the User has access to in Sonatype IQ Server  
@@ -78,7 +79,8 @@ Response (AUTH_ERROR)
 
 ### Get Extension Configuration
 
-**Type:** getExtensionConfiguration  
+**Type:** readExtensionConfiguration 
+**Handled By:** Content Script  
 **Parameters:** *None*  
 **Response Returned:** Yes  
 **Description:** Get current Extension Configuration from local storage.  
@@ -86,7 +88,7 @@ Response (AUTH_ERROR)
 Example request:
 ```
 {
-    "type": "getConfiguration"
+    "type": "readExtensionConfiguration"
 }
 ```
 
@@ -108,14 +110,15 @@ Response (SUCCESS):
 ### Update Extension Configuration
 
 **Type:** updateExtensionConfiguration  
-**Parameters:** *None*  
+**Handled By:** Content Script   
+**Parameters:** ExtensionSettings  
 **Response Returned:** Yes  
 **Description:** Update current Extension Configuration in local storage and then return current settings
 
 Example request:
 ```
 {
-    "type": "updateConfiguration",
+    "type": "updateExtensionConfiguration",
     "params": {
         dataSource: DATA_SOURCE
         host?: string;

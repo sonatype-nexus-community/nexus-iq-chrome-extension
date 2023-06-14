@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import Options from './components/Options/Options';
-import Install from './components/Install/Install';
-import Help from './components/Help/Help';
+export const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
 
-export interface NexusOptionsContainerInterace {
-  install: boolean,
-  help: boolean
-}
+export const isHttpUriValidator = (val: string) => {
+    let url
+    try {
+        url = new URL(val)
+    } catch (_) {
+        return false
+    }
 
-export const NexusOptionsContainer = (props: NexusOptionsContainerInterace) => {
-  return (
-    <React.Fragment>
-      {props.help && <Help />}
-      {props.install && <Install />}
-      {!props.help && !props.install && <Options />}
-    </React.Fragment>
-  )
+    return url.protocol === 'http:' || url.protocol === 'https:'
 }

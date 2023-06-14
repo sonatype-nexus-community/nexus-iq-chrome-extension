@@ -13,7 +13,7 @@
     "@agney/react-loading": "^0.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@sonatype/js-sona-types": "^1.2.2",
-    "@sonatype/nexus-iq-api-client": "^0.156.1",
+    "@sonatype/nexus-iq-api-client": "^0.156.3",
     "@sonatype/ossindex-api-client": "^2023.5.2",
     "@sonatype/react-shared-components": "^12.10.30",
     "@types/chrome": "^0.0.218",

@@ -20,82 +20,121 @@ import {ArtifactMessage} from './types/ArtifactMessage';
 import {getArtifactDetailsFromDOM} from './utils/PageParsing';
 import {findRepoType} from './utils/UrlParsing';
 import {RepoType} from "./utils/Constants";
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message';
+import { readExtensionConfiguration, updateExtensionConfiguration } from './messages/SettingsMessages';
+import { ExtensionSettings } from './service/ExtensionSettings';
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser;
+
+/**
+ * New listener for messages received by Service Worker.
+ * 
+ */
+// _browser.runtime.onMessage.addListener(handle_message_received)
+
+/**
+ * New (asynchronous) handler for processing messages received.
+ * 
+ * This always returns True to cause handling to be asynchronous.
+ */
+function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
+  console.debug('Content Script - Handle Received Message', request.type)
+
+  // let response: MessageResponse = {
+  //   "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR,
+  //   "status_detail": {
+  //     "mesage": "Default Error"
+  //   }
+  // }
+
+  switch (request.type) {
+    case MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS:
+      updateExtensionConfiguration((request.params as ExtensionSettings)).then((response) => {
+        sendResponse(response)
+      })
+      break
+  }
+
+  return true
+}
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
-  console.info('Received a message on content.js', event);
-  if (event.type === 'changedURLOnPage') {
-    console.debug('Received changedURLOnPage message on content.js');
-    checkPage();
-  }
+// chrome.runtime.onMessage.addListener((event: any, sender, respCallback) => {
+//   console.info('Received a message on content.js', event);
+//   if (event.type === 'changedURLOnPage') {
+//     console.debug('Received changedURLOnPage message on content.js');
+//     checkPage();
+//   }
 
-  if (event.type === 'getArtifactDetailsFromWebpage') {
-    console.info('Received getArtifactDetailsFromWebpage message on content.js');
-    const data: ArtifactMessage = event;
-    const repoType = data.repoTypeInfo;
-    console.info('Message says to get some artifact details from the webpage, will do boss!', data);
+//   if (event.type === 'getArtifactDetailsFromWebpage') {
+//     console.info('Received getArtifactDetailsFromWebpage message on content.js');
+//     const data: ArtifactMessage = event;
+//     const repoType = data.repoTypeInfo;
+//     console.info('Message says to get some artifact details from the webpage, will do boss!', data);
 
-    const purl = getArtifactDetailsFromDOM(data.repoTypeInfo, data.url);
+//     const purl = getArtifactDetailsFromDOM(data.repoTypeInfo, data.url);
 
-    if (purl) {
-      console.debug('Obtained a valid purl from getArtifactDetailsFromDOM: ' + purl);
-      respCallback(purl.toString());
-    } else {
-      const version = findVersionElement(repoType) ?? '';
-      if (version.length > 0) {
-        // TODO: This needs to be handled for the different pacakge formats
-        const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
-        const newUrl = oldUrl + (repoType.appendVersionPath?.replace("{versionNumber}", version));
-        const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
-        if (newPurl) {
-          console.debug('Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
-          respCallback(newPurl.toString());
-        }
-      }
-    }
-    // if (purl) {
-    //   console.info('Got a purl back from scraping url or webpage', purl);
-    //   respCallback(purl.toString());
-    // }
-  }
+//     if (purl) {
+//       console.debug('Obtained a valid purl from getArtifactDetailsFromDOM: ' + purl);
+//       respCallback(purl.toString());
+//     } else {
+//       const version = findVersionElement(repoType) ?? '';
+//       if (version.length > 0) {
+//         // TODO: This needs to be handled for the different pacakge formats
+//         const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
+//         const newUrl = oldUrl + (repoType.appendVersionPath?.replace("{versionNumber}", version));
+//         const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
+//         if (newPurl) {
+//           console.debug('Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + purl);
+//           respCallback(newPurl.toString());
+//         }
+//       }
+//     }
+//     // if (purl) {
+//     //   console.info('Got a purl back from scraping url or webpage', purl);
+//     //   respCallback(purl.toString());
+//     // }
+//   }
 
-  if (event.type === 'artifactDetailsFromServiceWorker') {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (event.componentDetails) {
-      const data: ComponentDetails = event.componentDetails;
-      // const policyData: PolicyData = event.policyData;
-      //
-      // console.log('Policy Details', policyData);
-      const loc = window.location.href;
-      const element = findElement(loc);
-      removeClasses(element);
-      if (
-        // data.componentDetails[0] &&
-        data.componentDetails[0].securityData &&
-        // data.componentDetails[0].securityData.securityIssues &&
-        data.componentDetails[0].securityData.securityIssues.length > 0
-      ) {
-        const maxSeverity = Math.max(
-          ...data.componentDetails[0].securityData.securityIssues.map((issue) => {
-            return issue.severity;
-          })
-        );
+//   if (event.type === 'artifactDetailsFromServiceWorker') {
+//     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+//     if (event.componentDetails) {
+//       const data: ComponentDetails = event.componentDetails;
+//       // const policyData: PolicyData = event.policyData;
+//       //
+//       // console.log('Policy Details', policyData);
+//       const loc = window.location.href;
+//       const element = findElement(loc);
+//       removeClasses(element);
+//       if (
+//         // data.componentDetails[0] &&
+//         data.componentDetails[0].securityData &&
+//         // data.componentDetails[0].securityData.securityIssues &&
+//         data.componentDetails[0].securityData.securityIssues.length > 0
+//       ) {
+//         const maxSeverity = Math.max(
+//           ...data.componentDetails[0].securityData.securityIssues.map((issue) => {
+//             return issue.severity;
+//           })
+//         );
 
-        let vulnClass = 'sonatype-iq-extension-vuln-low';
-        if (maxSeverity >= 9) {
-          vulnClass = 'sonatype-iq-extension-vuln-severe';
-        } else if (maxSeverity >= 7) {
-          vulnClass = 'sonatype-iq-extension-vuln-high';
-        } else if (maxSeverity >= 5) {
-          vulnClass = 'sonatype-iq-extension-vuln-med';
-        } else if (maxSeverity >= 2) {
-          vulnClass = 'sonatype-iq-extension-vuln-low';
-        }
-        addClasses(vulnClass, element);
-      }
-    }
-  }
-});
+//         let vulnClass = 'sonatype-iq-extension-vuln-low';
+//         if (maxSeverity >= 9) {
+//           vulnClass = 'sonatype-iq-extension-vuln-severe';
+//         } else if (maxSeverity >= 7) {
+//           vulnClass = 'sonatype-iq-extension-vuln-high';
+//         } else if (maxSeverity >= 5) {
+//           vulnClass = 'sonatype-iq-extension-vuln-med';
+//         } else if (maxSeverity >= 2) {
+//           vulnClass = 'sonatype-iq-extension-vuln-low';
+//         }
+//         addClasses(vulnClass, element);
+//       }
+//     }
+//   }
+// });
 
 const removeClasses = (element) => {
   //remove the class
@@ -106,40 +145,40 @@ const removeClasses = (element) => {
   element.removeClass('sonatype-iq-extension-vuln-low');
 };
 
-const checkPage = () => {
-  const repoType = findRepoType(window.location.href);
+// const checkPage = () => {
+//   const repoType = findRepoType(window.location.href);
 
-  if (repoType) {
-    chrome.runtime.sendMessage({type: 'togglePage', show: true});
-    console.debug('checkPage: Found a valid repoType: ' + repoType);
-    const purl = getArtifactDetailsFromDOM(repoType, window.location.href);
+//   if (repoType) {
+//     chrome.runtime.sendMessage({type: 'togglePage', show: true});
+//     console.debug('checkPage: Found a valid repoType: ' + repoType);
+//     const purl = getArtifactDetailsFromDOM(repoType, window.location.href);
 
-    if (purl) {
-      console.debug('checkPage: Obtained a valid purl: ' + purl);
-      chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: purl.toString()});
-    } else {
-      console.debug('checkPage: No valid purl for : ' + repoType);
-      console.debug('checkPage: building new url and retrying: ' + repoType.versionPath);
-      const version = findVersionElement(repoType) ?? '';
-      if (version.length > 0) {
-        // TODO: This needs to be handled for the different pacakge formats
-        // const newUrl = repoType.versionPath?.replace("{url}/{packagename}", window.location.href).replace("{versionNumber}", version) ?? window.location.href;
-        const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
-        const newUrl = oldUrl + (repoType.appendVersionPath?.replace("{versionNumber}", version));
-        console.debug('checkPage: the new url : ' + newUrl);
-        const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
-        if (newPurl) {
-          console.debug('checkPage: Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + newPurl);
-          chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: newPurl.toString()});
-        }
-      }
-    }
-  } else {
-    chrome.runtime.sendMessage({type: 'togglePage', show: false});
-  }
-};
+//     if (purl) {
+//       console.debug('checkPage: Obtained a valid purl: ' + purl);
+//       chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: purl.toString()});
+//     } else {
+//       console.debug('checkPage: No valid purl for : ' + repoType);
+//       console.debug('checkPage: building new url and retrying: ' + repoType.versionPath);
+//       const version = findVersionElement(repoType) ?? '';
+//       if (version.length > 0) {
+//         // TODO: This needs to be handled for the different pacakge formats
+//         // const newUrl = repoType.versionPath?.replace("{url}/{packagename}", window.location.href).replace("{versionNumber}", version) ?? window.location.href;
+//         const oldUrl = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
+//         const newUrl = oldUrl + (repoType.appendVersionPath?.replace("{versionNumber}", version));
+//         console.debug('checkPage: the new url : ' + newUrl);
+//         const newPurl = getArtifactDetailsFromDOM(repoType, newUrl);
+//         if (newPurl) {
+//           console.debug('checkPage: Obtained a valid purl and retrying getArtifactDetailsFromPurl : ' + newPurl);
+//           chrome.runtime.sendMessage({type: 'getArtifactDetailsFromPurl', purl: newPurl.toString()});
+//         }
+//       }
+//     }
+//   } else {
+//     chrome.runtime.sendMessage({type: 'togglePage', show: false});
+//   }
+// };
 
-checkPage();
+// checkPage();
 
 function findVersionElement(repoType: RepoType) {
 

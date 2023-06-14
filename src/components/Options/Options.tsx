@@ -25,132 +25,249 @@ import {
   NxButton, NxButtonBar
 } from '@sonatype/react-shared-components';
 import React, {useContext, useEffect, useState} from 'react';
-import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
-import {DATA_SOURCES} from '../../utils/Constants';
+import {ExtensionContext, NexusContext, NexusContextInterface} from '../../context/NexusContext';
+import {DATA_SOURCE, DATA_SOURCES} from '../../utils/Constants';
+import { MessageRequest, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../types/Message"
 import GeneralOptionsPage from './General/GeneralOptionsPage';
 import IQServerOptionsPage from './IQServer/IQServerOptionsPage';
 import OSSIndexOptionsPage from './OSSIndex/OSSIndexOptionsPage';
-import { MESSAGE_REQUEST_TYPE } from '../../types/Message';
-// import {
-//   MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS
-// } from "../../types/Message";
+import { DEFAULT_EXTENSION_SETTINGS, ExtensionSettings } from '../../service/ExtensionSettings';
+import { readExtensionConfiguration, updateExtensionConfiguration } from '../../messages/SettingsMessages';
 
-const SCAN_TYPE = 'scanType';
 
-const Options = (): JSX.Element | null => {
+// const SCAN_TYPE = 'scanType';
+
+// const Options = (): JSX.Element | null => {
+//   const [activeTabId, setActiveTabId] = useState(0);
+//   const onClick = () => window.close();
+
+//   const [scanType, setScanType] = useState<string>(DATA_SOURCES.OSSINDEX);
+
+//   const nexusContext = useContext(NexusContext);
+
+//   (async () => {
+//     console.log("New Extension Settings")
+//     await chrome.runtime.sendMessage({"type": MESSAGE_REQUEST_TYPE.GET_SETTINGS}, (response) => {
+//       console.log(response);
+//     });
+
+//     // console.log("New getApplications")
+//     // await chrome.runtime.sendMessage({"type": "getApplications"}, (response) => {
+//     //   console.log(response);
+//     // });
+//     // do something with response here, not outside the function    
+//   })();
+
+//   useEffect(() => {
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     chrome.storage.local.get((items: {[key: string]: any}) => {
+//       if (items[SCAN_TYPE] !== undefined) {
+//         setScanType(items[SCAN_TYPE]);
+//       }
+//     });
+//   }, []);
+
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   const setItem = (func: any, value: any, key: string) => {
+//     func(value);
+//     chrome.storage.local.set({[key]: value});
+//     if (scanType === DATA_SOURCES.NEXUSIQ) {
+//       setActiveTabId(1);
+//     } else if (scanType === DATA_SOURCES.OSSINDEX) {
+//       setActiveTabId(0);
+//     } else {
+//       setActiveTabId(2);
+//     }
+//   };
+
+//   const renderOptions = (nexusContext: NexusContextInterface | undefined) => {
+//     if (nexusContext) {
+//       return (
+//         <React.Fragment>
+//           <h1>
+//             <NxPageTitle>Maury  Options</NxPageTitle>
+//           </h1>
+
+//           <NxTile>
+//             <NxTile.Content>
+//               {/*<NxForm.RequiredFieldNotice />*/}
+//               <div className="nx-grid-row">
+//               <section className="nx-grid-col nx-grid-col--66">
+//               <NxFieldset label={`Current Connection Type: ${scanType}`} isRequired>
+
+//                 <NxRadio
+//                   name={SCAN_TYPE}
+//                   value={DATA_SOURCES.NEXUSIQ}
+//                   onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
+//                   isChecked={scanType === DATA_SOURCES.NEXUSIQ}
+//                   radioId="scanType-IQ-Server"
+//                 >
+//                   Sonatype IQ Server
+//                 </NxRadio>
+//                 <NxRadio
+//                   name={SCAN_TYPE}
+//                   value={DATA_SOURCES.OSSINDEX}
+//                   onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
+//                   isChecked={scanType === DATA_SOURCES.OSSINDEX}
+//                   radioId="scanType-OSS-Index"
+//                 >
+//                   Sonatype OSS Index
+//                 </NxRadio>
+
+//               </NxFieldset>
+//               </section>
+//               <section className="nx-grid-col nx-grid-col--33">
+//               <NxButtonBar>
+//                 <NxButton
+//                     onClick={onClick}>
+//                   <span>Save & Close</span>
+//                 </NxButton>
+//               </NxButtonBar>
+//               </section>
+//               </div>
+
+//               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+//                 <NxTabList>
+//                   <NxTab key={DATA_SOURCES.NEXUSIQ}>Sonatype IQ Server</NxTab>
+//                   <NxTab key={DATA_SOURCES.OSSINDEX}>Sonatype OSS Index</NxTab>
+//                   <NxTab key={`GENERAL`}>General Options</NxTab>
+//                 </NxTabList>
+//                 <NxTabPanel>
+//                   <IQServerOptionsPage />
+//                 </NxTabPanel>
+//                 <NxTabPanel>
+//                   <OSSIndexOptionsPage />
+//                 </NxTabPanel>
+//                 <NxTabPanel>
+//                   <GeneralOptionsPage />
+//                 </NxTabPanel>
+//               </NxTabs>
+//             </NxTile.Content>
+//           </NxTile>
+//         </React.Fragment>
+//       );
+//     }
+//     return null;
+//   };
+
+//   return renderOptions(nexusContext);
+// };
+
+// export default Options;
+
+export default function Options() {
   const [activeTabId, setActiveTabId] = useState(0);
-  const onClick = () => window.close();
+  const [extensionConfig, setExtensionConfig] = useState<ExtensionSettings>(DEFAULT_EXTENSION_SETTINGS)
 
-  const [scanType, setScanType] = useState<string>(DATA_SOURCES.OSSINDEX);
+  function handleDataSourceChange(e) {
+    const newExtensionConfig = extensionConfig
+    newExtensionConfig.dataSource = e
+    handleNewExtensionConfig(newExtensionConfig)
+  }
 
-  const nexusContext = useContext(NexusContext);
+  function handleNewExtensionConfig(settings: ExtensionSettings) {
+    console.log(`Options handleNewExtensionConfig`, settings)
+    updateExtensionConfiguration(settings).then((response) => {
+      console.log('Options Response', response)
+      if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+        setExtensionConfig((response.data as ExtensionSettings))
+      }
+    })
+    // _browser.runtime.sendMessage({
+    //   'type': MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
+    //   'params': settings
+    // }, (response) => {
+    //   console.log('Options Response', response)
+    //   if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+    //     setExtensionConfig((response.data as ExtensionSettings))
+    //   }
+    // })
+  }
 
-  (async () => {
-    console.log("New Extension Settings")
-    await chrome.runtime.sendMessage({"type": MESSAGE_REQUEST_TYPE.GET_SETTINGS}, (response) => {
-      console.log(response);
-    });
-
-    // console.log("New getApplications")
-    // await chrome.runtime.sendMessage({"type": "getApplications"}, (response) => {
-    //   console.log(response);
-    // });
-    // do something with response here, not outside the function    
-  })();
+  function handleSaveClose() {
+    // @todo add Save logic
+    window.close()
+  }
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[SCAN_TYPE] !== undefined) {
-        setScanType(items[SCAN_TYPE]);
-      }
-    });
-  }, []);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const setItem = (func: any, value: any, key: string) => {
-    func(value);
-    chrome.storage.local.set({[key]: value});
-    if (scanType === DATA_SOURCES.NEXUSIQ) {
-      setActiveTabId(1);
-    } else if (scanType === DATA_SOURCES.OSSINDEX) {
-      setActiveTabId(0);
-    } else {
-      setActiveTabId(2);
+    if (extensionConfig == undefined || extensionConfig == DEFAULT_EXTENSION_SETTINGS) {
+      readExtensionConfiguration().then((response) => {
+        console.log('Options useEffect Response:', response)
+        if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+          if (response.data === undefined) {
+            setExtensionConfig(DEFAULT_EXTENSION_SETTINGS)
+          } else {
+            setExtensionConfig((response.data as ExtensionSettings))
+          }
+        }
+      })
     }
-  };
+  })
 
-  const renderOptions = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext) {
-      return (
-        <React.Fragment>
-          <h1>
-            <NxPageTitle>Maury  Options</NxPageTitle>
-          </h1>
+  return (
+    <ExtensionContext.Provider value={extensionConfig}>
+      <React.Fragment>
+        <h1>
+          <NxPageTitle>Extension Options</NxPageTitle>
+        </h1>
 
-          <NxTile>
-            <NxTile.Content>
-              {/*<NxForm.RequiredFieldNotice />*/}
-              <div className="nx-grid-row">
-              <section className="nx-grid-col nx-grid-col--66">
-              <NxFieldset label={`Current Connection Type: ${scanType}`} isRequired>
+        <NxTile>
+          <NxTile.Content>
+            {/*<NxForm.RequiredFieldNotice />*/}
+            <div className="nx-grid-row">
+            <section className="nx-grid-col nx-grid-col--66">
+            <NxFieldset label={`Current Connection Type: ${extensionConfig.dataSource}`} isRequired>
 
-                <NxRadio
-                  name={SCAN_TYPE}
-                  value={DATA_SOURCES.NEXUSIQ}
-                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
-                  isChecked={scanType === DATA_SOURCES.NEXUSIQ}
-                  radioId="scanType-IQ-Server"
-                >
-                  Sonatype IQ Server
-                </NxRadio>
-                <NxRadio
-                  name={SCAN_TYPE}
-                  value={DATA_SOURCES.OSSINDEX}
-                  onChange={(event) => setItem(setScanType, event, SCAN_TYPE)}
-                  isChecked={scanType === DATA_SOURCES.OSSINDEX}
-                  radioId="scanType-OSS-Index"
-                >
-                  Sonatype OSS Index
-                </NxRadio>
+              <NxRadio
+                name="scanType"
+                value={DATA_SOURCE.NEXUSIQ}
+                onChange={handleDataSourceChange}
+                isChecked={extensionConfig.dataSource === DATA_SOURCE.NEXUSIQ}
+                radioId="scanType-IQ-Server"
+              >
+                Sonatype IQ Server
+              </NxRadio>
+              <NxRadio
+                name="scanType"
+                value={DATA_SOURCE.OSSINDEX}
+                onChange={handleDataSourceChange}
+                isChecked={extensionConfig.dataSource === DATA_SOURCE.OSSINDEX}
+                radioId="scanType-OSS-Index"
+              >
+                Sonatype OSS Index
+              </NxRadio>
 
-              </NxFieldset>
-              </section>
-              <section className="nx-grid-col nx-grid-col--33">
-              <NxButtonBar>
-                <NxButton
-                    onClick={onClick}>
-                  <span>Save & Close</span>
-                </NxButton>
-              </NxButtonBar>
-              </section>
-              </div>
+            </NxFieldset>
+            </section>
+            <section className="nx-grid-col nx-grid-col--33">
+            <NxButtonBar>
+              <NxButton
+                  onClick={handleSaveClose}>
+                <span>Save & Close</span>
+              </NxButton>
+            </NxButtonBar>
+            </section>
+            </div>
 
-              <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-                <NxTabList>
-                  <NxTab key={DATA_SOURCES.NEXUSIQ}>Sonatype IQ Server</NxTab>
-                  <NxTab key={DATA_SOURCES.OSSINDEX}>Sonatype OSS Index</NxTab>
-                  <NxTab key={`GENERAL`}>General Options</NxTab>
-                </NxTabList>
-                <NxTabPanel>
-                  <IQServerOptionsPage />
-                </NxTabPanel>
-                <NxTabPanel>
-                  <OSSIndexOptionsPage />
-                </NxTabPanel>
-                <NxTabPanel>
-                  <GeneralOptionsPage />
-                </NxTabPanel>
-              </NxTabs>
-            </NxTile.Content>
-          </NxTile>
-        </React.Fragment>
-      );
-    }
-    return null;
-  };
-
-  return renderOptions(nexusContext);
-};
-
-export default Options;
+            <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+              <NxTabList>
+                <NxTab key={DATA_SOURCE.NEXUSIQ}>Sonatype IQ Server</NxTab>
+                <NxTab key={DATA_SOURCE.OSSINDEX}>Sonatype OSS Index</NxTab>
+                <NxTab key={`GENERAL`}>General Options</NxTab>
+              </NxTabList>
+              <NxTabPanel>
+                <IQServerOptionsPage setExtensionConfig={handleNewExtensionConfig} />
+              </NxTabPanel>
+              <NxTabPanel>
+                <OSSIndexOptionsPage />
+              </NxTabPanel>
+              <NxTabPanel>
+                <GeneralOptionsPage />
+              </NxTabPanel>
+            </NxTabs>
+          </NxTile.Content>
+        </NxTile>
+      </React.Fragment>
+    </ExtensionContext.Provider>
+  );
+}

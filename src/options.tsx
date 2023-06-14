@@ -32,7 +32,15 @@ import {
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import * as pack from '../package.json';
-import NexusOptionsContainer from './NexusOptionsContainer';
+import { NexusOptionsContainer } from './NexusOptionsContainer';
+import { BrowserExtensionLogger, LogLevel } from './logger/Logger';
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageResponse } from './types/Message';
+import { readExtensionConfiguration } from './messages/SettingsMessages';
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser;
+
+const logger = new BrowserExtensionLogger(LogLevel.TRACE);
 
 const container = document.getElementById('ui');
 const root = ReactDOM.createRoot(container);
@@ -81,3 +89,20 @@ root.render(
     </NxPageMain>
   </React.StrictMode>
 );
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  logger.logMessage('Options Request received', LogLevel.INFO, request);
+  console.info('OptionsMessage received: ', request);
+
+  switch (request.type) {
+    case MESSAGE_REQUEST_TYPE.GET_SETTINGS:
+      readExtensionConfiguration().then((response) => {
+        response.status_detail = {
+          'message': "Proving this is where the response comes from Options!"
+        }
+        sendResponse(response)
+      })
+      break
+  }
+})

@@ -35,62 +35,67 @@ export interface ExtensionSettings {
     user?: string;
     token?: string;
     iqApplicationId?: string;
-    logLevel: string;
+    logLevel: LogLevel;
 }
 
-export function getSettings(): Promise<ExtensionSettings> {
-    logger.logMessage('getSettings loading from local storage', LogLevel.TRACE)
+export const DEFAULT_EXTENSION_SETTINGS: ExtensionSettings = {
+    "dataSource": DATA_SOURCE.NEXUSIQ,
+    "logLevel": LogLevel.ERROR
+}
 
-    return _browser.storage.local.get([SETTINGS_STORAGE_KEY])
+// export function getSettings(): Promise<ExtensionSettings> {
+//     logger.logMessage('getSettings loading from local storage', LogLevel.TRACE)
 
-    // const promise = new Promise<ExtensionSettings>((resolve) => {
+//     return _browser.storage.local.get([SETTINGS_STORAGE_KEY])
+
+//     // const promise = new Promise<ExtensionSettings>((resolve) => {
         
 
-    //     // _browser.storage.local.get(
-    //     //     [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
-    //     //     (items: {[key: string]: string}) => {
-    //     //         resolve({
-    //     //             dataSource: DATA_SOURCE[items[SCAN_TYPE]],
-    //     //             host: items[IQ_SERVER_URL],
-    //     //             user: items[IQ_SERVER_USER],
-    //     //             token: items[IQ_SERVER_TOKEN],
-    //     //             iqApplicationId: items[IQ_SERVER_APPLICATION],
-    //     //             logLevel: items[LOG_LEVEL]
-    //     //         });
-    //     //     }
-    //     // );
-    // });
+//     //     // _browser.storage.local.get(
+//     //     //     [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
+//     //     //     (items: {[key: string]: string}) => {
+//     //     //         resolve({
+//     //     //             dataSource: DATA_SOURCE[items[SCAN_TYPE]],
+//     //     //             host: items[IQ_SERVER_URL],
+//     //     //             user: items[IQ_SERVER_USER],
+//     //     //             token: items[IQ_SERVER_TOKEN],
+//     //     //             iqApplicationId: items[IQ_SERVER_APPLICATION],
+//     //     //             logLevel: items[LOG_LEVEL]
+//     //     //         });
+//     //     //     }
+//     //     // );
+//     // });
 
-    // return await promise
-}
+//     // return await promise
+// }
 
-export async function updateSettings(settings: ExtensionSettings): Promise<ExtensionSettings> {
-    logger.logMessage('updateSettings to local storage', LogLevel.TRACE)
+// export async function updateSettings(settings: ExtensionSettings): Promise<ExtensionSettings> {
+//     logger.logMessage('updateSettings to local storage', LogLevel.TRACE)
 
-    const promise = new Promise<ExtensionSettings>(() => {
-        _browser.storage.local.set({
-            [SETTINGS_STORAGE_KEY]: settings
-        }, () => {
-            // if (_browser.runtime.lastError instanceof chrome.runtime.LastError) {
-            //     logger.logMessage('Error in updateSettings', LogLevel.ERROR, _browser.runtime.lastError)
-            // }
+//     const promise = new Promise<ExtensionSettings>(() => {
+//         _browser.storage.local.set({
+//             [SETTINGS_STORAGE_KEY]: settings
+//         }, () => {
+//             // if (_browser.runtime.lastError instanceof chrome.runtime.LastError) {
+//             //     logger.logMessage('Error in updateSettings', LogLevel.ERROR, _browser.runtime.lastError)
+//             // }
 
-            return getSettings()
-        })
-        // _browser.storage.local.get(
-        //     [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
-        //     (items: {[key: string]: string}) => {
-        //         resolve({
-        //             dataSource: DATA_SOURCE[items[SCAN_TYPE]],
-        //             host: items[IQ_SERVER_URL],
-        //             user: items[IQ_SERVER_USER],
-        //             token: items[IQ_SERVER_TOKEN],
-        //             iqApplicationId: items[IQ_SERVER_APPLICATION],
-        //             logLevel: items[LOG_LEVEL]
-        //         });
-        //     }
-        // );
-    });
+//             return getSettings()
+//         })
+//         // _browser.storage.local.get(
+//         //     [SCAN_TYPE, IQ_SERVER_URL, IQ_SERVER_USER, IQ_SERVER_TOKEN, IQ_SERVER_APPLICATION, LOG_LEVEL],
+//         //     (items: {[key: string]: string}) => {
+//         //         resolve({
+//         //             dataSource: DATA_SOURCE[items[SCAN_TYPE]],
+//         //             host: items[IQ_SERVER_URL],
+//         //             user: items[IQ_SERVER_USER],
+//         //             token: items[IQ_SERVER_TOKEN],
+//         //             iqApplicationId: items[IQ_SERVER_APPLICATION],
+//         //             logLevel: items[LOG_LEVEL]
+//         //         });
+//         //     }
+//         // );
+//     });
 
-    return await promise
-}
+//     return await promise
+// }

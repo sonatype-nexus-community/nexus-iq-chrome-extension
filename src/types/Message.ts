@@ -19,8 +19,8 @@
  */
 export enum MESSAGE_REQUEST_TYPE {
     GET_APPLICATIONS = 'getApplications',
-    GET_SETTINGS = 'getSettings',
-    UPDATE_SETTINGS = 'updateSettings'
+    GET_SETTINGS = 'readExtensionConfiguration',
+    UPDATE_SETTINGS = 'updateExtensionConfiguration'
 }
 
 /**
