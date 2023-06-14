@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import {ComponentDetails} from '@sonatype/js-sona-types';
-import $, {Cash} from 'cash-dom';
-import {ArtifactMessage} from './types/ArtifactMessage';
-import {getArtifactDetailsFromDOM} from './utils/PageParsing';
-import {findRepoType} from './utils/UrlParsing';
-import {RepoType} from "./utils/Constants";
-import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message';
-import { readExtensionConfiguration, updateExtensionConfiguration } from './messages/SettingsMessages';
-import { ExtensionSettings } from './service/ExtensionSettings';
+// import {ComponentDetails} from '@sonatype/js-sona-types'
+import $, {Cash} from 'cash-dom'
+// import {ArtifactMessage} from './types/ArtifactMessage'
+import {getArtifactDetailsFromDOM} from './utils/PageParsing'
+import { findRepoType } from './utils/UrlParsing'
+import { RepoType } from "./utils/Constants"
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
+// import { readExtensionConfiguration, updateExtensionConfiguration } from './messages/SettingsMessages'
+// import { ExtensionConfiguration } from './types/ExtensionConfiguration'
+import { PackageURL } from 'packageurl-js'
+import { logger, LogLevel } from './logger/Logger'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -31,29 +33,55 @@ const _browser: any = chrome ? chrome : browser;
  * New listener for messages received by Service Worker.
  * 
  */
-// _browser.runtime.onMessage.addListener(handle_message_received)
+_browser.runtime.onMessage.addListener(handle_message_received_calculate_purl_for_page)
 
 /**
  * New (asynchronous) handler for processing messages received.
  * 
  * This always returns True to cause handling to be asynchronous.
  */
-function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
-  console.debug('Content Script - Handle Received Message', request.type)
+// function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
+//   logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
 
-  // let response: MessageResponse = {
-  //   "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR,
-  //   "status_detail": {
-  //     "mesage": "Default Error"
-  //   }
-  // }
+//   return true
+// }
 
-  switch (request.type) {
-    case MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS:
-      updateExtensionConfiguration((request.params as ExtensionSettings)).then((response) => {
-        sendResponse(response)
+/**
+ * New (asynchronous) handler for processing messages received.
+ * 
+ * This always returns True to cause handling to be asynchronous.
+ */
+function handle_message_received_calculate_purl_for_page(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
+  if (request.type == MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE) {
+    logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
+    logger.logMessage('Deriving PackageURL', LogLevel.INFO, request.params)
+    const repoType = findRepoType(window.location.href)
+
+    if (repoType === undefined) {
+      sendResponse({
+        "status": MESSAGE_RESPONSE_STATUS.FAILURE,
+        "status_detail": {
+          "message": `Repository not supported: ${window.location.href}`
+        }
       })
-      break
+    } else {
+      const purl = getArtifactDetailsFromDOM(repoType, window.location.href)
+      if (purl === undefined) {
+        sendResponse({
+          "status": MESSAGE_RESPONSE_STATUS.FAILURE,
+          "status_detail": {
+            "message": `Unable to determine PackageURL for ${request.params}`
+          }
+        })
+      } else {
+        sendResponse({
+          "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
+          "data": {
+            "purl": purl.toString()
+          }
+        })
+      }
+    }
   }
 
   return true
@@ -180,35 +208,35 @@ const removeClasses = (element) => {
 
 // checkPage();
 
-function findVersionElement(repoType: RepoType) {
+// function findVersionElement(repoType: RepoType) {
 
-  const element = $(repoType.versionSelector);
-  console.info('findVersionElement versionSelector: ', repoType.versionSelector);
-  if (element.length > 0) {
-    console.info('findVersionElement', element.text().trim());
-    return element.text().trim();
-  }
-  return undefined;
+//   const element = $(repoType.versionSelector);
+//   console.info('findVersionElement versionSelector: ', repoType.versionSelector);
+//   if (element.length > 0) {
+//     console.info('findVersionElement', element.text().trim());
+//     return element.text().trim();
+//   }
+//   return undefined;
 
-}
+// }
 
 
-function findElement(loc: string) {
-  console.info('findElement', loc);
-  const repoType = findRepoType(loc);
-  if (repoType) {
-    const element = $(repoType.titleSelector);
-    if (element.length > 0) {
-      return element;
-    }
-  }
-  return undefined;
-}
+// function findElement(loc: string) {
+//   console.info('findElement', loc);
+//   const repoType = findRepoType(loc);
+//   if (repoType) {
+//     const element = $(repoType.titleSelector);
+//     if (element.length > 0) {
+//       return element;
+//     }
+//   }
+//   return undefined;
+// }
 
-function addClasses(vulnClass: string, element?: Cash) {
-  console.info('addClasses', vulnClass, element);
-  if (element) {
-    element.addClass(vulnClass);
-    element.addClass('sonatype-iq-extension-vuln');
-  }
-}
+// function addClasses(vulnClass: string, element?: Cash) {
+//   console.info('addClasses', vulnClass, element);
+//   if (element) {
+//     element.addClass(vulnClass);
+//     element.addClass('sonatype-iq-extension-vuln');
+//   }
+// }

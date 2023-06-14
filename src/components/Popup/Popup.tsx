@@ -24,7 +24,7 @@ import {
     NxFooter
 } from '@sonatype/react-shared-components';
 import React, {useContext, useState} from 'react';
-import {NexusContext, NexusContextInterface} from '../../context/NexusContext';
+import {ExtensionConfigurationContext, NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import {DATA_SOURCES} from '../../utils/Constants';
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
 import LicensingPage from './IQServer/LicensingPage/LicensingPage';
@@ -189,3 +189,11 @@ const Popup = (): JSX.Element | null => {
 };
 
 export default Popup;
+
+// export default function Popup() {
+//   const extensionSettings = useContext(ExtensionContext)
+
+//   return (
+
+//   )
+// }

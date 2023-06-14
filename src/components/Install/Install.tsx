@@ -16,8 +16,8 @@
 import {NxH2, NxPageTitle, NxTile} from '@sonatype/react-shared-components';
 import React, {useState} from 'react';
 import IQServerOptionsPage from '../Options/IQServer/IQServerOptionsPage';
-import { DEFAULT_EXTENSION_SETTINGS, ExtensionSettings } from '../../service/ExtensionSettings';
-import { ExtensionContext } from '../../context/NexusContext';
+import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../types/ExtensionConfiguration';
+import { ExtensionConfigurationContext } from '../../context/NexusContext';
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from '../../types/Message';
 import { updateExtensionConfiguration } from '../../messages/SettingsMessages';
 
@@ -25,9 +25,9 @@ import { updateExtensionConfiguration } from '../../messages/SettingsMessages';
 const _browser: any = chrome ? chrome : browser;
 
 function Install() {
-  const [extensionConfig, setExtensionConfig] = useState<ExtensionSettings>(DEFAULT_EXTENSION_SETTINGS)
+  const [extensionConfig, setExtensionConfig] = useState<ExtensionConfiguration>(DEFAULT_EXTENSION_SETTINGS)
 
-  function handleNewExtensionConfig(settings: ExtensionSettings) {
+  function handleNewExtensionConfig(settings: ExtensionConfiguration) {
     console.log(`Install handleNewExtensionConfig`, settings)
     // _browser.runtime.sendMessage({
     //   'type': MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
@@ -42,13 +42,13 @@ function Install() {
       console.log('Install Response', response)
       if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
         console.log('Install Set Extension Response:', response)
-        setExtensionConfig((response.data as ExtensionSettings))
+        setExtensionConfig((response.data as ExtensionConfiguration))
       }
     })
   }
 
   return (
-    <ExtensionContext.Provider value={extensionConfig}>
+    <ExtensionConfigurationContext.Provider value={extensionConfig}>
       <React.Fragment>
         <h1>
           <NxPageTitle>
@@ -68,7 +68,7 @@ function Install() {
           </NxTile.Content>
         </NxTile>
       </React.Fragment>
-    </ExtensionContext.Provider>
+    </ExtensionConfigurationContext.Provider>
   )
 }
 

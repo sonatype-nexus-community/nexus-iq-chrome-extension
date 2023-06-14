@@ -15,7 +15,7 @@
  */
 
 import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
-import { ExtensionSettings } from '../service/ExtensionSettings'
+import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
 import { 
     MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
 } from "../types/Message";
@@ -47,7 +47,7 @@ export async function readExtensionConfiguration(): Promise<MessageResponse> {
     })
 }
 
-export async function updateExtensionConfiguration(settings: ExtensionSettings): Promise<MessageResponse> {
+export async function updateExtensionConfiguration(settings: ExtensionConfiguration): Promise<MessageResponse> {
     return _browser.storage.local.set({[SETTINGS_STORAGE_KEY]: settings}).then(() => {
         if (chrome.runtime.lastError) console.error('Failed writing local storage')
         logger.logMessage('Set Extension Settings in Local Storage', LogLevel.DEBUG, settings, chrome.runtime.lastError)

@@ -17,11 +17,11 @@
 
 import 'node-window-polyfill/register'; // New line ensures this Polyfill is first!
 
-import {
-  ComponentDetails
-} from '@sonatype/js-sona-types';
-import localforage from 'localforage';
-import {PackageURL} from 'packageurl-js';
+// import {
+//   ComponentDetails
+// } from '@sonatype/js-sona-types';
+// import localforage from 'localforage';
+// import {PackageURL} from 'packageurl-js';
 import { logger, LogLevel } from './logger/Logger';
 import { findRepoType } from './utils/UrlParsing'
 
@@ -218,27 +218,12 @@ _browser.runtime.onMessage.addListener(handle_message_received)
 function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
   console.debug('Service Worker - Handle Received Message', request.type)
 
-  let response: MessageResponse = {
-    "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR,
-    "status_detail": {
-      "mesage": "Default Error"
-    }
-  }
-
   switch (request.type) {
     case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
       getApplications(request).then((response) => {
         sendResponse(response)
       })
       break
-    // case MESSAGE_REQUEST_TYPE.GET_SETTINGS:
-    //   readExtensionConfiguration().then((response) => {
-    //     response.status_detail = {
-    //       'message': "Proving this is where the response comes from!"
-    //     }
-    //     sendResponse(response)
-    //   })
-    //   break
   }
 
   return true
@@ -263,14 +248,33 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
    * 
    */
   const repoType = findRepoType(url)
+
+  /**
+   * Make sure we get a valid PURL before we ENABLE - this may require DOM access (via Message)
+   */
+
   if (repoType !== undefined) {
     // We support this Repository!
     logger.logMessage(`Enabling Sonatype Browser Extension for ${url}`, LogLevel.DEBUG)
-    chrome.action.enable(tabId, () => {
-      /**
-       * @todo Change Extension ICON
-       */
-      console.log('Sonatype Extension ENABLED for ', url)
+    _browser.tabs.sendMessage(tabId, {
+      "type": MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE,
+      "params": {
+        "tabId": tabId,
+        "url": url
+      }
+    }, {}, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('ERROR in here', chrome.runtime.lastError.message)
+      }
+      logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
+      if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+        chrome.action.enable(tabId, () => {
+          /**
+           * @todo Change Extension ICON
+           */
+          console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
+        })
+      }
     })
   } else {
     logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Not a supported Registry.`, LogLevel.DEBUG)
@@ -288,15 +292,17 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
  */
 chrome.tabs.onActivated.addListener(({tabId, windowId}) => {
   chrome.tabs.get(tabId, (tab) => {
-    enableDisableExtensionForUrl(tab.url || '', tabId)
+    if (tab.url !== undefined) {
+      enableDisableExtensionForUrl(tab.url, tabId)
+    }
   })
 })
 
 /**
- * this is fired for every tab on every update - we should filter before sending a message - this is carnage!
+ * This is fired for every tab on every update - we should filter before sending a message - this is carnage!
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status == 'complete' && tab.active) {
-    enableDisableExtensionForUrl(tab.url || '', tabId)
+  if (changeInfo.status == 'complete' && tab.active && tab.url !== undefined) {
+    enableDisableExtensionForUrl(tab.url, tabId)
   }
 })

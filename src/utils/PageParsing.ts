@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {PackageURL} from 'packageurl-js';
+import { logger, LogLevel } from '../logger/Logger'
 import {REPOS, RepoType} from './Constants';
 import {parseAlpine} from './PageParsing/Alpine';
 import {parseNPM} from './PageParsing/NPM';
@@ -29,68 +30,54 @@ import {parseMavenApache} from './PageParsing/MavenApache';
 import {parseSearchMavenOrg} from './PageParsing/SearchMavenOrg';
 import {parseCentralSonatypeCom} from './PageParsing/CentralSonatypeCom';
 
-const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  console.info('getArtifactDetailsFromDOM: repoFormat, url ', repoFormat, url);
+export const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
+  logger.logMessage('In getArtifactDetailsFromDOM', LogLevel.TRACE, repoFormat, url)
+  
   switch (repoFormat.repoID) {
     case REPOS.npmJs: {
       return parseNPM(url);
-      break;
     }
     case REPOS.alpineLinux: {
       return parseAlpine(url);
-      break;
     }
     case REPOS.nugetOrg: {
       return parseNuget(url);
-      break;
     }
     case REPOS.rubyGemsOrg: {
       return parseRuby(url);
-      break;
     }
     case REPOS.pkgGoDev: {
       return parseGolang(url);
-      break;
     }
     case REPOS.pypiOrg: {
       return parsePyPIURL(url);
-      break;
     }
     case REPOS.cranRProject: {
       return parseCRAN(url);
-      break;
     }
     case REPOS.anacondaCom: {
       return parseConda(url);
-      break;
     }
     case REPOS.packagistOrg: {
       return parsePackagist(url);
-      break;
     }
     case REPOS.mvnRepositoryCom: {
       return parseMVNRepository(url);
-      break;
     }
     case REPOS.repoMavenApacheOrg: {
       return parseMavenApache(url);
-      break;
     }
     case REPOS.searchMavenOrg: {
       return parseSearchMavenOrg(url);
-      break;
     }
     case REPOS.centralSonatypeCom: {
-      console.info('fixin to call parseCentralSonatypCom: ' + url);
       return parseCentralSonatypeCom(url);
-      break;
     }
 
     default: {
-      console.debug(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`);
+      logger.logMessage(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`, LogLevel.WARN)
     }
   }
-  return undefined;
-};
 
-export {getArtifactDetailsFromDOM};
+  return undefined
+}

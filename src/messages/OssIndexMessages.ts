@@ -21,7 +21,7 @@ import {
 } from '@sonatype/ossindex-api-client'
 import { logger, LogLevel } from '../logger/Logger';
 import { readExtensionConfiguration } from './SettingsMessages'
-import { ExtensionSettings } from '../service/ExtensionSettings';
+import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
 import { InvalidConfigurationError } from '../error/ExtensionError'
 import { 
     MessageRequest, MessageResponse, MESSAGE_RESPONSE_STATUS 
@@ -86,7 +86,7 @@ function _get_iq_api_configuration(): Promise<Configuration> {
             console.log('Error _get_iq_api_configuration', chrome.runtime.lastError.message)
         }
         if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-            const settings = response.data as ExtensionSettings
+            const settings = response.data as ExtensionConfiguration
             if (settings.dataSource !== DATA_SOURCE.OSSINDEX) {
                 logger.logMessage(`Attempt to get connection configuration for ${DATA_SOURCE.OSSINDEX}, but DATA_SOURCE is ${settings.dataSource}`, LogLevel.ERROR, settings)
                 throw new InvalidConfigurationError('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')

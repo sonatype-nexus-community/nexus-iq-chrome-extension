@@ -18,6 +18,7 @@
  * Enumeration of Message Types that are known.
  */
 export enum MESSAGE_REQUEST_TYPE {
+    CALCULATE_PURL_FOR_PAGE = 'calculatePurlForPage',
     GET_APPLICATIONS = 'getApplications',
     GET_SETTINGS = 'readExtensionConfiguration',
     UPDATE_SETTINGS = 'updateExtensionConfiguration'

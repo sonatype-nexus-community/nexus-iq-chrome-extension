@@ -33,8 +33,8 @@ import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
 import { MessageRequest, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../../types/Message";
-import { DEFAULT_EXTENSION_SETTINGS, ExtensionSettings } from "../../../service/ExtensionSettings";
-import { ExtensionContext } from "../../../context/NexusContext";
+import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from "../../../types/ExtensionConfiguration";
+import { ExtensionConfigurationContext } from "../../../context/NexusContext";
 import { isHttpUriValidator, nonEmptyValidator } from '../../Common/Validators'
 import { logger } from "../../../logger/Logger";
 import { ApiApplicationDTO } from "@sonatype/nexus-iq-api-client";
@@ -391,11 +391,11 @@ const SCAN_TYPE = 'scanType';
 // };
 
 export interface IqServerOptionsPageInterface {
-  setExtensionConfig: (settings: ExtensionSettings) => void
+  setExtensionConfig: (settings: ExtensionConfiguration) => void
 }
 
 export default function IQServerOptionsPage(props: IqServerOptionsPageInterface) {
-  const extensionSettings = useContext(ExtensionContext)
+  const extensionSettings = useContext(ExtensionConfigurationContext)
   const [hasPermissions, setHasPermission] = useState(false)
   const [iqAuthenticated, setIqAuthenticated] = useState<boolean|undefined>()
   const [iqServerApplicationList, setiqServerApplicationList] = useState([])
@@ -455,19 +455,19 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
   }
 
   function handleIqTokenChange(e) {
-    const newExtensionSettings = (extensionSettings as ExtensionSettings)
+    const newExtensionSettings = (extensionSettings as ExtensionConfiguration)
     newExtensionSettings.token = (e as string)
     setExtensionConfig(newExtensionSettings)
   }
 
   function handleIqUserChange(e) {
-    const newExtensionSettings = (extensionSettings as ExtensionSettings)
+    const newExtensionSettings = (extensionSettings as ExtensionConfiguration)
     newExtensionSettings.user = (e as string)
     setExtensionConfig(newExtensionSettings)
   }
 
   function handleIqApplicationChange(e) {
-    const newExtensionSettings = (extensionSettings as ExtensionSettings)
+    const newExtensionSettings = (extensionSettings as ExtensionConfiguration)
     newExtensionSettings.iqApplicationId = (e.target.value as string)
     setExtensionConfig(newExtensionSettings)
   }
@@ -477,7 +477,7 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
       type: MESSAGE_REQUEST_TYPE.GET_APPLICATIONS
     }, (response) => {
       if (chrome.runtime.lastError) {
-        logger.logMessage('Error handleLoginCheck', LogLevel.ERROR, chrome.runtime.lastError.message)
+        logger.logMessage('Error handleLoginCheck', LogLevel.ERROR)
       }
       if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
         setIqAuthenticated(true)    

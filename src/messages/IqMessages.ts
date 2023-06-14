@@ -19,20 +19,15 @@ import {
     ApplicationsApi,
     ResponseError
 } from '@sonatype/nexus-iq-api-client'
-import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
+import { logger, LogLevel } from '../logger/Logger'
 import { readExtensionConfiguration } from '../messages/SettingsMessages'
-import { ExtensionSettings } from '../service/ExtensionSettings';
+import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
 import { InvalidConfigurationError } from '../error/ExtensionError'
 import { 
     MessageRequest, MessageResponse, MESSAGE_RESPONSE_STATUS 
-} from "../types/Message";
-import { DATA_SOURCE } from '../utils/Constants';
-import { UserAgentHelper } from '../utils/UserAgentHelper';
-
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser;
-
-const logger = new BrowserExtensionLogger(LogLevel.TRACE);
+} from "../types/Message"
+import { DATA_SOURCE } from '../utils/Constants'
+import { UserAgentHelper } from '../utils/UserAgentHelper'
 
 /**
  * This file contains handlers for processing messages that relate to calling
@@ -86,7 +81,7 @@ function _get_iq_api_configuration(): Promise<Configuration> {
             console.log('Error _get_iq_api_configuration', chrome.runtime.lastError.message)
         }
         if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-            const settings = response.data as ExtensionSettings
+            const settings = response.data as ExtensionConfiguration
             if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
                 logger.logMessage(`Attempt to get connection configuration for ${DATA_SOURCE.NEXUSIQ}, but DATA_SOURCE is ${settings.dataSource}`, LogLevel.ERROR, settings)
                 throw new InvalidConfigurationError('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')

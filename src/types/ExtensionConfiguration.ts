@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import ReactDOM from 'react-dom/client'
-import ExtensionPopup  from './components/Popup/ExtensionPopup'
-import NexusChromeExtensionContainer from './NexusChromeExtensionContainer'
 
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser;
+import { LogLevel } from "../logger/Logger"
+import { DATA_SOURCE } from "../utils/Constants";
 
-/**
- * This is essentially the UI that appears in the Extension Popup.
- */
+export interface ExtensionConfiguration {
+    dataSource: DATA_SOURCE
+    host?: string;
+    user?: string;
+    token?: string;
+    iqApplicationId?: string;
+    logLevel: LogLevel;
+}
 
-const container = document.getElementById('ui')
-const root = ReactDOM.createRoot(container)
-root.render(
-  <React.StrictMode>
-    <ExtensionPopup />
-  </React.StrictMode>
-)
+export const DEFAULT_EXTENSION_SETTINGS: ExtensionConfiguration = {
+    "dataSource": DATA_SOURCE.NEXUSIQ,
+    "logLevel": LogLevel.DEBUG
+}

@@ -25,7 +25,7 @@ import {
 import {PackageURL} from 'packageurl-js';
 import React from 'react';
 import {DATA_SOURCE, DATA_SOURCES} from '../utils/Constants';
-import { ExtensionSettings } from '../service/ExtensionSettings';
+import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
 import { LogLevel } from '../logger/Logger';
 
 export interface NexusContextInterface {
@@ -72,7 +72,7 @@ const initialContext: NexusContextInterface = {
 
 export const NexusContext = React.createContext(initialContext);
 
-export const ExtensionContext = React.createContext<ExtensionSettings>({
+export const ExtensionConfigurationContext = React.createContext<ExtensionConfiguration>({
   "dataSource": DATA_SOURCE.NEXUSIQ,
   "logLevel": LogLevel.ERROR
 })

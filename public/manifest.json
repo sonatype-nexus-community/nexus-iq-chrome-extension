@@ -1,7 +1,7 @@
 {
-  "name": "Sonatype Nexus Lifecycle Evaluation",
-  "description": "Sonatype Nexus Lifecycle Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
-  "author": "Cameron Townshend - ctownshend@sonatype.com",
+  "name": "Sonatype Browser Extension",
+  "description": "Shift Security Left wiht the Sonatype Browser Extension - Scan Open Source Repositories for known Vulnerabilities.",
+  "author": "Sonatype Nexus Community - community-group@sonatype.com",
   "version": "2.0.0",
   "minimum_chrome_version": "93",
   "manifest_version": 3,
