@@ -13,26 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import os from 'os';
+const extension = chrome.runtime.getManifest()
 
 export class UserAgentHelper {
-  public static async getUserAgent(browser: boolean, product: string, version: string): Promise<string> {
-    if (browser) {
-      return this.getUserAgentBrowser(product, version);
-    }
-    return this.getUserAgentNode(product, version);
+  public static getUserAgent(): string {
+    return `${UserAgentHelper.nameToUserAgentProduct(extension.name)}/${extension.version}`
   }
 
-  private static async getUserAgentNode(product: string, version: string): Promise<string> {
-    const nodeVersion = process.versions;
-    const environment = 'NodeJS';
-    const environmentVersion = nodeVersion.node;
-    const system = `${os.type()} ${os.release()}`;
-
-    return `${product}/${version} (${environment} ${environmentVersion}; ${system})`;
-  }
-
-  private static getUserAgentBrowser(product: string, version: string): string {
-    return `${product}/${version}`;
+  private static nameToUserAgentProduct(name: string): string {
+    return name.toLowerCase().replaceAll(' ', '_')
   }
 }

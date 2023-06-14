@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
-    "lib": ["es6", "webworker"],
+    "lib": ["es6", "webworker", "ES2021.String"],
 
     /* Strict Type-Checking Options */
     /* Enable all strict type-checking options. */

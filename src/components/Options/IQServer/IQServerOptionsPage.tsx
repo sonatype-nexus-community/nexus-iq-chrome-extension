@@ -37,6 +37,7 @@ import { DEFAULT_EXTENSION_SETTINGS, ExtensionSettings } from "../../../service/
 import { ExtensionContext } from "../../../context/NexusContext";
 import { isHttpUriValidator, nonEmptyValidator } from '../../Common/Validators'
 import { logger } from "../../../logger/Logger";
+import { ApiApplicationDTO } from "@sonatype/nexus-iq-api-client";
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -465,13 +466,18 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
     setExtensionConfig(newExtensionSettings)
   }
 
+  function handleIqApplicationChange(e) {
+    const newExtensionSettings = (extensionSettings as ExtensionSettings)
+    newExtensionSettings.iqApplicationId = (e.target.value as string)
+    setExtensionConfig(newExtensionSettings)
+  }
+
   function handleLoginCheck() {
-    console.info("In onSubmit...");
     _browser.runtime.sendMessage({
       type: MESSAGE_REQUEST_TYPE.GET_APPLICATIONS
     }, (response) => {
       if (chrome.runtime.lastError) {
-        console.log('Error handleLoginCheck', chrome.runtime.lastError.message)
+        logger.logMessage('Error handleLoginCheck', LogLevel.ERROR, chrome.runtime.lastError.message)
       }
       if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
         setIqAuthenticated(true)    
@@ -538,13 +544,11 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
               </p>
 
               <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
-                <NxFormSelect value={iqServerApplicationList} 
-                  // onChange={onChange} 
+                <NxFormSelect defaultValue={extensionSettings.iqApplicationId} 
+                  onChange={handleIqApplicationChange} 
                   disabled={!iqAuthenticated} >
-                  {iqServerApplicationList.map((app) => {
+                  {iqServerApplicationList.map((app: ApiApplicationDTO) => {
                     return (
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
                         <option key={app.publicId} value={app.publicId}>{app.name}</option>
                     )
                   })}

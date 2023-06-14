@@ -32,7 +32,7 @@ import { UserAgentHelper } from '../utils/UserAgentHelper';
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
 
-const logger = new BrowserExtensionLogger(LogLevel.ERROR);
+const logger = new BrowserExtensionLogger(LogLevel.TRACE);
 
 /**
  * This file contains handlers for processing messages that relate to calling
@@ -96,16 +96,14 @@ function _get_iq_api_configuration(): Promise<Configuration> {
                 logger.logMessage(`Host is not set for IQ Server`, LogLevel.WARN)
                 throw new InvalidConfigurationError('Host is not set for IQ Server')
             }
-    
-            /**
-             * @todo - FIX USER AGENT CODE
-             */
+
             return new Configuration({
                 basePath: (settings.host.endsWith('/') ? settings.host.slice(0, -1) : settings.host),
                 username: settings.user,
                 password: settings.token,
                 headers: {
-                    'User-Agent': 'nexus-iq-chrome-extension/2.x.x' //await UserAgentHelper.getUserAgent(true, 'nexus-iq-chrome-extension', '2.0.0')
+                    'User-Agent': UserAgentHelper.getUserAgent(),
+                    'X-User-Agent': UserAgentHelper.getUserAgent()
                 }
             })
         } else {
