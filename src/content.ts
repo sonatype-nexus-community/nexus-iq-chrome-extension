@@ -40,17 +40,6 @@ _browser.runtime.onMessage.addListener(handle_message_received_calculate_purl_fo
  * 
  * This always returns True to cause handling to be asynchronous.
  */
-// function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
-//   logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
-
-//   return true
-// }
-
-/**
- * New (asynchronous) handler for processing messages received.
- * 
- * This always returns True to cause handling to be asynchronous.
- */
 function handle_message_received_calculate_purl_for_page(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
   if (request.type == MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE) {
     logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)

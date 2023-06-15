@@ -15,39 +15,120 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { ExtensionConfigurationContext, NexusContext } from "../../context/NexusContext";
+import { 
+  getDefaultPopupContext, 
+  ExtensionConfigurationContext, 
+  ExtensionPopupContext,
+} from "../../context/NexusContext";
 import AlpDrawer from "../AlpDrawer/AlpDrawer";
 import Popup from "./Popup";
+import { logger, LogLevel } from '../../logger/Logger'
 import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from "../../types/ExtensionConfiguration";
 import { readExtensionConfiguration } from "../../messages/SettingsMessages";
-import { MESSAGE_RESPONSE_STATUS } from "../../types/Message";
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../types/Message";
+import { PackageURL } from "packageurl-js";
+import { pollForComponentEvaluationResult, requestComponentEvaluationByPurls } from "../../messages/IqMessages";
+import { ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from "@sonatype/nexus-iq-api-client";
+
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser;
 
 export default function ExtensionPopup() {
     const [extensionConfig, setExtensionConfig] = useState<ExtensionConfiguration>(DEFAULT_EXTENSION_SETTINGS)
+    const [popupContext, setPopupContext] = useState<ExtensionPopupContext>(getDefaultPopupContext(extensionConfig.dataSource))
+    const [purl, setPurl] = useState<PackageURL|undefined>(undefined)
 
+    /**
+     * Load Extension Settings and get PURL for current active tab.
+     * 
+     * This is our onComponentDidMount equivalent.
+     */
     useEffect(() => {
-        if (extensionConfig == undefined || extensionConfig == DEFAULT_EXTENSION_SETTINGS) {
-          readExtensionConfiguration().then((response) => {
-            console.log('ExtensionPopup useEffect Response:', response)
+      readExtensionConfiguration().then((response) => {
+        console.log('ExtensionPopup useEffect Response:', response)
+        if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+          if (response.data === undefined) {
+            setExtensionConfig(DEFAULT_EXTENSION_SETTINGS)
+          } else {
+            setExtensionConfig((response.data as ExtensionConfiguration))
+          }
+        }
+      })
+      
+      logger.logMessage('Popup requesting PURL for current active Tab', LogLevel.INFO)
+      _browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+        const [tab] = tabs
+        logger.logMessage(`Requesting PURL from Tab ${tab.url}`, LogLevel.DEBUG)
+        if (tab.status != 'unloaded') {
+          _browser.tabs.sendMessage(tab.id, {
+            "type": MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE,
+            "params": {
+              "tabId": tab.id,
+              "url": tab.url
+            }
+          }, (response) => {
+            if (chrome.runtime.lastError) {
+              console.error('ERROR in here', chrome.runtime.lastError.message, response)
+            }
+            logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
             if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-              if (response.data === undefined) {
-                setExtensionConfig(DEFAULT_EXTENSION_SETTINGS)
-              } else {
-                setExtensionConfig((response.data as ExtensionConfiguration))
-              }
+              setPurl(PackageURL.fromString(response.data.purl))
             }
           })
         }
       })
+    }, [])
+
+    /**
+     * When PURL changes (initially caused by our onComponentDidMount useEffect above),
+     * we kick off data gathering for the Componet to put back into state.
+     */
+    useEffect(() => {
+      if (purl !== undefined) {
+        logger.logMessage(`In ExtensionPopup and PURL changed: ${purl}`, LogLevel.DEBUG)
+        requestComponentEvaluationByPurls({
+          type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,
+          params: {
+            purls: [purl.toString()]
+          }
+        }).then((r2) => {
+          if (chrome.runtime.lastError) {
+            logger.logMessage('Error handling Eval Comp Purl', LogLevel.ERROR)
+          }
+
+          const evaluateRequestTicketResponse = r2.data as ApiComponentEvaluationTicketDTOV2
+
+          const { promise, stopPolling } = pollForComponentEvaluationResult(
+            (evaluateRequestTicketResponse.applicationId === undefined ? '' : evaluateRequestTicketResponse.applicationId), 
+            (evaluateRequestTicketResponse.resultId === undefined ? '' : evaluateRequestTicketResponse.resultId), 
+            1000
+          )
+
+          promise.then((evalResponse) => {
+            const newPopupContext = popupContext
+            newPopupContext.iq.componentDetails = (evalResponse as ApiComponentEvaluationResultDTOV2).results?.pop()
+            logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
+            setPopupContext(newPopupContext)
+          }).catch((err) => {
+            logger.logMessage(`Error in Poll: ${err}`, LogLevel.ERROR)
+          }).finally(() => {
+            logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
+            stopPolling()
+          })
+        })
+      }
+    }, [purl])
 
     return (
-        <ExtensionConfigurationContext.Provider value={extensionConfig}>
-            {/* <AlpDrawer /> */}
-            <div className="nx-page-content">
-                <main className="nx-page-main nx-viewport-sized">
-                    <Popup />
-                </main>
-            </div>
-        </ExtensionConfigurationContext.Provider>
+      <ExtensionConfigurationContext.Provider value={extensionConfig}>
+        <ExtensionPopupContext.Provider value={popupContext}>
+          {popupContext.supportsLicensing && <AlpDrawer />}
+          <div className="nx-page-content">
+            <main className="nx-page-main nx-viewport-sized">
+              <Popup />
+            </main>
+          </div>
+        </ExtensionPopupContext.Provider>
+      </ExtensionConfigurationContext.Provider>
     )
 }

@@ -16,10 +16,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
 import ExtensionPopup  from './components/Popup/ExtensionPopup'
-import NexusChromeExtensionContainer from './NexusChromeExtensionContainer'
 
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser;
 
 /**
  * This is essentially the UI that appears in the Extension Popup.

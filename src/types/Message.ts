@@ -21,7 +21,9 @@ export enum MESSAGE_REQUEST_TYPE {
     CALCULATE_PURL_FOR_PAGE = 'calculatePurlForPage',
     GET_APPLICATIONS = 'getApplications',
     GET_SETTINGS = 'readExtensionConfiguration',
-    UPDATE_SETTINGS = 'updateExtensionConfiguration'
+    REQUEST_COMPONENT_EVALUATION_BY_PURLS = 'requestComponentEvaluationByPurls',
+    UPDATE_SETTINGS = 'updateExtensionConfiguration',
+    RESPONSE_COMPONENT_EVALUATION_BY_PURLS = 'responseComponentEvaluationByPurls'
 }
 
 /**

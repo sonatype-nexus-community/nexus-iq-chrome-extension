@@ -22,7 +22,7 @@ export interface ExtensionConfiguration {
     host?: string;
     user?: string;
     token?: string;
-    iqApplicationId?: string;
+    iqApplicationInternalId?: string;
     logLevel: LogLevel;
 }
 

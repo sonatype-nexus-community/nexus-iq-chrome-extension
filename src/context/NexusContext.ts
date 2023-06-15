@@ -27,6 +27,8 @@ import React from 'react';
 import {DATA_SOURCE, DATA_SOURCES} from '../utils/Constants';
 import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
 import { LogLevel } from '../logger/Logger';
+import { ApiComponentDTOV2, ApiComponentDetailsDTOV2, ApiComponentEvaluationResultDTOV2 } from '@sonatype/nexus-iq-api-client';
+import { ComponentReport } from '@sonatype/ossindex-api-client'
 
 export interface NexusContextInterface {
   showAlpDrawer: boolean;
@@ -71,6 +73,51 @@ const initialContext: NexusContextInterface = {
 };
 
 export const NexusContext = React.createContext(initialContext);
+
+export interface IqPopupContext {
+  componentDetails?: ApiComponentDetailsDTOV2
+}
+
+export interface OssIndexPopupContext {
+  componentDetails?: ComponentReport
+}
+
+export interface ExtensionPopupContext {
+  iq: IqPopupContext
+  ossindex: OssIndexPopupContext
+  supportsLicensing: boolean
+  supportsPolicy: boolean
+}
+
+export const ExtensionPopupContext = React.createContext<ExtensionPopupContext>({
+  iq: {},
+  ossindex: {},
+  supportsLicensing: false,
+  supportsPolicy: false
+})
+
+const DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA = {
+  iq: {},
+  ossindex: {},
+  supportsLicensing: true,
+  supportsPolicy: true
+}
+
+const DEFAULT_OSSINDEX_EXTENSION_POPUP_CONTEXT_DATA = {
+  iq: {},
+  ossindex: {},
+  supportsLicensing: false,
+  supportsPolicy: false
+}
+
+export function getDefaultPopupContext(dataSource: DATA_SOURCE): ExtensionPopupContext {
+  if (dataSource == DATA_SOURCE.NEXUSIQ) {
+    return DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA
+  } else {
+    return DEFAULT_OSSINDEX_EXTENSION_POPUP_CONTEXT_DATA
+  }
+}
+
 
 export const ExtensionConfigurationContext = React.createContext<ExtensionConfiguration>({
   "dataSource": DATA_SOURCE.NEXUSIQ,

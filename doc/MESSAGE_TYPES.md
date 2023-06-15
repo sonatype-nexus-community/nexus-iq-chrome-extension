@@ -40,6 +40,36 @@ Every message must comply with the following format rules.
 
 ## NEW: Messages Received by Service Worker
 
+### Evaluate Component by PURL
+
+**Type:** evaluateComponentByPurl  
+**Handled By:** Service Worker
+**Parameters:** *None*  
+**Response Returned:** Yes  
+**Description:** Get a list of Applications that the User has access to in Sonatype IQ Server  
+
+Example request:
+```
+{
+    "type": "evaluateComponentByPurl",
+    "params": {
+        "purls": [
+            // List of purl strings
+        ]
+    }
+}
+```
+
+Response (SUCCESS):
+```
+{
+    "status": "SUCCESS",
+    "data": [
+        purl: data
+    ]
+}
+```
+
 ### Get Applications
 
 **Type:** getApplications  

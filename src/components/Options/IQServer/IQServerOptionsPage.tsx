@@ -468,7 +468,7 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
 
   function handleIqApplicationChange(e) {
     const newExtensionSettings = (extensionSettings as ExtensionConfiguration)
-    newExtensionSettings.iqApplicationId = (e.target.value as string)
+    newExtensionSettings.iqApplicationInternalId = (e.target.value as string)
     setExtensionConfig(newExtensionSettings)
   }
 
@@ -544,12 +544,12 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
               </p>
 
               <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
-                <NxFormSelect defaultValue={extensionSettings.iqApplicationId} 
+                <NxFormSelect defaultValue={extensionSettings.iqApplicationInternalId} 
                   onChange={handleIqApplicationChange} 
                   disabled={!iqAuthenticated} >
                   {iqServerApplicationList.map((app: ApiApplicationDTO) => {
                     return (
-                        <option key={app.publicId} value={app.publicId}>{app.name}</option>
+                        <option key={app.publicId} value={app.id}>{app.name}</option>
                     )
                   })}
                 </NxFormSelect>

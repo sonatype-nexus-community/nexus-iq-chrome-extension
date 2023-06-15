@@ -26,7 +26,8 @@ import { logger, LogLevel } from './logger/Logger';
 import { findRepoType } from './utils/UrlParsing'
 
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
-import { getApplications } from './messages/IqMessages'
+import { requestComponentEvaluationByPurls, getApplications, pollForComponentEvaluationResult } from './messages/IqMessages'
+import { ApiComponentEvaluationRequestDTOV2, ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from '@sonatype/nexus-iq-api-client';
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -216,11 +217,17 @@ _browser.runtime.onMessage.addListener(handle_message_received)
  * This always returns True to cause handling to be asynchronous.
  */
 function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
-  console.debug('Service Worker - Handle Received Message', request.type)
+  logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
 
   switch (request.type) {
     case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
       getApplications(request).then((response) => {
+        sendResponse(response)
+      })
+      break
+    case MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS:
+      requestComponentEvaluationByPurls(request).then((response) => {
+        logger.logMessage(`Response to Poll for Results: ${response}`, LogLevel.DEBUG)
         sendResponse(response)
       })
       break
@@ -262,17 +269,25 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
         "tabId": tabId,
         "url": url
       }
-    }, {}, (response) => {
+    }, (response) => {
       if (chrome.runtime.lastError) {
-        console.error('ERROR in here', chrome.runtime.lastError.message)
+        console.error('ERROR in here', chrome.runtime.lastError.message, response)
       }
       logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
       if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-        chrome.action.enable(tabId, () => {
+        _browser.action.enable(tabId, () => {
           /**
            * @todo Change Extension ICON
            */
           console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
+        })
+      } else {
+        logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Could not determine PURL.`, LogLevel.DEBUG)
+        chrome.action.disable(tabId, () => {
+          /**
+           * @todo Change Extension ICON
+           */
+          console.log('Sonatype Extension DISABLED for ', url)
         })
       }
     })
