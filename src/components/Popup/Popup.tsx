@@ -248,7 +248,7 @@ function IqPopup() {
 
         <div className="nx-tile-subsection nx-viewport-sized__container">
 
-          <NxTextInput type="textarea" value={JSON.stringify(popupContext.iq)} isPristine={true}/>
+          {/*<NxTextInput type="textarea" value={JSON.stringify(popupContext.iq)} isPristine={true}/>*/}
 
           <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
             <NxTabList>
@@ -278,6 +278,9 @@ function IqPopup() {
               )}
               {effectiveLicenses.length > 0 && <NxTab>Legal</NxTab>}
             </NxTabList>
+            <NxTabPanel>
+              <ComponentInfoPage />
+            </NxTabPanel>
           </NxTabs>
         </div>
         

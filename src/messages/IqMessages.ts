@@ -44,7 +44,7 @@ export async function requestComponentEvaluationByPurls(request: MessageRequest)
         throw err
     }).then((apiConfig) => {
         logger.logMessage('API Configiration', LogLevel.INFO, apiConfig)
-        const applicationId = '370bf138ffa0429791b7c269cd8edbb9'
+        const applicationId = '2d84d349f416492a83137a622a08a12e'
         const apiClient = new EvaluationApi(apiConfig)
 
         // @typescript-eslint/strict-boolean-expressions:
