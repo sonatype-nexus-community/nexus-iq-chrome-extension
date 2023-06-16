@@ -15,13 +15,13 @@
  */
 import {PolicyData} from '@sonatype/js-sona-types';
 import {
-  NxDescriptionList,
-  NxGrid,
-  NxP,
-  NxPolicyViolationIndicator,
-  NxTextLink,
-  NxTooltip,
-  ThreatLevelNumber
+    NxDescriptionList,
+    NxGrid, NxLoadingSpinner,
+    NxP,
+    NxPolicyViolationIndicator,
+    NxTextLink,
+    NxTooltip,
+    ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {
@@ -89,7 +89,10 @@ function GetPolicyViolationIndicator ({policyData}:{policyData: ApiComponentPoli
 
 function IqComponentInfo() {
   const popupContext = useContext(ExtensionPopupContext)
-  return (
+    if (popupContext.iq?.componentDetails?.component?.displayName == undefined) {
+        return <NxLoadingSpinner />;
+    }
+    return (
       <React.Fragment>
         <NxGrid.Row>
           <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
@@ -236,10 +239,8 @@ function IqComponentInfo() {
           <section className="nx-grid-col nx-grid-col--33">
               {popupContext.iq?.componentDetails?.policyData != undefined && (
                   <React.Fragment>
-                  <span>Policy</span>
                       <GetPolicyViolationIndicator policyData={popupContext.iq.componentDetails.policyData}/>
-                  {/*getPolicyViolationIndicator(nexusContext.policyDetails.results[0].policyData)}*/}
-                      </React.Fragment>
+                  </React.Fragment>
               )}
 
             {popupContext.iq?.componentDetails?.licenseData != undefined && (
@@ -252,7 +253,7 @@ function IqComponentInfo() {
           </section>
         </NxGrid.Row>
       </React.Fragment>
-  )
+    )
 }
 
 export default function ComponentInfoPage() {
