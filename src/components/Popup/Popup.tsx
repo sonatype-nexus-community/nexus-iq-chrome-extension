@@ -203,16 +203,16 @@ function IqPopup() {
     popupContext.iq.componentDetails.licenseData.effectiveLicenses : []
   )
 
-  function getPolicyViolations() {
-    if (popupContext.iq &&
-          popupContext.iq.componentDetails && 
-          popupContext.iq.componentDetails.policyData &&
-          popupContext.iq.componentDetails.policyData.policyViolations) {
-      return popupContext.iq.componentDetails.policyData.policyViolations
-    } else {
-      return []
-    }
-  }
+  // function getPolicyViolations() {
+  //   if (popupContext.iq &&
+  //         popupContext.iq.componentDetails &&
+  //         popupContext.iq.componentDetails.policyData &&
+  //         popupContext.iq.componentDetails.policyData.policyViolations) {
+  //     return popupContext.iq.componentDetails.policyData.policyViolations
+  //   } else {
+  //     return []
+  //   }
+  // }
 
   const policyViolations = (
     popupContext.iq &&
@@ -260,7 +260,7 @@ function IqPopup() {
                   popupContext.iq.componentDetails.policyData.policyViolations ? 'Remediation' : 'Versions'}
               </NxTab>
 
-              {getPolicyViolations().length > 0 && (
+              {policyViolations.length > 0 && (
                   <NxTab>
                     Policy
                     <span className={'nx-counter'}>
@@ -280,6 +280,15 @@ function IqPopup() {
             </NxTabList>
             <NxTabPanel>
               <ComponentInfoPage />
+            </NxTabPanel>
+            <NxTabPanel>
+              {/*<RemediationPage />*/}
+            </NxTabPanel>
+            <NxTabPanel>
+              <PolicyPage />
+            </NxTabPanel>
+            <NxTabPanel>
+              {/*<SecurityPage />*/}
             </NxTabPanel>
           </NxTabs>
         </div>

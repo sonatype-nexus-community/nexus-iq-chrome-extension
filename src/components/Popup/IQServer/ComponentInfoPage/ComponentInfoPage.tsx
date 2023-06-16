@@ -48,17 +48,7 @@ import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-clien
 //     return 'N/A';
 //   };
 //
-//   // TODO: Give the correct coordinate labels based on package type
-//   const renderCIPPage = (nexusContext: NexusContextInterface | undefined) => {
-//     if (nexusContext && nexusContext.componentDetails?.component) {
-//       const purlMinusVersion = nexusContext.componentDetails.component.packageUrl.split('@')[0];
-//
-//     } else {
-//       console.info('No component details results');
-//       return null;
-//     }
-//   };
-//
+
 function GetPolicyViolationIndicator ({policyData}:{policyData: ApiComponentPolicyViolationListDTOV2}) {
     const violationCount = policyData.policyViolations ? policyData.policyViolations?.length : 0
 
@@ -84,8 +74,6 @@ function GetPolicyViolationIndicator ({policyData}:{policyData: ApiComponentPoli
         </React.Fragment>
       )
 }
-
-// export default ComponentInfoPage;
 
 function IqComponentInfo() {
   const popupContext = useContext(ExtensionPopupContext)
@@ -243,13 +231,13 @@ function IqComponentInfo() {
                   </React.Fragment>
               )}
 
-            {popupContext.iq?.componentDetails?.licenseData != undefined && (
-                <LicenseThreat />
-            )}
+            {/*{popupContext.iq?.componentDetails?.licenseData != undefined && (*/}
+            {/*    <LicenseThreat />*/}
+            {/*)}*/}
 
-            <div id="security-threat">
-              <SecurityThreat />
-            </div>
+            {/*<div id="security-threat">*/}
+            {/*  <SecurityThreat />*/}
+            {/*</div>*/}
           </section>
         </NxGrid.Row>
       </React.Fragment>

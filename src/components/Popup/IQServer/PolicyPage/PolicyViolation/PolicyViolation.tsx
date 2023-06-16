@@ -22,9 +22,10 @@ import {
 } from '@sonatype/react-shared-components';
 import React, {useEffect, useState} from 'react';
 import '../PolicyPage.css';
+import {ApiPolicyViolationDTOV2} from "@sonatype/nexus-iq-api-client";
 
 type PolicyViolationProps = {
-  policyViolation: PolicyViolation;
+  policyViolation:  ApiPolicyViolationDTOV2;
   iqServerUrl: string;
 };
 
@@ -46,7 +47,7 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
     );
   };
 
-  const printPolicyViolation = (policyViolation: PolicyViolation, iqServerUrl: string) => {
+  const printPolicyViolation = (policyViolation: ApiPolicyViolationDTOV2, iqServerUrl: string) => {
     // if (policyViolation) {
     return (
       <tr className="nx-table-row">
@@ -58,10 +59,10 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
             }}
             policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}
           >
-            {policyViolation.threatLevel.toString()}
+            {policyViolation?.threatLevel?.toString()}
           </NxPolicyViolationIndicator>
         </td>
-        {policyViolation.constraintViolations.map((constraint: ConstraintViolation, index) => (
+        {policyViolation?.constraintViolations?.map((constraint: ConstraintViolation, index) => (
           <React.Fragment key={`constraint${index}`}>
             <td className="nx-cell">{policyViolation.policyName}</td>
             <td className="nx-cell">{constraint.constraintName}</td>

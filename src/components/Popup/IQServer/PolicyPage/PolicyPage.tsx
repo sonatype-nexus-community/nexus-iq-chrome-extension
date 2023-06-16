@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 import React, {useContext, useEffect, useState} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext,
+  NexusContext,
+  NexusContextInterface
+} from '../../../../context/NexusContext';
 import './PolicyPage.css';
 import PolicyViolation from './PolicyViolation/PolicyViolation';
+import {DATA_SOURCE} from "../../../../utils/Constants";
+import {NxLoadingSpinner} from "@sonatype/react-shared-components";
+import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client";
 
-const PolicyPage = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+function IqPolicyPage() {
+  const popupContext = useContext(ExtensionPopupContext)
+  const extensionContext = useContext(ExtensionConfigurationContext)
+  // const iqServerUrl = extensionContext.host ? extensionContext.host : 'UNKNOWN'
+  const policyData = popupContext.iq?.componentDetails?.policyData
+  const violationCount = policyData?.policyViolations ? policyData.policyViolations?.length : 0
 
-  const [iqServerUrl, setIqServerUrl] = useState('');
-
-  useEffect(() => {
-    chrome.storage.local.get('iqServerURL', function (result) {
-      console.log(`get local storage result: ${result.iqServerURL}`);
-      setIqServerUrl(result.iqServerURL);
-    });
-  });
-
-  const renderPolicyViolation = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      nexusContext.policyDetails.results.length > 0
-    ) {
+  if (violationCount <= 0) {
+    return <NxLoadingSpinner />;
+  }
       return (
         <React.Fragment>
           <div className="nx-grid-row">
@@ -50,13 +50,13 @@ const PolicyPage = (): JSX.Element | null => {
                   </tr>
                 </thead>
                 <tbody>
-                  {nexusContext.policyDetails.results[0].policyData.policyViolations.map(
+                  {policyData?.policyViolations?.map(
                     (violation,index) => {
                       return (
                         <PolicyViolation
                           key={`violation${index}`}
                           policyViolation={violation}
-                          iqServerUrl={iqServerUrl}
+                          iqServerUrl={extensionContext.host as string}
                         ></PolicyViolation>
                       );
                     }
@@ -66,12 +66,17 @@ const PolicyPage = (): JSX.Element | null => {
             </section>
           </div>
         </React.Fragment>
-      );
-    }
-    return null;
-  };
+      )
+}
 
-  return renderPolicyViolation(nexusContext);
-};
+export default function PolicyPage() {
+  const extensionContext = useContext(ExtensionConfigurationContext)
 
-export default PolicyPage;
+  return (
+      <div>
+        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
+            <IqPolicyPage/>
+        )}
+      </div>
+  )
+}
