@@ -76,39 +76,35 @@ export const NexusContext = React.createContext(initialContext);
 
 export interface IqPopupContext {
   componentDetails?: ApiComponentDetailsDTOV2
+  setComponentDetails?: (componentDetails: ApiComponentDetailsDTOV2) => void
 }
 
 export interface OssIndexPopupContext {
   componentDetails?: ComponentReport
+  setComponentDetails?: (componentDetails: ComponentReport) => void
 }
 
 export interface ExtensionPopupContext {
-  iq: IqPopupContext
-  ossindex: OssIndexPopupContext
+  iq?: IqPopupContext
+  ossindex?: OssIndexPopupContext
   supportsLicensing: boolean
   supportsPolicy: boolean
 }
 
-export const ExtensionPopupContext = React.createContext<ExtensionPopupContext>({
-  iq: {},
-  ossindex: {},
-  supportsLicensing: false,
-  supportsPolicy: false
-})
-
 const DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA = {
   iq: {},
-  ossindex: {},
   supportsLicensing: true,
   supportsPolicy: true
 }
 
 const DEFAULT_OSSINDEX_EXTENSION_POPUP_CONTEXT_DATA = {
-  iq: {},
   ossindex: {},
   supportsLicensing: false,
   supportsPolicy: false
 }
+
+export const ExtensionPopupContext = React.createContext<ExtensionPopupContext>(DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA)
+
 
 export function getDefaultPopupContext(dataSource: DATA_SOURCE): ExtensionPopupContext {
   if (dataSource == DATA_SOURCE.NEXUSIQ) {

@@ -21,7 +21,8 @@ import {
   NxTabPanel,
   NxTabs,
     NxP,
-    NxFooter
+    NxFooter,
+    NxTextInput
 } from '@sonatype/react-shared-components';
 import React, {useContext, useEffect, useState} from 'react';
 import {ExtensionConfigurationContext, ExtensionPopupContext, NexusContext, NexusContextInterface} from '../../context/NexusContext';
@@ -246,14 +247,17 @@ function IqPopup() {
         </header>
 
         <div className="nx-tile-subsection nx-viewport-sized__container">
+
+          <NxTextInput type="textarea" value={JSON.stringify(popupContext.iq)} isPristine={true}/>
+
           <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
             <NxTabList>
               <NxTab>Info</NxTab>
               <NxTab>
                 {popupContext.iq &&
-          popupContext.iq.componentDetails && 
-          popupContext.iq.componentDetails.policyData &&
-          popupContext.iq.componentDetails.policyData.policyViolations ? 'Remediation' : 'Versions'}
+                  popupContext.iq.componentDetails && 
+                  popupContext.iq.componentDetails.policyData &&
+                  popupContext.iq.componentDetails.policyData.policyViolations ? 'Remediation' : 'Versions'}
               </NxTab>
 
               {getPolicyViolations().length > 0 && (

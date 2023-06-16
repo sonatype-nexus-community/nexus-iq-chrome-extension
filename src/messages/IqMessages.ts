@@ -163,18 +163,19 @@ export function pollForComponentEvaluationResult(applicationId: string, resultId
                 if (error instanceof ResponseError && error.response.status == 404) {
                     // Continue polling
                     logger.logMessage(`ResultId ${resultId} not ready (404). Continuing to poll...`, LogLevel.INFO)
+                    setTimeout(executePoll, time)
                 } else {
                     polling = false
                     reject(new Error("Polling cancelled due to API error"))
                 }
             }
-      };
+        };
   
       setTimeout(executePoll, time)                       
     })
   
     return { promise, stopPolling }                        
-  }
+}
 
 export async function getApplications(request: MessageRequest): Promise<MessageResponse> { 
     return _get_iq_api_configuration().then((apiConfig) => {
