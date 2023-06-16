@@ -107,6 +107,37 @@ Response (AUTH_ERROR)
 }
 ```
 
+### Get Component Versions
+
+**Type:** getComponentVersions 
+**Handled By:** N/A
+**Parameters:** Yes  
+**Response Returned:** Yes  
+**Description:** Get an array of all known versions of a Component by PURL.  
+
+Example request:
+```
+{
+    "type": "getComponentVersions",
+    "params": {
+        "purl": <PACKAGE_URL_STRING>
+    }
+}
+```
+
+Response (SUCCESS):
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        "versions": [
+            <list of version numbers>
+        ]
+    }
+}
+```
+
+
 ### Get Extension Configuration
 
 **Type:** readExtensionConfiguration 

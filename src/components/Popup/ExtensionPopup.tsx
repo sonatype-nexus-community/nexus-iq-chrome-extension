@@ -27,7 +27,7 @@ import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from "../../types/
 import { readExtensionConfiguration } from "../../messages/SettingsMessages";
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../types/Message";
 import { PackageURL } from "packageurl-js";
-import { pollForComponentEvaluationResult, requestComponentEvaluationByPurls } from "../../messages/IqMessages";
+import { getAllComponentVersions, pollForComponentEvaluationResult, requestComponentEvaluationByPurls } from "../../messages/IqMessages";
 import { ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from "@sonatype/nexus-iq-api-client";
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
@@ -118,6 +118,22 @@ export default function ExtensionPopup() {
             logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
             stopPolling()
           })
+        })
+
+        getAllComponentVersions({
+          "type": MESSAGE_REQUEST_TYPE.GET_COMPONENT_VERSIONS,
+          "params": {
+            "purl": purl.toString()
+          }
+        }).then((allVersionsResponse) => {
+          const newPopupContext = {...popupContext}
+          if (!newPopupContext.iq) {
+            newPopupContext.iq = {}
+          }
+          if (allVersionsResponse.data) {
+            newPopupContext.iq.allVersions = ('versions' in allVersionsResponse.data ? allVersionsResponse.data.versions as Array<string> : [])
+          }
+          setPopupContext(newPopupContext)
         })
       }
     }, [purl])

@@ -17,8 +17,9 @@
 import {
     Configuration,
     ApplicationsApi,
+    ComponentsApi,
+    EvaluationApi,
     ResponseError,
-    EvaluationApi
 } from '@sonatype/nexus-iq-api-client'
 import { logger, LogLevel } from '../logger/Logger'
 import { readExtensionConfiguration } from '../messages/SettingsMessages'
@@ -122,6 +123,30 @@ export function pollForComponentEvaluationResult(applicationId: string, resultId
     })
   
     return { promise, stopPolling }                        
+}
+
+export async function getAllComponentVersions(request: MessageRequest): Promise<MessageResponse> { 
+    return _get_iq_api_configuration().then((apiConfig) => {
+        return apiConfig
+    }).catch((err) => { 
+        throw err
+    }).then((apiConfig) => {
+        logger.logMessage('Making API Call ComponentsApi::getComponentVersions()', LogLevel.DEBUG, apiConfig)
+        const apiClient = new ComponentsApi(apiConfig)
+
+        return apiClient.getComponentVersions({
+            apiComponentOrPurlIdentifierDTOV2: {
+                packageUrl: (request.params !== undefined && 'purl' in request.params ? request.params.purl : '') as string
+            }
+        }).then((componentVersions) => {
+            return {
+                "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
+                "data": {
+                    "versions": componentVersions
+                }
+            }
+        }).catch(_handle_iq_error_repsonse)
+    })
 }
 
 export async function getApplications(request: MessageRequest): Promise<MessageResponse> { 

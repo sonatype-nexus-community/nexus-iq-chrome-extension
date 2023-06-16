@@ -15,24 +15,18 @@
  */
 import {Puff} from '@agney/react-loading';
 import {
-  NxStatefulErrorAlert,
   NxTab,
   NxTabList,
   NxTabPanel,
   NxTabs,
     NxP,
-    NxFooter,
-    NxTextInput
+    NxFooter
 } from '@sonatype/react-shared-components';
 import React, {useContext, useEffect, useState} from 'react';
 import {ExtensionConfigurationContext, ExtensionPopupContext, NexusContext, NexusContextInterface} from '../../context/NexusContext';
 import {DATA_SOURCE, DATA_SOURCES} from '../../utils/Constants';
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
-import LicensingPage from './IQServer/LicensingPage/LicensingPage';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
-import RemediationPage from './IQServer/RemediationPage/RemediationPage';
-import SecurityPage from './IQServer/SecurityPage/SecurityPage';
-import LiteSecurityPage from './OSSIndex/LiteSecurityPage/LiteSecurityPage';
 import './Popup.css';
 
 // const Popup = (): JSX.Element | null => {
@@ -202,17 +196,6 @@ function IqPopup() {
     popupContext.iq.componentDetails.licenseData.effectiveLicenses !== undefined ?
     popupContext.iq.componentDetails.licenseData.effectiveLicenses : []
   )
-
-  // function getPolicyViolations() {
-  //   if (popupContext.iq &&
-  //         popupContext.iq.componentDetails &&
-  //         popupContext.iq.componentDetails.policyData &&
-  //         popupContext.iq.componentDetails.policyData.policyViolations) {
-  //     return popupContext.iq.componentDetails.policyData.policyViolations
-  //   } else {
-  //     return []
-  //   }
-  // }
 
   const policyViolations = (
     popupContext.iq &&
