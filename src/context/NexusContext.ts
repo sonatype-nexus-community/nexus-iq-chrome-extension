@@ -76,12 +76,10 @@ export const NexusContext = React.createContext(initialContext);
 
 export interface IqPopupContext {
   componentDetails?: ApiComponentDetailsDTOV2
-  setComponentDetails?: (componentDetails: ApiComponentDetailsDTOV2) => void
 }
 
 export interface OssIndexPopupContext {
   componentDetails?: ComponentReport
-  setComponentDetails?: (componentDetails: ComponentReport) => void
 }
 
 export interface ExtensionPopupContext {

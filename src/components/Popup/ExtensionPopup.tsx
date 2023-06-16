@@ -105,7 +105,10 @@ export default function ExtensionPopup() {
           )
 
           promise.then((evalResponse) => {
-            const newPopupContext = popupContext
+            const newPopupContext = {...popupContext}
+            if (!newPopupContext.iq) {
+              newPopupContext.iq = {}
+            }
             newPopupContext.iq.componentDetails = (evalResponse as ApiComponentEvaluationResultDTOV2).results?.pop()
             logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
             setPopupContext(newPopupContext)
