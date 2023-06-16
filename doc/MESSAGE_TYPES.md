@@ -199,6 +199,36 @@ Response (SUCCESS):
 }
 ```
 
+### Get Remediation Details
+
+**Type:** getRemediationDetailsForComponent  
+**Handled By:** Content Script   
+**Parameters:** ExtensionSettings  
+**Response Returned:** Yes  
+**Description:** Get Remediation Details for a PURL
+
+Example request:
+```
+{
+    "type": "getRemediationDetailsForComponent",
+    "params": {
+        "purl": <PACKAGE_URL_STRING>
+    }
+}
+```
+
+Response (SUCCESS):
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        "remediation": ApiComponentRemediationDTO
+    }
+}
+```
+
+
+
 ### Update Extension Configuration
 
 **Type:** updateExtensionConfiguration  

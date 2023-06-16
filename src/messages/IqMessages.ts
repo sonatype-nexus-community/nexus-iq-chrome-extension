@@ -20,6 +20,7 @@ import {
     ComponentsApi,
     EvaluationApi,
     ResponseError,
+    GetSuggestedRemediationForComponentOwnerTypeEnum,
 } from '@sonatype/nexus-iq-api-client'
 import { logger, LogLevel } from '../logger/Logger'
 import { readExtensionConfiguration } from '../messages/SettingsMessages'
@@ -189,12 +190,43 @@ export async function getComponentDetails(request: MessageRequest): Promise<Mess
                 })
             }
         }).then((componentDetailsResponse) => {
-            logger.logMessage('getComponentDetails response', LogLevel.DEBUG, )
+            logger.logMessage('getComponentDetails response', LogLevel.DEBUG, componentDetailsResponse)
             return {
                 "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
                 "data": componentDetailsResponse
             }
         }).catch(_handle_iq_error_repsonse)
+    })
+}
+
+export async function getRemediationDetailsForComponent(request: MessageRequest): Promise<MessageResponse> { 
+    return readExtensionConfiguration().then((response) => {
+        return response.data as ExtensionConfiguration
+     }).then((extensionConfig) => {
+        return _get_iq_api_configuration().then((apiConfig) => {
+            return apiConfig
+        }).catch((err) => { 
+            throw err
+        }).then((apiConfig) => {
+            logger.logMessage('Making API Call ComponentsApi::getSuggestedRemediationForComponent()', LogLevel.DEBUG, apiConfig)
+            const apiClient = new ComponentsApi(apiConfig)
+
+            return apiClient.getSuggestedRemediationForComponent({
+                ownerType: GetSuggestedRemediationForComponentOwnerTypeEnum.Application,
+                ownerId: (extensionConfig.iqApplicationInternalId !== undefined ? extensionConfig.iqApplicationInternalId : ''),
+                apiComponentDTOV2: {
+                    packageUrl: (request.params !== undefined && 'purl' in request.params ? request.params.purl : '') as string
+                }
+            }).then((remediationDetailsResponse) => {
+                logger.logMessage('getSuggestedRemediationForComponent response', LogLevel.DEBUG, remediationDetailsResponse)
+                return {
+                    "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
+                    "data": {
+                        "remediation": remediationDetailsResponse.remediation
+                    }
+                }
+            }).catch(_handle_iq_error_repsonse)
+        })
     })
 }
 

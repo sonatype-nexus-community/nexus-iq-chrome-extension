@@ -27,8 +27,8 @@ import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from "../../types/
 import { readExtensionConfiguration } from "../../messages/SettingsMessages";
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../types/Message";
 import { PackageURL } from "packageurl-js";
-import { getAllComponentVersions, getComponentDetails, pollForComponentEvaluationResult, requestComponentEvaluationByPurls } from "../../messages/IqMessages";
-import { ApiComponentDetailsDTOV2, ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from "@sonatype/nexus-iq-api-client";
+import { getAllComponentVersions, getComponentDetails, getRemediationDetailsForComponent, pollForComponentEvaluationResult, requestComponentEvaluationByPurls } from "../../messages/IqMessages";
+import { ApiComponentDetailsDTOV2, ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2, ApiComponentRemediationDTO } from "@sonatype/nexus-iq-api-client";
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -147,6 +147,29 @@ export default function ExtensionPopup() {
               }
             })
           })
+        })
+
+        /** 
+         * Request Remediation Details for the current PURL
+         */
+        getRemediationDetailsForComponent({
+          type: MESSAGE_REQUEST_TYPE.GET_REMEDIATION_DETAILS_FOR_COMPONENT,
+          params: {
+            purl: purl.toString()
+          }
+        }).then((remediationResponse) => {
+          if (remediationResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+            const newPopupContext = {...popupContext}
+            if (!newPopupContext.iq) {
+              newPopupContext.iq = {}
+            }
+            if (remediationResponse.data) {
+              newPopupContext.iq.remediationDetails = (
+                'remediation' in remediationResponse.data ? remediationResponse.data.remediation as ApiComponentRemediationDTO : undefined
+              )
+            }
+            setPopupContext(newPopupContext)
+          }
         })
 
         /**

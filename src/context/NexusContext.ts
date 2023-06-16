@@ -27,7 +27,7 @@ import React from 'react';
 import {DATA_SOURCE, DATA_SOURCES} from '../utils/Constants';
 import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
 import { LogLevel } from '../logger/Logger';
-import { ApiComponentDetailsDTOV2 } from '@sonatype/nexus-iq-api-client';
+import { ApiComponentDetailsDTOV2, ApiComponentRemediationDTO } from '@sonatype/nexus-iq-api-client';
 import { ComponentReport } from '@sonatype/ossindex-api-client'
 
 export interface NexusContextInterface {
@@ -77,6 +77,7 @@ export const NexusContext = React.createContext(initialContext);
 export interface IqPopupContext {
   allVersions?: Array<string>
   componentDetails?: ApiComponentDetailsDTOV2
+  remediationDetails?: ApiComponentRemediationDTO
 }
 
 export interface OssIndexPopupContext {
