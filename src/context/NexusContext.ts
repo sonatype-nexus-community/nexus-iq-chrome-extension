@@ -75,6 +75,7 @@ const initialContext: NexusContextInterface = {
 export const NexusContext = React.createContext(initialContext);
 
 export interface IqPopupContext {
+  allVersions?: Array<string>
   componentDetails?: ApiComponentDetailsDTOV2
 }
 

@@ -141,7 +141,9 @@ export async function getAllComponentVersions(request: MessageRequest): Promise<
         }).then((componentVersions) => {
             return {
                 "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
-                "data": componentVersions
+                "data": {
+                    "versions": componentVersions
+                }
             }
         }).catch(_handle_iq_error_repsonse)
     })
