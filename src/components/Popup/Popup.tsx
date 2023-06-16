@@ -28,7 +28,8 @@ import {DATA_SOURCE, DATA_SOURCES} from '../../utils/Constants';
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
 import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 import './Popup.css';
-import RemediationPage from "./IQServer/AllVersionsPage/AllVersionsPage";
+import RemediationPage from "./IQServer/RemediationPage/RemediationPage";
+import LicensePage from "./IQServer/LicensingPage/LicensingPage";
 
 // const Popup = (): JSX.Element | null => {
 //   const [activeTabId, setActiveTabId] = useState(0);
@@ -273,6 +274,9 @@ function IqPopup() {
             </NxTabPanel>
             <NxTabPanel>
               {/*<SecurityPage />*/}
+            </NxTabPanel>
+            <NxTabPanel>
+              <LicensePage />
             </NxTabPanel>
           </NxTabs>
         </div>

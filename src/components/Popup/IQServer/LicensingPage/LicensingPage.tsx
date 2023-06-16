@@ -15,25 +15,24 @@
  */
 import {NxButton, NxP, NxTextLink} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext,
+  NexusContext,
+  NexusContextInterface
+} from '../../../../context/NexusContext';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
 import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
+import {DATA_SOURCE} from "../../../../utils/Constants";
 
-const LicensingPage = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+function IqLicensePage () {
+  const popupContext = useContext(ExtensionPopupContext)
+  const licenseData = popupContext.iq?.componentDetails?.licenseData
 
-  const renderLicensePage = (nexusContext: NexusContextInterface | undefined) => {
-    console.log("Rendering LicensingPage");
-
-    if (
-      nexusContext &&
-      // nexusContext.policyDetails &&
-      nexusContext.policyDetails?.results &&
-      nexusContext.policyDetails.results.length > 0
-    ) {
-      const licenseData = nexusContext.policyDetails.results[0].licenseData;
-      const observedLicenses = licenseData.observedLicenses.filter(
+    if (licenseData !== undefined) {
+      // const licenseData = nexusContext.policyDetails.results[0].licenseData;
+      const observedLicenses = licenseData?.observedLicenses?.filter(
         (license) => license.licenseId != 'Not-Supported'
       );
       return (
@@ -48,10 +47,10 @@ const LicensingPage = (): JSX.Element | null => {
               <header className="nx-grid-header">
                 <h3 className="nx-h3 nx-grid-header__title">Effective License(s)</h3>
               </header>
-              {licenseData.effectiveLicenses.map((license: LicenseDetail) => {
+              {licenseData.effectiveLicenses?.map((license: LicenseDetail) => {
                 return <LicensingDisplay key={license.licenseId} licenseData={license} />;
               })}
-              {observedLicenses.length > 0 && (
+              {observedLicenses && observedLicenses.length > 0 && (
                 <React.Fragment>
                   <header className="nx-grid-header">
                     <h3 className={'nx-h3 nx-grid-header__title'}>Observed License(s)</h3>
@@ -70,7 +69,8 @@ const LicensingPage = (): JSX.Element | null => {
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--100">
               <NxP style={{textAlign: 'center'}}>
-                <NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>
+                {/*<NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>*/}
+                  <NxButton id="nx-drawer-legal-open-button" >
                   <div>
                     <span>View License Files</span>
                   </div>
@@ -108,10 +108,17 @@ const LicensingPage = (): JSX.Element | null => {
           </React.Fragment>
       )
     }
-    return null;
-  };
+}
 
-  return renderLicensePage(nexusContext);
-};
+export default function LicensePage() {
+  const extensionContext = useContext(ExtensionConfigurationContext)
 
-export default LicensingPage;
+  return (
+      <div>
+        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
+            <IqLicensePage/>
+        )}
+      </div>
+  )
+}
+
