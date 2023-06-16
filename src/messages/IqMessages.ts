@@ -18,9 +18,7 @@ import {
     Configuration,
     ApplicationsApi,
     ResponseError,
-    EvaluationApi,
-    ApiComponentDTOV2,
-    ApiComponentEvaluationResultDTOV2
+    EvaluationApi
 } from '@sonatype/nexus-iq-api-client'
 import { logger, LogLevel } from '../logger/Logger'
 import { readExtensionConfiguration } from '../messages/SettingsMessages'
@@ -38,97 +36,46 @@ import { UserAgentHelper } from '../utils/UserAgentHelper'
  */
 
 export async function requestComponentEvaluationByPurls(request: MessageRequest): Promise<MessageResponse> {
-    return _get_iq_api_configuration().then((apiConfig) => {
-        return apiConfig
-    }).catch((err) => { 
-        throw err
-    }).then((apiConfig) => {
-        logger.logMessage('API Configiration', LogLevel.INFO, apiConfig)
-        const applicationId = '2d84d349f416492a83137a622a08a12e'
-        const apiClient = new EvaluationApi(apiConfig)
-
-        // @typescript-eslint/strict-boolean-expressions:
-        let purls: Array<string> = []
-        if (request.params && 'purls' in request.params) {
-            purls = request.params['purls'] as Array<string>
-        }
-
-        return apiClient.evaluateComponents({
-            applicationId: applicationId,
-            apiComponentEvaluationRequestDTOV2: {
-                components: purls.map(purl => {
-                    return { packageUrl: purl }
-                })
+    return readExtensionConfiguration().then((response) => {
+       return response.data as ExtensionConfiguration
+    }).then((extensionConfig) => {
+        return _get_iq_api_configuration().then((apiConfig) => {
+            return apiConfig
+        }).catch((err) => { 
+            throw err
+        }).then((apiConfig) => {
+            logger.logMessage('API Configiration', LogLevel.INFO, apiConfig)
+            const applicationId = extensionConfig.iqApplicationInternalId !== undefined ? extensionConfig.iqApplicationInternalId : 'UNKNOWN'
+            const apiClient = new EvaluationApi(apiConfig)
+    
+            // @typescript-eslint/strict-boolean-expressions:
+            let purls: Array<string> = []
+            if (request.params && 'purls' in request.params) {
+                purls = request.params['purls'] as Array<string>
             }
-        }).then((evaluateRequestResponse) => {
-            logger.logMessage('Response from evaluateComponents', LogLevel.INFO, evaluateRequestResponse)
-            return {
-                "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
-                "data": evaluateRequestResponse
-            }
-        }).catch(_handle_iq_error_repsonse)
+    
+            return apiClient.evaluateComponents({
+                applicationId: applicationId,
+                apiComponentEvaluationRequestDTOV2: {
+                    components: purls.map(purl => {
+                        return { packageUrl: purl }
+                    })
+                }
+            }).then((evaluateRequestResponse) => {
+                logger.logMessage('Response from evaluateComponents', LogLevel.INFO, evaluateRequestResponse)
+                return {
+                    "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
+                    "data": evaluateRequestResponse
+                }
+            }).catch(_handle_iq_error_repsonse)
+        })
     })
 }
 
-// export const untilAsync = async (fn, time = 1000, wait = 10000) => {
-//     const startTime = new Date().getTime();  /* [1] */
-//     for (;;) {                               /* [2] */
-//       try {
-//         if (await fn()) {                    /* [3] */
-//           return true;
-//         }
-//       } catch (e) {                          /* [4] */
-//         throw e;
-//       }
-  
-//       if (new Date().getTime() - startTime > wait) {
-//         throw new Error('Max wait reached'); /* [5] */
-//       } else {                               /* [6] */
-//         await new Promise((resolve) => setTimeout(resolve, time));
-//       }
-//     }
-//   };
-
-// export function pollForComponentEvaluationResult2(applicationId: string, resultId: string): ApiComponentEvaluationResultDTOV2 {
-//     _get_iq_api_configuration().catch((err) => { 
-//         throw err
-//     }).then((apiConfig) => {
-//         const apiClient = new EvaluationApi(apiConfig)
-//         apiClient.getComponentEvaluation({
-//             applicationId: applicationId,
-//             resultId: resultId
-//         }).catch((err) => {
-
-//         })
-//     })
-//     try {
-//         const apiConfig = await _get_iq_api_configuration();
-//         const apiClient = new EvaluationApi(apiConfig)
-//         const result = await apiClient.getComponentEvaluation({
-//             applicationId: applicationId,
-//             resultId: resultId
-//         })
-
-//         if (polling && result.results) {                      
-//             polling = false
-//             resolve(result)
-//         } else {                                              
-//             setTimeout(executePoll, time)
-//         }
-//     } catch (error) {      
-//         if (error instanceof ResponseError && error.response.status == 404) {
-//             // Continue polling
-//             logger.logMessage(`ResultId ${resultId} not ready (404). Continuing to poll...`, LogLevel.INFO)
-//         } else {
-//             polling = false
-//             reject(new Error("Polling cancelled due to API error"))
-//         }
-//     }
-// }
-
 export function pollForComponentEvaluationResult(applicationId: string, resultId: string, time: number) {
     let polling = false                            
-    let rejectThis = null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let rejectThis: (reject: any) => void
   
     const stopPolling = () => {                                 
         if (polling) {

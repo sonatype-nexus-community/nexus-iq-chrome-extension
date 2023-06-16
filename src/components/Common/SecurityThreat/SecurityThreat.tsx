@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SecurityData} from '@sonatype/js-sona-types';
 import {
   NxH3, NxLoadingSpinner,
   NxPolicyViolationIndicator,
@@ -22,9 +21,7 @@ import {
 import React, {useContext} from 'react';
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
+  ExtensionPopupContext
 } from '../../../context/NexusContext';
 import {DATA_SOURCE} from "../../../utils/Constants";
 
@@ -33,10 +30,8 @@ function IqSecurity() {
   const securityData= popupContext.iq?.componentDetails?.securityData
 
   function getMaxSecurity() {
-    if (securityData !== undefined &&
-        securityData.securityIssues &&
-        securityData?.securityIssues?.length > 0) {
-      return Math.max(...securityData.securityIssues.map((issue) => issue.severity as number));
+    if (securityData && securityData.securityIssues && securityData?.securityIssues?.length > 0) {
+      return Math.max(...securityData.securityIssues.map((issue) => issue.severity as number))
     }
 
     return 0
@@ -48,7 +43,7 @@ function IqSecurity() {
     return (
         <React.Fragment>
           <header className="nx-grid-header">
-            <h3 className={'nx-h3'}>Max Security Threat</h3>
+            <NxH3 className={'nx-h3'}>Max Security Threat</NxH3>
           </header>
           <NxPolicyViolationIndicator
               policyThreatLevel={getMaxSecurity() as ThreatLevelNumber}
