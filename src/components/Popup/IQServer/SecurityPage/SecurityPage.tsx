@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 import React, {useContext, useState} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext,
+  NexusContext,
+  NexusContextInterface
+} from '../../../../context/NexusContext';
 import {SecurityIssue, sortIssues} from '../../../../types/ArtifactMessage';
 import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
 import './SecurityPage.css';
+import {DATA_SOURCE} from "../../../../utils/Constants";
 
 // type SecurityProps = object;
 
-const SecurityPage = (): JSX.Element | null => {
-  // props: SecurityProps
+function IqSecurityPage() {
+  const popupContext = useContext(ExtensionPopupContext)
   const [open, setOpen] = useState('');
-
-  const nexusContext = useContext(NexusContext);
-
+  
   const getRemediationAndOpen = (securityIssue: string): void => {
     if (open == securityIssue) {
       setOpen('');
@@ -75,6 +79,16 @@ const SecurityPage = (): JSX.Element | null => {
   };
 
   return renderAccordion(nexusContext);
-};
+}
 
-export default SecurityPage;
+export default function SecurityPage() {
+  const extensionContext = useContext(ExtensionConfigurationContext)
+
+  return (
+      <div>
+        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
+            <IqComponentInfo/>
+        )}
+      </div>
+  )
+}
