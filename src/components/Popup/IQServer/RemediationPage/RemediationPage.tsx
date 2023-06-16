@@ -15,47 +15,44 @@
  */
 import {NxH3} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext,
+  NexusContext,
+  NexusContextInterface
+} from '../../../../context/NexusContext';
 import AllVersionsDetails from '../AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
 import RemediationDetails from './RemediationDetails/RemediationDetails';
+import {DATA_SOURCE} from "../../../../utils/Constants";
 
-const RemediationPage = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+function IqRemediationPage() {
+  const popupContext = useContext(ExtensionPopupContext)
 
-  const renderRemediationPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      // nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 &&
-      nexusContext.getRemediationDetails
-    ) {
-      if (!nexusContext.remediationDetails) {
-        nexusContext.getRemediationDetails(
-          nexusContext.policyDetails.results[0].component.packageUrl
-        );
-      }
+  return (
+    <React.Fragment>
+      <div className="nx-grid-row">
+        <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
+          <NxH3>Recommended Versions</NxH3>
+          <RemediationDetails />
+        </section>
+        <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
+          <NxH3>All Versions ({popupContext.iq?.allVersions?.length})</NxH3>
+          <AllVersionsDetails />
+        </section>
+      </div>
+    </React.Fragment>
+  );
+}
 
-      return (
-        <React.Fragment>
-          <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
-              <NxH3>Recommended Versions</NxH3>
-              <RemediationDetails />
-            </section>
-            <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
-              <NxH3>All Versions ({nexusContext.componentVersionsDetails?.length})</NxH3>
-              <AllVersionsDetails />
-            </section>
-          </div>
-        </React.Fragment>
-      );
-    }
+export default function RemediationPage() {
+  const extensionContext = useContext(ExtensionConfigurationContext)
 
-    return null;
-  };
+  return (
+      <div>
+        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
+            <IqRemediationPage/>
+        )}
+      </div>
+  )
+}
 
-  return renderRemediationPage(nexusContext);
-};
-
-export default RemediationPage;

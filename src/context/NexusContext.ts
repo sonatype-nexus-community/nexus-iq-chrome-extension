@@ -84,6 +84,7 @@ export interface OssIndexPopupContext {
 }
 
 export interface ExtensionPopupContext {
+  currentPurl: PackageURL | undefined
   iq?: IqPopupContext
   ossindex?: OssIndexPopupContext
   supportsLicensing: boolean
@@ -91,12 +92,14 @@ export interface ExtensionPopupContext {
 }
 
 const DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA = {
+  currentPurl: undefined,
   iq: {},
   supportsLicensing: true,
   supportsPolicy: true
 }
 
 const DEFAULT_OSSINDEX_EXTENSION_POPUP_CONTEXT_DATA = {
+  currentPurl: undefined,
   ossindex: {},
   supportsLicensing: false,
   supportsPolicy: false

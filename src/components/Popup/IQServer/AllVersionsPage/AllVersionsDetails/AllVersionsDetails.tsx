@@ -22,69 +22,71 @@ import {
 } from '@sonatype/react-shared-components';
 import {PackageURL} from 'packageurl-js';
 import React, {useContext, useEffect, useRef} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext,
+  NexusContext,
+  NexusContextInterface
+} from '../../../../../context/NexusContext';
 import './AllVersionsDetails.css';
+import {DATA_SOURCE} from "../../../../../utils/Constants";
 
-const AllVersionsDetails = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
-
+function IqAllVersionDetails() {
+  const popupContext = useContext(ExtensionPopupContext)
+  const allVersions = popupContext.iq?.allVersions
   const currentVersionRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    if (
-      nexusContext.componentVersionsDetails &&
-      nexusContext.componentVersionsDetails.length > 0 &&
-      currentVersionRef.current
-    ) {
-      console.log(currentVersionRef.current);
-      currentVersionRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'nearest'
-      });
-    }
-  });
-
-  const renderAllVersionsDetails = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.componentVersionsDetails &&
-      nexusContext.componentVersionsDetails.length > 0
-    ) {
-      const allVersionsDetails: ComponentContainer[] = nexusContext.componentVersionsDetails;
-      const currentPurl = nexusContext.currentComponentPurl;
-
+  // useEffect(() => {
+  //   if (
+  //     nexusContext.componentVersionsDetails &&
+  //     nexusContext.componentVersionsDetails.length > 0 &&
+  //     currentVersionRef.current
+  //   ) {
+  //     console.log(currentVersionRef.current);
+  //     currentVersionRef.current.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'center',
+  //       inline: 'nearest'
+  //     });
+  //   }
+  // })
+    if (allVersions && popupContext.currentPurl) {
       return (
         <NxList>
-          {allVersionsDetails.map((componentDetail) => {
-            const securityData: SecurityData | null = componentDetail.securityData
-              ? componentDetail.securityData
-              : null;
-            let maxSeverity = 0;
-            if (securityData && securityData.securityIssues?.length > 0) {
-              maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
+          {allVersions.map((version) => {
+            // const securityData: SecurityData | null = componentDetail.securityData
+            //   ? componentDetail.securityData
+            //   : null;
+            // let maxSeverity = 0;
+            // if (securityData && securityData.securityIssues?.length > 0) {
+            //   maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
+            // }
+            // const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
+            const purl = popupContext.currentPurl
+            if (purl) {
+              purl.version = version
             }
-            const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
+
 
             return (
               <NxList.LinkItem
                 href=""
-                key={purl.version}
-                selected={currentPurl && purl.version == currentPurl.version}
+                key={purl?.version}
+                selected={popupContext.currentPurl && purl?.version == popupContext.currentPurl.version}
               >
                 <NxList.Text
                   ref={
-                    currentPurl && purl.version == currentPurl.version ? currentVersionRef : null
+                    popupContext.currentPurl && purl?.version == popupContext.currentPurl.version ? currentVersionRef : null
                   }
                 >
-                  {/*{purl.version}*/}
+                  {purl?.version}
 
-                  <NxPolicyViolationIndicator
-                    style={{float: 'right', width: '100px !important'}}
-                    policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
-                  >
-                    {' ' + purl.version}
-                  </NxPolicyViolationIndicator>
+                  {/*<NxPolicyViolationIndicator*/}
+                  {/*  style={{float: 'right', width: '100px !important'}}*/}
+                  {/*  policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}*/}
+                  {/*>*/}
+                  {/*  {' ' + purl.version}*/}
+                  {/*</NxPolicyViolationIndicator>*/}
                 </NxList.Text>
               </NxList.LinkItem>
             );
@@ -94,10 +96,17 @@ const AllVersionsDetails = (): JSX.Element | null => {
     } else {
       return <NxLoadingSpinner />;
     }
-    return null;
-  };
+}
 
-  return renderAllVersionsDetails(nexusContext);
-};
+export default function AllVersionDetails() {
+  const extensionContext = useContext(ExtensionConfigurationContext)
 
-export default AllVersionsDetails;
+  return (
+      <div>
+        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
+            <IqAllVersionDetails/>
+        )}
+      </div>
+  )
+}
+

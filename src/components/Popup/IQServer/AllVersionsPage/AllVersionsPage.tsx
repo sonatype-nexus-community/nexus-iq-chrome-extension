@@ -15,34 +15,46 @@
  */
 import {NxH3} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext,
+  NexusContext,
+  NexusContextInterface
+} from '../../../../context/NexusContext';
 import AllVersionsDetails from './AllVersionsDetails/AllVersionsDetails';
+import {DATA_SOURCE} from "../../../../utils/Constants";
 
-const RemediationPage = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+function IqRemediationPageAllVersion() {
+  const popupContext = useContext(ExtensionPopupContext)
 
-  const renderRemediationPage = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.componentVersionsDetails &&
-      nexusContext.componentVersionsDetails.length > 0
-    ) {
+    if (popupContext?.iq?.allVersions) {
       return (
-        <React.Fragment>
-          <NxH3>All Versions ({nexusContext.componentVersionsDetails.length})</NxH3>
-          <AllVersionsDetails />
-        </React.Fragment>
+          <React.Fragment>
+            <NxH3>All Versions ({popupContext?.iq?.allVersions.length})</NxH3>
+            <AllVersionsDetails />
+          </React.Fragment>
+      )
+    } else {
+      return (
+          <React.Fragment>
+            <em>No versions</em>
+          </React.Fragment>
       );
     }
 
-    return (
-      <React.Fragment>
-        <em>No versions</em>
-      </React.Fragment>
-    );
-  };
 
-  return renderRemediationPage(nexusContext);
-};
 
-export default RemediationPage;
+}
+
+export default function RemediationPageAllVersion() {
+  const extensionContext = useContext(ExtensionConfigurationContext)
+
+  return (
+      <div>
+        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
+            <IqRemediationPageAllVersion/>
+        )}
+      </div>
+  )
+}
+
