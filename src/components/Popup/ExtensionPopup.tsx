@@ -27,8 +27,8 @@ import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from "../../types/
 import { readExtensionConfiguration } from "../../messages/SettingsMessages";
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../types/Message";
 import { PackageURL } from "packageurl-js";
-import { getAllComponentVersions, pollForComponentEvaluationResult, requestComponentEvaluationByPurls } from "../../messages/IqMessages";
-import { ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from "@sonatype/nexus-iq-api-client";
+import { getAllComponentVersions, getComponentDetails, pollForComponentEvaluationResult, requestComponentEvaluationByPurls } from "../../messages/IqMessages";
+import { ApiComponentDetailsDTOV2, ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from "@sonatype/nexus-iq-api-client";
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser;
@@ -118,23 +118,56 @@ export default function ExtensionPopup() {
           }).finally(() => {
             logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
             stopPolling()
+            /**
+             * Get additional detail about this Componet Version
+             * 
+             * projectData is not populated in the Evaluation Response :-(
+             */
+            getComponentDetails({
+              type: MESSAGE_REQUEST_TYPE.GET_COMPONENT_DETAILS,
+              params: {
+                purls: [purl.toString()]
+              }
+            }).then((componentDetailsResponse) => {
+              if (componentDetailsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+                logger.logMessage('Got Response to GetComponentDetails', LogLevel.DEBUG, componentDetailsResponse)
+                if (componentDetailsResponse.data && 'componentDetails' in componentDetailsResponse.data) {
+                  const componentDetails = (componentDetailsResponse.data.componentDetails as Array<ApiComponentDetailsDTOV2>).pop()
+                  if (componentDetails) {
+                    const newPopupContext = {...popupContext}
+                    if (!newPopupContext.iq) {
+                      newPopupContext.iq = {}
+                    }
+                    if (newPopupContext.iq.componentDetails) {
+                      newPopupContext.iq.componentDetails.projectData = componentDetails.projectData
+                      setPopupContext(newPopupContext)
+                    }
+                  }
+                } 
+              }
+            })
           })
         })
 
+        /**
+         * Load all known versions of the current Component
+         */
         getAllComponentVersions({
           "type": MESSAGE_REQUEST_TYPE.GET_COMPONENT_VERSIONS,
           "params": {
             "purl": purl.toString()
           }
         }).then((allVersionsResponse) => {
-          const newPopupContext = {...popupContext}
-          if (!newPopupContext.iq) {
-            newPopupContext.iq = {}
+          if (allVersionsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+            const newPopupContext = {...popupContext}
+            if (!newPopupContext.iq) {
+              newPopupContext.iq = {}
+            }
+            if (allVersionsResponse.data) {
+              newPopupContext.iq.allVersions = ('versions' in allVersionsResponse.data ? allVersionsResponse.data.versions as Array<string> : [])
+            }
+            setPopupContext(newPopupContext)
           }
-          if (allVersionsResponse.data) {
-            newPopupContext.iq.allVersions = ('versions' in allVersionsResponse.data ? allVersionsResponse.data.versions as Array<string> : [])
-          }
-          setPopupContext(newPopupContext)
         })
       }
     }, [purl])

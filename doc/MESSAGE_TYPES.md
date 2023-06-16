@@ -107,6 +107,37 @@ Response (AUTH_ERROR)
 }
 ```
 
+### Get Component Details
+
+**Type:** getComponentDetails 
+**Handled By:** N/A
+**Parameters:** Yes  
+**Response Returned:** Yes  
+**Description:** Get detailed information about a Component by PURL.  
+
+Example request:
+```
+{
+    "type": "getComponentDetails",
+    "params": {
+       "purls": [
+            // List of PURL strings
+        ]
+    }
+}
+```
+
+Response (SUCCESS):
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        "componentDetails": Array<ApiComponentDetailsDTOV2>
+    }
+}
+```
+ 
+
 ### Get Component Versions
 
 **Type:** getComponentVersions 

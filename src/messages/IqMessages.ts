@@ -167,6 +167,37 @@ export async function getApplications(request: MessageRequest): Promise<MessageR
     })
 }
 
+export async function getComponentDetails(request: MessageRequest): Promise<MessageResponse> { 
+    return _get_iq_api_configuration().then((apiConfig) => {
+        return apiConfig
+    }).catch((err) => { 
+        throw err
+    }).then((apiConfig) => {
+        logger.logMessage('Making API Call ComponentsApi::getComponentDetails()', LogLevel.DEBUG, apiConfig)
+        const apiClient = new ComponentsApi(apiConfig)
+
+        // @typescript-eslint/strict-boolean-expressions:
+        let purls: Array<string> = []
+        if (request.params && 'purls' in request.params) {
+            purls = request.params['purls'] as Array<string>
+        }
+
+        return apiClient.getComponentDetails({
+            apiComponentDetailsRequestDTOV2: {
+                components:  purls.map(purl => {
+                    return { packageUrl: purl }
+                })
+            }
+        }).then((componentDetailsResponse) => {
+            logger.logMessage('getComponentDetails response', LogLevel.DEBUG, )
+            return {
+                "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
+                "data": componentDetailsResponse
+            }
+        }).catch(_handle_iq_error_repsonse)
+    })
+}
+
 async function _get_iq_api_configuration(): Promise<Configuration> {
     return readExtensionConfiguration().then((response) => {
         if (chrome.runtime.lastError) {

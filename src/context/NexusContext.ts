@@ -27,7 +27,7 @@ import React from 'react';
 import {DATA_SOURCE, DATA_SOURCES} from '../utils/Constants';
 import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
 import { LogLevel } from '../logger/Logger';
-import { ApiComponentDTOV2, ApiComponentDetailsDTOV2, ApiComponentEvaluationResultDTOV2 } from '@sonatype/nexus-iq-api-client';
+import { ApiComponentDetailsDTOV2 } from '@sonatype/nexus-iq-api-client';
 import { ComponentReport } from '@sonatype/ossindex-api-client'
 
 export interface NexusContextInterface {
