@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {ComponentContainer, SecurityData} from '@sonatype/js-sona-types';
 import {
   NxList,
   NxLoadingSpinner,
@@ -24,20 +23,20 @@ import {PackageURL} from 'packageurl-js';
 import React, {useContext, useEffect, useRef} from 'react';
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
+  ExtensionPopupContext
 } from '../../../../../../context/NexusContext';
 import './AllVersionsDetails.css';
 import {DATA_SOURCE} from "../../../../../../utils/Constants";
-import {version} from "os";
-import {ApiComponentPolicyViolationListDTOV2, instanceOfApiVersionChangeOptionDTO} from "@sonatype/nexus-iq-api-client";
+import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client";
+import {logger, LogLevel} from "../../../../../../logger/Logger";
 
 function IqAllVersionDetails() {
   const popupContext = useContext(ExtensionPopupContext)
+  logger.logMessage('** popupContext', LogLevel.DEBUG, popupContext)
   const allVersions = popupContext.iq?.allVersions
   const currentPurl = popupContext.currentPurl
   const currentVersionRef = useRef<HTMLElement>(null)
+  logger.logMessage('** currentPurl', LogLevel.DEBUG, currentPurl?.version)
 
   function getMaxViolation (policyData: ApiComponentPolicyViolationListDTOV2) {
       if (policyData.policyViolations && policyData.policyViolations.length > 0) {
@@ -50,9 +49,7 @@ function IqAllVersionDetails() {
   }
 
   useEffect(() => {
-    if (
-      currentVersionRef.current
-    ) {
+    if (currentVersionRef.current) {
       console.log(currentVersionRef.current);
       currentVersionRef.current.scrollIntoView({
         behavior: 'smooth',
@@ -67,20 +64,10 @@ function IqAllVersionDetails() {
       return (
         <NxList>
           {allVersions.map((version) => {
-            // const securityData: SecurityData | null = componentDetail.securityData
-            //   ? componentDetail.securityData
-            //   : null;
-            // let maxSeverity = 0;
-            // if (securityData && securityData.securityIssues?.length > 0) {
-            //   maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
-            // }
-            // const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
-            const currentPurl = popupContext.currentPurl
-            const versionPurl = PackageURL.fromString(version.component?.packageUrl as string)
 
-            // if (purl) {
-            //   purl.version = version
-            // }
+            // const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
+            const versionPurl = PackageURL.fromString(version.component?.packageUrl as string)
+            
             return (
               <NxList.LinkItem
                 href=""
@@ -88,9 +75,7 @@ function IqAllVersionDetails() {
                 selected={versionPurl.version == currentPurl?.version}
               >
                 <NxList.Text
-                  ref={
-                    popupContext.currentPurl && currentPurl?.version == popupContext.currentPurl.version ? currentVersionRef : null
-                  }
+                    ref={currentPurl?.version == versionPurl.version ? currentVersionRef : null}
                 >
                   {version.policyData != undefined && (
                       <NxPolicyViolationIndicator

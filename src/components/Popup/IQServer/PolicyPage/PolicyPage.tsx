@@ -17,14 +17,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import {
   ExtensionConfigurationContext,
   ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
 } from '../../../../context/NexusContext';
 import './PolicyPage.css';
 import PolicyViolation from './PolicyViolation/PolicyViolation';
 import {DATA_SOURCE} from "../../../../utils/Constants";
 import {NxLoadingSpinner} from "@sonatype/react-shared-components";
-import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client";
 
 function IqPolicyPage() {
   const popupContext = useContext(ExtensionPopupContext)

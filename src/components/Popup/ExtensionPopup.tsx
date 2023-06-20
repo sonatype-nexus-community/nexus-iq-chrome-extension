@@ -229,6 +229,7 @@ export default function ExtensionPopup() {
                   if (!newPopupContext.iq) {
                     newPopupContext.iq = {}
                   }
+                  newPopupContext.currentPurl = purl
                   newPopupContext.iq.allVersions = (evalResponse as ApiComponentEvaluationResultDTOV2).results
                   logger.logMessage(`Updating PopUp Context with All Version Evaluations`, LogLevel.DEBUG, newPopupContext)
                   setPopupContext(newPopupContext)

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {RepoType} from '../utils/Constants';
+import {ApiPolicyViolationDTOV2} from "@sonatype/nexus-iq-api-client";
 
 export interface ArtifactMessage {
   type: string;
