@@ -30,6 +30,8 @@ import {
 } from '../../../../../../context/NexusContext';
 import './AllVersionsDetails.css';
 import {DATA_SOURCE} from "../../../../../../utils/Constants";
+import {version} from "os";
+import {ApiComponentPolicyViolationListDTOV2, instanceOfApiVersionChangeOptionDTO} from "@sonatype/nexus-iq-api-client";
 
 function IqAllVersionDetails() {
   const popupContext = useContext(ExtensionPopupContext)
@@ -37,20 +39,29 @@ function IqAllVersionDetails() {
   const currentPurl = popupContext.currentPurl
   const currentVersionRef = useRef<HTMLElement>(null)
 
-  // useEffect(() => {
-  //   if (
-  //     nexusContext.componentVersionsDetails &&
-  //     nexusContext.componentVersionsDetails.length > 0 &&
-  //     currentVersionRef.current
-  //   ) {
-  //     console.log(currentVersionRef.current);
-  //     currentVersionRef.current.scrollIntoView({
-  //       behavior: 'smooth',
-  //       block: 'center',
-  //       inline: 'nearest'
-  //     });
-  //   }
-  // })
+  function getMaxViolation (policyData: ApiComponentPolicyViolationListDTOV2) {
+      if (policyData.policyViolations && policyData.policyViolations.length > 0) {
+        return Math.max(
+            ...policyData.policyViolations.map((violation) =>
+                violation.threatLevel != undefined ? violation.threatLevel : 0)
+        )
+      }
+      return 0
+  }
+
+  useEffect(() => {
+    if (
+      currentVersionRef.current
+    ) {
+      console.log(currentVersionRef.current);
+      currentVersionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+    }
+  })
+
     if (allVersions) {
       // if (allVersions && currentPurl) {
       return (
@@ -64,29 +75,31 @@ function IqAllVersionDetails() {
             //   maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
             // }
             // const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
-            const purl = popupContext.currentPurl
-            if (purl) {
-              purl.version = version
-            }
+            const currentPurl = popupContext.currentPurl
+            const versionPurl = PackageURL.fromString(version.component?.packageUrl as string)
+
+            // if (purl) {
+            //   purl.version = version
+            // }
             return (
               <NxList.LinkItem
                 href=""
-                key={version}
-                selected={popupContext.currentPurl && purl?.version == popupContext.currentPurl.version}
+                key={version.component?.packageUrl}
+                selected={versionPurl.version == currentPurl?.version}
               >
                 <NxList.Text
                   ref={
-                    popupContext.currentPurl && purl?.version == popupContext.currentPurl.version ? currentVersionRef : null
+                    popupContext.currentPurl && currentPurl?.version == popupContext.currentPurl.version ? currentVersionRef : null
                   }
                 >
-                  {/*{purl?.version}*/}
-                  {version}
-                  {/*<NxPolicyViolationIndicator*/}
-                  {/*  style={{float: 'right', width: '100px !important'}}*/}
-                  {/*  policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}*/}
-                  {/*>*/}
-                  {/*  {' ' + purl.version}*/}
-                  {/*</NxPolicyViolationIndicator>*/}
+                  {version.policyData != undefined && (
+                      <NxPolicyViolationIndicator
+                          style={{marginBottom: '16px !important'}}
+                          policyThreatLevel={Math.round(getMaxViolation(version.policyData)) as ThreatLevelNumber}
+                      >
+                        {versionPurl.version}
+                      </NxPolicyViolationIndicator>
+                  )}
                 </NxList.Text>
               </NxList.LinkItem>
             );
@@ -94,7 +107,6 @@ function IqAllVersionDetails() {
         </NxList>
       );
     } else {
-      console.log("CURRENT PURL:", currentPurl)
       return (
           <>
             <span>{currentPurl?.name}</span>

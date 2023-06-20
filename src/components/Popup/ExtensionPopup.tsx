@@ -186,13 +186,61 @@ export default function ExtensionPopup() {
           }
         }).then((allVersionsResponse) => {
           if (allVersionsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+            /**
+             * TODO: Call requestComponentEvaluationByPurls with the list of versions
+             *       These results are used to display the threat indicator on the all versions page.
+             */
             logger.logMessage('Got Response to getAllComponentVersions', LogLevel.DEBUG, allVersionsResponse)
             const newPopupContext = {...popupContext}
             if (!newPopupContext.iq) {
               newPopupContext.iq = {}
             }
             if (allVersionsResponse.data !== undefined) {
-              newPopupContext.iq.allVersions = ('versions' in allVersionsResponse.data ? allVersionsResponse.data.versions as Array<string> : [])
+              const allVersions = ('versions' in allVersionsResponse.data ? allVersionsResponse.data.versions as Array<string> : [])
+              // const allVersionsPurl: PackageURL[] = [];
+              const allVersionsPurl: string[] = [];
+              allVersions.map((version) => {
+                const versionPurl = PackageURL.fromString(purl.toString())
+                versionPurl.version = version
+                allVersionsPurl.push(versionPurl.toString())
+              })
+              logger.logMessage('Created list of all versions by purl', LogLevel.DEBUG, allVersionsPurl)
+
+              requestComponentEvaluationByPurls({
+                type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,
+                params: {
+                  purls: allVersionsPurl
+                }
+              }).then((r2) => {
+                if (chrome.runtime.lastError) {
+                  logger.logMessage('Error handling Eval Comp Purl', LogLevel.ERROR)
+                }
+
+                const evaluateRequestTicketResponse = r2.data as ApiComponentEvaluationTicketDTOV2
+                logger.logMessage(`evaluateRequestTicketResponse in get all versions`, LogLevel.DEBUG, evaluateRequestTicketResponse)
+
+                const { promise, stopPolling } = pollForComponentEvaluationResult(
+                    (evaluateRequestTicketResponse.applicationId === undefined ? '' : evaluateRequestTicketResponse.applicationId),
+                    (evaluateRequestTicketResponse.resultId === undefined ? '' : evaluateRequestTicketResponse.resultId),
+                    1000
+                )
+
+                promise.then((evalResponse) => {
+                  if (!newPopupContext.iq) {
+                    newPopupContext.iq = {}
+                  }
+                  newPopupContext.iq.allVersions = (evalResponse as ApiComponentEvaluationResultDTOV2).results
+                  logger.logMessage(`Updating PopUp Context with All Version Evaluations`, LogLevel.DEBUG, newPopupContext)
+                  setPopupContext(newPopupContext)
+                }).catch((err) => {
+                  logger.logMessage(`Error in Poll: ${err}`, LogLevel.ERROR)
+                }).finally(() => {
+                  logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
+                  stopPolling()
+                })
+              })
+
+
             }
             setPopupContext(newPopupContext)
           }
