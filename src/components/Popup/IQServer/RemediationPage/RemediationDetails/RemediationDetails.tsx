@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {VersionChange} from "@sonatype/js-sona-types";
-import {NxDescriptionList, NxLoadingSpinner} from '@sonatype/react-shared-components';
+import {NxDescriptionList, NxH3, NxLoadingSpinner} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {
   ExtensionConfigurationContext,
@@ -28,11 +28,16 @@ function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
   const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
 
-  if (versionChanges && versionChanges.length > 0) {
+  // if (versionChanges && versionChanges.length > 0) {
     return (
+        <React.Fragment>
+          {versionChanges && versionChanges.length > 0 && (
+            <NxH3>Recommended Versions</NxH3>
+          )}
+
         <NxDescriptionList
             emptyMessage={"No recommended versions available."}>
-          {versionChanges.map((change) => {
+          {versionChanges?.map((change) => {
             if (change !== undefined) {
               return (
                   <>
@@ -49,13 +54,13 @@ function IqRemediationDetails() {
                   </>
               )
             }
-
           })}
         </NxDescriptionList>
+        </React.Fragment>
     )
-  } else {
-    return <NxLoadingSpinner />;
-  }
+  // } else {
+  //   return <NxLoadingSpinner />;
+  // }
 }
 
 export default function RemediationDetails() {

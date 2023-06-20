@@ -32,7 +32,6 @@ function IqRemediationPage() {
     <React.Fragment>
       <div className="nx-grid-row">
         <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
-          <NxH3>Recommended Versions</NxH3>
           <RemediationDetails />
         </section>
         <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
@@ -41,7 +40,7 @@ function IqRemediationPage() {
         </section>
       </div>
     </React.Fragment>
-  );
+  )
 }
 
 export default function RemediationPage() {

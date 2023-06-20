@@ -39,7 +39,8 @@ function IqLicensePage () {
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
               <header className="nx-grid-header">
-                <h3 className="nx-h3 nx-grid-header__title">Effective Licenses ({licenseData.effectiveLicenses?.length})</h3>
+                <h3 className="nx-h3 nx-grid-header__title">Effective Licenses
+                    <span className={'nx-counter'}>{licenseData.effectiveLicenses?.length}</span></h3>
               </header>
               {licenseData.effectiveLicenses?.map((license: LicenseDetail) => {
                   return (
@@ -51,7 +52,8 @@ function IqLicensePage () {
               {observedLicenses && observedLicenses.length > 0 && (
                 <React.Fragment>
                   <header className="nx-grid-header">
-                    <h3 className={'nx-h3 nx-grid-header__title'}>Observed Licenses ({licenseData.observedLicenses?.length})</h3>
+                    <h3 className={'nx-h3 nx-grid-header__title'}>Observed Licenses
+                        <span className={'nx-counter'}>{licenseData.observedLicenses?.length}</span></h3>
                   </header>
                   {observedLicenses.map((license: LicenseDetail) => {
                     return (
@@ -65,7 +67,8 @@ function IqLicensePage () {
                 {declaredLicenses && declaredLicenses.length > 0 && (
                     <React.Fragment>
                         <header className="nx-grid-header">
-                            <h3 className={'nx-h3 nx-grid-header__title'}>Declared Licenses ({licenseData.declaredLicenses?.length})</h3>
+                            <h3 className={'nx-h3 nx-grid-header__title'}>Declared Licenses
+                                <span className={'nx-counter'}>{licenseData.declaredLicenses?.length}</span></h3>
                         </header>
                         {declaredLicenses.map((license: LicenseDetail) => {
                             return (
