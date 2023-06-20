@@ -21,7 +21,7 @@ import {
   NexusContext,
   NexusContextInterface
 } from '../../../../context/NexusContext';
-import AllVersionsDetails from '../AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
+import AllVersionsDetails from './AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
 import RemediationDetails from './RemediationDetails/RemediationDetails';
 import {DATA_SOURCE} from "../../../../utils/Constants";
 

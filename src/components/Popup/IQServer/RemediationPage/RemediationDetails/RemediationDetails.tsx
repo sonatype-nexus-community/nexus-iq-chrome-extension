@@ -26,35 +26,36 @@ import './RemediationDetails.css';
 
 function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
+  const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
 
+  if (versionChanges && versionChanges.length > 0) {
     return (
-      <NxDescriptionList
-          emptyMessage={"No recommended versions available."}>
-        {/*{versionChanges.map((change) => {*/}
-        {/*  return (*/}
-        {/*    <>*/}
-        {/*      <NxDescriptionList.LinkItem*/}
-        {/*        key={change.data.component.hash}*/}
-        {/*        href={buildNextUrlAndGo(*/}
-        {/*          change.data.component.componentIdentifier.coordinates*/}
-        {/*            ? change.data.component.componentIdentifier.coordinates.version*/}
-        {/*            : 'UNKNOWN'*/}
-        {/*        )}*/}
-        {/*        term={REMEDIATION_LABELS[change.type]}*/}
-        {/*        description={*/}
-        {/*          change.data.component.componentIdentifier.coordinates*/}
-        {/*            ? change.data.component.componentIdentifier.coordinates.version*/}
-        {/*            : 'UNKNOWN'*/}
-        {/*        }*/}
-        {/*      />*/}
-        {/*    </>*/}
-        {/*  );*/}
-        {/*})}*/}
-      </NxDescriptionList>
+        <NxDescriptionList
+            emptyMessage={"No recommended versions available."}>
+          {versionChanges.map((change) => {
+            if (change !== undefined) {
+              return (
+                  <>
+                    <NxDescriptionList.LinkItem
+                        key={change.type}
+                        href=''
+                        term={REMEDIATION_LABELS[change.type as string]}
+                        description={
+                          change.data?.component?.componentIdentifier?.coordinates
+                              ? change.data.component.componentIdentifier.coordinates.version
+                              : 'UNKNOWN'
+                        }
+                    />
+                  </>
+              )
+            }
+
+          })}
+        </NxDescriptionList>
     )
-  // } else {
-  //   return <NxLoadingSpinner />;
-  // }
+  } else {
+    return <NxLoadingSpinner />;
+  }
 }
 
 export default function RemediationDetails() {

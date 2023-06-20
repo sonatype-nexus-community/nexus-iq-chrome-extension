@@ -21,9 +21,11 @@ import {
   NexusContextInterface
 } from '../../../../context/NexusContext';
 import {SecurityIssue, sortIssues} from '../../../../types/ArtifactMessage';
-import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
+import {IqSecurityItemDisplay} from './SecurityItemDisplay/SecurityItemDisplay';
 import './SecurityPage.css';
 import {DATA_SOURCE} from "../../../../utils/Constants";
+import {PackageURL} from "packageurl-js";
+import {ApiSecurityIssueDTO} from "@sonatype/nexus-iq-api-client";
 
 // type SecurityProps = object;
 
@@ -43,28 +45,20 @@ function IqSecurityPage() {
     return issue == open;
   };
 
-  const renderAccordion = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      // nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 // &&
-      // nexusContext.policyDetails.results[0].securityData
-    ) {
-      const purl = nexusContext.policyDetails.results[0].component.packageUrl;
-      const securityData = nexusContext.policyDetails.results[0].securityData;
-      const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
+      const purl = popupContext.currentPurl as PackageURL;
+      const securityData = popupContext.iq?.componentDetails?.securityData
+      // const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
       return (
         <React.Fragment>
           {' '}
           <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              {sortedIssues.map((issue: SecurityIssue) => {
+              {securityData?.securityIssues?.map((issue: ApiSecurityIssueDTO) => {
                 return (
-                  <SecurityItemDisplay
+                  <IqSecurityItemDisplay
                     key={issue.reference}
-                    open={isOpen(issue.reference)}
-                    packageUrl={purl}
+                    open={isOpen(issue.reference as string)}
+                    packageUrl={purl.toString()}
                     securityIssue={issue}
                     remediationEvent={getRemediationAndOpen}
                   />
@@ -73,12 +67,7 @@ function IqSecurityPage() {
             </section>
           </div>
         </React.Fragment>
-      );
-    }
-    return null;
-  };
-
-  return renderAccordion(nexusContext);
+      )
 }
 
 export default function SecurityPage() {
@@ -87,7 +76,7 @@ export default function SecurityPage() {
   return (
       <div>
         {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
-            <IqComponentInfo/>
+            <IqSecurityPage/>
         )}
       </div>
   )

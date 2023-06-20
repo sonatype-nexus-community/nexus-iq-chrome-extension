@@ -131,7 +131,7 @@ export default function ExtensionPopup() {
             }).then((componentDetailsResponse) => {
               if (componentDetailsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                 logger.logMessage('Got Response to GetComponentDetails', LogLevel.DEBUG, componentDetailsResponse)
-                if (componentDetailsResponse.data && 'componentDetails' in componentDetailsResponse.data) {
+                if (componentDetailsResponse.data !== undefined && 'componentDetails' in componentDetailsResponse.data) {
                   const componentDetails = (componentDetailsResponse.data.componentDetails as Array<ApiComponentDetailsDTOV2>).pop()
                   if (componentDetails) {
                     const newPopupContext = {...popupContext}
@@ -159,16 +159,20 @@ export default function ExtensionPopup() {
           }
         }).then((remediationResponse) => {
           if (remediationResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+            logger.logMessage('Got Response to getRemediationDetailsForComponent', LogLevel.DEBUG, remediationResponse)
             const newPopupContext = {...popupContext}
             if (!newPopupContext.iq) {
               newPopupContext.iq = {}
             }
-            if (remediationResponse.data) {
+            if (remediationResponse.data !== undefined) {
               newPopupContext.iq.remediationDetails = (
-                'remediation' in remediationResponse.data ? remediationResponse.data.remediation as ApiComponentRemediationDTO : undefined
+                'remediation' in remediationResponse.data ? remediationResponse.data as ApiComponentRemediationDTO : undefined
               )
+              logger.logMessage('Setting remediation into newPopupContext', LogLevel.DEBUG, newPopupContext.iq.remediationDetails)
             }
             setPopupContext(newPopupContext)
+          } else {
+            logger.logMessage('Unable to get response to getRemediationDetailsForComponent', LogLevel.ERROR, remediationResponse.status)
           }
         })
 
@@ -182,11 +186,12 @@ export default function ExtensionPopup() {
           }
         }).then((allVersionsResponse) => {
           if (allVersionsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+            logger.logMessage('Got Response to getAllComponentVersions', LogLevel.DEBUG, allVersionsResponse)
             const newPopupContext = {...popupContext}
             if (!newPopupContext.iq) {
               newPopupContext.iq = {}
             }
-            if (allVersionsResponse.data) {
+            if (allVersionsResponse.data !== undefined) {
               newPopupContext.iq.allVersions = ('versions' in allVersionsResponse.data ? allVersionsResponse.data.versions as Array<string> : [])
             }
             setPopupContext(newPopupContext)

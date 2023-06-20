@@ -20,32 +20,37 @@ import {
 } from '@sonatype/react-shared-components';
 import * as React from 'react';
 import {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext,
+  NexusContext,
+  NexusContextInterface
+} from '../../../../../context/NexusContext';
 import {SecurityIssue} from '../../../../../types/ArtifactMessage';
 import '../SecurityPage.css';
 import VulnDetails from './VulnDetails/VulnDetails';
+import {ApiSecurityIssueDTO} from "@sonatype/nexus-iq-api-client";
+import {DATA_SOURCE} from "../../../../../utils/Constants";
 
 type SecurityItemProps = {
-  securityIssue: SecurityIssue;
+  securityIssue: ApiSecurityIssueDTO;
   open: boolean;
   packageUrl: string;
   remediationEvent: (vulnID: string) => void;
 };
 
-const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+export function IqSecurityItemDisplay(props: SecurityItemProps) {
+  // const popupContext = useContext(ExtensionPopupContext)
 
-  const renderSecurityItem = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
       return (
         <NxAccordion
           open={props.open}
-          onToggle={() => {
-            props.remediationEvent(props.securityIssue.reference);
-            if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
-              nexusContext.getVulnDetails(props.securityIssue.reference);
-            }
-          }}
+          // onToggle={() => {
+          //   props.remediationEvent(props.securityIssue.reference);
+          //   if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
+          //     nexusContext.getVulnDetails(props.securityIssue.reference);
+          //   }
+          // }}
         >
           <NxAccordion.Header>
             <NxAccordion.Title>
@@ -53,30 +58,36 @@ const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
               {props.securityIssue.reference}
             </NxAccordion.Title>
             {/*<div className="nx-btn-bar">*/}
-            <NxPolicyViolationIndicator
-                style={{
-                  width: '10px !important',
-                  margin: 'none !important'
-                }}
-                policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
-            >
-              {props.securityIssue.severity.toString()}
-            </NxPolicyViolationIndicator>
+            {/*<NxPolicyViolationIndicator*/}
+            {/*    style={{*/}
+            {/*      width: '10px !important',*/}
+            {/*      margin: 'none !important'*/}
+            {/*    }}*/}
+            {/*    policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}*/}
+            {/*>*/}
+            {/*  {props.securityIssue.severity.toString()}*/}
+            {/*</NxPolicyViolationIndicator>*/}
             {/*<NxPolicyViolationIndicator*/}
             {/*  policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}*/}
             {/*/>*/}
             {/*</div>*/}
           </NxAccordion.Header>
           <p className="nx-p">
-            <VulnDetails />
+            {/*<VulnDetails />*/}
           </p>
         </NxAccordion>
-      );
-    }
-    return null;
-  };
+      )
 
-  return renderSecurityItem(nexusContext);
-};
+}
 
-export default SecurityItemDisplay;
+// export default function SecurityItemDisplay() {
+//   const extensionContext = useContext(ExtensionConfigurationContext)
+//
+//   return (
+//       <div>
+//         {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
+//             <IqSecurityItemDisplay/>
+//         )}
+//       </div>
+//   )
+// }
