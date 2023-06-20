@@ -32,7 +32,6 @@ import {logger, LogLevel} from "../../../../../../logger/Logger";
 
 function IqAllVersionDetails() {
   const popupContext = useContext(ExtensionPopupContext)
-  logger.logMessage('** popupContext', LogLevel.DEBUG, popupContext)
   const allVersions = popupContext.iq?.allVersions
   const currentPurl = popupContext.currentPurl
   const currentVersionRef = useRef<HTMLElement>(null)
@@ -67,7 +66,7 @@ function IqAllVersionDetails() {
 
             // const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
             const versionPurl = PackageURL.fromString(version.component?.packageUrl as string)
-            
+
             return (
               <NxList.LinkItem
                 href=""

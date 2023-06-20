@@ -13,53 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxButton, NxP, NxTextLink} from '@sonatype/react-shared-components';
+import {NxButton, NxList, NxP, NxTextLink} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
+  ExtensionPopupContext
 } from '../../../../context/NexusContext';
 import {LicenseDetail} from '../../../../types/ArtifactMessage';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
-import LicensingDisplay from './LicensingDisplay/LicensingDisplay';
 import {DATA_SOURCE} from "../../../../utils/Constants";
+import './LicensingDisplay.css';
 
 function IqLicensePage () {
   const popupContext = useContext(ExtensionPopupContext)
   const licenseData = popupContext.iq?.componentDetails?.licenseData
 
     if (licenseData !== undefined) {
-      // const licenseData = nexusContext.policyDetails.results[0].licenseData;
       const observedLicenses = licenseData?.observedLicenses?.filter(
         (license) => license.licenseId != 'Not-Supported'
-      );
+      )
+      const declaredLicenses = licenseData?.declaredLicenses
+
       return (
         <React.Fragment>
           <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              {/*Old Drawer Location*/}
-            </section>
-          </div>
-          <div className="nx-grid-row">
             <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
               <header className="nx-grid-header">
-                <h3 className="nx-h3 nx-grid-header__title">Effective License(s)</h3>
+                <h3 className="nx-h3 nx-grid-header__title">Effective Licenses ({licenseData.effectiveLicenses?.length})</h3>
               </header>
               {licenseData.effectiveLicenses?.map((license: LicenseDetail) => {
-                return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+                  return (
+                      <NxList.Item key={`effective-${license.licenseId}`}>
+                          <NxList.Text>{license.licenseName}</NxList.Text>
+                      </NxList.Item>
+                  )
               })}
               {observedLicenses && observedLicenses.length > 0 && (
                 <React.Fragment>
                   <header className="nx-grid-header">
-                    <h3 className={'nx-h3 nx-grid-header__title'}>Observed License(s)</h3>
+                    <h3 className={'nx-h3 nx-grid-header__title'}>Observed Licenses ({licenseData.observedLicenses?.length})</h3>
                   </header>
                   {observedLicenses.map((license: LicenseDetail) => {
-                    return <LicensingDisplay key={license.licenseId} licenseData={license} />;
+                    return (
+                        <NxList.Item key={`observed-${license.licenseId}`}>
+                            <NxList.Text>{license.licenseName}</NxList.Text>
+                        </NxList.Item>
+                    )
                   })}
                 </React.Fragment>
               )}
+                {declaredLicenses && declaredLicenses.length > 0 && (
+                    <React.Fragment>
+                        <header className="nx-grid-header">
+                            <h3 className={'nx-h3 nx-grid-header__title'}>Declared Licenses ({licenseData.declaredLicenses?.length})</h3>
+                        </header>
+                        {declaredLicenses.map((license: LicenseDetail) => {
+                            return (
+                                <NxList.Item key={`declared-${license.licenseId}`}>
+                                    <NxList.Text>{license.licenseName}</NxList.Text>
+                                </NxList.Item>
+                            )
+                        })}
+                    </React.Fragment>
+                )}
             </section>
             <section className="nx-grid-col nx-grid-col--33 nx-scrollable">
               <LicenseThreat />
@@ -75,7 +91,8 @@ function IqLicensePage () {
                     <span>View License Files</span>
                   </div>
                 </NxButton>
-                <h4 className={'nx-h4'}>
+                {/*<h4 className={'nx-h4'}>*/}
+                    <span className={'smaller-font-for-legal'}>
                   <div>
                     Powered by{' '}
                     <NxTextLink
@@ -88,7 +105,7 @@ function IqLicensePage () {
                   <div>
                     <span>A Sonatype Lifecycle Add-On</span>
                   </div>
-                </h4>
+                    </span>
                 <span>
                   <img
                     src="/images/add-on-sonatype-icon-logoblue.png"
