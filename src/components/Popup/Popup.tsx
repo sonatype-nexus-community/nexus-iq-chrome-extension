@@ -30,6 +30,7 @@ import PolicyPage from './IQServer/PolicyPage/PolicyPage';
 import './Popup.css';
 import RemediationPage from "./IQServer/RemediationPage/RemediationPage";
 import LicensePage from "./IQServer/LicensingPage/LicensingPage";
+import SecurityPage from "./IQServer/SecurityPage/SecurityPage";
 
 // const Popup = (): JSX.Element | null => {
 //   const [activeTabId, setActiveTabId] = useState(0);
@@ -273,7 +274,7 @@ function IqPopup() {
               <PolicyPage />
             </NxTabPanel>
             <NxTabPanel>
-              {/*<SecurityPage />*/}
+              <SecurityPage />
             </NxTabPanel>
             <NxTabPanel>
               <LicensePage />

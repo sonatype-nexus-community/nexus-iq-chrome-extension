@@ -16,16 +16,16 @@
 import React, {useContext, useState} from 'react';
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
+  ExtensionPopupContext
 } from '../../../../context/NexusContext';
-import {SecurityIssue, sortIssues} from '../../../../types/ArtifactMessage';
 import {IqSecurityItemDisplay} from './SecurityItemDisplay/SecurityItemDisplay';
 import './SecurityPage.css';
 import {DATA_SOURCE} from "../../../../utils/Constants";
 import {PackageURL} from "packageurl-js";
 import {ApiSecurityIssueDTO} from "@sonatype/nexus-iq-api-client";
+import PolicyViolation from "../PolicyPage/PolicyViolation/PolicyViolation";
+import {sortIssues, SecurityIssue} from "../../../../types/ArtifactMessage";
+import {NxTable} from "@sonatype/react-shared-components";
 
 // type SecurityProps = object;
 
@@ -45,29 +45,55 @@ function IqSecurityPage() {
     return issue == open;
   };
 
-      const purl = popupContext.currentPurl as PackageURL;
-      const securityData = popupContext.iq?.componentDetails?.securityData
-      // const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
-      return (
-        <React.Fragment>
-          {' '}
-          <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              {securityData?.securityIssues?.map((issue: ApiSecurityIssueDTO) => {
-                return (
+  const sortedIssues: SecurityIssue[] = sortIssues(popupContext.iq?.componentDetails?.securityData?.securityIssues as SecurityIssue[]);
+
+  return (
+    <React.Fragment>
+      {' '}
+      <div className="nx-grid-row">
+        <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
+          <NxTable className="nx-table">
+            <NxTable.Head>
+            <NxTable.Row isClickable className="nx-table-row nx-table-row--header">
+              {/*<th className="nx-cell nx-cell--header nx-cell--num">Threat</th>*/}
+              <th className="nx-cell nx-cell--header">CVSS</th>
+              <th className="nx-cell nx-cell--header">Issue</th>
+            </NxTable.Row>
+            </NxTable.Head>
+            <NxTable.Body>
+            {sortedIssues.map((issue: ApiSecurityIssueDTO) => {
+              return (
                   <IqSecurityItemDisplay
-                    key={issue.reference}
-                    open={isOpen(issue.reference as string)}
-                    packageUrl={purl.toString()}
-                    securityIssue={issue}
-                    remediationEvent={getRemediationAndOpen}
+                      key={issue.reference}
+                      open={isOpen(issue.reference as string)}
+                      packageUrl={popupContext.currentPurl?.toString() as string}
+                      securityIssue={issue}
+                      remediationEvent={getRemediationAndOpen}
                   />
-                );
-              })}
-            </section>
-          </div>
-        </React.Fragment>
-      )
+              )
+            })}
+            </NxTable.Body>
+          </NxTable>
+        </section>
+      </div>
+      {/*<div className="nx-grid-row">*/}
+      {/*  <section className="nx-grid-col nx-grid-col--100 nx-scrollable">*/}
+      {/*    {securityData?.securityIssues?.map((issue: ApiSecurityIssueDTO) => {*/}
+      {/*      return (*/}
+      {/*        <IqSecurityItemDisplay*/}
+      {/*          key={issue.reference}*/}
+      {/*          open={isOpen(issue.reference as string)}*/}
+      {/*          packageUrl={popupContext.currentPurl?.toString() as string}*/}
+      {/*          securityIssue={issue}*/}
+      {/*          remediationEvent={getRemediationAndOpen}*/}
+      {/*          threatLevelCategory={issue.threatCategory}*/}
+      {/*        />*/}
+      {/*      )*/}
+      {/*    })}*/}
+      {/*  </section>*/}
+      {/*</div>*/}
+    </React.Fragment>
+  )
 }
 
 export default function SecurityPage() {
