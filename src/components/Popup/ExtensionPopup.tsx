@@ -37,6 +37,7 @@ export default function ExtensionPopup() {
     const [extensionConfig, setExtensionConfig] = useState<ExtensionConfiguration>(DEFAULT_EXTENSION_SETTINGS)
     const [popupContext, setPopupContext] = useState<ExtensionPopupContext>(getDefaultPopupContext(extensionConfig.dataSource))
     const [purl, setPurl] = useState<PackageURL|undefined>(undefined)
+    const [currentTabUrl, setCurrentTabUrl] = useState<URL|undefined>(undefined)
 
     /**
      * Load Extension Settings and get PURL for current active tab.
@@ -58,6 +59,7 @@ export default function ExtensionPopup() {
       logger.logMessage('Popup requesting PURL for current active Tab', LogLevel.INFO)
       _browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
         const [tab] = tabs
+        setCurrentTabUrl(tab.url)
         logger.logMessage(`Requesting PURL from Tab ${tab.url}`, LogLevel.DEBUG)
         if (tab.status != 'unloaded') {
           _browser.tabs.sendMessage(tab.id, {
@@ -110,6 +112,7 @@ export default function ExtensionPopup() {
               newPopupContext.iq = {}
             }
             newPopupContext.currentPurl = purl
+            newPopupContext.currentTabUrl = currentTabUrl
             newPopupContext.iq.componentDetails = (evalResponse as ApiComponentEvaluationResultDTOV2).results?.pop()
             logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
             setPopupContext(newPopupContext)
@@ -230,6 +233,7 @@ export default function ExtensionPopup() {
                     newPopupContext.iq = {}
                   }
                   newPopupContext.currentPurl = purl
+                  newPopupContext.currentTabUrl = currentTabUrl
                   newPopupContext.iq.allVersions = (evalResponse as ApiComponentEvaluationResultDTOV2).results
                   logger.logMessage(`Updating PopUp Context with All Version Evaluations`, LogLevel.DEBUG, newPopupContext)
                   setPopupContext(newPopupContext)

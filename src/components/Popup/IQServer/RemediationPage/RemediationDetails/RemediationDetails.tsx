@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxDescriptionList, NxH3} from '@sonatype/react-shared-components'
+import {NxDescriptionList, NxH3, NxTooltip} from '@sonatype/react-shared-components'
 import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
@@ -25,6 +25,7 @@ import './RemediationDetails.css'
 function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
   const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
+  const currentUrl = popupContext.currentTabUrl
 
   return (
       <React.Fragment>
@@ -37,9 +38,10 @@ function IqRemediationDetails() {
         {versionChanges?.map((change) => {
           if (change !== undefined) {
             return (
+              <React.Fragment>
                   <NxDescriptionList.LinkItem
                       key={change.type?.length}
-                      href=''
+                      href={currentUrl?.toString() as string}
                       term={REMEDIATION_LABELS[change.type as string]}
                       description={
                         change.data?.component?.componentIdentifier?.coordinates
@@ -47,6 +49,15 @@ function IqRemediationDetails() {
                             : 'UNKNOWN'
                       }
                   />
+                  <NxDescriptionList.LinkItem
+                      key={change.type?.length}
+                      href={currentUrl?.toString() as string}
+                      term='New URL'
+                      description={
+                        currentUrl?.toString() as string
+                      }
+                  />
+                </React.Fragment>
             )
           }
         })}

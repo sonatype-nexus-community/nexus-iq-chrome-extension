@@ -90,6 +90,7 @@ export interface OssIndexPopupContext {
 
 export interface ExtensionPopupContext {
   currentPurl: PackageURL | undefined
+  currentTabUrl?: URL | undefined
   iq?: IqPopupContext
   ossindex?: OssIndexPopupContext
   supportsLicensing: boolean
@@ -98,6 +99,7 @@ export interface ExtensionPopupContext {
 
 const DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA = {
   currentPurl: undefined,
+  currentTabUrl: undefined,
   iq: {},
   supportsLicensing: true,
   supportsPolicy: true
