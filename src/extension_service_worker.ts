@@ -276,11 +276,15 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
       logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
       if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
         _browser.action.enable(tabId, () => {
+        chrome.action.setIcon({
+          tabId: tabId,
+          path: '/images/sonatype-lifecycle-icon-white-32x32.png'
+        })})
+        console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
           /**
-           * @todo Change Extension ICON
+           * @todo Get the policy/security threat level and update the CSS
            */
-          console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
-        })
+        
       } else {
         logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Could not determine PURL.`, LogLevel.DEBUG)
         chrome.action.disable(tabId, () => {
