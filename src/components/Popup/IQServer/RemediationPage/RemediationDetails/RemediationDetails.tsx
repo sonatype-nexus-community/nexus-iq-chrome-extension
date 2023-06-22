@@ -13,54 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {VersionChange} from "@sonatype/js-sona-types";
-import {NxDescriptionList, NxH3, NxLoadingSpinner} from '@sonatype/react-shared-components';
+import {NxDescriptionList, NxH3} from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {
   ExtensionConfigurationContext,
   ExtensionPopupContext,
 } from '../../../../../context/NexusContext';
 import {DATA_SOURCE, REMEDIATION_LABELS} from '../../../../../utils/Constants';
-import {findRepoType} from '../../../../../utils/UrlParsing';
 import './RemediationDetails.css';
+import { logger, LogLevel } from '../../../../../logger/Logger'
 
 function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
   const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
 
-  // if (versionChanges && versionChanges.length > 0) {
-    return (
-        <React.Fragment>
-          {versionChanges && versionChanges.length > 0 && (
-            <NxH3>Recommended Versions</NxH3>
-          )}
+  return (
+      <React.Fragment>
+        {versionChanges && versionChanges.length > 0 && (
+          <NxH3>Recommended Versions</NxH3>
+        )}
 
-        <NxDescriptionList
-            emptyMessage={"No recommended versions available."}>
-          {versionChanges?.map((change) => {
-            if (change !== undefined) {
-              return (
-                  <>
-                    <NxDescriptionList.LinkItem
-                        key={change.type}
-                        href=''
-                        term={REMEDIATION_LABELS[change.type as string]}
-                        description={
-                          change.data?.component?.componentIdentifier?.coordinates
-                              ? change.data.component.componentIdentifier.coordinates.version
-                              : 'UNKNOWN'
-                        }
-                    />
-                  </>
-              )
-            }
-          })}
-        </NxDescriptionList>
-        </React.Fragment>
-    )
-  // } else {
-  //   return <NxLoadingSpinner />;
-  // }
+      <NxDescriptionList
+          emptyMessage={"No recommended versions available."}>
+        {versionChanges?.map((change) => {
+          if (change !== undefined) {
+            logger.logMessage(`IqRemediationDetails change.type`, LogLevel.DEBUG, change.type)
+            return (
+                  <NxDescriptionList.LinkItem
+                      key={change.type?.length}
+                      href=''
+                      term={REMEDIATION_LABELS[change.type as string]}
+                      description={
+                        change.data?.component?.componentIdentifier?.coordinates
+                            ? change.data.component.componentIdentifier.coordinates.version
+                            : 'UNKNOWN'
+                      }
+                  />
+            )
+          }
+        })}
+      </NxDescriptionList>
+      </React.Fragment>
+  )
 }
 
 export default function RemediationDetails() {
