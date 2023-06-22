@@ -282,7 +282,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
         })})
         console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
           /**
-           * @todo Get the policy/security threat level and update the CSS
+           * @todo Get the policy/security threat level and update the
            */
         
       } else {

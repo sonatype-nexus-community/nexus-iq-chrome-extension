@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxDescriptionList, NxH3, NxTooltip} from '@sonatype/react-shared-components'
+import {NxDescriptionList, NxH3, useUniqueId} from '@sonatype/react-shared-components'
 import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
@@ -21,11 +21,29 @@ import {
 } from '../../../../../context/NexusContext'
 import {DATA_SOURCE, REMEDIATION_LABELS} from '../../../../../utils/Constants'
 import './RemediationDetails.css'
+import { logger, LogLevel } from '../../../../../logger/Logger'
 
 function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
   const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
-  const currentUrl = popupContext.currentTabUrl
+  // const currentUrl = popupContext.currentTabUrl
+  // const currentVersion = popupContext.currentPurl?.version
+
+  function getNewUrl(version:string) {
+    const currentTabUrl = popupContext.currentTab?.url
+    const currentPurlVersion = popupContext.currentPurl?.version
+    
+    logger.logMessage(`Remediation Details: Replacing URL with ${version}`, LogLevel.DEBUG)
+    if (currentPurlVersion !== undefined && currentTabUrl !== undefined) {
+      const currentVersion = new RegExp( currentPurlVersion as string)
+      const newUrl = currentTabUrl?.toString().replace(currentVersion, version)
+      logger.logMessage(`Remediation Details: Generated new URL ${newUrl}`, LogLevel.DEBUG)
+      return newUrl
+    } else {
+      logger.logMessage(`Remediation Details: currentTabURL or currentPul are undefined when trying to replace with ${version}`, LogLevel.ERROR)
+    }
+    
+  }
 
   return (
       <React.Fragment>
@@ -35,13 +53,13 @@ function IqRemediationDetails() {
 
       <NxDescriptionList
           emptyMessage={"No recommended versions available."}>
-        {versionChanges?.map((change) => {
+        {versionChanges?.map((change, id) => {
+          const newUrl = getNewUrl(change.data?.component?.componentIdentifier?.coordinates?.version as string)
           if (change !== undefined) {
             return (
-              <React.Fragment>
-                  <NxDescriptionList.LinkItem
-                      key={change.type?.length}
-                      href={currentUrl?.toString() as string}
+                <NxDescriptionList.ButtonItem 
+                    onClick={() => alert('new url: ' + newUrl as string)}
+                      key={id}
                       term={REMEDIATION_LABELS[change.type as string]}
                       description={
                         change.data?.component?.componentIdentifier?.coordinates
@@ -49,15 +67,6 @@ function IqRemediationDetails() {
                             : 'UNKNOWN'
                       }
                   />
-                  <NxDescriptionList.LinkItem
-                      key={change.type?.length}
-                      href={currentUrl?.toString() as string}
-                      term='New URL'
-                      description={
-                        currentUrl?.toString() as string
-                      }
-                  />
-                </React.Fragment>
             )
           }
         })}
