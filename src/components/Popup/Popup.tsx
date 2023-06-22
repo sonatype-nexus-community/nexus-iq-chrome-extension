@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Puff} from '@agney/react-loading';
+// import {Puff} from '@agney/react-loading'
 import {
   NxTab,
   NxTabList,
@@ -21,16 +21,16 @@ import {
   NxTabs,
     NxP,
     NxFooter
-} from '@sonatype/react-shared-components';
-import React, {useContext, useEffect, useState} from 'react';
-import {ExtensionConfigurationContext, ExtensionPopupContext, NexusContext, NexusContextInterface} from '../../context/NexusContext';
-import {DATA_SOURCE, DATA_SOURCES} from '../../utils/Constants';
-import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage';
-import PolicyPage from './IQServer/PolicyPage/PolicyPage';
-import './Popup.css';
-import RemediationPage from "./IQServer/RemediationPage/RemediationPage";
-import LicensePage from "./IQServer/LicensingPage/LicensingPage";
-import SecurityPage from "./IQServer/SecurityPage/SecurityPage";
+} from '@sonatype/react-shared-components'
+import React, {useContext, useEffect, useState} from 'react'
+import {ExtensionConfigurationContext, ExtensionPopupContext} from '../../context/NexusContext'
+import {DATA_SOURCE} from '../../utils/Constants'
+import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage'
+import PolicyPage from './IQServer/PolicyPage/PolicyPage'
+import './Popup.css'
+import RemediationPage from "./IQServer/RemediationPage/RemediationPage"
+import LicensePage from "./IQServer/LicensingPage/LicensingPage"
+import SecurityPage from "./IQServer/SecurityPage/SecurityPage"
 
 // const Popup = (): JSX.Element | null => {
 //   const [activeTabId, setActiveTabId] = useState(0);

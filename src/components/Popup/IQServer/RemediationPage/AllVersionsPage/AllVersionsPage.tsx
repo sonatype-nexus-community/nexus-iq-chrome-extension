@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxH3} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
+import {NxH3} from '@sonatype/react-shared-components'
+import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
-} from '../../../../../context/NexusContext';
-import AllVersionsDetails from './AllVersionsDetails/AllVersionsDetails';
-import {DATA_SOURCE} from "../../../../../utils/Constants";
+  ExtensionPopupContext
+} from '../../../../../context/NexusContext'
+import AllVersionsDetails from './AllVersionsDetails/AllVersionsDetails'
+import {DATA_SOURCE} from "../../../../../utils/Constants"
 
 function IqRemediationPageAllVersion() {
   const popupContext = useContext(ExtensionPopupContext)
@@ -30,14 +28,14 @@ function IqRemediationPageAllVersion() {
     if (popupContext?.iq?.allVersions) {
       return (
           <React.Fragment>
-            <NxH3>All Versions ({popupContext?.iq?.allVersions.length})</NxH3>
+            <NxH3>All Versions <span className={'nx-counter'}>{popupContext?.iq?.allVersions.length}</span></NxH3>
             <AllVersionsDetails />
           </React.Fragment>
       )
     } else {
       return (
           <React.Fragment>
-            <em>No versions</em>
+            <em>No Additional Versions</em>
           </React.Fragment>
       );
     }

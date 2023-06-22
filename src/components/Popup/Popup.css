@@ -35,3 +35,10 @@
   margin-bottom: 10px !important;
   padding-top: 7px !important;
 }
+
+.nx-counter {
+  border-radius: 16px !important;
+  font-size: 12px !important;
+  min-width: none !important;
+  vertical-align: text-top;
+}

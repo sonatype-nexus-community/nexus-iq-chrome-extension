@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxH3} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
+import {NxH3} from '@sonatype/react-shared-components'
+import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
-} from '../../../../context/NexusContext';
-import AllVersionsDetails from './AllVersionsPage/AllVersionsDetails/AllVersionsDetails';
-import RemediationDetails from './RemediationDetails/RemediationDetails';
-import {DATA_SOURCE} from "../../../../utils/Constants";
+  ExtensionPopupContext
+} from '../../../../context/NexusContext'
+import AllVersionsDetails from './AllVersionsPage/AllVersionsDetails/AllVersionsDetails'
+import RemediationDetails from './RemediationDetails/RemediationDetails'
+import {DATA_SOURCE} from "../../../../utils/Constants"
 
 function IqRemediationPage() {
   const popupContext = useContext(ExtensionPopupContext)
