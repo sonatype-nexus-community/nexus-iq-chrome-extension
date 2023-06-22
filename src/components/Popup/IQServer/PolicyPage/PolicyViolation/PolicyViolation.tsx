@@ -34,6 +34,7 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
 
 
   const formatReason = (reason: string, iqServerUrl: string) => {
+    iqServerUrl = iqServerUrl.endsWith('/') ? iqServerUrl.slice(0, -1) : iqServerUrl
     const CVERegex = /((?:CVE|sonatype)-[0-9]{4}-[0-9]+)/g;
     return reason.split(CVERegex).map((segment, index) =>
       CVERegex.exec(segment) ? (
