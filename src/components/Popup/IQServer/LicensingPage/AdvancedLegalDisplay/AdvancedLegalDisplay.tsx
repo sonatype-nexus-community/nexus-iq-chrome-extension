@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
-import {faCopy} from '@fortawesome/free-solid-svg-icons';
-import {NxButton, NxFontAwesomeIcon, NxH3, NxList} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
+import {IconDefinition} from '@fortawesome/fontawesome-svg-core'
+import {faCopy} from '@fortawesome/free-solid-svg-icons'
+import {NxButton, NxFontAwesomeIcon, NxH3, NxList} from '@sonatype/react-shared-components'
+import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
-} from '../../../../../context/NexusContext';
-import {DATA_SOURCE} from "../../../../../utils/Constants";
+  ExtensionPopupContext
+} from '../../../../../context/NexusContext'
+import {DATA_SOURCE} from "../../../../../utils/Constants"
 
 function IqAdvancedLegalDisplay() {
   const popupContext = useContext(ExtensionPopupContext)

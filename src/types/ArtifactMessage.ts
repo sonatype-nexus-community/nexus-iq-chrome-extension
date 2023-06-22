@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import {RepoType} from '../utils/Constants';
-import {ApiPolicyViolationDTOV2} from "@sonatype/nexus-iq-api-client";
 
 export interface ArtifactMessage {
   type: string;
@@ -85,7 +84,7 @@ export interface LicenseDetail {
   licenseName: string;
 }
 
-export function sortIssues(securityIssues: SecurityIssue[]): SecurityIssue[] {
+export function sortSecurityIssues(securityIssues: SecurityIssue[]): SecurityIssue[] {
   return securityIssues
     .sort((a: SecurityIssue, b: SecurityIssue) => {
       return b.reference > a.reference ? 1 : -1;

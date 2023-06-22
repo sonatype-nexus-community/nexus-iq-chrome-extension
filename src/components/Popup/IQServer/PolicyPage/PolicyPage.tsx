@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
   ExtensionPopupContext,
-} from '../../../../context/NexusContext';
-import './PolicyPage.css';
-import PolicyViolation from './PolicyViolation/PolicyViolation';
-import {DATA_SOURCE} from "../../../../utils/Constants";
-import {NxLoadingSpinner} from "@sonatype/react-shared-components";
+} from '../../../../context/NexusContext'
+import './PolicyPage.css'
+import PolicyViolation from './PolicyViolation/PolicyViolation'
+import {DATA_SOURCE} from "../../../../utils/Constants"
+import {NxLoadingSpinner} from "@sonatype/react-shared-components"
+import {ApiPolicyViolationDTOV2} from "@sonatype/nexus-iq-api-client";
+
 
 function IqPolicyPage() {
   const popupContext = useContext(ExtensionPopupContext)
@@ -47,7 +49,8 @@ function IqPolicyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {policyData?.policyViolations?.map(
+                  {policyData?.policyViolations?.sort((a: ApiPolicyViolationDTOV2, b: ApiPolicyViolationDTOV2) => {
+                      return (b.threatLevel as number) > (a.threatLevel as number) ? 1 : -1; }).map(
                     (violation,index) => {
                       return (
                         <PolicyViolation

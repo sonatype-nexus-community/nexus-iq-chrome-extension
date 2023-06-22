@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState} from 'react'
 import {
   ExtensionConfigurationContext,
   ExtensionPopupContext
-} from '../../../../context/NexusContext';
-import {IqSecurityItemDisplay} from './SecurityItemDisplay/SecurityItemDisplay';
-import './SecurityPage.css';
-import {DATA_SOURCE} from "../../../../utils/Constants";
-import {PackageURL} from "packageurl-js";
-import {ApiSecurityIssueDTO} from "@sonatype/nexus-iq-api-client";
-import PolicyViolation from "../PolicyPage/PolicyViolation/PolicyViolation";
-import {sortIssues, SecurityIssue} from "../../../../types/ArtifactMessage";
-import {NxTable} from "@sonatype/react-shared-components";
+} from '../../../../context/NexusContext'
+import {IqSecurityItemDisplay} from './SecurityItemDisplay/SecurityItemDisplay'
+import './SecurityPage.css'
+import {DATA_SOURCE} from "../../../../utils/Constants"
+import {ApiSecurityIssueDTO} from "@sonatype/nexus-iq-api-client"
+import {sortSecurityIssues, SecurityIssue} from "../../../../types/ArtifactMessage"
+import {NxTable} from "@sonatype/react-shared-components"
 
 // type SecurityProps = object;
 
@@ -45,7 +43,7 @@ function IqSecurityPage() {
     return issue == open;
   };
 
-  const sortedIssues: SecurityIssue[] = sortIssues(popupContext.iq?.componentDetails?.securityData?.securityIssues as SecurityIssue[]);
+  const sortedIssues: SecurityIssue[] = sortSecurityIssues(popupContext.iq?.componentDetails?.securityData?.securityIssues as SecurityIssue[]);
 
   return (
     <React.Fragment>

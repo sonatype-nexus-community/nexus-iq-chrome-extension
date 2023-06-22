@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxDescriptionList, NxH3} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
+import {NxDescriptionList, NxH3} from '@sonatype/react-shared-components'
+import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
   ExtensionPopupContext,
-} from '../../../../../context/NexusContext';
-import {DATA_SOURCE, REMEDIATION_LABELS} from '../../../../../utils/Constants';
-import './RemediationDetails.css';
-import { logger, LogLevel } from '../../../../../logger/Logger'
+} from '../../../../../context/NexusContext'
+import {DATA_SOURCE, REMEDIATION_LABELS} from '../../../../../utils/Constants'
+import './RemediationDetails.css'
 
 function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
@@ -37,7 +36,6 @@ function IqRemediationDetails() {
           emptyMessage={"No recommended versions available."}>
         {versionChanges?.map((change) => {
           if (change !== undefined) {
-            logger.logMessage(`IqRemediationDetails change.type`, LogLevel.DEBUG, change.type)
             return (
                   <NxDescriptionList.LinkItem
                       key={change.type?.length}

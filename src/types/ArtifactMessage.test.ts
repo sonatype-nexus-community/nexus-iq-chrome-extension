@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import {describe, expect, test} from '@jest/globals';
-import {SecurityData, SecurityIssue, sortIssues} from './ArtifactMessage';
+import {SecurityData, SecurityIssue, sortSecurityIssues} from './ArtifactMessage';
 const securityDataRaw = `{
     "securityData": {
         "securityIssues": [
@@ -61,7 +61,7 @@ describe('Artifact Message Test', () => {
   test('should sort security issues', () => {
     const securityData: SecurityData = JSON.parse(securityDataRaw).securityData;
     // console.trace("securityData",  securityData.securityIssues);
-    const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
+    const sortedIssues: SecurityIssue[] = sortSecurityIssues(securityData.securityIssues);
     expect(sortedIssues).toBeDefined();
     expect(sortedIssues[0].severity).toBeGreaterThanOrEqual(
       sortedIssues[sortedIssues.length - 1].severity

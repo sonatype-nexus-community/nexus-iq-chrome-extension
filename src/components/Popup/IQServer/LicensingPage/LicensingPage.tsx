@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxButton, NxList, NxP, NxTextLink, NxTab, NxTabList, NxTabs, NxTabPanel,NxSmallThreatCounter, NxTag} from '@sonatype/react-shared-components'
+import {NxButton, NxList, NxTextLink, NxTab, NxTabList, NxTabs, NxTabPanel} from '@sonatype/react-shared-components'
 import React, {useContext, useState} from 'react'
 import {
   ExtensionConfigurationContext,
@@ -23,7 +23,6 @@ import {LicenseDetail} from '../../../../types/ArtifactMessage'
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat'
 import {DATA_SOURCE} from "../../../../utils/Constants"
 import './LicensingDisplay.css'
-import { instanceOfApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 
 function IqLicensePage () {
   const popupContext = useContext(ExtensionPopupContext)
