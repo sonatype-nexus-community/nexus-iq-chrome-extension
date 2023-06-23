@@ -16,9 +16,7 @@
 
 import { BrowserExtensionLogger, LogLevel } from '../logger/Logger';
 import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
-import { 
-    MessageRequest, MessageResponse, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS 
-} from "../types/Message";
+import { MessageResponse, MESSAGE_RESPONSE_STATUS } from "../types/Message";
 
 const SETTINGS_STORAGE_KEY = 'settings'
 
@@ -42,7 +40,10 @@ export async function readExtensionConfiguration(): Promise<MessageResponse> {
         }
     }).catch((err) => {
         return {
-            "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR
+            "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR,
+            "status_detail": {
+                "message": `Error reading extension settings from local storage: ${err} - ${chrome.runtime.lastError?.message}`
+            }
         }
     })
 }
@@ -56,7 +57,7 @@ export async function updateExtensionConfiguration(settings: ExtensionConfigurat
         return {
             "status": MESSAGE_RESPONSE_STATUS.UNKNOWN_ERROR,
             "status_detail": {
-                "message": `Error storing in local storage: ${chrome.runtime.lastError?.message}`
+                "message": `Error storing in local storage: ${err} - ${chrome.runtime.lastError?.message}`
             }
         }
     })

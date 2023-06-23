@@ -220,10 +220,11 @@ function IqPopup() {
   if (popupContext !== undefined && popupContext.iq?.componentDetails !== undefined) {
     return (
       <React.Fragment>
-        <section className="nx-tile nx-viewport-sized__container">
-          <header className="nx-tile-header">
-            <div className="nx-tile-header__title">
-              <h2 className="nx-h2">
+        <div className="nx-page-content">
+          <main className="nx-page-main">
+
+          {/* <div className='nx-page-header'>
+          <h2 className="nx-h2">
                 <img
                   src="/images/sonatype-lifecycle-icon-48x48.png"
                   className="nx-popup-logo"
@@ -231,8 +232,13 @@ function IqPopup() {
                 />
                 &nbsp;Sonatype Lifecycle - Component Details
               </h2>
+            </div> */}
+        <section className="nx-tile">
+          {/* <header className="nx-tile-header">
+            <div className="nx-tile-header__title">
+          
             </div>
-          </header>
+          </header> */}
   
           <div className="nx-tile-subsection nx-viewport-sized__container">
   
@@ -287,6 +293,8 @@ function IqPopup() {
             </NxP>
           </NxFooter>
         </section>
+        </main>
+        </div>
       </React.Fragment>
     )
   } else {

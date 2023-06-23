@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-import {
-    Configuration,
-    ComponentVulnerabilityReportsApi,
-    ResponseError
-} from '@sonatype/ossindex-api-client'
+import { Configuration } from '@sonatype/ossindex-api-client'
 import { logger, LogLevel } from '../logger/Logger';
 import { readExtensionConfiguration } from './SettingsMessages'
 import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
 import { InvalidConfigurationError } from '../error/ExtensionError'
-import { 
-    MessageRequest, MessageResponse, MESSAGE_RESPONSE_STATUS 
-} from "../types/Message";
+import { MESSAGE_RESPONSE_STATUS } from "../types/Message";
 import { DATA_SOURCE } from '../utils/Constants';
 import { UserAgentHelper } from '../utils/UserAgentHelper';
 

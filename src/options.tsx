@@ -34,7 +34,7 @@ import ReactDOM from 'react-dom/client';
 import * as pack from '../package.json';
 import { NexusOptionsContainer } from './NexusOptionsContainer';
 import { logger, LogLevel } from './logger/Logger';
-import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageResponse } from './types/Message';
+import { MESSAGE_REQUEST_TYPE } from './types/Message';
 import { readExtensionConfiguration } from './messages/SettingsMessages';
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
