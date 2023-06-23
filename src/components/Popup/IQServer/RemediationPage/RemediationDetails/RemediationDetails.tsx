@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxDescriptionList, NxH3, useUniqueId} from '@sonatype/react-shared-components'
+import {NxDescriptionList, NxH3} from '@sonatype/react-shared-components'
 import React, {useContext} from 'react'
 import {
   ExtensionConfigurationContext,
@@ -26,8 +26,9 @@ import { logger, LogLevel } from '../../../../../logger/Logger'
 function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
   const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
-  // const currentUrl = popupContext.currentTabUrl
-  // const currentVersion = popupContext.currentPurl?.version
+
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+  const _browser = chrome ? chrome : browser;
 
   function getNewUrl(version:string) {
     const currentTabUrl = popupContext.currentTab?.url
@@ -38,7 +39,11 @@ function IqRemediationDetails() {
       const currentVersion = new RegExp( currentPurlVersion as string)
       const newUrl = currentTabUrl?.toString().replace(currentVersion, version)
       logger.logMessage(`Remediation Details: Generated new URL ${newUrl}`, LogLevel.DEBUG)
-      return newUrl
+      
+      chrome.tabs.update({
+        url: newUrl,
+      });
+      
     } else {
       logger.logMessage(`Remediation Details: currentTabURL or currentPul are undefined when trying to replace with ${version}`, LogLevel.ERROR)
     }
@@ -54,11 +59,11 @@ function IqRemediationDetails() {
       <NxDescriptionList
           emptyMessage={"No recommended versions available."}>
         {versionChanges?.map((change, id) => {
-          const newUrl = getNewUrl(change.data?.component?.componentIdentifier?.coordinates?.version as string)
+          const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
           if (change !== undefined) {
             return (
                 <NxDescriptionList.ButtonItem 
-                    onClick={() => alert('new url: ' + newUrl as string)}
+                    onClick={() => getNewUrl(version)}
                       key={id}
                       term={REMEDIATION_LABELS[change.type as string]}
                       description={
