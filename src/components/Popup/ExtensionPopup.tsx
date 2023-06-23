@@ -54,7 +54,7 @@ export default function ExtensionPopup() {
         getDefaultPopupContext(extensionConfig.dataSource)
     )
     const [purl, setPurl] = useState<PackageURL | undefined>(undefined)
-    const [currentTab, setCurrentTab] = useState<chrome.tabs.Tab | undefined>(undefined)
+    const [currentTab, setCurrentTab] = useState<chrome.tabs.Tab | browser.tabs.Tab | undefined>(undefined)
 
     /**
      * Load Extension Settings and get PURL for current active tab.
@@ -135,12 +135,10 @@ export default function ExtensionPopup() {
                         if (!newPopupContext.iq) {
                             newPopupContext.iq = {}
                         }
-                        newPopupContext.currentPurl = purl
                         newPopupContext.currentTab = currentTab
                         newPopupContext.iq.componentDetails = (
                             evalResponse as ApiComponentEvaluationResultDTOV2
                         ).results?.pop()
-                        newPopupContext.currentTab = currentTab
                         logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
                         setPopupContext(newPopupContext)
                     })
@@ -154,9 +152,9 @@ export default function ExtensionPopup() {
                         /**
                          * Share the state of the Component
                          */
-                        if (popupContext.currentTab) {
+                        if (currentTab) {
                             propogateCurrentComponentState(
-                                popupContext.currentTab,
+                                currentTab,
                                 getForComponentPolicyViolations(popupContext.iq?.componentDetails?.policyData)
                             )
                         }

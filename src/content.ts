@@ -22,6 +22,8 @@ import { findRepoType } from './utils/UrlParsing'
 // import { RepoType } from './utils/Constants'
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponseFunction } from './types/Message'
 import { logger, LogLevel } from './logger/Logger'
+import { ComponentState } from './types/Component'
+import { RepoType } from './utils/Constants'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
@@ -90,6 +92,34 @@ function handle_message_received_propogate_component_state(
 ): boolean {
     if (request.type == MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE) {
         logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
+        if (request.params !== undefined && 'componentState' in request.params) {
+            logger.logMessage('Adding CSS Classes', LogLevel.DEBUG)
+            const repoType = findRepoType(window.location.href) as RepoType
+            const componentState = request.params.componentState as ComponentState
+            let vulnClass = 'sonatype-iq-extension-vuln-low'
+            //         addClasses(vulnClass, element);
+            switch (componentState) {
+                case ComponentState.CRITICAL:
+                    vulnClass = 'sonatype-iq-extension-vuln-severe'
+                    break
+                case ComponentState.SEVERE:
+                    vulnClass = 'sonatype-iq-extension-vuln-high'
+                    break
+                case ComponentState.MODERATE:
+                    vulnClass = 'sonatype-iq-extension-vuln-med'
+                    break
+                case ComponentState.LOW:
+                    vulnClass = 'sonatype-iq-extension-vuln-low'
+                    break
+            }
+
+            const domElement = $(repoType.titleSelector).get(0)
+
+            if (domElement !== undefined) {
+                domElement.addClass(vulnClass)
+                domElement.addClass('sonatype-iq-extension-vuln')
+            }
+        }
     }
 
     return true

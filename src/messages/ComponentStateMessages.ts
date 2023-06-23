@@ -22,11 +22,11 @@ import { MESSAGE_REQUEST_TYPE } from '../types/Message'
 const _browser: any = chrome ? chrome : browser
 
 export async function propogateCurrentComponentState(
-    tabId: chrome.tabs.Tab | browser.tabs.Tab,
+    tab: chrome.tabs.Tab | browser.tabs.Tab,
     componentState: ComponentState
 ): Promise<void> {
     logger.logMessage(`Propogating Component State ${componentState}`, LogLevel.DEBUG)
-    _browser.tabs.sendMessage(tabId, {
+    _browser.tabs.sendMessage(tab.id, {
         type: MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE,
         params: {
             componentState: componentState,
