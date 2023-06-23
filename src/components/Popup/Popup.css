@@ -1,7 +1,9 @@
 
-.nx-page {
+.nx-page-content {
   min-width: 800px !important;
+  max-width: 800px !important;
   min-height: 600px !important;
+  max-height: 580px !important;
   padding: 5px !important;
 }
 
@@ -9,9 +11,10 @@
   padding: 0px !important;
 }
 
-
-.nx-tile {
+.nx-tile .nx-tile-subsection {
   padding: 10px !important;
+  min-height: 480px !important;
+  max-height: 480px !important;
 }
 .nx-counter {
   margin-left: var(--nx-spacing-2x) !important;

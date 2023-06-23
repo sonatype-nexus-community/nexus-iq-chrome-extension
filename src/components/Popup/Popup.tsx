@@ -213,70 +213,77 @@ function IqPopup() {
     if (popupContext !== undefined && popupContext.iq?.componentDetails !== undefined) {
         return (
             <React.Fragment>
-                <section className='nx-tile nx-viewport-sized__container'>
-                    <header className='nx-tile-header'>
-                        <div className='nx-tile-header__title'>
-                            <h2 className='nx-h2'>
-                                <img
-                                    src='/images/sonatype-lifecycle-icon-48x48.png'
-                                    className='nx-popup-logo'
-                                    alt='Sonatype Lifecycle - Component Details'
-                                />
-                                &nbsp;Sonatype Lifecycle - Component Details
-                            </h2>
-                        </div>
-                    </header>
+                <div className='nx-page-content'>
+                    <main className='nx-page-main'>
+                        {/* <div className='nx-page-header'>
+          <h2 className="nx-h2">
+                <img
+                  src="/images/sonatype-lifecycle-icon-48x48.png"
+                  className="nx-popup-logo"
+                  alt="Sonatype Lifecycle - Component Details"
+                />
+                &nbsp;Sonatype Lifecycle - Component Details
+              </h2>
+            </div> */}
+                        <section className='nx-tile'>
+                            {/* <header className="nx-tile-header">
+            <div className="nx-tile-header__title">
+          
+            </div>
+          </header> */}
 
-                    <div className='nx-tile-subsection nx-viewport-sized__container'>
-                        {/*<NxTextInput type="textarea" value={JSON.stringify(popupContext.iq)} isPristine={true}/>*/}
+                            <div className='nx-tile-subsection nx-viewport-sized__container'>
+                                {/*<NxTextInput type="textarea" value={JSON.stringify(popupContext.iq)} isPristine={true}/>*/}
 
-                        <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-                            <NxTabList>
-                                <NxTab>Info</NxTab>
-                                <NxTab>
-                                    {popupContext.iq.componentDetails.policyData?.policyViolations
-                                        ? 'Remediation'
-                                        : 'Versions'}
-                                </NxTab>
+                                <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+                                    <NxTabList>
+                                        <NxTab>Info</NxTab>
+                                        <NxTab>
+                                            {popupContext.iq.componentDetails.policyData?.policyViolations
+                                                ? 'Remediation'
+                                                : 'Versions'}
+                                        </NxTab>
 
-                                {policyViolations.length > 0 && (
-                                    <NxTab>
-                                        Policy
-                                        <span className={'nx-counter'}>{policyViolations.length}</span>
-                                    </NxTab>
-                                )}
-                                {securityIssues.length > 0 && (
-                                    <NxTab>
-                                        Security
-                                        <span className={'nx-counter'}>{securityIssues.length}</span>
-                                    </NxTab>
-                                )}
-                                {effectiveLicenses.length > 0 && <NxTab>Legal</NxTab>}
-                            </NxTabList>
-                            <NxTabPanel>
-                                <ComponentInfoPage />
-                            </NxTabPanel>
-                            <NxTabPanel>
-                                <RemediationPage />
-                            </NxTabPanel>
-                            <NxTabPanel>
-                                <PolicyPage />
-                            </NxTabPanel>
-                            <NxTabPanel>
-                                <SecurityPage />
-                            </NxTabPanel>
-                            <NxTabPanel>
-                                <LicensePage />
-                            </NxTabPanel>
-                        </NxTabs>
-                    </div>
+                                        {policyViolations.length > 0 && (
+                                            <NxTab>
+                                                Policy
+                                                <span className={'nx-counter'}>{policyViolations.length}</span>
+                                            </NxTab>
+                                        )}
+                                        {securityIssues.length > 0 && (
+                                            <NxTab>
+                                                Security
+                                                <span className={'nx-counter'}>{securityIssues.length}</span>
+                                            </NxTab>
+                                        )}
+                                        {effectiveLicenses.length > 0 && <NxTab>Legal</NxTab>}
+                                    </NxTabList>
+                                    <NxTabPanel>
+                                        <ComponentInfoPage />
+                                    </NxTabPanel>
+                                    <NxTabPanel>
+                                        <RemediationPage />
+                                    </NxTabPanel>
+                                    <NxTabPanel>
+                                        <PolicyPage />
+                                    </NxTabPanel>
+                                    <NxTabPanel>
+                                        <SecurityPage />
+                                    </NxTabPanel>
+                                    <NxTabPanel>
+                                        <LicensePage />
+                                    </NxTabPanel>
+                                </NxTabs>
+                            </div>
 
-                    <NxFooter>
-                        <NxP style={{ textAlign: 'center' }}>
-                            Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype IQ Server
-                        </NxP>
-                    </NxFooter>
-                </section>
+                            <NxFooter>
+                                <NxP style={{ textAlign: 'center' }}>
+                                    Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype IQ Server
+                                </NxP>
+                            </NxFooter>
+                        </section>
+                    </main>
+                </div>
             </React.Fragment>
         )
     } else {

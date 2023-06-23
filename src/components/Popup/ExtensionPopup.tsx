@@ -372,11 +372,7 @@ export default function ExtensionPopup() {
         <ExtensionConfigurationContext.Provider value={extensionConfig}>
             <ExtensionPopupContext.Provider value={popupContext}>
                 {popupContext.supportsLicensing && <AlpDrawer />}
-                <div className='nx-page-content'>
-                    <main className='nx-page-main nx-viewport-sized'>
-                        <Popup />
-                    </main>
-                </div>
+                <Popup />
             </ExtensionPopupContext.Provider>
         </ExtensionConfigurationContext.Provider>
     )

@@ -16,19 +16,15 @@
 import {PolicyData} from '@sonatype/js-sona-types';
 import {
     NxDescriptionList,
-    NxGrid, NxLoadingSpinner,
-    NxP,
+     NxLoadingSpinner,
     NxPolicyViolationIndicator,
-    NxTextLink,
     NxTooltip,
     ThreatLevelNumber
 } from '@sonatype/react-shared-components';
 import React, {useContext} from 'react';
 import {
   ExtensionConfigurationContext,
-  ExtensionPopupContext,
-  NexusContext,
-  NexusContextInterface
+  ExtensionPopupContext
 } from '../../../../context/NexusContext';
 import {DATA_SOURCE, DATA_SOURCES} from '../../../../utils/Constants';
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
@@ -82,7 +78,7 @@ function IqComponentInfo() {
     }
     return (
       <React.Fragment>
-        <NxGrid.Row>
+        <div className="nx-grid-row">
           <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
             <header className="nx-grid-header">
 
@@ -94,37 +90,7 @@ function IqComponentInfo() {
                         {popupContext.iq?.componentDetails?.component?.displayName}
                     </h3>
                   </NxTooltip>
-
-              {/*{nexusContext.scanType === DATA_SOURCES.OSSINDEX && (*/}
-              {/*    <React.Fragment>*/}
-              {/*      <NxTooltip*/}
-              {/*          placement="top"*/}
-              {/*          title={<>{nexusContext.componentDetails.component.name}</>}*/}
-              {/*      >*/}
-              {/*        <h3 className="nx-h2 nx-grid-header__title">*/}
-              {/*          {nexusContext.componentDetails.component.name}*/}
-              {/*        </h3>*/}
-              {/*      </NxTooltip>*/}
-              {/*    </React.Fragment>*/}
-              {/*)}*/}
             </header>
-            {/*{popupContext.iq?.componentDetails?.component?.description != null && (*/}
-            {/*    <NxP>{popupContext.iq?.componentDetails?.component?.description}</NxP>*/}
-            {/*)}*/}
-            {/*{nexusContext.scanType === DATA_SOURCES.OSSINDEX && (*/}
-            {/*    <React.Fragment>*/}
-            {/*      <NxTextLink*/}
-            {/*          external*/}
-            {/*          className="nx-btn"*/}
-            {/*          style={{backgroundColor: '#e10486', color: 'white'}}*/}
-            {/*          href={`https://ossindex.sonatype.org/component/${purlMinusVersion}`}*/}
-            {/*      >*/}
-            {/*        See Package Information for: &nbsp;*/}
-            {/*        {nexusContext.componentDetails.component.name}*/}
-            {/*      </NxTextLink>*/}
-            {/*    </React.Fragment>*/}
-            {/*)}*/}
-
                 <NxDescriptionList>
                     {popupContext.iq?.componentDetails?.component?.hash != null && (
                         <NxDescriptionList.Item>
@@ -134,112 +100,25 @@ function IqComponentInfo() {
                             </NxDescriptionList.Description>
                         </NxDescriptionList.Item>
                     )}
-                  {/*{nexusContext.componentDetails.projectData &&*/}
-                  {/*    nexusContext.componentDetails.projectData.projectMetadata.organization && (*/}
-                  {/*        <NxDescriptionList.Item>*/}
-                  {/*          <NxDescriptionList.Term>Project</NxDescriptionList.Term>*/}
-                  {/*          <NxDescriptionList.Description>*/}
-                  {/*            {nexusContext.componentDetails.projectData?.projectMetadata.organization}*/}
-                  {/*          </NxDescriptionList.Description>*/}
-                  {/*        </NxDescriptionList.Item>*/}
-                  {/*    )}*/}
-                  {/*{nexusContext.componentDetails.projectData &&*/}
-                  {/*    nexusContext.componentDetails.projectData.projectMetadata.description && (*/}
-                  {/*        <NxDescriptionList.Item>*/}
-                  {/*          <NxDescriptionList.Term>Description</NxDescriptionList.Term>*/}
-                  {/*          <NxDescriptionList.Description>*/}
-                  {/*            {nexusContext.componentDetails.projectData?.projectMetadata.description}*/}
-                  {/*          </NxDescriptionList.Description>*/}
-                  {/*        </NxDescriptionList.Item>*/}
-                  {/*    )}*/}
-                  {/*{nexusContext.componentDetails.integrityRating != null && (*/}
-                  {/*    <NxDescriptionList.Item>*/}
-                  {/*      <NxDescriptionList.Term>*/}
-
-                  {/*        <NxTextLink*/}
-                  {/*            external*/}
-                  {/*            href="https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components"*/}
-                  {/*        >Integrity Rating*/}
-                  {/*        </NxTextLink></NxDescriptionList.Term>*/}
-                  {/*      <NxDescriptionList.Description>*/}
-                  {/*        {nexusContext.componentDetails.integrityRating}*/}
-                  {/*      </NxDescriptionList.Description>*/}
-                  {/*    </NxDescriptionList.Item>*/}
-                  {/*)}*/}
-                  {/*{nexusContext.componentDetails.hygieneRating != null && (*/}
-                  {/*    <NxDescriptionList.Item>*/}
-                  {/*      <NxDescriptionList.Term><NxTextLink*/}
-                  {/*          external*/}
-                  {/*          href="https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings"*/}
-                  {/*      >Hygiene Rating*/}
-                  {/*      </NxTextLink></NxDescriptionList.Term>*/}
-                  {/*      <NxDescriptionList.Description>*/}
-                  {/*        {nexusContext.componentDetails.hygieneRating}*/}
-                  {/*      </NxDescriptionList.Description>*/}
-                  {/*    </NxDescriptionList.Item>*/}
-                  {/*)}*/}
-                  {/*{nexusContext.componentDetails.projectData &&*/}
-                  {/*    nexusContext.componentDetails.projectData.lastReleaseDate && (*/}
-                  {/*        <NxDescriptionList.Item>*/}
-                  {/*          <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>*/}
-                  {/*          <NxDescriptionList.Description>*/}
-                  {/*            {formatDate(*/}
-                  {/*                new Date(nexusContext.componentDetails.projectData?.lastReleaseDate)*/}
-                  {/*            )}*/}
-                  {/*          </NxDescriptionList.Description>*/}
-                  {/*        </NxDescriptionList.Item>*/}
-                  {/*    )}*/}
-                  {/*{nexusContext.componentDetails.projectData &&*/}
-                  {/*    nexusContext.componentDetails.projectData.firstReleaseDate && (*/}
-                  {/*        <NxDescriptionList.Item>*/}
-                  {/*          <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>*/}
-                  {/*          <NxDescriptionList.Description>*/}
-                  {/*            {formatDate(*/}
-                  {/*                new Date(nexusContext.componentDetails.projectData?.firstReleaseDate)*/}
-                  {/*            )}*/}
-                  {/*          </NxDescriptionList.Description>*/}
-                  {/*        </NxDescriptionList.Item>*/}
-                  {/*    )}*/}
-                  {/*{nexusContext.componentDetails.catalogDate != null && (*/}
-                  {/*    <NxDescriptionList.Item>*/}
-                  {/*      <NxTooltip*/}
-                  {/*          placement="top"*/}
-                  {/*          // className="gallery-tooltip-example"*/}
-                  {/*          title={<>The date this component version was added to Nexus Intelligence</>}*/}
-                  {/*      >*/}
-                  {/*        <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>*/}
-                  {/*      </NxTooltip>*/}
-                  {/*      <NxTooltip*/}
-                  {/*          placement="top"*/}
-                  {/*          // className="gallery-tooltip-example"*/}
-                  {/*          title={<>{nexusContext.componentDetails.catalogDate}</>}*/}
-                  {/*      >*/}
-                  {/*        <NxDescriptionList.Description>*/}
-                  {/*          {formatDate(new Date(nexusContext.componentDetails.catalogDate))}*/}
-                  {/*        </NxDescriptionList.Description>*/}
-                  {/*      </NxTooltip>*/}
-                  {/*    </NxDescriptionList.Item>*/}
-                  {/*)}*/}
-
-
+                  {popupContext.iq?.componentDetails.projectData !== undefined &&
+                     popupContext.iq?.componentDetails.projectData?.projectMetadata?.organization !== undefined && (
+                         <NxDescriptionList.Item>
+                           <NxDescriptionList.Term>Project</NxDescriptionList.Term>
+                           <NxDescriptionList.Description>
+                             {popupContext.iq?.componentDetails.projectData?.projectMetadata.organization}
+                           </NxDescriptionList.Description>
+                         </NxDescriptionList.Item>
+                     )}
                 </NxDescriptionList>
-          </section>
-          <section className="nx-grid-col nx-grid-col--33">
-              {popupContext.iq?.componentDetails?.policyData != undefined && (
+                </section>
+                <section className="nx-grid-col nx-grid-col--33">
+                  {popupContext.iq?.componentDetails?.policyData != undefined && (
                   <React.Fragment>
                       <GetPolicyViolationIndicator policyData={popupContext.iq.componentDetails.policyData}/>
                   </React.Fragment>
-              )}
-
-            {/*{popupContext.iq?.componentDetails?.licenseData != undefined && (*/}
-            {/*    <LicenseThreat />*/}
-            {/*)}*/}
-
-            {/*<div id="security-threat">*/}
-            {/*  <SecurityThreat />*/}
-            {/*</div>*/}
+                  )}
           </section>
-        </NxGrid.Row>
+        </div>
       </React.Fragment>
     )
 }
