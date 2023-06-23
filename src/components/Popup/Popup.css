@@ -12,8 +12,24 @@
 }
 
 
-.popup-content-row {
+#popup-content-row {
   margin-bottom: 0px !important;
+}
+
+.nx-tab-panel {
+  /* padding: 10px !important; */
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  min-height: 540px !important;
+  max-height: 540px !important;
+}
+
+.nx-tile .nx-tile-subsection {
+  /* padding: 10px !important; */
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  min-height: 520px !important;
+  max-height: 520px !important;
 }
 
 .nx-tab-panel {
