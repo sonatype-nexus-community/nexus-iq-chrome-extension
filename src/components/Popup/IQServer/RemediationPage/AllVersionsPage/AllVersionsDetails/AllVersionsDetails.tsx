@@ -18,17 +18,18 @@ import {
   NxLoadingSpinner,
   NxPolicyViolationIndicator,
   ThreatLevelNumber
-} from '@sonatype/react-shared-components';
-import {PackageURL} from 'packageurl-js';
-import React, {useContext, useEffect, useRef} from 'react';
+} from '@sonatype/react-shared-components'
+import {PackageURL} from 'packageurl-js'
+import React, {useContext, useEffect, useRef} from 'react'
 import {
   ExtensionConfigurationContext,
   ExtensionPopupContext
-} from '../../../../../../context/NexusContext';
-import './AllVersionsDetails.css';
-import {DATA_SOURCE} from "../../../../../../utils/Constants";
-import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client";
-import {logger, LogLevel} from "../../../../../../logger/Logger";
+} from '../../../../../../context/NexusContext'
+import './AllVersionsDetails.css'
+import {DATA_SOURCE} from "../../../../../../utils/Constants"
+import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client"
+import {logger, LogLevel} from "../../../../../../logger/Logger"
+import {getNewUrlandGo} from '../../../../../../utils/Helpers'
 
 function IqAllVersionDetails() {
   const popupContext = useContext(ExtensionPopupContext)
@@ -54,7 +55,7 @@ function IqAllVersionDetails() {
         behavior: 'smooth',
         block: 'center',
         inline: 'nearest'
-      });
+      })
     }
   })
 
@@ -63,8 +64,6 @@ function IqAllVersionDetails() {
       return (
         <NxList>
           {allVersions.map((version) => {
-
-            // const purl = PackageURL.fromString(componentDetail.component.packageUrl.toString());
             const versionPurl = PackageURL.fromString(version.component?.packageUrl as string)
 
             return (
@@ -74,6 +73,7 @@ function IqAllVersionDetails() {
                 selected={versionPurl.version == currentPurl?.version}
               >
                 <NxList.Text
+                    onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurl?.version as string, versionPurl.version as string)}
                     ref={currentPurl?.version == versionPurl.version ? currentVersionRef : null}
                 >
                   {version.policyData != undefined && (
@@ -86,10 +86,10 @@ function IqAllVersionDetails() {
                   )}
                 </NxList.Text>
               </NxList.LinkItem>
-            );
+            )
           })}
         </NxList>
-      );
+      )
     } else {
       return (
           <>

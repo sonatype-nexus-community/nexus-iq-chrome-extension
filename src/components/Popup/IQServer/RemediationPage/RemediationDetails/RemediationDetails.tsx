@@ -21,7 +21,6 @@ import {
 } from '../../../../../context/NexusContext'
 import {DATA_SOURCE, REMEDIATION_LABELS} from '../../../../../utils/Constants'
 import './RemediationDetails.css'
-import { logger, LogLevel } from '../../../../../logger/Logger'
 import {getNewUrlandGo} from '../../../../../utils/Helpers'
 
 function IqRemediationDetails() {
