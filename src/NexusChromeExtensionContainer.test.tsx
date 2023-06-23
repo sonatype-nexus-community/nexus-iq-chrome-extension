@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {test} from '@jest/globals';
+import { test } from '@jest/globals'
 
 test('renders learn react link', () => {
-  // render(<NexusChromeExtensionContainer />);
-  // const linkElement = screen.getByText(/learn react/i);
-  // expect(linkElement).toBeInTheDocument();
-});
+    // render(<NexusChromeExtensionContainer />);
+    // const linkElement = screen.getByText(/learn react/i);
+    // expect(linkElement).toBeInTheDocument();
+})

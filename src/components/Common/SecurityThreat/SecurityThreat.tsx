@@ -14,53 +14,43 @@
  * limitations under the License.
  */
 import {
-  NxH3, NxLoadingSpinner,
-  NxPolicyViolationIndicator,
-  ThreatLevelNumber
-} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
-import {
-  ExtensionConfigurationContext,
-  ExtensionPopupContext
-} from '../../../context/NexusContext';
-import {DATA_SOURCE} from "../../../utils/Constants";
+    NxH3,
+    NxLoadingSpinner,
+    NxPolicyViolationIndicator,
+    ThreatLevelNumber,
+} from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
+import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../context/NexusContext'
+import { DATA_SOURCE } from '../../../utils/Constants'
 
 function IqSecurity() {
-  const popupContext = useContext(ExtensionPopupContext)
-  const securityData= popupContext.iq?.componentDetails?.securityData
+    const popupContext = useContext(ExtensionPopupContext)
+    const securityData = popupContext.iq?.componentDetails?.securityData
 
-  function getMaxSecurity() {
-    if (securityData && securityData.securityIssues && securityData?.securityIssues?.length > 0) {
-      return Math.max(...securityData.securityIssues.map((issue) => issue.severity as number))
+    function getMaxSecurity() {
+        if (securityData && securityData.securityIssues && securityData?.securityIssues?.length > 0) {
+            return Math.max(...securityData.securityIssues.map((issue) => issue.severity as number))
+        }
+
+        return 0
     }
 
-    return 0
-  }
-
-  if (securityData == undefined) {
-    return <NxLoadingSpinner/>;
-  } else {
-    return (
-        <React.Fragment>
-          <header className="nx-grid-header">
-            <NxH3 className={'nx-h3'}>Max Security Threat</NxH3>
-          </header>
-          <NxPolicyViolationIndicator
-              policyThreatLevel={getMaxSecurity() as ThreatLevelNumber}
-          />
-        </React.Fragment>
-    )
-  }
+    if (securityData == undefined) {
+        return <NxLoadingSpinner />
+    } else {
+        return (
+            <React.Fragment>
+                <header className='nx-grid-header'>
+                    <NxH3 className={'nx-h3'}>Max Security Threat</NxH3>
+                </header>
+                <NxPolicyViolationIndicator policyThreatLevel={getMaxSecurity() as ThreatLevelNumber} />
+            </React.Fragment>
+        )
+    }
 }
 
 export default function SecurityThreat() {
-  const extensionContext = useContext(ExtensionConfigurationContext)
+    const extensionContext = useContext(ExtensionConfigurationContext)
 
-  return (
-      <div>
-        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
-            <IqSecurity/>
-        )}
-      </div>
-  )
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqSecurity />}</div>
 }

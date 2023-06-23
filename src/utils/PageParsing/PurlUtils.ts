@@ -14,40 +14,40 @@
  * limitations under the License.
  */
 
-import {PackageURL} from 'packageurl-js';
+import { PackageURL } from 'packageurl-js'
 
 const generatePackageURL = (
-  format: string,
-  name: string,
-  version: string,
-  qualifiers?: {[key: string]: string}
+    format: string,
+    name: string,
+    version: string,
+    qualifiers?: { [key: string]: string }
 ): PackageURL => {
-  return generatePackageURLComplete(format, name, version, undefined, qualifiers, undefined);
-};
+    return generatePackageURLComplete(format, name, version, undefined, qualifiers, undefined)
+}
 
 const generatePackageURLWithNamespace = (
-  format: string,
-  name: string,
-  version: string,
-  namespace: string | undefined
+    format: string,
+    name: string,
+    version: string,
+    namespace: string | undefined
 ): PackageURL => {
-  return generatePackageURLComplete(format, name, version, namespace, undefined, undefined);
-};
+    return generatePackageURLComplete(format, name, version, namespace, undefined, undefined)
+}
 
 const generatePackageURLComplete = (
-  format: string,
-  name: string,
-  version: string,
-  namespace: string | undefined,
-  qualifiers:
-    | {
-        [key: string]: string;
-      }
-    | undefined
-    | null,
-  subpath: string | undefined | null
+    format: string,
+    name: string,
+    version: string,
+    namespace: string | undefined,
+    qualifiers:
+        | {
+              [key: string]: string
+          }
+        | undefined
+        | null,
+    subpath: string | undefined | null
 ): PackageURL => {
-  return new PackageURL(format, namespace, name, version, qualifiers, subpath);
-};
+    return new PackageURL(format, namespace, name, version, qualifiers, subpath)
+}
 
-export {generatePackageURL, generatePackageURLWithNamespace, generatePackageURLComplete};
+export { generatePackageURL, generatePackageURLWithNamespace, generatePackageURLComplete }

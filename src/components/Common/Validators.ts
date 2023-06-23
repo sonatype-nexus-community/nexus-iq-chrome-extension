@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty');
+export const nonEmptyValidator = (val: string) => (val && val.length ? null : 'Must be non-empty')
 
 export const isHttpUriValidator = (val: string) => {
     let url

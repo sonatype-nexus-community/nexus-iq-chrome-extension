@@ -13,71 +13,71 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {PackageURL} from 'packageurl-js';
+import { PackageURL } from 'packageurl-js'
 import { logger, LogLevel } from '../logger/Logger'
-import {REPOS, RepoType} from './Constants';
-import {parseAlpine} from './PageParsing/Alpine';
-import {parseNPM} from './PageParsing/NPM';
-import {parseNuget} from './PageParsing/Nuget';
-import {parseRuby} from './PageParsing/RubyGems';
-import {parseGolang} from './PageParsing/Golang';
-import {parsePyPIURL} from './PageParsing/PyPI';
-import {parseCRAN} from './PageParsing/CRAN';
-import {parseConda} from './PageParsing/Anaconda';
-import {parsePackagist} from './PageParsing/Packagist';
-import {parseMVNRepository} from './PageParsing/MVNRepository';
-import {parseMavenApache} from './PageParsing/MavenApache';
-import {parseSearchMavenOrg} from './PageParsing/SearchMavenOrg';
-import {parseCentralSonatypeCom} from './PageParsing/CentralSonatypeCom';
+import { REPOS, RepoType } from './Constants'
+import { parseAlpine } from './PageParsing/Alpine'
+import { parseNPM } from './PageParsing/NPM'
+import { parseNuget } from './PageParsing/Nuget'
+import { parseRuby } from './PageParsing/RubyGems'
+import { parseGolang } from './PageParsing/Golang'
+import { parsePyPIURL } from './PageParsing/PyPI'
+import { parseCRAN } from './PageParsing/CRAN'
+import { parseConda } from './PageParsing/Anaconda'
+import { parsePackagist } from './PageParsing/Packagist'
+import { parseMVNRepository } from './PageParsing/MVNRepository'
+import { parseMavenApache } from './PageParsing/MavenApache'
+import { parseSearchMavenOrg } from './PageParsing/SearchMavenOrg'
+import { parseCentralSonatypeCom } from './PageParsing/CentralSonatypeCom'
 
 export const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
-  logger.logMessage('In getArtifactDetailsFromDOM', LogLevel.TRACE, repoFormat, url)
-  
-  switch (repoFormat.repoID) {
-    case REPOS.npmJs: {
-      return parseNPM(url);
-    }
-    case REPOS.alpineLinux: {
-      return parseAlpine(url);
-    }
-    case REPOS.nugetOrg: {
-      return parseNuget(url);
-    }
-    case REPOS.rubyGemsOrg: {
-      return parseRuby(url);
-    }
-    case REPOS.pkgGoDev: {
-      return parseGolang(url);
-    }
-    case REPOS.pypiOrg: {
-      return parsePyPIURL(url);
-    }
-    case REPOS.cranRProject: {
-      return parseCRAN(url);
-    }
-    case REPOS.anacondaCom: {
-      return parseConda(url);
-    }
-    case REPOS.packagistOrg: {
-      return parsePackagist(url);
-    }
-    case REPOS.mvnRepositoryCom: {
-      return parseMVNRepository(url);
-    }
-    case REPOS.repoMavenApacheOrg: {
-      return parseMavenApache(url);
-    }
-    case REPOS.searchMavenOrg: {
-      return parseSearchMavenOrg(url);
-    }
-    case REPOS.centralSonatypeCom: {
-      return parseCentralSonatypeCom(url);
+    logger.logMessage('In getArtifactDetailsFromDOM', LogLevel.TRACE, repoFormat, url)
+
+    switch (repoFormat.repoID) {
+        case REPOS.npmJs: {
+            return parseNPM(url)
+        }
+        case REPOS.alpineLinux: {
+            return parseAlpine(url)
+        }
+        case REPOS.nugetOrg: {
+            return parseNuget(url)
+        }
+        case REPOS.rubyGemsOrg: {
+            return parseRuby(url)
+        }
+        case REPOS.pkgGoDev: {
+            return parseGolang(url)
+        }
+        case REPOS.pypiOrg: {
+            return parsePyPIURL(url)
+        }
+        case REPOS.cranRProject: {
+            return parseCRAN(url)
+        }
+        case REPOS.anacondaCom: {
+            return parseConda(url)
+        }
+        case REPOS.packagistOrg: {
+            return parsePackagist(url)
+        }
+        case REPOS.mvnRepositoryCom: {
+            return parseMVNRepository(url)
+        }
+        case REPOS.repoMavenApacheOrg: {
+            return parseMavenApache(url)
+        }
+        case REPOS.searchMavenOrg: {
+            return parseSearchMavenOrg(url)
+        }
+        case REPOS.centralSonatypeCom: {
+            return parseCentralSonatypeCom(url)
+        }
+
+        default: {
+            logger.logMessage(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`, LogLevel.WARN)
+        }
     }
 
-    default: {
-      logger.logMessage(`Unhandled Repotype and URL ${repoFormat.repoID} ${url}`, LogLevel.WARN)
-    }
-  }
-
-  return undefined
+    return undefined
 }

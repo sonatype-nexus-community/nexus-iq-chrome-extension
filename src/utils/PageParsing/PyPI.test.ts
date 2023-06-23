@@ -13,51 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {describe, expect, test} from '@jest/globals';
-import {readFileSync} from 'fs';
-import {join} from 'path';
-import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
-import {ensure} from '../Helpers'
-import {getArtifactDetailsFromDOM} from '../PageParsing';
+import { describe, expect, test } from '@jest/globals'
+import { readFileSync } from 'fs'
+import { join } from 'path'
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
+import { ensure } from '../Helpers'
+import { getArtifactDetailsFromDOM } from '../PageParsing'
 
 describe('PyPI Page Parsing', () => {
-  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.pypiOrg)
-  expect(repoType).toBeDefined()
+    const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.pypiOrg)
+    expect(repoType).toBeDefined()
 
-  test('should parse a valid PyPI page', () => {
-    const html = readFileSync(join(__dirname, 'testdata/pypi.html'));
+    test('should parse a valid PyPI page', () => {
+        const html = readFileSync(join(__dirname, 'testdata/pypi.html'))
 
-    window.document.body.innerHTML = html.toString();
+        window.document.body.innerHTML = html.toString()
 
-    const PackageURL = getArtifactDetailsFromDOM(
-      ensure(repoType), 'https://pypi.org/project/Django/'
-    )
+        const PackageURL = getArtifactDetailsFromDOM(ensure(repoType), 'https://pypi.org/project/Django/')
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe(FORMATS.pypi);
-    expect(PackageURL?.name).toBe('Django');
-    expect(PackageURL?.version).toBe('4.2.1');
-  });
+        expect(PackageURL).toBeDefined()
+        expect(PackageURL?.type).toBe(FORMATS.pypi)
+        expect(PackageURL?.name).toBe('Django')
+        expect(PackageURL?.version).toBe('4.2.1')
+    })
 
-  test('should parse valid PyPI page with the version', () => {
-    const PackageURL = getArtifactDetailsFromDOM(
-      ensure(repoType), 'https://pypi.org/project/Django/4.2/'
-    )
+    test('should parse valid PyPI page with the version', () => {
+        const PackageURL = getArtifactDetailsFromDOM(ensure(repoType), 'https://pypi.org/project/Django/4.2/')
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe(FORMATS.pypi);
-    expect(PackageURL?.name).toBe('Django');
-    expect(PackageURL?.version).toBe('4.2');
-  });
+        expect(PackageURL).toBeDefined()
+        expect(PackageURL?.type).toBe(FORMATS.pypi)
+        expect(PackageURL?.name).toBe('Django')
+        expect(PackageURL?.version).toBe('4.2')
+    })
 
-  test('should parse valid PyPI page with the version, query string and fragment', () => {
-    const PackageURL = getArtifactDetailsFromDOM(
-      ensure(repoType), 'https://pypi.org/project/Django/4.2/?some=thing#else'
-    )
+    test('should parse valid PyPI page with the version, query string and fragment', () => {
+        const PackageURL = getArtifactDetailsFromDOM(
+            ensure(repoType),
+            'https://pypi.org/project/Django/4.2/?some=thing#else'
+        )
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe(FORMATS.pypi);
-    expect(PackageURL?.name).toBe('Django');
-    expect(PackageURL?.version).toBe('4.2');
-  });
-});
+        expect(PackageURL).toBeDefined()
+        expect(PackageURL?.type).toBe(FORMATS.pypi)
+        expect(PackageURL?.name).toBe('Django')
+        expect(PackageURL?.version).toBe('4.2')
+    })
+})

@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 export interface OSSIndexResponse {
-  coordinates: string;
-  description: string;
-  reference: string;
-  vulnerabilities: Vulnerability[];
+    coordinates: string
+    description: string
+    reference: string
+    vulnerabilities: Vulnerability[]
 }
 
 export interface Vulnerability {
-  id: string;
-  displayName: string;
-  title: string;
-  description: string;
-  cvssScore: number;
-  cvssVector: string;
-  cve?: string;
-  reference: string;
-  cwe?: string;
+    id: string
+    displayName: string
+    title: string
+    description: string
+    cvssScore: number
+    cvssVector: string
+    cve?: string
+    reference: string
+    cwe?: string
 }

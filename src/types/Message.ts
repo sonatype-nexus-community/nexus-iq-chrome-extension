@@ -27,7 +27,7 @@ export enum MESSAGE_REQUEST_TYPE {
     GET_SETTINGS = 'readExtensionConfiguration',
     REQUEST_COMPONENT_EVALUATION_BY_PURLS = 'requestComponentEvaluationByPurls',
     UPDATE_SETTINGS = 'updateExtensionConfiguration',
-    RESPONSE_COMPONENT_EVALUATION_BY_PURLS = 'responseComponentEvaluationByPurls'
+    RESPONSE_COMPONENT_EVALUATION_BY_PURLS = 'responseComponentEvaluationByPurls',
 }
 
 /**
@@ -37,14 +37,14 @@ export enum MESSAGE_RESPONSE_STATUS {
     SUCCESS,
     AUTH_ERROR,
     FAILURE,
-    UNKNOWN_ERROR
+    UNKNOWN_ERROR,
 }
 
 /**
  * All Message Requests must conform to this structure.
  */
 export interface MessageRequest {
-    type: MESSAGE_REQUEST_TYPE,
+    type: MESSAGE_REQUEST_TYPE
     params?: object
 }
 
@@ -52,8 +52,8 @@ export interface MessageRequest {
  * All Message Responses must conform to this structure.
  */
 export interface MessageResponse {
-    status: MESSAGE_RESPONSE_STATUS,
-    status_detail?: object,
+    status: MESSAGE_RESPONSE_STATUS
+    status_detail?: object
     data?: object
 }
 

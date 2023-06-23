@@ -15,31 +15,31 @@
  */
 
 // import {ComponentDetails} from '@sonatype/js-sona-types'
-import $, {Cash} from 'cash-dom';
+import $, { Cash } from 'cash-dom'
 // import {ArtifactMessage} from './types/ArtifactMessage'
-import {getArtifactDetailsFromDOM} from './utils/PageParsing';
-import {findRepoType} from './utils/UrlParsing';
-import {RepoType} from './utils/Constants';
+import { getArtifactDetailsFromDOM } from './utils/PageParsing'
+import { findRepoType } from './utils/UrlParsing'
+import { RepoType } from './utils/Constants'
 import {
-  MESSAGE_REQUEST_TYPE,
-  MESSAGE_RESPONSE_STATUS,
-  MessageRequest,
-  MessageResponse,
-  MessageResponseFunction
-} from './types/Message';
+    MESSAGE_REQUEST_TYPE,
+    MESSAGE_RESPONSE_STATUS,
+    MessageRequest,
+    MessageResponse,
+    MessageResponseFunction,
+} from './types/Message'
 // import { readExtensionConfiguration, updateExtensionConfiguration } from './messages/SettingsMessages'
 // import { ExtensionConfiguration } from './types/ExtensionConfiguration'
-import {PackageURL} from 'packageurl-js';
-import {logger, LogLevel} from './logger/Logger';
+import { PackageURL } from 'packageurl-js'
+import { logger, LogLevel } from './logger/Logger'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser;
+const _browser: any = chrome ? chrome : browser
 
 /**
  * New listener for messages received by Service Worker.
  *
  */
-_browser.runtime.onMessage.addListener(handle_message_received_calculate_purl_for_page);
+_browser.runtime.onMessage.addListener(handle_message_received_calculate_purl_for_page)
 
 /**
  * New (asynchronous) handler for processing messages received.
@@ -47,43 +47,43 @@ _browser.runtime.onMessage.addListener(handle_message_received_calculate_purl_fo
  * This always returns True to cause handling to be asynchronous.
  */
 function handle_message_received_calculate_purl_for_page(
-  request: MessageRequest,
-  sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
-  sendResponse: MessageResponseFunction
+    request: MessageRequest,
+    sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
+    sendResponse: MessageResponseFunction
 ): boolean {
-  if (request.type == MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE) {
-    logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type);
-    logger.logMessage('Deriving PackageURL', LogLevel.INFO, request.params);
-    const repoType = findRepoType(window.location.href);
+    if (request.type == MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE) {
+        logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
+        logger.logMessage('Deriving PackageURL', LogLevel.INFO, request.params)
+        const repoType = findRepoType(window.location.href)
 
-    if (repoType === undefined) {
-      sendResponse({
-        status: MESSAGE_RESPONSE_STATUS.FAILURE,
-        status_detail: {
-          message: `Repository not supported: ${window.location.href}`
+        if (repoType === undefined) {
+            sendResponse({
+                status: MESSAGE_RESPONSE_STATUS.FAILURE,
+                status_detail: {
+                    message: `Repository not supported: ${window.location.href}`,
+                },
+            })
+        } else {
+            const purl = getArtifactDetailsFromDOM(repoType, window.location.href)
+            if (purl === undefined) {
+                sendResponse({
+                    status: MESSAGE_RESPONSE_STATUS.FAILURE,
+                    status_detail: {
+                        message: `Unable to determine PackageURL for ${request.params}`,
+                    },
+                })
+            } else {
+                sendResponse({
+                    status: MESSAGE_RESPONSE_STATUS.SUCCESS,
+                    data: {
+                        purl: purl.toString(),
+                    },
+                })
+            }
         }
-      });
-    } else {
-      const purl = getArtifactDetailsFromDOM(repoType, window.location.href);
-      if (purl === undefined) {
-        sendResponse({
-          status: MESSAGE_RESPONSE_STATUS.FAILURE,
-          status_detail: {
-            message: `Unable to determine PackageURL for ${request.params}`
-          }
-        });
-      } else {
-        sendResponse({
-          status: MESSAGE_RESPONSE_STATUS.SUCCESS,
-          data: {
-            purl: purl.toString()
-          }
-        });
-      }
     }
-  }
 
-  return true;
+    return true
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -163,13 +163,13 @@ function handle_message_received_calculate_purl_for_page(
 // });
 
 const removeClasses = (element) => {
-  //remove the class
-  console.info('removing classes', element);
-  element.removeClass('sonatype-iq-extension-vuln');
-  element.removeClass('sonatype-iq-extension-vuln-severe');
-  element.removeClass('sonatype-iq-extension-vuln-high');
-  element.removeClass('sonatype-iq-extension-vuln-low');
-};
+    //remove the class
+    console.info('removing classes', element)
+    element.removeClass('sonatype-iq-extension-vuln')
+    element.removeClass('sonatype-iq-extension-vuln-severe')
+    element.removeClass('sonatype-iq-extension-vuln-high')
+    element.removeClass('sonatype-iq-extension-vuln-low')
+}
 
 // const checkPage = () => {
 //   const repoType = findRepoType(window.location.href);

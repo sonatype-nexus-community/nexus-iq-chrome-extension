@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import Options from './components/Options/Options';
-import Install from './components/Install/Install';
-import Help from './components/Help/Help';
+import React from 'react'
+import Options from './components/Options/Options'
+import Install from './components/Install/Install'
+import Help from './components/Help/Help'
 
 export interface NexusOptionsContainerInterace {
-  install: boolean,
-  help: boolean
+    install: boolean
+    help: boolean
 }
 
 export const NexusOptionsContainer = (props: NexusOptionsContainerInterace) => {
-  return (
-    <React.Fragment>
-      {props.help && <Help />}
-      {props.install && <Install />}
-      {!props.help && !props.install && <Options />}
-    </React.Fragment>
-  )
+    return (
+        <React.Fragment>
+            {props.help && <Help />}
+            {props.install && <Install />}
+            {!props.help && !props.install && <Options />}
+        </React.Fragment>
+    )
 }

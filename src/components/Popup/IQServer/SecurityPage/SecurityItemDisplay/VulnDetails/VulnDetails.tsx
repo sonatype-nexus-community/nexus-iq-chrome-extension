@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxVulnerabilityDetails} from '@sonatype/react-shared-components';
-import {VulnerabilityDetails} from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types';
-import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../../../context/NexusContext';
+import { NxVulnerabilityDetails } from '@sonatype/react-shared-components'
+import { VulnerabilityDetails } from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types'
+import React, { useContext } from 'react'
+import { NexusContext, NexusContextInterface } from '../../../../../../context/NexusContext'
 
 const VulnDetails = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+    const nexusContext = useContext(NexusContext)
 
-  const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext && nexusContext.vulnDetails) {
-      return (
-        <NxVulnerabilityDetails
-          vulnerabilityDetails={nexusContext.vulnDetails as VulnerabilityDetails}
-        />
-      );
+    const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
+        if (nexusContext && nexusContext.vulnDetails) {
+            return <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails as VulnerabilityDetails} />
+        }
+        return null
     }
-    return null;
-  };
 
-  return renderVulnerability(nexusContext);
-};
+    return renderVulnerability(nexusContext)
+}
 
-export default VulnDetails;
+export default VulnDetails

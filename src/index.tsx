@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-import ExtensionPopup  from './components/Popup/ExtensionPopup'
-
+import ExtensionPopup from './components/Popup/ExtensionPopup'
 
 /**
  * This is essentially the UI that appears in the Extension Popup.
@@ -25,7 +24,7 @@ import ExtensionPopup  from './components/Popup/ExtensionPopup'
 const container = document.getElementById('ui')
 const root = ReactDOM.createRoot(container)
 root.render(
-  <React.StrictMode>
-    <ExtensionPopup />
-  </React.StrictMode>
+    <React.StrictMode>
+        <ExtensionPopup />
+    </React.StrictMode>
 )

@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-import $ from 'cash-dom';
-import {PackageURL} from 'packageurl-js';
-import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
-import {generatePackageURL} from './PurlUtils';
+import $ from 'cash-dom'
+import { PackageURL } from 'packageurl-js'
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
+import { generatePackageURL } from './PurlUtils'
 /*
   https://cran.r-project.org/
   https://cran.r-project.org/web/packages/latte/index.html
 */
 const parseCRAN = (url: string): PackageURL | undefined => {
-  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.cranRProject)
-  console.debug('*** REPO TYPE: ', repoType)
-  if (repoType) {
-    if (repoType.pathRegex) {
-      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-      console.debug(pathResult?.groups)      
-      if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
-        const version = $(repoType.versionDomPath).first().text().trim();
-        return generatePackageURL(FORMATS.cran, encodeURIComponent(pathResult.groups.artifactId), version)
-      }
+    const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.cranRProject)
+    console.debug('*** REPO TYPE: ', repoType)
+    if (repoType) {
+        if (repoType.pathRegex) {
+            const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+            console.debug(pathResult?.groups)
+            if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
+                const version = $(repoType.versionDomPath).first().text().trim()
+                return generatePackageURL(FORMATS.cran, encodeURIComponent(pathResult.groups.artifactId), version)
+            }
+        }
+    } else {
+        console.error('Unable to determine REPO TYPE.')
     }
-  } else {
-    console.error('Unable to determine REPO TYPE.')
-  }
-  
-  return undefined;
-};
 
-export {parseCRAN};
+    return undefined
+}
+
+export { parseCRAN }

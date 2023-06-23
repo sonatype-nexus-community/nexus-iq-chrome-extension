@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {PackageURL} from 'packageurl-js';
-import {DATA_SOURCES, FORMATS} from '../utils/Constants';
-import {Artifact} from './Artifact';
+import { PackageURL } from 'packageurl-js'
+import { DATA_SOURCES, FORMATS } from '../utils/Constants'
+import { Artifact } from './Artifact'
 
 export class MavenArtifact extends Artifact {
-  constructor(
-    readonly groupId: string,
-    readonly artifactId: string,
-    readonly version: string,
-    readonly extension: string,
-    readonly classifier: string
-  ) {
-    super(FORMATS.maven, null, DATA_SOURCES.NEXUSIQ, artifactId, version);
-  }
+    constructor(
+        readonly groupId: string,
+        readonly artifactId: string,
+        readonly version: string,
+        readonly extension: string,
+        readonly classifier: string
+    ) {
+        super(FORMATS.maven, null, DATA_SOURCES.NEXUSIQ, artifactId, version)
+    }
 
-  public toPurl(): string {
-    return new PackageURL(
-      this.format,
-      this.groupId,
-      this.name,
-      this.version,
-      undefined,
-      undefined
-    ).toString();
-  }
+    public toPurl(): string {
+        return new PackageURL(this.format, this.groupId, this.name, this.version, undefined, undefined).toString()
+    }
 }

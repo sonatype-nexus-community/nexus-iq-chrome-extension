@@ -15,16 +15,16 @@
  */
 
 import { Configuration } from '@sonatype/ossindex-api-client'
-import { logger, LogLevel } from '../logger/Logger';
+import { logger, LogLevel } from '../logger/Logger'
 import { readExtensionConfiguration } from './SettingsMessages'
-import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
+import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
 import { InvalidConfigurationError } from '../error/ExtensionError'
-import { MESSAGE_RESPONSE_STATUS } from "../types/Message";
-import { DATA_SOURCE } from '../utils/Constants';
-import { UserAgentHelper } from '../utils/UserAgentHelper';
+import { MESSAGE_RESPONSE_STATUS } from '../types/Message'
+import { DATA_SOURCE } from '../utils/Constants'
+import { UserAgentHelper } from '../utils/UserAgentHelper'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser;
+const _browser: any = chrome ? chrome : browser
 
 const OSS_INDEX_HOST = 'https://ossindex.sonatype.org'
 
@@ -33,10 +33,10 @@ const OSS_INDEX_HOST = 'https://ossindex.sonatype.org'
  * Sonatype OSS Index.
  */
 
-// export function getApplications(request: MessageRequest): Promise<MessageResponse> { 
+// export function getApplications(request: MessageRequest): Promise<MessageResponse> {
 //     return _get_iq_api_configuration().then((apiConfig) => {
 //         return apiConfig
-//     }).catch((err) => { 
+//     }).catch((err) => {
 //         throw err
 //     }).then((apiConfig) => {
 //         logger.logMessage('API Configiration', LogLevel.INFO, apiConfig)
@@ -75,30 +75,38 @@ const OSS_INDEX_HOST = 'https://ossindex.sonatype.org'
 // }
 
 function _get_iq_api_configuration(): Promise<Configuration> {
-    return readExtensionConfiguration().then((response) => {
-        if (chrome.runtime.lastError) {
-            console.log('Error _get_iq_api_configuration', chrome.runtime.lastError.message)
-        }
-        if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-            const settings = response.data as ExtensionConfiguration
-            if (settings.dataSource !== DATA_SOURCE.OSSINDEX) {
-                logger.logMessage(`Attempt to get connection configuration for ${DATA_SOURCE.OSSINDEX}, but DATA_SOURCE is ${settings.dataSource}`, LogLevel.ERROR, settings)
-                throw new InvalidConfigurationError('Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ')
+    return readExtensionConfiguration()
+        .then((response) => {
+            if (chrome.runtime.lastError) {
+                console.log('Error _get_iq_api_configuration', chrome.runtime.lastError.message)
             }
-
-            return new Configuration({
-                basePath: OSS_INDEX_HOST,
-                username: settings.user,
-                password: settings.token,
-                headers: {
-                    'User-Agent': UserAgentHelper.getUserAgent(),
-                    'X-User-Agent': UserAgentHelper.getUserAgent()
+            if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+                const settings = response.data as ExtensionConfiguration
+                if (settings.dataSource !== DATA_SOURCE.OSSINDEX) {
+                    logger.logMessage(
+                        `Attempt to get connection configuration for ${DATA_SOURCE.OSSINDEX}, but DATA_SOURCE is ${settings.dataSource}`,
+                        LogLevel.ERROR,
+                        settings
+                    )
+                    throw new InvalidConfigurationError(
+                        'Attempt to get connection configuration for Sonatype IQ Server, but DATA_SOURCE is not NEXUSIQ'
+                    )
                 }
-            })
-        } else {
-            throw new InvalidConfigurationError('Unable to get Extension Configuration')
-        }
-    }).catch((err) => {
-        throw err
-    })
+
+                return new Configuration({
+                    basePath: OSS_INDEX_HOST,
+                    username: settings.user,
+                    password: settings.token,
+                    headers: {
+                        'User-Agent': UserAgentHelper.getUserAgent(),
+                        'X-User-Agent': UserAgentHelper.getUserAgent(),
+                    },
+                })
+            } else {
+                throw new InvalidConfigurationError('Unable to get Extension Configuration')
+            }
+        })
+        .catch((err) => {
+            throw err
+        })
 }

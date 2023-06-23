@@ -13,75 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {IconDefinition} from '@fortawesome/fontawesome-svg-core'
-import {faCopy} from '@fortawesome/free-solid-svg-icons'
-import {NxButton, NxFontAwesomeIcon, NxH3, NxList} from '@sonatype/react-shared-components'
-import React, {useContext} from 'react'
-import {
-  ExtensionConfigurationContext,
-  ExtensionPopupContext
-} from '../../../../../context/NexusContext'
-import {DATA_SOURCE} from "../../../../../utils/Constants"
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { faCopy } from '@fortawesome/free-solid-svg-icons'
+import { NxButton, NxFontAwesomeIcon, NxH3, NxList } from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
+import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../../context/NexusContext'
+import { DATA_SOURCE } from '../../../../../utils/Constants'
 
 function IqAdvancedLegalDisplay() {
-  const popupContext = useContext(ExtensionPopupContext)
+    const popupContext = useContext(ExtensionPopupContext)
 
-  const copyToClipboard = (_event: React.MouseEvent, text: string) => {
-    navigator.clipboard.writeText(text);
-  };
+    const copyToClipboard = (_event: React.MouseEvent, text: string) => {
+        navigator.clipboard.writeText(text)
+    }
 
-      return (
+    return (
         <React.Fragment>
-          <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              <NxH3>Copy License Text</NxH3>
-              {/*<NxList>*/}
-              {/*  {popupContext.iq?.componentDetails?.licenseData.licenseLegalData.licenseFiles.map(*/}
-              {/*    (licenses, index) => {*/}
-              {/*      return (*/}
-              {/*        <NxList.Item key={`${licenses.id}_${index}`}>*/}
-              {/*          <NxList.Text>{licenses.relPath}</NxList.Text>*/}
-              {/*          <NxList.Actions>*/}
-              {/*            <NxButton*/}
-              {/*              title="Copy License Text"*/}
-              {/*              variant="icon-only"*/}
-              {/*              onClick={(event) => copyToClipboard(event, licenses.content)}*/}
-              {/*            >*/}
-              {/*              <NxFontAwesomeIcon icon={faCopy as IconDefinition} />*/}
-              {/*            </NxButton>*/}
-              {/*          </NxList.Actions>*/}
-              {/*        </NxList.Item>*/}
-              {/*      );*/}
-              {/*    }*/}
-              {/*  )}*/}
-              {/*</NxList>*/}
-              <NxH3>Copyright Statements</NxH3>
-              {/*<NxList>*/}
-              {/*  {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(*/}
-              {/*    (copyrights) => {*/}
-              {/*      return (*/}
-              {/*        <NxList.Item key={copyrights.originalContentHash}>*/}
-              {/*          <NxList.Text>{copyrights.content}</NxList.Text>*/}
-              {/*        </NxList.Item>*/}
-              {/*      );*/}
-              {/*    }*/}
-              {/*  )}*/}
-              {/*</NxList>*/}
-            </section>
-          </div>
+            <div className='nx-grid-row'>
+                <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
+                    <NxH3>Copy License Text</NxH3>
+                    {/*<NxList>*/}
+                    {/*  {popupContext.iq?.componentDetails?.licenseData.licenseLegalData.licenseFiles.map(*/}
+                    {/*    (licenses, index) => {*/}
+                    {/*      return (*/}
+                    {/*        <NxList.Item key={`${licenses.id}_${index}`}>*/}
+                    {/*          <NxList.Text>{licenses.relPath}</NxList.Text>*/}
+                    {/*          <NxList.Actions>*/}
+                    {/*            <NxButton*/}
+                    {/*              title="Copy License Text"*/}
+                    {/*              variant="icon-only"*/}
+                    {/*              onClick={(event) => copyToClipboard(event, licenses.content)}*/}
+                    {/*            >*/}
+                    {/*              <NxFontAwesomeIcon icon={faCopy as IconDefinition} />*/}
+                    {/*            </NxButton>*/}
+                    {/*          </NxList.Actions>*/}
+                    {/*        </NxList.Item>*/}
+                    {/*      );*/}
+                    {/*    }*/}
+                    {/*  )}*/}
+                    {/*</NxList>*/}
+                    <NxH3>Copyright Statements</NxH3>
+                    {/*<NxList>*/}
+                    {/*  {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(*/}
+                    {/*    (copyrights) => {*/}
+                    {/*      return (*/}
+                    {/*        <NxList.Item key={copyrights.originalContentHash}>*/}
+                    {/*          <NxList.Text>{copyrights.content}</NxList.Text>*/}
+                    {/*        </NxList.Item>*/}
+                    {/*      );*/}
+                    {/*    }*/}
+                    {/*  )}*/}
+                    {/*</NxList>*/}
+                </section>
+            </div>
         </React.Fragment>
-      )
+    )
 }
 
 export default function AdvancedLegalDisplay() {
-  const extensionContext = useContext(ExtensionConfigurationContext)
+    const extensionContext = useContext(ExtensionConfigurationContext)
 
-  return (
-      <div>
-        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
-            <IqAdvancedLegalDisplay/>
-        )}
-      </div>
-  )
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqAdvancedLegalDisplay />}</div>
 }
-

@@ -13,81 +13,79 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {ConstraintViolation, PolicyViolation, Reason} from '@sonatype/js-sona-types';
-import {
-  NxList,
-  NxPolicyViolationIndicator,
-  NxTextLink,
-  ThreatLevelNumber
-} from '@sonatype/react-shared-components';
-import React, {useEffect, useState} from 'react';
-import '../PolicyPage.css';
-import {ApiPolicyViolationDTOV2} from "@sonatype/nexus-iq-api-client";
+import { ConstraintViolation, PolicyViolation, Reason } from '@sonatype/js-sona-types'
+import { NxList, NxPolicyViolationIndicator, NxTextLink, ThreatLevelNumber } from '@sonatype/react-shared-components'
+import React, { useEffect, useState } from 'react'
+import '../PolicyPage.css'
+import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 
 type PolicyViolationProps = {
-  policyViolation:  ApiPolicyViolationDTOV2;
-  iqServerUrl: string;
-};
+    policyViolation: ApiPolicyViolationDTOV2
+    iqServerUrl: string
+}
 
 const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
-  // // const [open, setOpen] = useState(false);
+    // // const [open, setOpen] = useState(false);
 
+    const formatReason = (reason: string, iqServerUrl: string) => {
+        iqServerUrl = iqServerUrl.endsWith('/') ? iqServerUrl.slice(0, -1) : iqServerUrl
+        const CVERegex = /((?:CVE|sonatype)-[0-9]{4}-[0-9]+)/g
+        return reason.split(CVERegex).map((segment, index) =>
+            CVERegex.exec(segment) ? (
+                // eslint-disable-next-line react/jsx-key
+                <NxTextLink
+                    key={`textLink${index}`}
+                    external
+                    href={`${iqServerUrl}/assets/index.html#/vulnerabilities/${segment}`}
+                >
+                    {segment}
+                </NxTextLink>
+            ) : (
+                segment
+            )
+        )
+    }
 
-  const formatReason = (reason: string, iqServerUrl: string) => {
-    iqServerUrl = iqServerUrl.endsWith('/') ? iqServerUrl.slice(0, -1) : iqServerUrl
-    const CVERegex = /((?:CVE|sonatype)-[0-9]{4}-[0-9]+)/g;
-    return reason.split(CVERegex).map((segment, index) =>
-      CVERegex.exec(segment) ? (
-        // eslint-disable-next-line react/jsx-key
-        <NxTextLink key={`textLink${index}`}external href={`${iqServerUrl}/assets/index.html#/vulnerabilities/${segment}`}>
-          {segment}
-        </NxTextLink>
-      ) : (
-        segment
-      )
-    );
-  };
-
-  const printPolicyViolation = (policyViolation: ApiPolicyViolationDTOV2, iqServerUrl: string) => {
-    // if (policyViolation) {
-    return (
-      <tr className="nx-table-row">
-        <td className="nx-cell">
-          <NxPolicyViolationIndicator
-            style={{
-              width: '10px !important',
-              margin: 'none !important'
-            }}
-            policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}
-          >
-            {policyViolation?.threatLevel?.toString()}
-          </NxPolicyViolationIndicator>
-        </td>
-        {policyViolation?.constraintViolations?.map((constraint: ConstraintViolation, index) => (
-          <React.Fragment key={`constraint${index}`}>
-            <td className="nx-cell">{policyViolation.policyName}</td>
-            <td className="nx-cell">{constraint.constraintName}</td>
-            <td className="nx-cell">
-              {/* {constraint.reasons.map((reason: Reason) => ( */}
-              <NxList>
-                {constraint.reasons.map((reason: Reason, index) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <NxList.Item key={`policy${index}`} className="nx-list-in-cell">
-                    <NxList.Text>{formatReason(reason.reason, iqServerUrl)}</NxList.Text>
-                  </NxList.Item>
+    const printPolicyViolation = (policyViolation: ApiPolicyViolationDTOV2, iqServerUrl: string) => {
+        // if (policyViolation) {
+        return (
+            <tr className='nx-table-row'>
+                <td className='nx-cell'>
+                    <NxPolicyViolationIndicator
+                        style={{
+                            width: '10px !important',
+                            margin: 'none !important',
+                        }}
+                        policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}
+                    >
+                        {policyViolation?.threatLevel?.toString()}
+                    </NxPolicyViolationIndicator>
+                </td>
+                {policyViolation?.constraintViolations?.map((constraint: ConstraintViolation, index) => (
+                    <React.Fragment key={`constraint${index}`}>
+                        <td className='nx-cell'>{policyViolation.policyName}</td>
+                        <td className='nx-cell'>{constraint.constraintName}</td>
+                        <td className='nx-cell'>
+                            {/* {constraint.reasons.map((reason: Reason) => ( */}
+                            <NxList>
+                                {constraint.reasons.map((reason: Reason, index) => (
+                                    // eslint-disable-next-line react/jsx-key
+                                    <NxList.Item key={`policy${index}`} className='nx-list-in-cell'>
+                                        <NxList.Text>{formatReason(reason.reason, iqServerUrl)}</NxList.Text>
+                                    </NxList.Item>
+                                ))}
+                            </NxList>
+                            {/* ))} */}
+                        </td>
+                    </React.Fragment>
                 ))}
-              </NxList>
-              {/* ))} */}
-            </td>
-          </React.Fragment>
-        ))}
-      </tr>
-    );
-    // }
-    return null;
-  };
+            </tr>
+        )
+        // }
+        return null
+    }
 
-  return printPolicyViolation(props.policyViolation, props.iqServerUrl);
-};
+    return printPolicyViolation(props.policyViolation, props.iqServerUrl)
+}
 
-export default PolicyViolation;
+export default PolicyViolation

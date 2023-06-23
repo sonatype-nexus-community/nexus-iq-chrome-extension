@@ -24,43 +24,43 @@ export enum LogLevel {
 }
 
 export interface ILogger {
-    logMessage(message: string, level: LogLevel, ...meta: any): void;
+    logMessage(message: string, level: LogLevel, ...meta: any): void
 }
 
 export class BrowserExtensionLogger implements ILogger {
     constructor(private _level: LogLevel = LogLevel.DEBUG) {}
 
     public setLevel(level: LogLevel) {
-        this._level = level;
+        this._level = level
     }
 
     public logMessage = (message: string, level: LogLevel, ...meta: any): void => {
         if (this._level >= level) {
             switch (level) {
                 case LogLevel.DEBUG:
-                    console.debug(message, LogLevel[level].toString(), meta);
-                    break;
+                    console.debug(message, LogLevel[level].toString(), meta)
+                    break
                 case LogLevel.ERROR:
-                    console.error(message, LogLevel[level].toString(), meta);
-                    break;
+                    console.error(message, LogLevel[level].toString(), meta)
+                    break
                 case LogLevel.INFO:
-                    console.info(message, LogLevel[level].toString(), meta);
-                    break;
+                    console.info(message, LogLevel[level].toString(), meta)
+                    break
                 case LogLevel.TRACE:
-                    console.trace(message, LogLevel[level].toString(), meta);
-                    break;
+                    console.trace(message, LogLevel[level].toString(), meta)
+                    break
                 case LogLevel.WARN:
-                    console.warn(message, LogLevel[level].toString(), meta);
-                    break;
+                    console.warn(message, LogLevel[level].toString(), meta)
+                    break
                 case LogLevel.LOG:
-                    console.log(message, LogLevel[level].toString(), meta);
-                    break;
+                    console.log(message, LogLevel[level].toString(), meta)
+                    break
                 default:
-                    console.log(message, meta);
-                    break;
+                    console.log(message, meta)
+                    break
             }
         }
-    };
+    }
 }
 
 export const logger = new BrowserExtensionLogger()

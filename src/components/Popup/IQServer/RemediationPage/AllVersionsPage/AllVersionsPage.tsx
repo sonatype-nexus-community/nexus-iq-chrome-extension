@@ -13,46 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxH3} from '@sonatype/react-shared-components'
-import React, {useContext} from 'react'
-import {
-  ExtensionConfigurationContext,
-  ExtensionPopupContext
-} from '../../../../../context/NexusContext'
+import { NxH3 } from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
+import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../../context/NexusContext'
 import AllVersionsDetails from './AllVersionsDetails/AllVersionsDetails'
-import {DATA_SOURCE} from "../../../../../utils/Constants"
+import { DATA_SOURCE } from '../../../../../utils/Constants'
 
 function IqRemediationPageAllVersion() {
-  const popupContext = useContext(ExtensionPopupContext)
+    const popupContext = useContext(ExtensionPopupContext)
 
     if (popupContext?.iq?.allVersions) {
-      return (
-          <React.Fragment>
-            <NxH3>All Versions <span className={'nx-counter'}>{popupContext?.iq?.allVersions.length}</span></NxH3>
-            <AllVersionsDetails />
-          </React.Fragment>
-      )
+        return (
+            <React.Fragment>
+                <NxH3>
+                    All Versions <span className={'nx-counter'}>{popupContext?.iq?.allVersions.length}</span>
+                </NxH3>
+                <AllVersionsDetails />
+            </React.Fragment>
+        )
     } else {
-      return (
-          <React.Fragment>
-            <em>No Additional Versions</em>
-          </React.Fragment>
-      );
+        return (
+            <React.Fragment>
+                <em>No Additional Versions</em>
+            </React.Fragment>
+        )
     }
-
-
-
 }
 
 export default function RemediationPageAllVersion() {
-  const extensionContext = useContext(ExtensionConfigurationContext)
+    const extensionContext = useContext(ExtensionConfigurationContext)
 
-  return (
-      <div>
-        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
-            <IqRemediationPageAllVersion/>
-        )}
-      </div>
-  )
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqRemediationPageAllVersion />}</div>
 }
-

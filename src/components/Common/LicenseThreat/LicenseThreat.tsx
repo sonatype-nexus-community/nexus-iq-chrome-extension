@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  NxLoadingSpinner,
-  NxPolicyViolationIndicator,
-  ThreatLevelNumber
-} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
+import { NxLoadingSpinner, NxPolicyViolationIndicator, ThreatLevelNumber } from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
 import {
     ExtensionConfigurationContext,
     ExtensionPopupContext,
     NexusContext,
-    NexusContextInterface
-} from '../../../context/NexusContext';
-import {DATA_SOURCE} from "../../../utils/Constants";
+    NexusContextInterface,
+} from '../../../context/NexusContext'
+import { DATA_SOURCE } from '../../../utils/Constants'
 
 function LicenseThreatIndicator() {
     const popupContext = useContext(ExtensionPopupContext)
 
     return (
         <React.Fragment>
-
-            <header className="nx-grid-header">
+            <header className='nx-grid-header'>
                 <h3 className={'nx-h3 nx-grid-header__title'}>Max License Threat</h3>
             </header>
             <span>Need license details from somewhere</span>
@@ -45,35 +40,27 @@ function LicenseThreatIndicator() {
         </React.Fragment>
     )
 
-  // const renderLicenseThreat = (nexusContext: NexusContextInterface | undefined) => {
-  //     if (nexusContext && nexusContext.getLicenseDetails && nexusContext.componentDetails &&
-  //         !nexusContext.licenseDetails) {
-  //         nexusContext.getLicenseDetails(nexusContext.componentDetails?.component.packageUrl)
-  //         console.log(nexusContext.licenseDetails);
-  //     }
-  //   if (nexusContext && nexusContext.licenseDetails) {
-  //     return getLicenseThreat(
-  //       nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
-  //         .licenseThreatGroupLevel,
-  //       nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
-  //         .licenseThreatGroupName
-  //     );
-  //   } else {
-  //     return <NxLoadingSpinner />;
-  //   }
-  // };
-
-
+    // const renderLicenseThreat = (nexusContext: NexusContextInterface | undefined) => {
+    //     if (nexusContext && nexusContext.getLicenseDetails && nexusContext.componentDetails &&
+    //         !nexusContext.licenseDetails) {
+    //         nexusContext.getLicenseDetails(nexusContext.componentDetails?.component.packageUrl)
+    //         console.log(nexusContext.licenseDetails);
+    //     }
+    //   if (nexusContext && nexusContext.licenseDetails) {
+    //     return getLicenseThreat(
+    //       nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
+    //         .licenseThreatGroupLevel,
+    //       nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
+    //         .licenseThreatGroupName
+    //     );
+    //   } else {
+    //     return <NxLoadingSpinner />;
+    //   }
+    // };
 }
 
 export default function LicenseThreat() {
     const extensionContext = useContext(ExtensionConfigurationContext)
 
-    return (
-        <div>
-            {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
-                <LicenseThreatIndicator/>
-            )}
-        </div>
-    )
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <LicenseThreatIndicator />}</div>
 }

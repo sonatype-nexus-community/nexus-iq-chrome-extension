@@ -13,61 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxDescriptionList, NxH3} from '@sonatype/react-shared-components'
-import React, {useContext} from 'react'
-import {
-  ExtensionConfigurationContext,
-  ExtensionPopupContext,
-} from '../../../../../context/NexusContext'
-import {DATA_SOURCE, REMEDIATION_LABELS} from '../../../../../utils/Constants'
+import { NxDescriptionList, NxH3 } from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
+import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../../context/NexusContext'
+import { DATA_SOURCE, REMEDIATION_LABELS } from '../../../../../utils/Constants'
 import './RemediationDetails.css'
-import {getNewUrlandGo} from '../../../../../utils/Helpers'
+import { getNewUrlandGo } from '../../../../../utils/Helpers'
 
 function IqRemediationDetails() {
-  const popupContext = useContext(ExtensionPopupContext)
-  const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
-  const currentPurlVersion:string = popupContext.currentPurl?.version as string
+    const popupContext = useContext(ExtensionPopupContext)
+    const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
+    const currentPurlVersion: string = popupContext.currentPurl?.version as string
 
-  return (
-      <React.Fragment>
-        {versionChanges && versionChanges.length > 0 && (
-          <NxH3>Recommended Versions</NxH3>
-        )}
+    return (
+        <React.Fragment>
+            {versionChanges && versionChanges.length > 0 && <NxH3>Recommended Versions</NxH3>}
 
-        <NxDescriptionList
-          emptyMessage={"No recommended versions available."}>
-        {versionChanges?.map((change, id) => {
-          const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
-          if (change !== undefined) {
-            return (
-                <NxDescriptionList.ButtonItem 
-                    onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}
-                      key={id}
-                      term={REMEDIATION_LABELS[change.type as string]}
-                      description={
-                        change.data?.component?.componentIdentifier?.coordinates
-                            ? change.data.component.componentIdentifier.coordinates.version
-                            : 'UNKNOWN'
-                      }
-                  />
-            )
-          }
-        })}
-      </NxDescriptionList>
-      
-      </React.Fragment>
-  )
+            <NxDescriptionList emptyMessage={'No recommended versions available.'}>
+                {versionChanges?.map((change, id) => {
+                    const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
+                    if (change !== undefined) {
+                        return (
+                            <NxDescriptionList.ButtonItem
+                                onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}
+                                key={id}
+                                term={REMEDIATION_LABELS[change.type as string]}
+                                description={
+                                    change.data?.component?.componentIdentifier?.coordinates
+                                        ? change.data.component.componentIdentifier.coordinates.version
+                                        : 'UNKNOWN'
+                                }
+                            />
+                        )
+                    }
+                })}
+            </NxDescriptionList>
+        </React.Fragment>
+    )
 }
 
 export default function RemediationDetails() {
-  const extensionContext = useContext(ExtensionConfigurationContext)
+    const extensionContext = useContext(ExtensionConfigurationContext)
 
-  return (
-      <div>
-        {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
-            <IqRemediationDetails/>
-        )}
-      </div>
-  )
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqRemediationDetails />}</div>
 }
-

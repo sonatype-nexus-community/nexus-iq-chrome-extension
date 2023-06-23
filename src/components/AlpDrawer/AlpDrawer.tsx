@@ -13,37 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxDrawer} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
-import {NexusContext} from '../../context/NexusContext';
-import AdvancedLegalDisplay from '../Popup/IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay';
+import { NxDrawer } from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
+import { NexusContext } from '../../context/NexusContext'
+import AdvancedLegalDisplay from '../Popup/IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay'
 
 const AlpDrawer = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+    const nexusContext = useContext(NexusContext)
 
-  return (
-    <NxDrawer
-      id="nx-drawer-legal"
-      open={nexusContext.showAlpDrawer}
-      onClose={nexusContext.toggleAlpDrawer}
-      aria-labelledby="drawer-legal-title"
-    >
-      <NxDrawer.Header>
-        <NxDrawer.HeaderTitle id="drawer-legal-title">
-          <span>
-                  <img
-                      src="/images/add-on-sonatype-icon-logoblue.png"
-                      className="nx-popup-logo"
-                      alt="Powered by Advanced Legal Pack"
-                  />
-                </span>
-          <span>&nbsp;&nbsp;Advanced Legal Pack</span></NxDrawer.HeaderTitle>
-      </NxDrawer.Header>
-      <NxDrawer.Content tabIndex={0}>
-        <AdvancedLegalDisplay />
-      </NxDrawer.Content>
-    </NxDrawer>
-  );
-};
+    return (
+        <NxDrawer
+            id='nx-drawer-legal'
+            open={nexusContext.showAlpDrawer}
+            onClose={nexusContext.toggleAlpDrawer}
+            aria-labelledby='drawer-legal-title'
+        >
+            <NxDrawer.Header>
+                <NxDrawer.HeaderTitle id='drawer-legal-title'>
+                    <span>
+                        <img
+                            src='/images/add-on-sonatype-icon-logoblue.png'
+                            className='nx-popup-logo'
+                            alt='Powered by Advanced Legal Pack'
+                        />
+                    </span>
+                    <span>&nbsp;&nbsp;Advanced Legal Pack</span>
+                </NxDrawer.HeaderTitle>
+            </NxDrawer.Header>
+            <NxDrawer.Content tabIndex={0}>
+                <AdvancedLegalDisplay />
+            </NxDrawer.Content>
+        </NxDrawer>
+    )
+}
 
-export default AlpDrawer;
+export default AlpDrawer

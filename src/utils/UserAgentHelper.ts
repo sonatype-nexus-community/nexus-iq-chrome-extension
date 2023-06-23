@@ -16,11 +16,11 @@
 const extension = chrome.runtime.getManifest()
 
 export class UserAgentHelper {
-  public static getUserAgent(): string {
-    return `${UserAgentHelper.nameToUserAgentProduct(extension.name)}/${extension.version}`
-  }
+    public static getUserAgent(): string {
+        return `${UserAgentHelper.nameToUserAgentProduct(extension.name)}/${extension.version}`
+    }
 
-  private static nameToUserAgentProduct(name: string): string {
-    return name.toLowerCase().replaceAll(' ', '_')
-  }
+    private static nameToUserAgentProduct(name: string): string {
+        return name.toLowerCase().replaceAll(' ', '_')
+    }
 }

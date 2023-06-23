@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {describe, expect, test} from '@jest/globals';
-import {SecurityData, SecurityIssue, sortSecurityIssues} from './ArtifactMessage';
+import { describe, expect, test } from '@jest/globals'
+import { SecurityData, SecurityIssue, sortSecurityIssues } from './ArtifactMessage'
 const securityDataRaw = `{
     "securityData": {
         "securityIssues": [
@@ -55,20 +55,17 @@ const securityDataRaw = `{
             }
         ]
     }
-}`;
+}`
 
 describe('Artifact Message Test', () => {
-  test('should sort security issues', () => {
-    const securityData: SecurityData = JSON.parse(securityDataRaw).securityData;
-    // console.trace("securityData",  securityData.securityIssues);
-    const sortedIssues: SecurityIssue[] = sortSecurityIssues(securityData.securityIssues);
-    expect(sortedIssues).toBeDefined();
-    expect(sortedIssues[0].severity).toBeGreaterThanOrEqual(
-      sortedIssues[sortedIssues.length - 1].severity
-    );
-    expect(sortedIssues[0].severity).toBe(9.8);
-    expect(sortedIssues.length).toBe(5);
-    expect(sortedIssues[sortedIssues.length - 1].severity).toBe(5.3);
-
-  });
-});
+    test('should sort security issues', () => {
+        const securityData: SecurityData = JSON.parse(securityDataRaw).securityData
+        // console.trace("securityData",  securityData.securityIssues);
+        const sortedIssues: SecurityIssue[] = sortSecurityIssues(securityData.securityIssues)
+        expect(sortedIssues).toBeDefined()
+        expect(sortedIssues[0].severity).toBeGreaterThanOrEqual(sortedIssues[sortedIssues.length - 1].severity)
+        expect(sortedIssues[0].severity).toBe(9.8)
+        expect(sortedIssues.length).toBe(5)
+        expect(sortedIssues[sortedIssues.length - 1].severity).toBe(5.3)
+    })
+})

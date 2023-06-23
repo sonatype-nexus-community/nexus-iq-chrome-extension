@@ -15,35 +15,35 @@
  */
 //https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/
 //"purl": "pkg:maven/com.mycompany.myproduct/artifact-name@2.1.7",
-import {PackageURL} from 'packageurl-js';
-import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
-import {generatePackageURLComplete} from './PurlUtils';
+import { PackageURL } from 'packageurl-js'
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
+import { generatePackageURLComplete } from './PurlUtils'
 
 //pkg:type/namespace/name@version?qualifiers#subpath
 //Sonatype expects: "packageUrl": "pkg:maven/org.yaml/snakeyaml@1.17?type=jar"
 const parseMavenApache = (url: string): PackageURL | undefined => {
-  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.repoMavenApacheOrg)
-  console.debug('*** REPO TYPE: ', repoType)
-  if (repoType) {
-    if (repoType.pathRegex) {
-      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-      console.debug(pathResult?.groups)      
-      if (pathResult && pathResult.groups) {
-        return generatePackageURLComplete(
-          FORMATS.maven, 
-          encodeURIComponent(pathResult.groups.artifactId), 
-          encodeURIComponent(pathResult.groups.version), 
-          encodeURIComponent(pathResult.groups.groupId), 
-          {type: 'jar'}, 
-          undefined
-        )
-      }
+    const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.repoMavenApacheOrg)
+    console.debug('*** REPO TYPE: ', repoType)
+    if (repoType) {
+        if (repoType.pathRegex) {
+            const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+            console.debug(pathResult?.groups)
+            if (pathResult && pathResult.groups) {
+                return generatePackageURLComplete(
+                    FORMATS.maven,
+                    encodeURIComponent(pathResult.groups.artifactId),
+                    encodeURIComponent(pathResult.groups.version),
+                    encodeURIComponent(pathResult.groups.groupId),
+                    { type: 'jar' },
+                    undefined
+                )
+            }
+        }
+    } else {
+        console.error('Unable to determine REPO TYPE.')
     }
-  } else {
-    console.error('Unable to determine REPO TYPE.')
-  }
-  
-  return undefined;
-};
 
-export {parseMavenApache};
+    return undefined
+}
+
+export { parseMavenApache }

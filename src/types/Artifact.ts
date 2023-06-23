@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {PackageURL} from 'packageurl-js';
+import { PackageURL } from 'packageurl-js'
 
 export class Artifact {
-  constructor(
-    readonly format: string,
-    readonly hash: string | undefined | null,
-    readonly datasource: string,
-    readonly name: string,
-    readonly version: string
-  ) {}
+    constructor(
+        readonly format: string,
+        readonly hash: string | undefined | null,
+        readonly datasource: string,
+        readonly name: string,
+        readonly version: string
+    ) {}
 
-  public display(): string {
-    return this.format;
-  }
+    public display(): string {
+        return this.format
+    }
 
-  public toPurl(): string {
-    return new PackageURL(
-      this.format,
-      undefined,
-      this.name,
-      this.version,
-      undefined,
-      undefined
-    ).toString();
-  }
+    public toPurl(): string {
+        return new PackageURL(this.format, undefined, this.name, this.version, undefined, undefined).toString()
+    }
 }

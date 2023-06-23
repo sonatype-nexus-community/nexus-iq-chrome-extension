@@ -13,67 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {LogLevel} from '@sonatype/js-sona-types';
-import {
-  NxFormGroup,
-  NxFormSelect,
-  nxFormSelectStateHelpers
-} from '@sonatype/react-shared-components';
-import React, {useEffect, useState} from 'react';
+import { LogLevel } from '@sonatype/js-sona-types'
+import { NxFormGroup, NxFormSelect, nxFormSelectStateHelpers } from '@sonatype/react-shared-components'
+import React, { useEffect, useState } from 'react'
 
-const LOG_LEVEL = 'logLevel';
+const LOG_LEVEL = 'logLevel'
 
 const GeneralOptionsPage = (): JSX.Element | null => {
-  const [logLevel, setLogLevel] = nxFormSelectStateHelpers.useNxFormSelectState<number>(
-    LogLevel.ERROR
-  );
-  const [loading, setLoading] = useState(true);
+    const [logLevel, setLogLevel] = nxFormSelectStateHelpers.useNxFormSelectState<number>(LogLevel.ERROR)
+    const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+    useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        chrome.storage.local.get((items: { [key: string]: any }) => {
+            if (items[LOG_LEVEL] !== undefined) {
+                setLogLevel(items[LOG_LEVEL])
+            }
+            setLoading(false)
+        })
+        // eslint-disable-next-line
+    }, [logLevel])
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    chrome.storage.local.get((items: {[key: string]: any}) => {
-      if (items[LOG_LEVEL] !== undefined) {
-        setLogLevel(items[LOG_LEVEL]);
-      }
-      setLoading(false);
-    });
-    // eslint-disable-next-line
-  }, [logLevel]);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const setItem = (func: any, event: any, key: string) => {
-    console.log(event.target.value);
-    func(parseInt(event.target.value));
-    chrome.storage.local.set({[key]: parseInt(event.target.value)});
-  };
-
-  const renderOptions = () => {
-    if (!loading) {
-      return (
-        <form className="nx-form">
-          <NxFormGroup label={`Extension Log Level`} isRequired>
-            <NxFormSelect
-              onChange={(event) => setItem(setLogLevel, event, LOG_LEVEL)}
-              {...logLevel}
-            >
-              {Object.keys(LogLevel)
-                .filter((key) => !isNaN(Number(LogLevel[key])))
-                .map((val, key) => {
-                  return (
-                    <option key={key} value={key}>
-                      {LogLevel[key]}
-                    </option>
-                  );
-                })}
-            </NxFormSelect>
-          </NxFormGroup>
-        </form>
-      );
+    const setItem = (func: any, event: any, key: string) => {
+        console.log(event.target.value)
+        func(parseInt(event.target.value))
+        chrome.storage.local.set({ [key]: parseInt(event.target.value) })
     }
-    return null;
-  };
 
-  return renderOptions();
-};
+    const renderOptions = () => {
+        if (!loading) {
+            return (
+                <form className='nx-form'>
+                    <NxFormGroup label={`Extension Log Level`} isRequired>
+                        <NxFormSelect onChange={(event) => setItem(setLogLevel, event, LOG_LEVEL)} {...logLevel}>
+                            {Object.keys(LogLevel)
+                                .filter((key) => !isNaN(Number(LogLevel[key])))
+                                .map((val, key) => {
+                                    return (
+                                        <option key={key} value={key}>
+                                            {LogLevel[key]}
+                                        </option>
+                                    )
+                                })}
+                        </NxFormSelect>
+                    </NxFormGroup>
+                </form>
+            )
+        }
+        return null
+    }
 
-export default GeneralOptionsPage;
+    return renderOptions()
+}
+
+export default GeneralOptionsPage

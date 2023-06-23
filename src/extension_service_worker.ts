@@ -15,22 +15,36 @@
  */
 /// <reference lib="webworker" />
 
-import 'node-window-polyfill/register'; // New line ensures this Polyfill is first!
+import 'node-window-polyfill/register' // New line ensures this Polyfill is first!
 
 // import {
 //   ComponentDetails
 // } from '@sonatype/js-sona-types';
 // import localforage from 'localforage';
 // import {PackageURL} from 'packageurl-js';
-import { logger, LogLevel } from './logger/Logger';
+import { logger, LogLevel } from './logger/Logger'
 import { findRepoType } from './utils/UrlParsing'
 
-import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse, MessageResponseFunction } from './types/Message'
-import { requestComponentEvaluationByPurls, getApplications, pollForComponentEvaluationResult } from './messages/IqMessages'
-import { ApiComponentEvaluationRequestDTOV2, ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from '@sonatype/nexus-iq-api-client';
+import {
+    MESSAGE_REQUEST_TYPE,
+    MESSAGE_RESPONSE_STATUS,
+    MessageRequest,
+    MessageResponse,
+    MessageResponseFunction,
+} from './types/Message'
+import {
+    requestComponentEvaluationByPurls,
+    getApplications,
+    pollForComponentEvaluationResult,
+} from './messages/IqMessages'
+import {
+    ApiComponentEvaluationRequestDTOV2,
+    ApiComponentEvaluationResultDTOV2,
+    ApiComponentEvaluationTicketDTOV2,
+} from '@sonatype/nexus-iq-api-client'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser;
+const _browser: any = chrome ? chrome : browser
 
 // const handleURLOSSIndex = (purl: string, settings: Settings): Promise<ComponentDetails> => {
 //   const manifestData = chrome.runtime.getManifest();
@@ -61,7 +75,6 @@ const _browser: any = chrome ? chrome : browser;
 //       });
 //   });
 // };
-
 
 // const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
 //   handleURLOSSIndex(purl, settings)
@@ -132,7 +145,7 @@ const _browser: any = chrome ? chrome : browser;
 //         componentDetails: details
 //       }, (response) => {
 //         if (chrome.runtime.lastError) {
-//           console.error('Error in getActiveTabId 1') 
+//           console.error('Error in getActiveTabId 1')
 //         }
 //       });
 //     })
@@ -145,7 +158,7 @@ const _browser: any = chrome ? chrome : browser;
 //   return new Promise((resolve, reject) => {
 //     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
 //       if (chrome.runtime.lastError) {
-//         console.error('Error in getActiveTabId 2') 
+//         console.error('Error in getActiveTabId 2')
 //       }
 
 //       const tab = tabs.length > 0 ? tabs[0] : undefined;
@@ -158,8 +171,6 @@ const _browser: any = chrome ? chrome : browser;
 //     });
 //   });
 // };
-
-
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -207,121 +218,132 @@ const _browser: any = chrome ? chrome : browser;
 
 /**
  * New listener for messages received by Service Worker.
- * 
+ *
  */
 _browser.runtime.onMessage.addListener(handle_message_received)
 
 /**
  * New (asynchronous) handler for processing messages received.
- * 
+ *
  * This always returns True to cause handling to be asynchronous.
  */
-function handle_message_received(request: MessageRequest, sender: chrome.runtime.MessageSender | browser.runtime.MessageSender, sendResponse: MessageResponseFunction): boolean {
-  logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
+function handle_message_received(
+    request: MessageRequest,
+    sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
+    sendResponse: MessageResponseFunction
+): boolean {
+    logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
 
-  switch (request.type) {
-    case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
-      getApplications(request).then((response) => {
-        sendResponse(response)
-      })
-      break
-    case MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS:
-      requestComponentEvaluationByPurls(request).then((response) => {
-        logger.logMessage(`Response to Poll for Results: ${response}`, LogLevel.DEBUG)
-        sendResponse(response)
-      })
-      break
-  }
+    switch (request.type) {
+        case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
+            getApplications(request).then((response) => {
+                sendResponse(response)
+            })
+            break
+        case MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS:
+            requestComponentEvaluationByPurls(request).then((response) => {
+                logger.logMessage(`Response to Poll for Results: ${response}`, LogLevel.DEBUG)
+                sendResponse(response)
+            })
+            break
+    }
 
-  return true
+    return true
 }
 
 /**
  * Handler for Install Event for our Extension
  */
 _browser.runtime.onInstalled.addListener((details) => {
-  if (details.reason === 'install') {   
-    _browser.tabs.create({url: 'options.html?install'}, (tab) => {
-      if (chrome.runtime.lastError || browser.runtime.lastError) {
-        console.error('Error in install handler opening tab')
-      }
-    })
-  }
+    if (details.reason === 'install') {
+        _browser.tabs.create({ url: 'options.html?install' }, (tab) => {
+            if (chrome.runtime.lastError || browser.runtime.lastError) {
+                console.error('Error in install handler opening tab')
+            }
+        })
+    }
 })
 
 function enableDisableExtensionForUrl(url: string, tabId: number): void {
-  /**
-   * Check if URL matches an ecosystem we support, and only then do something
-   * 
-   */
-  const repoType = findRepoType(url)
+    /**
+     * Check if URL matches an ecosystem we support, and only then do something
+     *
+     */
+    const repoType = findRepoType(url)
 
-  /**
-   * Make sure we get a valid PURL before we ENABLE - this may require DOM access (via Message)
-   */
+    /**
+     * Make sure we get a valid PURL before we ENABLE - this may require DOM access (via Message)
+     */
 
-  if (repoType !== undefined) {
-    // We support this Repository!
-    logger.logMessage(`Enabling Sonatype Browser Extension for ${url}`, LogLevel.DEBUG)
-    _browser.tabs.sendMessage(tabId, {
-      "type": MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE,
-      "params": {
-        "tabId": tabId,
-        "url": url
-      }
-    }, (response) => {
-      if (chrome.runtime.lastError) {
-        console.error('ERROR in here', chrome.runtime.lastError.message, response)
-      }
-      logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
-      if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-        _browser.action.enable(tabId, () => {
-        chrome.action.setIcon({
-          tabId: tabId,
-          path: '/images/sonatype-lifecycle-icon-white-32x32.png'
-        })})
-        console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
-          /**
-           * @todo Get the policy/security threat level and update the
-           */
-        
-      } else {
-        logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Could not determine PURL.`, LogLevel.DEBUG)
+    if (repoType !== undefined) {
+        // We support this Repository!
+        logger.logMessage(`Enabling Sonatype Browser Extension for ${url}`, LogLevel.DEBUG)
+        _browser.tabs.sendMessage(
+            tabId,
+            {
+                type: MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE,
+                params: {
+                    tabId: tabId,
+                    url: url,
+                },
+            },
+            (response) => {
+                if (chrome.runtime.lastError) {
+                    console.error('ERROR in here', chrome.runtime.lastError.message, response)
+                }
+                logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
+                if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+                    _browser.action.enable(tabId, () => {
+                        chrome.action.setIcon({
+                            tabId: tabId,
+                            path: '/images/sonatype-lifecycle-icon-white-32x32.png',
+                        })
+                    })
+                    console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
+                    /**
+                     * @todo Get the policy/security threat level and update the
+                     */
+                } else {
+                    logger.logMessage(
+                        `Disabling Sonatype Browser Extension for ${url} - Could not determine PURL.`,
+                        LogLevel.DEBUG
+                    )
+                    chrome.action.disable(tabId, () => {
+                        /**
+                         * @todo Change Extension ICON
+                         */
+                        console.log('Sonatype Extension DISABLED for ', url)
+                    })
+                }
+            }
+        )
+    } else {
+        logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Not a supported Registry.`, LogLevel.DEBUG)
         chrome.action.disable(tabId, () => {
-          /**
-           * @todo Change Extension ICON
-           */
-          console.log('Sonatype Extension DISABLED for ', url)
+            /**
+             * @todo Change Extension ICON
+             */
+            console.log('Sonatype Extension DISABLED for ', url)
         })
-      }
-    })
-  } else {
-    logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Not a supported Registry.`, LogLevel.DEBUG)
-    chrome.action.disable(tabId, () => {
-      /**
-       * @todo Change Extension ICON
-       */
-      console.log('Sonatype Extension DISABLED for ', url)
-    })
-  }
+    }
 }
 
 /**
  * Fired when the current tab changes, but the tab may itself not change
  */
-chrome.tabs.onActivated.addListener(({tabId, windowId}) => {
-  chrome.tabs.get(tabId, (tab) => {
-    if (tab.url !== undefined) {
-      enableDisableExtensionForUrl(tab.url, tabId)
-    }
-  })
+chrome.tabs.onActivated.addListener(({ tabId, windowId }) => {
+    chrome.tabs.get(tabId, (tab) => {
+        if (tab.url !== undefined) {
+            enableDisableExtensionForUrl(tab.url, tabId)
+        }
+    })
 })
 
 /**
  * This is fired for every tab on every update - we should filter before sending a message - this is carnage!
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status == 'complete' && tab.active && tab.url !== undefined) {
-    enableDisableExtensionForUrl(tab.url, tabId)
-  }
+    if (changeInfo.status == 'complete' && tab.active && tab.url !== undefined) {
+        enableDisableExtensionForUrl(tab.url, tabId)
+    }
 })
