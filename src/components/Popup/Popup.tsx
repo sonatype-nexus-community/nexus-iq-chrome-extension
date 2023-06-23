@@ -15,7 +15,7 @@
  */
 // import {Puff} from '@agney/react-loading'
 import { NxTab, NxTabList, NxTabPanel, NxTabs, NxP, NxFooter } from '@sonatype/react-shared-components'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../context/NexusContext'
 import { DATA_SOURCE } from '../../utils/Constants'
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage'
@@ -215,23 +215,7 @@ function IqPopup() {
             <React.Fragment>
                 <div className='nx-page-content'>
                     <main className='nx-page-main'>
-                        {/* <div className='nx-page-header'>
-          <h2 className="nx-h2">
-                <img
-                  src="/images/sonatype-lifecycle-icon-48x48.png"
-                  className="nx-popup-logo"
-                  alt="Sonatype Lifecycle - Component Details"
-                />
-                &nbsp;Sonatype Lifecycle - Component Details
-              </h2>
-            </div> */}
                         <section className='nx-tile'>
-                            {/* <header className="nx-tile-header">
-            <div className="nx-tile-header__title">
-          
-            </div>
-          </header> */}
-
                             <div className='nx-tile-subsection nx-viewport-sized__container'>
                                 {/*<NxTextInput type="textarea" value={JSON.stringify(popupContext.iq)} isPristine={true}/>*/}
 
@@ -293,5 +277,10 @@ function IqPopup() {
 
 export default function Popup() {
     const extensionContext = useContext(ExtensionConfigurationContext)
+
+    useEffect(() => {
+        console.log(`Popup: ${extensionContext}`)
+    })
+
     return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}</div>
 }

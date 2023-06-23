@@ -148,6 +148,7 @@ export default function ExtensionPopup() {
                     .finally(() => {
                         logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
                         stopPolling()
+
                         /**
                          * Get additional detail about this Component Version
                          *
