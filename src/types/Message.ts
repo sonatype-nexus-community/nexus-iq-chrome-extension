@@ -21,6 +21,7 @@ export enum MESSAGE_REQUEST_TYPE {
     CALCULATE_PURL_FOR_PAGE = 'calculatePurlForPage',
     GET_APPLICATIONS = 'getApplications',
     GET_COMPONENT_DETAILS = 'getComponentDetails',
+    GET_COMPONENT_LEGAL_DETAILS = 'getComponentLegalDetails',
     GET_COMPONENT_VERSIONS = 'getComponentVersions',
     GET_REMEDIATION_DETAILS_FOR_COMPONENT = 'getRemediationDetailsForComponent',
     GET_SETTINGS = 'readExtensionConfiguration',

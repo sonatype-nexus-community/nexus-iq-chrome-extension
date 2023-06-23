@@ -14,39 +14,37 @@
  * limitations under the License.
  */
 
-import {IqApplicationResponse, IqRequestService, LogLevel, TestLogger} from "@sonatype/js-sona-types";
 import {
-  NxFormGroup,
-  NxGrid,
-  NxStatefulErrorAlert,
-  NxStatefulSuccessAlert,
-  NxStatefulTextInput,
-  NxTooltip,
-  NxFontAwesomeIcon,
-  NxFormSelect,
-  NxButton
-} from '@sonatype/react-shared-components';
-import React, {useEffect, useState, FormEvent, useContext} from 'react';
-import {DATA_SOURCE, DATA_SOURCES} from '../../../utils/Constants';
-import './IQServerOptionsPage.css';
-import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
-import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+    NxFormGroup,
+    NxGrid,
+    NxStatefulErrorAlert,
+    NxStatefulSuccessAlert,
+    NxStatefulTextInput,
+    NxTooltip,
+    NxFontAwesomeIcon,
+    NxFormSelect,
+    NxButton,
+} from '@sonatype/react-shared-components'
+import React, { useEffect, useState, useContext } from 'react'
+import './IQServerOptionsPage.css'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-import { MessageRequest, MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from "../../../types/Message";
-import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from "../../../types/ExtensionConfiguration";
-import { ExtensionConfigurationContext } from "../../../context/NexusContext";
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from '../../../types/Message'
+import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../../types/ExtensionConfiguration'
+import { ExtensionConfigurationContext } from '../../../context/NexusContext'
 import { isHttpUriValidator, nonEmptyValidator } from '../../Common/Validators'
-import { logger } from "../../../logger/Logger";
-import { ApiApplicationDTO } from "@sonatype/nexus-iq-api-client";
+import { logger, LogLevel } from '../../../logger/Logger'
+import { ApiApplicationDTO } from '@sonatype/nexus-iq-api-client'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser;
+const _browser: any = chrome ? chrome : browser
 
-const IQ_SERVER_URL = 'iqServerURL';
-const IQ_SERVER_USER = 'iqServerUser';
-const IQ_SERVER_TOKEN = 'iqServerToken';
-const IQ_SERVER_APPLICATION = 'iqServerApplication';
-const SCAN_TYPE = 'scanType';
+const IQ_SERVER_URL = 'iqServerURL'
+const IQ_SERVER_USER = 'iqServerUser'
+const IQ_SERVER_TOKEN = 'iqServerToken'
+const IQ_SERVER_APPLICATION = 'iqServerApplication'
+const SCAN_TYPE = 'scanType'
 
 // const IQServerOptionsPage = (): JSX.Element | null => {
 
@@ -182,7 +180,7 @@ const SCAN_TYPE = 'scanType';
 //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 //   const setItem = (setter: any, value: string, key: string) => {
 //     console.info('setItem: ', key, value);
-    
+
 //     _browser.runtime.sendMessage({
 //       type: MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
 //       params: {
@@ -193,7 +191,7 @@ const SCAN_TYPE = 'scanType';
 //         iqApplicationId: iqServerApplication
 //       }
 //     })
-    
+
 //     // setter(value);
 //     // chrome.storage.local.set({[key]: value}, () => {
 //     //   if (chrome.runtime.lastError) {
@@ -366,7 +364,6 @@ const SCAN_TYPE = 'scanType';
 //                 </React.Fragment>
 //               )}
 
-
 //                 {loggedIn && (
 //                   <NxStatefulSuccessAlert>
 //                     Congrats! You are able to sign in to your Sonatype IQ Server!  If you need to choose
@@ -391,187 +388,205 @@ const SCAN_TYPE = 'scanType';
 // };
 
 export interface IqServerOptionsPageInterface {
-  setExtensionConfig: (settings: ExtensionConfiguration) => void
+    setExtensionConfig: (settings: ExtensionConfiguration) => void
 }
 
 export default function IQServerOptionsPage(props: IqServerOptionsPageInterface) {
-  const extensionSettings = useContext(ExtensionConfigurationContext)
-  const [hasPermissions, setHasPermission] = useState(false)
-  const [iqAuthenticated, setIqAuthenticated] = useState<boolean|undefined>()
-  const [iqServerApplicationList, setiqServerApplicationList] = useState([])
-  const setExtensionConfig = props.setExtensionConfig
+    const extensionSettings = useContext(ExtensionConfigurationContext)
+    const [hasPermissions, setHasPermission] = useState(false)
+    const [iqAuthenticated, setIqAuthenticated] = useState<boolean | undefined>()
+    const [iqServerApplicationList, setiqServerApplicationList] = useState([])
+    const setExtensionConfig = props.setExtensionConfig
 
-  /**
-   * Hook to check whether we already have permissions to IQ Server Host
-   */
-  useEffect(() => {
-    if (extensionSettings.host !== undefined) {
-      hasOriginPermission()
-    }
-  })
-
-  /**
-   * Request permission to IQ Server Host
-   */
-  const askForPermissions = () => {
-    logger.logMessage(`Requesting Browser Permission to Origin: '${extensionSettings?.host}'`, LogLevel.INFO)
-
-    if (extensionSettings.host !== undefined) {
-      logger.logMessage(`Requesting permission to Origin ${extensionSettings.host}`, LogLevel.DEBUG)
-      _browser.permissions.request({
-        'origins': [extensionSettings.host]
-      }, (granted) => {
-        console.log('Response from Permission Request', granted)
-        setHasPermission((granted as boolean))
-      })
-    }
-  }
-
-  function hasOriginPermission() {
-    if (extensionSettings.host !== undefined && isHttpUriValidator(extensionSettings.host)) {
-      chrome.permissions.contains({
-        origins: [extensionSettings.host]
-      }, (result) => {
-        if (chrome.runtime.lastError) {
-          console.log('Error in hasOriginPermission', chrome.runtime.lastError.message)
+    /**
+     * Hook to check whether we already have permissions to IQ Server Host
+     */
+    useEffect(() => {
+        if (extensionSettings.host !== undefined) {
+            hasOriginPermission()
         }
-        if (result) {
-          setHasPermission(true)
-        } else {
-          setHasPermission(false)
-        }
-      })
-    }
-  }
-
-  /**
-   * Field onChange Handlers
-   */
-  function handleIqHostChange(e) {
-    const newExtensionSettings = (extensionSettings !== undefined) ? extensionSettings : DEFAULT_EXTENSION_SETTINGS
-    newExtensionSettings.host = (e as string).endsWith('/') ? e : `${e}/`
-    setExtensionConfig(newExtensionSettings)
-    hasOriginPermission()
-  }
-
-  function handleIqTokenChange(e) {
-    const newExtensionSettings = (extensionSettings as ExtensionConfiguration)
-    newExtensionSettings.token = (e as string)
-    setExtensionConfig(newExtensionSettings)
-  }
-
-  function handleIqUserChange(e) {
-    const newExtensionSettings = (extensionSettings as ExtensionConfiguration)
-    newExtensionSettings.user = (e as string)
-    setExtensionConfig(newExtensionSettings)
-  }
-
-  function handleIqApplicationChange(e) {
-    const newExtensionSettings = (extensionSettings as ExtensionConfiguration)
-    newExtensionSettings.iqApplicationInternalId = (e.target.value as string)
-    setExtensionConfig(newExtensionSettings)
-  }
-
-  function handleLoginCheck() {
-    _browser.runtime.sendMessage({
-      type: MESSAGE_REQUEST_TYPE.GET_APPLICATIONS
-    }, (response) => {
-      if (chrome.runtime.lastError) {
-        logger.logMessage('Error handleLoginCheck', LogLevel.ERROR)
-      }
-      if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-        setIqAuthenticated(true)    
-        setiqServerApplicationList(response.data.applications)
-      } else {
-        setIqAuthenticated(false)    
-        setiqServerApplicationList([])
-      }
     })
-  }
 
-  return (
-    <React.Fragment>
-      <NxGrid.Row>
-        <section className="nx-grid-col nx-grid-col--100">
-          <p className="nx-p">
-            <strong>1)</strong> Enter the URL for the Sonatype IQ Server and grant the permissions needed for the extension to communicate with the Sonatype IQ Server.
-          </p>
+    /**
+     * Request permission to IQ Server Host
+     */
+    const askForPermissions = () => {
+        logger.logMessage(`Requesting Browser Permission to Origin: '${extensionSettings?.host}'`, LogLevel.INFO)
 
-          <div className="nx-form-row">
-            <NxFormGroup label={`URL`} isRequired>
-              <NxStatefulTextInput defaultValue={extensionSettings.host} 
-                placeholder="https://your-iq-server-url"
-                validator={nonEmptyValidator}
-                onChange={handleIqHostChange}
-              />
-          </NxFormGroup>
-          {!hasPermissions && (
-            <button className="nx-btn grant-permissions" onClick={askForPermissions}>
-              Grant Permissions to your Sonatype IQ Server
-            </button>
-          )}
-          </div>
-            
-          {hasPermissions && (
-            <div>
-              <p className="nx-p">
-                <strong>2)</strong> Provide your username and token for the Sonatype IQ Server.  Then connect to
-                retrieve the list of applications available.
-              </p>
-              <div className="nx-form-row">
-                <NxFormGroup label={`Username`} isRequired>
-                <NxStatefulTextInput defaultValue={extensionSettings?.user} validator={nonEmptyValidator}
-                  onChange={handleIqUserChange}
-                />
-                </NxFormGroup>
-                <NxFormGroup label={`Token`} isRequired>
-                <NxStatefulTextInput defaultValue={extensionSettings?.token} validator={nonEmptyValidator}
-                  type="password" onChange={handleIqTokenChange}
-                />
-                </NxFormGroup>
-                <NxButton variant="primary" onClick={handleLoginCheck}>Connect</NxButton>
-              </div>
-            </div>
-          )}
-          { iqAuthenticated === true && iqServerApplicationList.length > 0 && (
-            <React.Fragment>
-              <p className="nx-p">
-                <strong>3)</strong> Choose the Sonatype Lifecycle Application.
-                <NxTooltip title="The application policies that components will be evaluated against.">
-                  <NxFontAwesomeIcon icon={faQuestionCircle as IconDefinition} />
-                </NxTooltip>
+        if (extensionSettings.host !== undefined) {
+            logger.logMessage(`Requesting permission to Origin ${extensionSettings.host}`, LogLevel.DEBUG)
+            _browser.permissions.request(
+                {
+                    origins: [extensionSettings.host],
+                },
+                (granted) => {
+                    console.log('Response from Permission Request', granted)
+                    setHasPermission(granted as boolean)
+                }
+            )
+        }
+    }
 
-              </p>
+    function hasOriginPermission() {
+        if (extensionSettings.host !== undefined && isHttpUriValidator(extensionSettings.host)) {
+            chrome.permissions.contains(
+                {
+                    origins: [extensionSettings.host],
+                },
+                (result) => {
+                    if (chrome.runtime.lastError) {
+                        console.log('Error in hasOriginPermission', chrome.runtime.lastError.message)
+                    }
+                    if (result) {
+                        setHasPermission(true)
+                    } else {
+                        setHasPermission(false)
+                    }
+                }
+            )
+        }
+    }
 
-              <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
-                <NxFormSelect defaultValue={extensionSettings.iqApplicationInternalId} 
-                  onChange={handleIqApplicationChange} 
-                  disabled={!iqAuthenticated} >
-                  {iqServerApplicationList.map((app: ApiApplicationDTO) => {
-                    return (
-                        <option key={app.publicId} value={app.id}>{app.name}</option>
-                    )
-                  })}
-                </NxFormSelect>
-              </NxFormGroup>
-            </React.Fragment>
-          )}
+    /**
+     * Field onChange Handlers
+     */
+    function handleIqHostChange(e) {
+        const newExtensionSettings = extensionSettings !== undefined ? extensionSettings : DEFAULT_EXTENSION_SETTINGS
+        newExtensionSettings.host = (e as string).endsWith('/') ? e : `${e}/`
+        setExtensionConfig(newExtensionSettings)
+        hasOriginPermission()
+    }
 
+    function handleIqTokenChange(e) {
+        const newExtensionSettings = extensionSettings as ExtensionConfiguration
+        newExtensionSettings.token = e as string
+        setExtensionConfig(newExtensionSettings)
+    }
 
-            {iqAuthenticated === true && (
-              <NxStatefulSuccessAlert>
-                Congrats! You are able to sign in to your Sonatype IQ Server!  If you need to choose
-                an application, do so now.
-              </NxStatefulSuccessAlert>
-            )}
-            {iqAuthenticated === false && (
-              <NxStatefulErrorAlert>
-                There was an error signing in, it looks like
-              </NxStatefulErrorAlert>
-            )}
-          
-        </section>
-      </NxGrid.Row>
-    </React.Fragment>
-  );
+    function handleIqUserChange(e) {
+        const newExtensionSettings = extensionSettings as ExtensionConfiguration
+        newExtensionSettings.user = e as string
+        setExtensionConfig(newExtensionSettings)
+    }
+
+    function handleIqApplicationChange(e) {
+        const newExtensionSettings = extensionSettings as ExtensionConfiguration
+        const [iqApplicationInternalId, iqApplicationPublidId] = (e.target.value as string).split('|')
+        newExtensionSettings.iqApplicationInternalId = iqApplicationInternalId
+        newExtensionSettings.iqApplicationPublidId = iqApplicationPublidId
+        setExtensionConfig(newExtensionSettings)
+    }
+
+    function handleLoginCheck() {
+        _browser.runtime.sendMessage(
+            {
+                type: MESSAGE_REQUEST_TYPE.GET_APPLICATIONS,
+            },
+            (response) => {
+                if (chrome.runtime.lastError) {
+                    logger.logMessage('Error handleLoginCheck', LogLevel.ERROR)
+                }
+                if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+                    setIqAuthenticated(true)
+                    setiqServerApplicationList(response.data.applications)
+                } else {
+                    setIqAuthenticated(false)
+                    setiqServerApplicationList([])
+                }
+            }
+        )
+    }
+
+    return (
+        <React.Fragment>
+            <NxGrid.Row>
+                <section className='nx-grid-col nx-grid-col--100'>
+                    <p className='nx-p'>
+                        <strong>1)</strong> Enter the URL for the Sonatype IQ Server and grant the permissions needed
+                        for the extension to communicate with the Sonatype IQ Server.
+                    </p>
+
+                    <div className='nx-form-row'>
+                        <NxFormGroup label={`URL`} isRequired>
+                            <NxStatefulTextInput
+                                defaultValue={extensionSettings.host}
+                                placeholder='https://your-iq-server-url'
+                                validator={nonEmptyValidator}
+                                onChange={handleIqHostChange}
+                            />
+                        </NxFormGroup>
+                        {!hasPermissions && (
+                            <button className='nx-btn grant-permissions' onClick={askForPermissions}>
+                                Grant Permissions to your Sonatype IQ Server
+                            </button>
+                        )}
+                    </div>
+
+                    {hasPermissions && (
+                        <div>
+                            <p className='nx-p'>
+                                <strong>2)</strong> Provide your username and token for the Sonatype IQ Server. Then
+                                connect to retrieve the list of applications available.
+                            </p>
+                            <div className='nx-form-row'>
+                                <NxFormGroup label={`Username`} isRequired>
+                                    <NxStatefulTextInput
+                                        defaultValue={extensionSettings?.user}
+                                        validator={nonEmptyValidator}
+                                        onChange={handleIqUserChange}
+                                    />
+                                </NxFormGroup>
+                                <NxFormGroup label={`Token`} isRequired>
+                                    <NxStatefulTextInput
+                                        defaultValue={extensionSettings?.token}
+                                        validator={nonEmptyValidator}
+                                        type='password'
+                                        onChange={handleIqTokenChange}
+                                    />
+                                </NxFormGroup>
+                                <NxButton variant='primary' onClick={handleLoginCheck}>
+                                    Connect
+                                </NxButton>
+                            </div>
+                        </div>
+                    )}
+                    {iqAuthenticated === true && iqServerApplicationList.length > 0 && (
+                        <React.Fragment>
+                            <p className='nx-p'>
+                                <strong>3)</strong> Choose the Sonatype Lifecycle Application.
+                                <NxTooltip title='The application policies that components will be evaluated against.'>
+                                    <NxFontAwesomeIcon icon={faQuestionCircle as IconDefinition} />
+                                </NxTooltip>
+                            </p>
+
+                            <NxFormGroup label={`Sonatype Lifecycle Application`} isRequired>
+                                <NxFormSelect
+                                    defaultValue={`${extensionSettings.iqApplicationInternalId}|${extensionSettings.iqApplicationPublidId}`}
+                                    onChange={handleIqApplicationChange}
+                                    disabled={!iqAuthenticated}>
+                                    {iqServerApplicationList.map((app: ApiApplicationDTO) => {
+                                        return (
+                                            <option key={app.id} value={`${app.id}|${app.publicId}`}>
+                                                {app.name}
+                                            </option>
+                                        )
+                                    })}
+                                </NxFormSelect>
+                            </NxFormGroup>
+                        </React.Fragment>
+                    )}
+
+                    {iqAuthenticated === true && (
+                        <NxStatefulSuccessAlert>
+                            Congrats! You are able to sign in to your Sonatype IQ Server! If you need to choose an
+                            application, do so now.
+                        </NxStatefulSuccessAlert>
+                    )}
+                    {iqAuthenticated === false && (
+                        <NxStatefulErrorAlert>There was an error signing in, it looks like</NxStatefulErrorAlert>
+                    )}
+                </section>
+            </NxGrid.Row>
+        </React.Fragment>
+    )
 }

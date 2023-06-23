@@ -14,117 +14,119 @@
  * limitations under the License.
  */
 import {
-  ComponentContainer,
-  ILogger,
-  IqServerComponentPolicyEvaluationResult,
-  IqServerComponentRemediationResult,
-  IqServerLicenseLegalMetadataResult,
-  IqServerVulnerabilityDetails, LicenseData,
-  Application
-} from '@sonatype/js-sona-types';
-import {PackageURL} from 'packageurl-js';
-import React from 'react';
-import {DATA_SOURCE, DATA_SOURCES} from '../utils/Constants';
-import { ExtensionConfiguration } from '../types/ExtensionConfiguration';
-import { LogLevel } from '../logger/Logger';
+    ComponentContainer,
+    ILogger,
+    IqServerComponentPolicyEvaluationResult,
+    IqServerComponentRemediationResult,
+    IqServerLicenseLegalMetadataResult,
+    IqServerVulnerabilityDetails,
+    LicenseData,
+    Application,
+} from '@sonatype/js-sona-types'
+import { PackageURL } from 'packageurl-js'
+import React from 'react'
+import { DATA_SOURCE, DATA_SOURCES } from '../utils/Constants'
+import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
+import { LogLevel } from '../logger/Logger'
 import {
-  ApiComponentDetailsDTOV2,
-  ApiComponentEvaluationResultDTOV2,
-  ApiComponentRemediationDTO
-} from '@sonatype/nexus-iq-api-client';
+    ApiComponentDetailsDTOV2,
+    ApiComponentEvaluationResultDTOV2,
+    ApiComponentRemediationDTO,
+    ApiLicenseLegalComponentReportDTO,
+    ApiLicenseLegalMetadataDTO,
+} from '@sonatype/nexus-iq-api-client'
 import { ComponentReport } from '@sonatype/ossindex-api-client'
 
 export interface NexusContextInterface {
-  showAlpDrawer: boolean;
-  toggleAlpDrawer: () => void;
-  scanType: string;
-  componentDetails?: ComponentContainer;
-  policyDetails?: IqServerComponentPolicyEvaluationResult;
-  vulnDetails?: IqServerVulnerabilityDetails;
-  licenseDetails?: IqServerLicenseLegalMetadataResult;
-  licenseData?: LicenseData;
-  errorMessage?: string;
-  componentVersions?: string[];
-  componentVersionsDetails?: ComponentContainer[];
-  remediationDetails?: IqServerComponentRemediationResult;
-  applications: Set<Application>;
-  logger?: ILogger;
-  getVulnDetails?: (vulnId: string) => Promise<void>;
-  getLicenseDetails?: (purl: string) => Promise<void>;
-  getRemediationDetails?: (purl: string) => Promise<void>;
-  getComponentDetails?: (purl: string) => void;
-  currentComponentPurl?: PackageURL;
-  currentUrl: URL;
+    showAlpDrawer: boolean
+    toggleAlpDrawer: () => void
+    scanType: string
+    componentDetails?: ComponentContainer
+    policyDetails?: IqServerComponentPolicyEvaluationResult
+    vulnDetails?: IqServerVulnerabilityDetails
+    licenseDetails?: IqServerLicenseLegalMetadataResult
+    licenseData?: LicenseData
+    errorMessage?: string
+    componentVersions?: string[]
+    componentVersionsDetails?: ComponentContainer[]
+    remediationDetails?: IqServerComponentRemediationResult
+    applications: Set<Application>
+    logger?: ILogger
+    getVulnDetails?: (vulnId: string) => Promise<void>
+    getLicenseDetails?: (purl: string) => Promise<void>
+    getRemediationDetails?: (purl: string) => Promise<void>
+    getComponentDetails?: (purl: string) => void
+    currentComponentPurl?: PackageURL
+    currentUrl: URL
 }
 
 const initialContext: NexusContextInterface = {
-  showAlpDrawer: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  toggleAlpDrawer: () => {},
-  scanType: DATA_SOURCES.OSSINDEX,
-  componentDetails: undefined,
-  policyDetails: undefined,
-  vulnDetails: undefined,
-  licenseDetails: undefined,
-  licenseData: undefined,
-  errorMessage: undefined,
-  componentVersions: undefined,
-  remediationDetails: undefined,
-  logger: undefined,
-  currentComponentPurl: undefined,
-  currentUrl: new URL('about:blank'),
-  applications: new Set<Application>()
-};
+    showAlpDrawer: false,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    toggleAlpDrawer: () => {},
+    scanType: DATA_SOURCES.OSSINDEX,
+    componentDetails: undefined,
+    policyDetails: undefined,
+    vulnDetails: undefined,
+    licenseDetails: undefined,
+    licenseData: undefined,
+    errorMessage: undefined,
+    componentVersions: undefined,
+    remediationDetails: undefined,
+    logger: undefined,
+    currentComponentPurl: undefined,
+    currentUrl: new URL('about:blank'),
+    applications: new Set<Application>(),
+}
 
-export const NexusContext = React.createContext(initialContext);
+export const NexusContext = React.createContext(initialContext)
 
 export interface IqPopupContext {
-  allVersions?: Array<ApiComponentDetailsDTOV2>
-  componentDetails?: ApiComponentDetailsDTOV2
-  remediationDetails?: ApiComponentRemediationDTO
+    allVersions?: Array<ApiComponentDetailsDTOV2>
+    componentDetails?: ApiComponentDetailsDTOV2
+    componentLegalDetails?: Set<ApiLicenseLegalMetadataDTO>
+    remediationDetails?: ApiComponentRemediationDTO
 }
 
 export interface OssIndexPopupContext {
-  componentDetails?: ComponentReport
+    componentDetails?: ComponentReport
 }
 
 export interface ExtensionPopupContext {
-  currentPurl: PackageURL | undefined
-  currentTab?: chrome.tabs.Tab | undefined
-  iq?: IqPopupContext
-  ossindex?: OssIndexPopupContext
-  supportsLicensing: boolean
-  supportsPolicy: boolean
+    currentPurl: PackageURL | undefined
+    currentTab?: chrome.tabs.Tab | undefined
+    iq?: IqPopupContext
+    ossindex?: OssIndexPopupContext
+    supportsLicensing: boolean
+    supportsPolicy: boolean
 }
 
 const DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA = {
-  currentPurl: undefined,
-  currentTab: undefined,
-  iq: {},
-  supportsLicensing: true,
-  supportsPolicy: true
+    currentPurl: undefined,
+    currentTab: undefined,
+    iq: {},
+    supportsLicensing: true,
+    supportsPolicy: true,
 }
 
 const DEFAULT_OSSINDEX_EXTENSION_POPUP_CONTEXT_DATA = {
-  currentPurl: undefined,
-  ossindex: {},
-  supportsLicensing: false,
-  supportsPolicy: false
+    currentPurl: undefined,
+    ossindex: {},
+    supportsLicensing: false,
+    supportsPolicy: false,
 }
 
 export const ExtensionPopupContext = React.createContext<ExtensionPopupContext>(DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA)
 
-
 export function getDefaultPopupContext(dataSource: DATA_SOURCE): ExtensionPopupContext {
-  if (dataSource == DATA_SOURCE.NEXUSIQ) {
-    return DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA
-  } else {
-    return DEFAULT_OSSINDEX_EXTENSION_POPUP_CONTEXT_DATA
-  }
+    if (dataSource == DATA_SOURCE.NEXUSIQ) {
+        return DEFAULT_IQ_EXTENSION_POPUP_CONTEXT_DATA
+    } else {
+        return DEFAULT_OSSINDEX_EXTENSION_POPUP_CONTEXT_DATA
+    }
 }
 
-
 export const ExtensionConfigurationContext = React.createContext<ExtensionConfiguration>({
-  "dataSource": DATA_SOURCE.NEXUSIQ,
-  "logLevel": LogLevel.ERROR
+    dataSource: DATA_SOURCE.NEXUSIQ,
+    logLevel: LogLevel.ERROR,
 })

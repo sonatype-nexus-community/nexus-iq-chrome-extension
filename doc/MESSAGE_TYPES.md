@@ -3,9 +3,10 @@
 This document catalogues the message types and purposes passed between our UI and Service Worker.
 
 Message types should be named according to the following rules:
-- Domain-oriented 
+
+- Domain-oriented
 - Aligned to a CRUD operation
-  
+
 e.g. readComponentDetails; updateExtensionConfiguration; readExtensionConfiguration
 
 ## General Message Format
@@ -37,18 +38,18 @@ Every message must comply with the following format rules.
 }
 ```
 
-
 ## NEW: Messages Received by Service Worker
 
 ### Evaluate Component by PURL
 
 **Type:** evaluateComponentByPurl  
 **Handled By:** Service Worker
-**Parameters:** *None*  
+**Parameters:** _None_  
 **Response Returned:** Yes  
-**Description:** Get a list of Applications that the User has access to in Sonatype IQ Server  
+**Description:** Get a list of Applications that the User has access to in Sonatype IQ Server
 
 Example request:
+
 ```
 {
     "type": "evaluateComponentByPurl",
@@ -61,6 +62,7 @@ Example request:
 ```
 
 Response (SUCCESS):
+
 ```
 {
     "status": "SUCCESS",
@@ -74,11 +76,12 @@ Response (SUCCESS):
 
 **Type:** getApplications  
 **Handled By:** Service Worker
-**Parameters:** *None*  
+**Parameters:** _None_  
 **Response Returned:** Yes  
-**Description:** Get a list of Applications that the User has access to in Sonatype IQ Server  
+**Description:** Get a list of Applications that the User has access to in Sonatype IQ Server
 
 Example request:
+
 ```
 {
     "type": "getApplications"
@@ -86,6 +89,7 @@ Example request:
 ```
 
 Response (SUCCESS):
+
 ```
 {
     "status": "SUCCESS",
@@ -98,6 +102,7 @@ Response (SUCCESS):
 ```
 
 Response (AUTH_ERROR)
+
 ```
 {
     "status": "AUTH_ERROR",
@@ -109,13 +114,14 @@ Response (AUTH_ERROR)
 
 ### Get Component Details
 
-**Type:** getComponentDetails 
+**Type:** getComponentDetails
 **Handled By:** N/A
 **Parameters:** Yes  
 **Response Returned:** Yes  
-**Description:** Get detailed information about a Component by PURL.  
+**Description:** Get detailed information about a Component by PURL.
 
 Example request:
+
 ```
 {
     "type": "getComponentDetails",
@@ -128,6 +134,7 @@ Example request:
 ```
 
 Response (SUCCESS):
+
 ```
 {
     "status": "SUCCESS",
@@ -136,17 +143,47 @@ Response (SUCCESS):
     }
 }
 ```
- 
 
-### Get Component Versions
+### Get Component Legal Details
 
-**Type:** getComponentVersions 
+**Type:** getComponentLegalDetails  
 **Handled By:** N/A
 **Parameters:** Yes  
 **Response Returned:** Yes  
-**Description:** Get an array of all known versions of a Component by PURL.  
+**Description:** Get legal information about a Component by PURL.
 
 Example request:
+
+```
+{
+    "type": "getComponentDetails",
+    "params": {
+       "purl": // A PURL string
+    }
+}
+```
+
+Response (SUCCESS):
+
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        "componentLegalDetails": ApiLicenseLegalComponentReportDTO
+    }
+}
+```
+
+### Get Component Versions
+
+**Type:** getComponentVersions
+**Handled By:** N/A
+**Parameters:** Yes  
+**Response Returned:** Yes  
+**Description:** Get an array of all known versions of a Component by PURL.
+
+Example request:
+
 ```
 {
     "type": "getComponentVersions",
@@ -157,6 +194,7 @@ Example request:
 ```
 
 Response (SUCCESS):
+
 ```
 {
     "status": "SUCCESS",
@@ -168,16 +206,16 @@ Response (SUCCESS):
 }
 ```
 
-
 ### Get Extension Configuration
 
-**Type:** readExtensionConfiguration 
+**Type:** readExtensionConfiguration
 **Handled By:** Content Script  
-**Parameters:** *None*  
+**Parameters:** _None_  
 **Response Returned:** Yes  
-**Description:** Get current Extension Configuration from local storage.  
+**Description:** Get current Extension Configuration from local storage.
 
 Example request:
+
 ```
 {
     "type": "readExtensionConfiguration"
@@ -185,6 +223,7 @@ Example request:
 ```
 
 Response (SUCCESS):
+
 ```
 {
     "status": "SUCCESS",
@@ -202,12 +241,13 @@ Response (SUCCESS):
 ### Get Remediation Details
 
 **Type:** getRemediationDetailsForComponent  
-**Handled By:** Content Script   
+**Handled By:** Content Script  
 **Parameters:** ExtensionSettings  
 **Response Returned:** Yes  
 **Description:** Get Remediation Details for a PURL
 
 Example request:
+
 ```
 {
     "type": "getRemediationDetailsForComponent",
@@ -218,6 +258,7 @@ Example request:
 ```
 
 Response (SUCCESS):
+
 ```
 {
     "status": "SUCCESS",
@@ -227,17 +268,16 @@ Response (SUCCESS):
 }
 ```
 
-
-
 ### Update Extension Configuration
 
 **Type:** updateExtensionConfiguration  
-**Handled By:** Content Script   
+**Handled By:** Content Script  
 **Parameters:** ExtensionSettings  
 **Response Returned:** Yes  
 **Description:** Update current Extension Configuration in local storage and then return current settings
 
 Example request:
+
 ```
 {
     "type": "updateExtensionConfiguration",
@@ -253,6 +293,7 @@ Example request:
 ```
 
 Response (SUCCESS):
+
 ```
 {
     "status": "SUCCESS",
@@ -268,7 +309,6 @@ Response (SUCCESS):
 ```
 
 ## NEW: Messages Received by Content
-
 
 ## Existing Messages (to be depracated)
 

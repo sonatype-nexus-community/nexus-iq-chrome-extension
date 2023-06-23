@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-import { LogLevel } from "../logger/Logger"
-import { DATA_SOURCE } from "../utils/Constants";
+import { LogLevel } from '../logger/Logger'
+import { DATA_SOURCE } from '../utils/Constants'
 
 export interface ExtensionConfiguration {
     dataSource: DATA_SOURCE
-    host?: string;
-    user?: string;
-    token?: string;
-    iqApplicationInternalId?: string;
-    logLevel: LogLevel;
+    host?: string
+    user?: string
+    token?: string
+    iqApplicationInternalId?: string
+    iqApplicationPublidId?: string
+    logLevel: LogLevel
 }
 
 export const DEFAULT_EXTENSION_SETTINGS: ExtensionConfiguration = {
-    "dataSource": DATA_SOURCE.NEXUSIQ,
-    "logLevel": LogLevel.DEBUG
+    dataSource: DATA_SOURCE.NEXUSIQ,
+    logLevel: LogLevel.DEBUG,
 }
