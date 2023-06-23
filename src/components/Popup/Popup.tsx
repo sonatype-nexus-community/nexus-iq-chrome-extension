@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 // import {Puff} from '@agney/react-loading'
-import { NxTab, NxTabList, NxTabPanel, NxTabs, NxP, NxFooter } from '@sonatype/react-shared-components'
+import {
+    NxTab,
+    NxTabList,
+    NxTabPanel,
+    NxTabs,
+    NxP,
+    NxFooter,
+    NxFontAwesomeIcon,
+} from '@sonatype/react-shared-components'
 import React, { useContext, useEffect, useState } from 'react'
 import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../context/NexusContext'
 import { DATA_SOURCE } from '../../utils/Constants'
@@ -25,162 +33,11 @@ import RemediationPage from './IQServer/RemediationPage/RemediationPage'
 import LicensePage from './IQServer/LicensingPage/LicensingPage'
 import SecurityPage from './IQServer/SecurityPage/SecurityPage'
 import { Puff } from '@agney/react-loading'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-// const Popup = (): JSX.Element | null => {
-//   const [activeTabId, setActiveTabId] = useState(0);
-//   const nexusContext = useContext(NexusContext);
-
-//   const renderPopup = (nexusContext: NexusContextInterface | undefined) => {
-//     if (
-//       nexusContext &&
-//       nexusContext.policyDetails &&
-//       // nexusContext.policyDetails.results &&
-//       nexusContext.policyDetails.results?.length > 0 &&
-//       nexusContext.scanType === DATA_SOURCES.NEXUSIQ
-//     ) {
-
-//       const results = nexusContext.policyDetails.results[0];
-//       const hasViolations =
-//         // results.policyData &&
-//         // results.policyData.policyViolations &&
-//         results.policyData.policyViolations.length > 0;
-//       const hasSecurityIssues =
-//         // results.securityData &&
-//         // results.securityData.securityIssues &&
-//         results.securityData.securityIssues.length > 0;
-//       const hasLegalResults = results.licenseData.effectiveLicenses?.length > 0;
-
-//       console.info(results.licenseData);
-//       console.info('Rendering IQ Server View');
-
-//       return (
-// <React.Fragment>
-//   <section className="nx-tile nx-viewport-sized__container">
-//     <header className="nx-tile-header">
-//       <div className="nx-tile-header__title">
-//         <h2 className="nx-h2">
-//           <img
-//             src="/images/sonatype-lifecycle-icon-48x48.png"
-//             className="nx-popup-logo"
-//             alt="Sonatype Lifecycle - Component Details"
-//           />
-//           &nbsp;Sonatype Lifecycle - Component Details
-//         </h2>
-//       </div>
-//     </header>
-
-//     <div className="nx-tile-subsection nx-viewport-sized__container">
-//       <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-//         <NxTabList>
-//           <NxTab>Info</NxTab>
-//           <NxTab>
-//             {hasViolations ? 'Remediation' : 'Versions'}
-//           </NxTab>
-
-//           {hasViolations && (
-//               <NxTab>
-//                 Policy
-//                 <span className={'nx-counter'}>
-//                 {results.policyData.policyViolations.length}
-//               </span>
-//               </NxTab>
-//           )}
-//           {hasSecurityIssues && (
-//             <NxTab>
-//               Security
-//               <span className={'nx-counter'}>
-//                 {results.securityData.securityIssues.length}
-//               </span>
-//             </NxTab>
-//           )}
-//           {hasLegalResults && <NxTab>Legal</NxTab>}
-//         </NxTabList>
-//         <NxTabPanel>
-//           <ComponentInfoPage />
-//         </NxTabPanel>
-//         {/*{hasViolations && (*/}
-//         {/*    <NxTabPanel><RemediationPage /></NxTabPanel>*/}
-//         {/*)}*/}
-//         <NxTabPanel><RemediationPage /></NxTabPanel>
-
-//         {hasViolations && (
-//           <NxTabPanel>
-//             <PolicyPage />
-//           </NxTabPanel>
-//         )}
-//         {hasSecurityIssues && (
-//           <NxTabPanel>
-//             <SecurityPage />
-//           </NxTabPanel>
-//         )}
-//         {hasLegalResults && (
-//             <NxTabPanel><LicensingPage /></NxTabPanel>
-//         )}
-//       </NxTabs>
-//     </div>
-//     <NxFooter>
-//       <NxP style={{textAlign: 'center'}}>
-//         Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype IQ Server
-//       </NxP>
-//     </NxFooter>
-//   </section>
-// </React.Fragment>
-//       );
-//     } else if (
-//       nexusContext &&
-//       nexusContext.componentDetails &&
-//       nexusContext.scanType === DATA_SOURCES.OSSINDEX
-//     ) {
-//       // const purl = PackageURL.fromString(nexusContext.componentDetails.component.packageUrl);
-//       const hasVulns =
-//         nexusContext.componentDetails.securityData &&
-//         nexusContext.componentDetails.securityData.securityIssues.length > 0
-//           ? true
-//           : false;
-//       console.info('Rendering OSS Index View');
-//       return (
-//         <React.Fragment>
-//           <section className="nx-tile nx-viewport-sized__container">
-//             <header className="nx-tile-header">
-//               <div className="nx-tile-header__title">
-//                 <h2 className="nx-h2">Sonatype OSS Index Results</h2>
-//               </div>
-//             </header>
-//             <div className="nx-tile-content nx-viewport-sized__container">
-//               <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-//                 <NxTabList>
-//                   <NxTab>Info</NxTab>
-//                   {hasVulns && <NxTab>Security</NxTab>}
-//                 </NxTabList>
-//                 <NxTabPanel>
-//                   <ComponentInfoPage />
-//                 </NxTabPanel>
-//                 {hasVulns && (
-//                   <NxTabPanel>
-//                     <LiteSecurityPage></LiteSecurityPage>
-//                   </NxTabPanel>
-//                 )}
-//               </NxTabs>
-//             </div>
-//             <NxFooter>
-//               <NxP style={{textAlign: 'center'}}>
-//                 Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype OSS Index
-//               </NxP>
-//             </NxFooter>
-//           </section>
-//         </React.Fragment>
-//       );
-//     }
-//     if (nexusContext && nexusContext.errorMessage != null) {
-//       return <NxStatefulErrorAlert>{nexusContext.errorMessage}</NxStatefulErrorAlert>;
-//     }
-//     return <Puff />;
-//   };
-
-//   return renderPopup(nexusContext);
-// };
-
-// export default Popup;
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser
 
 function IqPopup() {
     const popupContext = useContext(ExtensionPopupContext)
@@ -241,6 +98,31 @@ function IqPopup() {
                                             </NxTab>
                                         )}
                                         {effectiveLicenses.length > 0 && <NxTab>Legal</NxTab>}
+                                        {popupContext.currentTab !== undefined && (
+                                            <NxTab>
+                                                <NxFontAwesomeIcon
+                                                    icon={faGear as IconDefinition}
+                                                    onClick={() => {
+                                                        chrome.tabs.update({
+                                                            url: 'options.html',
+                                                        })
+                                                        window.close()
+                                                        // _browser.tabs.sendMessage(
+                                                        //     popupContext.currentTab?.id,
+                                                        //     {
+                                                        //         reason: 'install',
+                                                        //     },
+                                                        //     (response) => {
+                                                        //         logger.logMessage(
+                                                        //             `Got response from calling install to get options page - ${response}`,
+                                                        //             LogLevel.DEBUG
+                                                        //         )
+                                                        //     }
+                                                        // )
+                                                    }}
+                                                />
+                                            </NxTab>
+                                        )}
                                     </NxTabList>
                                     <NxTabPanel>
                                         <ComponentInfoPage />
