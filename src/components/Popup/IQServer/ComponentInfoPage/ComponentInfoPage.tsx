@@ -13,55 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PolicyData } from '@sonatype/js-sona-types'
 import {
     NxDescriptionList,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
     NxTooltip,
     ThreatLevelNumber,
-    NxTextLink
-} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
-import {
-  ExtensionConfigurationContext,
-  ExtensionPopupContext
-} from '../../../../context/NexusContext';
-import {DATA_SOURCE, DATA_SOURCES} from '../../../../utils/Constants';
-import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
-import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat';
-import './ComponentInfoPage.css';
-import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client";
-
-  const formatDate = (date: Date | undefined | null): string => {
-    if (date) {
-      const dateTime = new Date(date);
-      const noTime = dateTime.toUTCString().split(' ').slice(0, 4).join(' ');
-      return noTime;
-    }
-    return 'N/A';
-  };
+} from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
+import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../context/NexusContext'
+import { DATA_SOURCE, DATA_SOURCES } from '../../../../utils/Constants'
+import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat'
+import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat'
+import './ComponentInfoPage.css'
+import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
+import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
 
 
 function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentPolicyViolationListDTOV2 }) {
-    const violationCount = policyData.policyViolations ? policyData.policyViolations?.length : 0
-
-    function getMaxViolation() {
-        if (
-            policyData.policyViolations &&
-            policyData.policyViolations.length > 0 &&
-            violationCount &&
-            violationCount > 0
-        ) {
-            return Math.max(
-                ...policyData.policyViolations.map((violation) =>
-                    violation.threatLevel != undefined ? violation.threatLevel : 0
-                )
-            )
-        }
-        return 0
-    }
-
     return (
         <React.Fragment>
             <header className='nx-grid-header'>
@@ -69,8 +38,9 @@ function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentP
             </header>
             <NxPolicyViolationIndicator
                 style={{ marginBottom: '16px !important' }}
-                policyThreatLevel={Math.round(getMaxViolation()) as ThreatLevelNumber}
-            ></NxPolicyViolationIndicator>
+                policyThreatLevel={
+                    Math.round(getMaxThreatLevelForPolicyViolations(policyData)) as ThreatLevelNumber
+                }></NxPolicyViolationIndicator>
         </React.Fragment>
     )
 }
@@ -81,6 +51,7 @@ function IqComponentInfo() {
         return <NxLoadingSpinner />
     }
     return (
+<<<<<<< Updated upstream
       <React.Fragment>
         <div className="nx-grid-row popup-content-row">
           <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
@@ -167,6 +138,38 @@ function IqComponentInfo() {
                           <NxDescriptionList.Description>
                             {formatDate(
                                 new Date(popupContext.iq?.componentDetails.projectData?.firstReleaseDate)
+=======
+        <React.Fragment>
+            <div className='nx-grid-row'>
+                <section className='nx-grid-col nx-grid-col--67 nx-scrollable'>
+                    <header className='nx-grid-header'>
+                        <NxTooltip
+                            placement='top'
+                            title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}>
+                            <h3 className='nx-h2 nx-grid-header__title'>
+                                {popupContext.iq?.componentDetails?.component?.displayName}
+                            </h3>
+                        </NxTooltip>
+                    </header>
+                    <NxDescriptionList>
+                        {popupContext.iq?.componentDetails?.component?.hash != null && (
+                            <NxDescriptionList.Item>
+                                <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
+                                <NxDescriptionList.Description>
+                                    {popupContext.iq?.componentDetails?.component?.hash}
+                                </NxDescriptionList.Description>
+                            </NxDescriptionList.Item>
+                        )}
+                        {popupContext.iq?.componentDetails.projectData !== undefined &&
+                            popupContext.iq?.componentDetails.projectData?.projectMetadata?.organization !==
+                                undefined && (
+                                <NxDescriptionList.Item>
+                                    <NxDescriptionList.Term>Project</NxDescriptionList.Term>
+                                    <NxDescriptionList.Description>
+                                        {popupContext.iq?.componentDetails.projectData?.projectMetadata.organization}
+                                    </NxDescriptionList.Description>
+                                </NxDescriptionList.Item>
+>>>>>>> Stashed changes
                             )}
                           </NxDescriptionList.Description>
                         </NxDescriptionList.Item>

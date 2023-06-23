@@ -31,6 +31,7 @@ const _browser: any = chrome ? chrome : browser
  *
  */
 _browser.runtime.onMessage.addListener(handle_message_received_calculate_purl_for_page)
+_browser.runtime.onMessage.addListener(handle_message_received_propogate_component_state)
 
 /**
  * New (asynchronous) handler for processing messages received.
@@ -72,6 +73,23 @@ function handle_message_received_calculate_purl_for_page(
                 })
             }
         }
+    }
+
+    return true
+}
+
+/**
+ * New (asynchronous) handler for processing messages received.
+ *
+ * This always returns True to cause handling to be asynchronous.
+ */
+function handle_message_received_propogate_component_state(
+    request: MessageRequest,
+    sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
+    sendResponse: MessageResponseFunction
+): boolean {
+    if (request.type == MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE) {
+        logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
     }
 
     return true

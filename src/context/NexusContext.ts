@@ -92,7 +92,7 @@ export interface OssIndexPopupContext {
 
 export interface ExtensionPopupContext {
     currentPurl: PackageURL | undefined
-    currentTab?: chrome.tabs.Tab | undefined
+    currentTab?: chrome.tabs.Tab | browser.tabs.Tab | undefined
     iq?: IqPopupContext
     ossindex?: OssIndexPopupContext
     supportsLicensing: boolean

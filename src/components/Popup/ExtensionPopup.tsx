@@ -42,6 +42,8 @@ import {
     ApiComponentRemediationDTO,
     ApiLicenseLegalComponentReportDTO,
 } from '@sonatype/nexus-iq-api-client'
+import { propogateCurrentComponentState } from '../../messages/ComponentStateMessages'
+import { getForComponentPolicyViolations } from '../../types/Component'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
@@ -148,6 +150,16 @@ export default function ExtensionPopup() {
                     .finally(() => {
                         logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
                         stopPolling()
+
+                        /**
+                         * Share the state of the Component
+                         */
+                        if (popupContext.currentTab) {
+                            propogateCurrentComponentState(
+                                popupContext.currentTab,
+                                getForComponentPolicyViolations(popupContext.iq?.componentDetails?.policyData)
+                            )
+                        }
 
                         /**
                          * Get additional detail about this Component Version

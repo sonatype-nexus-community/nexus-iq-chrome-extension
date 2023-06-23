@@ -4,8 +4,8 @@ This document catalogues the message types and purposes passed between our UI an
 
 Message types should be named according to the following rules:
 
-- Domain-oriented
-- Aligned to a CRUD operation
+-   Domain-oriented
+-   Aligned to a CRUD operation
 
 e.g. readComponentDetails; updateExtensionConfiguration; readExtensionConfiguration
 
@@ -264,6 +264,25 @@ Response (SUCCESS):
     "status": "SUCCESS",
     "data": {
         "remediation": ApiComponentRemediationDTO
+    }
+}
+```
+
+### Propogate Current Component State
+
+**Type:** propogateCurrentComponentState
+**Handled By:** Content Script  
+**Parameters:** Yes  
+**Response Returned:** Yes  
+**Description:** Share the fact the state (good/bad) of the current component is known or changed.
+
+Example request:
+
+```
+{
+    "type": "propogateCurrentComponentState",
+    "params": {
+        "state": GOOD|BAD|UNKNOWN (ComponentState)
     }
 }
 ```
