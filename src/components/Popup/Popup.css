@@ -1,46 +1,64 @@
+
 .nx-page-content {
-    min-width: 800px !important;
-    max-width: 800px !important;
-    min-height: 600px !important;
-    max-height: 580px !important;
-    padding: 5px !important;
+  min-width: 800px !important;
+  max-width: 800px !important;
+  /* min-height: 580px !important;
+  max-height: 580px !important; */
+  padding: 5px !important;
 }
 
 .nx-page-main {
-    padding: 0px !important;
+  padding: 0px !important;
+}
+
+
+.popup-content-row {
+  margin-bottom: 0px !important;
+}
+
+.nx-tab-panel {
+  /* padding: 10px !important; */
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  min-height: 540px !important;
+  max-height: 540px !important;
 }
 
 .nx-tile .nx-tile-subsection {
-    padding: 10px !important;
-    min-height: 480px !important;
-    max-height: 480px !important;
-}
-.nx-counter {
-    margin-left: var(--nx-spacing-2x) !important;
-}
-.nx-popup-logo {
-    vertical-align: middle;
+  /* padding: 10px !important; */
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  min-height: 520px !important;
+  max-height: 520px !important;
 }
 
-:not(.nx-tile-subsection__header) + .nx-tile-subsection:first-of-type {
-    border-top: none !important;
-    margin-top: var(--nx-spacing-2x) !important;
-    padding-top: 0px !important;
+.nx-counter {
+  margin-left: var(--nx-spacing-2x) !important;
+}
+.nx-popup-logo {
+  vertical-align: middle;
+}
+
+:not(.nx-tile-subsection__header)+.nx-tile-subsection:first-of-type {
+  border-top: none !important;
+  margin-top: var(--nx-spacing-2x) !important;
+  padding-top: 0px !important;
 }
 
 .nx-policy-violation-indicator {
-    margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;
+  margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;
 }
 
 .nx-footer {
-    font-size: var(--nx-font-size-xs);
-    margin-bottom: 10px !important;
-    padding-top: 7px !important;
+  font-size: var(--nx-font-size-xs);
+  margin-bottom: 10px !important;
+  margin-top: 0px !important;
+  padding-top: 7px !important;
 }
 
 .nx-counter {
-    border-radius: 16px !important;
-    font-size: 12px !important;
-    min-width: none !important;
-    vertical-align: text-top;
+  border-radius: 16px !important;
+  font-size: 12px !important;
+  min-width: none !important;
+  vertical-align: text-top;
 }

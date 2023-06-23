@@ -20,27 +20,27 @@ import {
     NxPolicyViolationIndicator,
     NxTooltip,
     ThreatLevelNumber,
-} from '@sonatype/react-shared-components'
-import React, { useContext } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../context/NexusContext'
-import { DATA_SOURCE, DATA_SOURCES } from '../../../../utils/Constants'
-import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat'
-import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat'
-import './ComponentInfoPage.css'
-import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
+} from '@sonatype/react-shared-components';
+import React, {useContext} from 'react';
+import {
+  ExtensionConfigurationContext,
+  ExtensionPopupContext
+} from '../../../../context/NexusContext';
+import {DATA_SOURCE, DATA_SOURCES} from '../../../../utils/Constants';
+import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat';
+import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat';
+import './ComponentInfoPage.css';
+import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client";
 
-// const ComponentInfoPage = (): JSX.Element | null => {
-//   const nexusContext = useContext(NexusContext);
-//
-//   const formatDate = (date: Date | undefined | null): string => {
-//     if (date) {
-//       const dateTime = new Date(date);
-//       const noTime = dateTime.toUTCString().split(' ').slice(0, 4).join(' ');
-//       return noTime;
-//     }
-//     return 'N/A';
-//   };
-//
+  const formatDate = (date: Date | undefined | null): string => {
+    if (date) {
+      const dateTime = new Date(date);
+      const noTime = dateTime.toUTCString().split(' ').slice(0, 4).join(' ');
+      return noTime;
+    }
+    return 'N/A';
+  };
+
 
 function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentPolicyViolationListDTOV2 }) {
     const violationCount = policyData.policyViolations ? policyData.policyViolations?.length : 0
@@ -80,39 +80,39 @@ function IqComponentInfo() {
         return <NxLoadingSpinner />
     }
     return (
-        <React.Fragment>
-            <div className='nx-grid-row'>
-                <section className='nx-grid-col nx-grid-col--67 nx-scrollable'>
-                    <header className='nx-grid-header'>
-                        <NxTooltip
-                            placement='top'
-                            title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}
-                        >
-                            <h3 className='nx-h2 nx-grid-header__title'>
-                                {popupContext.iq?.componentDetails?.component?.displayName}
-                            </h3>
-                        </NxTooltip>
-                    </header>
-                    <NxDescriptionList>
-                        {popupContext.iq?.componentDetails?.component?.hash != null && (
-                            <NxDescriptionList.Item>
-                                <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
-                                <NxDescriptionList.Description>
-                                    {popupContext.iq?.componentDetails?.component?.hash}
-                                </NxDescriptionList.Description>
-                            </NxDescriptionList.Item>
-                        )}
-                        {popupContext.iq?.componentDetails.projectData !== undefined &&
-                            popupContext.iq?.componentDetails.projectData?.projectMetadata?.organization !==
-                                undefined && (
-                                <NxDescriptionList.Item>
-                                    <NxDescriptionList.Term>Project</NxDescriptionList.Term>
-                                    <NxDescriptionList.Description>
-                                        {popupContext.iq?.componentDetails.projectData?.projectMetadata.organization}
-                                    </NxDescriptionList.Description>
-                                </NxDescriptionList.Item>
-                            )}
-                    </NxDescriptionList>
+      <React.Fragment>
+        <div className="nx-grid-row popup-content-row">
+          <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
+            <header className="nx-grid-header">
+
+                  <NxTooltip
+                      placement="top"
+                      title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}
+                  >
+                    <h3 className="nx-h2 nx-grid-header__title">
+                        {popupContext.iq?.componentDetails?.component?.displayName}
+                    </h3>
+                  </NxTooltip>
+            </header>
+                <NxDescriptionList>
+                    {popupContext.iq?.componentDetails?.component?.hash != null && (
+                        <NxDescriptionList.Item>
+                            <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
+                            <NxDescriptionList.Description>
+                                {popupContext.iq?.componentDetails?.component?.hash}
+                            </NxDescriptionList.Description>
+                        </NxDescriptionList.Item>
+                    )}
+                  {popupContext.iq?.componentDetails.projectData !== undefined &&
+                     popupContext.iq?.componentDetails.projectData?.projectMetadata?.organization !== undefined && (
+                         <NxDescriptionList.Item>
+                           <NxDescriptionList.Term>Project</NxDescriptionList.Term>
+                           <NxDescriptionList.Description>
+                             {popupContext.iq?.componentDetails.projectData?.projectMetadata.organization}
+                           </NxDescriptionList.Description>
+                         </NxDescriptionList.Item>
+                     )}
+                </NxDescriptionList>
                 </section>
                 <section className='nx-grid-col nx-grid-col--33'>
                     {popupContext.iq?.componentDetails?.policyData != undefined && (
