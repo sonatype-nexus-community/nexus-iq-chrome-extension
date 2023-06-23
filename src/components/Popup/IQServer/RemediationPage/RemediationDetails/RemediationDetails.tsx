@@ -27,10 +27,7 @@ function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
   const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
 
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-  const _browser = chrome ? chrome : browser;
-
-  function getNewUrl(version:string) {
+  function getNewUrlandGo(version:string) {
     const currentTabUrl = popupContext.currentTab?.url
     const currentPurlVersion = popupContext.currentPurl?.version
     
@@ -39,7 +36,7 @@ function IqRemediationDetails() {
       const currentVersion = new RegExp( currentPurlVersion as string)
       const newUrl = currentTabUrl?.toString().replace(currentVersion, version)
       logger.logMessage(`Remediation Details: Generated new URL ${newUrl}`, LogLevel.DEBUG)
-      // TODO: Make work with other browsers
+      // TODO: Make work with other browsers and error handling
       chrome.tabs.update({
         url: newUrl,
       });
@@ -47,8 +44,7 @@ function IqRemediationDetails() {
       
     } else {
       logger.logMessage(`Remediation Details: currentTabURL or currentPul are undefined when trying to replace with ${version}`, LogLevel.ERROR)
-    }
-    
+    } 
   }
 
   return (
@@ -64,7 +60,7 @@ function IqRemediationDetails() {
           if (change !== undefined) {
             return (
                 <NxDescriptionList.ButtonItem 
-                    onClick={() => getNewUrl(version)}
+                    onClick={() => getNewUrlandGo(version)}
                       key={id}
                       term={REMEDIATION_LABELS[change.type as string]}
                       description={
