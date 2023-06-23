@@ -24,6 +24,7 @@ import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageR
 import { logger, LogLevel } from './logger/Logger'
 import { ComponentState } from './types/Component'
 import { RepoType } from './utils/Constants'
+import { dom } from '@fortawesome/fontawesome-svg-core'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
@@ -89,7 +90,7 @@ function handle_message_received_propogate_component_state(
     request: MessageRequest,
     sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
     sendResponse: MessageResponseFunction
-): boolean {
+): void {
     if (request.type == MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE) {
         logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
         if (request.params !== undefined && 'componentState' in request.params) {
@@ -113,16 +114,13 @@ function handle_message_received_propogate_component_state(
                     break
             }
 
-            const domElement = $(repoType.titleSelector).get(0)
-
-            if (domElement !== undefined) {
+            const domElement = $(repoType.titleSelector)
+            if (domElement.length > 0) {
                 domElement.addClass(vulnClass)
                 domElement.addClass('sonatype-iq-extension-vuln')
             }
         }
     }
-
-    return true
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
