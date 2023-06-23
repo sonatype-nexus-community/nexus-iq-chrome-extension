@@ -39,10 +39,11 @@ function IqRemediationDetails() {
       const currentVersion = new RegExp( currentPurlVersion as string)
       const newUrl = currentTabUrl?.toString().replace(currentVersion, version)
       logger.logMessage(`Remediation Details: Generated new URL ${newUrl}`, LogLevel.DEBUG)
-      
+      // TODO: Make work with other browsers
       chrome.tabs.update({
         url: newUrl,
       });
+      window.close()
       
     } else {
       logger.logMessage(`Remediation Details: currentTabURL or currentPul are undefined when trying to replace with ${version}`, LogLevel.ERROR)
