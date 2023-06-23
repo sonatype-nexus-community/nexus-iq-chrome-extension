@@ -26,9 +26,9 @@ import {
   ExtensionPopupContext
 } from '../../../../../../context/NexusContext'
 import './AllVersionsDetails.css'
-import {DATA_SOURCE} from "../../../../../../utils/Constants"
-import {ApiComponentPolicyViolationListDTOV2} from "@sonatype/nexus-iq-api-client"
-import {logger, LogLevel} from "../../../../../../logger/Logger"
+import {DATA_SOURCE} from '../../../../../../utils/Constants'
+import {ApiComponentPolicyViolationListDTOV2} from '@sonatype/nexus-iq-api-client'
+import {logger, LogLevel} from '../../../../../../logger/Logger'
 import {getNewUrlandGo} from '../../../../../../utils/Helpers'
 
 function IqAllVersionDetails() {

@@ -34,7 +34,7 @@ function IqRemediationDetails() {
           <NxH3>Recommended Versions</NxH3>
         )}
 
-      <NxDescriptionList
+        <NxDescriptionList
           emptyMessage={"No recommended versions available."}>
         {versionChanges?.map((change, id) => {
           const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
@@ -54,6 +54,7 @@ function IqRemediationDetails() {
           }
         })}
       </NxDescriptionList>
+      
       </React.Fragment>
   )
 }
