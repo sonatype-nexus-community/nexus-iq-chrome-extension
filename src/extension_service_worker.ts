@@ -17,31 +17,11 @@
 
 import 'node-window-polyfill/register' // New line ensures this Polyfill is first!
 
-// import {
-//   ComponentDetails
-// } from '@sonatype/js-sona-types';
-// import localforage from 'localforage';
-// import {PackageURL} from 'packageurl-js';
 import { logger, LogLevel } from './logger/Logger'
 import { findRepoType } from './utils/UrlParsing'
 
-import {
-    MESSAGE_REQUEST_TYPE,
-    MESSAGE_RESPONSE_STATUS,
-    MessageRequest,
-    MessageResponse,
-    MessageResponseFunction,
-} from './types/Message'
-import {
-    requestComponentEvaluationByPurls,
-    getApplications,
-    pollForComponentEvaluationResult,
-} from './messages/IqMessages'
-import {
-    ApiComponentEvaluationRequestDTOV2,
-    ApiComponentEvaluationResultDTOV2,
-    ApiComponentEvaluationTicketDTOV2,
-} from '@sonatype/nexus-iq-api-client'
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponseFunction } from './types/Message'
+import { requestComponentEvaluationByPurls, getApplications } from './messages/IqMessages'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
@@ -236,7 +216,7 @@ function handle_message_received(
 
     switch (request.type) {
         case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
-            getApplications(request).then((response) => {
+            getApplications().then((response) => {
                 sendResponse(response)
             })
             break
@@ -256,7 +236,7 @@ function handle_message_received(
  */
 _browser.runtime.onInstalled.addListener((details) => {
     if (details.reason === 'install') {
-        _browser.tabs.create({ url: 'options.html?install' }, (tab) => {
+        _browser.tabs.create({ url: 'options.html?install' }, () => {
             if (chrome.runtime.lastError || browser.runtime.lastError) {
                 console.error('Error in install handler opening tab')
             }
@@ -331,7 +311,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
 /**
  * Fired when the current tab changes, but the tab may itself not change
  */
-chrome.tabs.onActivated.addListener(({ tabId, windowId }) => {
+chrome.tabs.onActivated.addListener(({ tabId }) => {
     chrome.tabs.get(tabId, (tab) => {
         if (tab.url !== undefined) {
             enableDisableExtensionForUrl(tab.url, tabId)

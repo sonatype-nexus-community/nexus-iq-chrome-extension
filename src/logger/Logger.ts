@@ -24,6 +24,7 @@ export enum LogLevel {
 }
 
 export interface ILogger {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     logMessage(message: string, level: LogLevel, ...meta: any): void
 }
 
@@ -34,6 +35,7 @@ export class BrowserExtensionLogger implements ILogger {
         this._level = level
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public logMessage = (message: string, level: LogLevel, ...meta: any): void => {
         if (this._level >= level) {
             switch (level) {
