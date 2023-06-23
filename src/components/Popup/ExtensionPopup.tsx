@@ -354,8 +354,6 @@ export default function ExtensionPopup() {
                         )
                     }
                     logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
-                    newPopupContext.currentTab = currentTab
-                    newPopupContext.currentPurl = purl
                     setPopupContext(newPopupContext)
                 } else {
                     logger.logMessage(
