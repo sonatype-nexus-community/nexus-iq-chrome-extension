@@ -22,30 +22,12 @@ import {
 import {DATA_SOURCE, REMEDIATION_LABELS} from '../../../../../utils/Constants'
 import './RemediationDetails.css'
 import { logger, LogLevel } from '../../../../../logger/Logger'
+import {getNewUrlandGo} from '../../../../../utils/Helpers'
 
 function IqRemediationDetails() {
   const popupContext = useContext(ExtensionPopupContext)
   const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
-
-  function getNewUrlandGo(version:string) {
-    const currentTabUrl = popupContext.currentTab?.url
-    const currentPurlVersion = popupContext.currentPurl?.version
-    
-    logger.logMessage(`Remediation Details: Replacing URL with ${version}`, LogLevel.DEBUG)
-    if (currentPurlVersion !== undefined && currentTabUrl !== undefined) {
-      const currentVersion = new RegExp( currentPurlVersion as string)
-      const newUrl = currentTabUrl?.toString().replace(currentVersion, version)
-      logger.logMessage(`Remediation Details: Generated new URL ${newUrl}`, LogLevel.DEBUG)
-      // TODO: Make work with other browsers and error handling
-      chrome.tabs.update({
-        url: newUrl,
-      });
-      window.close()
-      
-    } else {
-      logger.logMessage(`Remediation Details: currentTabURL or currentPul are undefined when trying to replace with ${version}`, LogLevel.ERROR)
-    } 
-  }
+  const currentPurlVersion:string = popupContext.currentPurl?.version as string
 
   return (
       <React.Fragment>
@@ -60,7 +42,7 @@ function IqRemediationDetails() {
           if (change !== undefined) {
             return (
                 <NxDescriptionList.ButtonItem 
-                    onClick={() => getNewUrlandGo(version)}
+                    onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}
                       key={id}
                       term={REMEDIATION_LABELS[change.type as string]}
                       description={
