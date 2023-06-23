@@ -19,17 +19,8 @@ import $, { Cash } from 'cash-dom'
 // import {ArtifactMessage} from './types/ArtifactMessage'
 import { getArtifactDetailsFromDOM } from './utils/PageParsing'
 import { findRepoType } from './utils/UrlParsing'
-import { RepoType } from './utils/Constants'
-import {
-    MESSAGE_REQUEST_TYPE,
-    MESSAGE_RESPONSE_STATUS,
-    MessageRequest,
-    MessageResponse,
-    MessageResponseFunction,
-} from './types/Message'
-// import { readExtensionConfiguration, updateExtensionConfiguration } from './messages/SettingsMessages'
-// import { ExtensionConfiguration } from './types/ExtensionConfiguration'
-import { PackageURL } from 'packageurl-js'
+// import { RepoType } from './utils/Constants'
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponseFunction } from './types/Message'
 import { logger, LogLevel } from './logger/Logger'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any

@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-import { Configuration } from '@sonatype/ossindex-api-client'
+import { Configuration, ComponentVulnerabilityReportsApi, ResponseError } from '@sonatype/ossindex-api-client'
 import { logger, LogLevel } from '../logger/Logger'
 import { readExtensionConfiguration } from './SettingsMessages'
 import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
 import { InvalidConfigurationError } from '../error/ExtensionError'
-import { MESSAGE_RESPONSE_STATUS } from '../types/Message'
+import { MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponse } from '../types/Message'
 import { DATA_SOURCE } from '../utils/Constants'
 import { UserAgentHelper } from '../utils/UserAgentHelper'
-
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser
 
 const OSS_INDEX_HOST = 'https://ossindex.sonatype.org'
 
@@ -33,48 +30,50 @@ const OSS_INDEX_HOST = 'https://ossindex.sonatype.org'
  * Sonatype OSS Index.
  */
 
-// export function getApplications(request: MessageRequest): Promise<MessageResponse> {
-//     return _get_iq_api_configuration().then((apiConfig) => {
-//         return apiConfig
-//     }).catch((err) => {
-//         throw err
-//     }).then((apiConfig) => {
-//         logger.logMessage('API Configiration', LogLevel.INFO, apiConfig)
-//         const apiClient = new ApplicationsApi(apiConfig)
+export async function getComponentDetails(request: MessageRequest): Promise<MessageResponse> {
+    return _get_ossindex_api_configuration()
+        .then((apiConfig) => {
+            return apiConfig
+        })
+        .catch((err) => {
+            throw err
+        })
+        .then((apiConfig) => {
+            logger.logMessage(
+                'Making API Call ComponentVulnerabilityReportsApi::authorizedComponentReport()',
+                LogLevel.DEBUG,
+                apiConfig
+            )
+            const apiClient = new ComponentVulnerabilityReportsApi(apiConfig)
 
-//         return apiClient.getApplications({}).then((applications) => {
-//             return {
-//                 "status": MESSAGE_RESPONSE_STATUS.SUCCESS,
-//                 "data": applications
-//             }
-//         }).catch((err) => {
-//             if (err instanceof ResponseError) {
-//                 if (err.response.status > 400 && err.response.status < 404) {
-//                     return {
-//                         "status": MESSAGE_RESPONSE_STATUS.AUTH_ERROR
-//                     }
-//                 } else {
-//                     return {
-//                         "status": MESSAGE_RESPONSE_STATUS.FAILURE,
-//                         "status_detail": {
-//                             "message": "Failed to call Sonatype IQ Server",
-//                             "detail": `${err.response.status}: ${err.message}`
-//                         }
-//                     }
-//                 }
-//             }
-//             return {
-//                 "status": MESSAGE_RESPONSE_STATUS.FAILURE,
-//                 "status_detail": {
-//                     "message": "Failed to call Sonatype IQ Server",
-//                     "detail": err
-//                 }
-//             }
-//         })
-//     })
-// }
+            // @typescript-eslint/strict-boolean-expressions:
+            let purls: Array<string> = []
+            if (request.params && 'purls' in request.params) {
+                purls = request.params['purls'] as Array<string>
+            }
 
-function _get_iq_api_configuration(): Promise<Configuration> {
+            return apiClient
+                .authorizedComponentReport({
+                    body: {
+                        coordinates: purls,
+                    },
+                })
+                .then((componentVulnerabilityResponse) => {
+                    logger.logMessage(
+                        'componentVulnerabilityResponse response',
+                        LogLevel.DEBUG,
+                        componentVulnerabilityResponse
+                    )
+                    return {
+                        status: MESSAGE_RESPONSE_STATUS.SUCCESS,
+                        data: componentVulnerabilityResponse,
+                    }
+                })
+                .catch(_handle_ossindex_error_repsonse)
+        })
+}
+
+function _get_ossindex_api_configuration(): Promise<Configuration> {
     return readExtensionConfiguration()
         .then((response) => {
             if (chrome.runtime.lastError) {
@@ -109,4 +108,31 @@ function _get_iq_api_configuration(): Promise<Configuration> {
         .catch((err) => {
             throw err
         })
+}
+
+function _handle_ossindex_error_repsonse(err) {
+    logger.logMessage(`Handling Error Response from OSS Index ${err}`, LogLevel.WARN)
+    if (err instanceof ResponseError) {
+        logger.logMessage(`   OSS Index Error: ${err.response.status}: ${err.response.statusText}`, LogLevel.WARN)
+        if (err.response.status > 400 && err.response.status < 404) {
+            return {
+                status: MESSAGE_RESPONSE_STATUS.AUTH_ERROR,
+            }
+        } else {
+            return {
+                status: MESSAGE_RESPONSE_STATUS.FAILURE,
+                status_detail: {
+                    message: 'Failed to call Sonatype OSS Index',
+                    detail: `${err.response.status}: ${err.message}`,
+                },
+            }
+        }
+    }
+    return {
+        status: MESSAGE_RESPONSE_STATUS.FAILURE,
+        status_detail: {
+            message: 'Failed to call Sonatype OSS Index',
+            detail: err,
+        },
+    }
 }

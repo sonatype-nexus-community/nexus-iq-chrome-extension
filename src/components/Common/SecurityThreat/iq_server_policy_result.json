@@ -1,0 +1,133 @@
+{
+    "submittedDate": "2015-02-13T18:01:42.082-05:00",
+    "evaluationDate": "2015-02-13T18:01:42.084-05:00",
+    "applicationId": "529b7f71bb714eca8955e5d66687ae2c",
+    "results": [
+        {
+            "component": {
+                "hash": null,
+                "packageUrl": "pkg:maven/commons-fileupload/commons-fileupload@1.2.2?type=jar",
+                "componentIdentifier": {
+                    "format": "maven",
+                    "coordinates": {
+                        "artifactId": "commons-fileupload",
+                        "extension": "jar",
+                        "groupId": "commons-fileupload",
+                        "version": "1.2.2"
+                    }
+                },
+                "proprietary": false
+            },
+            "matchState": "exact",
+            "catalogDate": "2010-07-29T16:41:12.000-04:00",
+            "licenseData": {
+                "declaredLicenses": [
+                    {
+                        "licenseId": "Apache-2.0",
+                        "licenseName": "Apache-2.0"
+                    }
+                ],
+                "observedLicenses": [
+                    {
+                        "licenseId": "Apache-2.0",
+                        "licenseName": "Apache-2.0"
+                    }
+                ],
+                "effectiveLicenses": [
+                    {
+                        "licenseId": "Apache-2.0",
+                        "licenseName": "Apache-2.0"
+                    }
+                ],
+                "overriddenLicenses": [],
+                "status": "Open"
+            },
+            "securityData": {
+                "securityIssues": [
+                    {
+                        "source": "cve",
+                        "reference": "CVE-2013-2186",
+                        "severity": 7.5,
+                        "status": "Open",
+                        "url": "http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-2186",
+                        "threatCategory": "critical"
+                    },
+                    {
+                        "source": "osvdb",
+                        "reference": "98703",
+                        "severity": 7.5,
+                        "status": "Open",
+                        "url": "http://osvdb.org/98703",
+                        "threatCategory": "critical"
+                    },
+                    {
+                        "source": "cve",
+                        "reference": "CVE-2014-0050",
+                        "severity": 5.0,
+                        "status": "Open",
+                        "url": "http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0050",
+                        "threatCategory": "severe"
+                    },
+                    {
+                        "source": "osvdb",
+                        "reference": "102945",
+                        "severity": 5.0,
+                        "status": "Open",
+                        "url": "http://osvdb.org/102945",
+                        "threatCategory": "severe"
+                    }
+                ]
+            },
+            "policyData": {
+                "policyViolations": [
+                    {
+                        "policyId": "0ccc3321662d491c86b32554ea84e4e9",
+                        "policyName": "Security-High",
+                        "threatLevel": 9,
+                        "constraintViolations": [
+                            {
+                                "constraintId": "d2dfc91f3bf4460ba0da3f7201e4adb7",
+                                "constraintName": "CVSS >=7 and <10",
+                                "reasons": [
+                                    {
+                                        "reason": "Found 2 Security Vulnerabilities with Severity >= 7"
+                                    },
+                                    {
+                                        "reason": "Found 4 Security Vulnerabilities with Severity < 10"
+                                    },
+                                    {
+                                        "reason": "Found 4 Security Vulnerabilities with Status OPEN"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "policyId": "0f1b57e6788c4e9bb0f65cde3b6e9f1c",
+                        "policyName": "Security-Medium",
+                        "threatLevel": 7,
+                        "constraintViolations": [
+                            {
+                                "constraintId": "12a71811de694876b51e4c06c10bad76",
+                                "constraintName": "CVSS >=4 and <7",
+                                "reasons": [
+                                    {
+                                        "reason": "Found 4 Security Vulnerabilities with Severity >= 4"
+                                    },
+                                    {
+                                        "reason": "Found 2 Security Vulnerabilities with Severity < 7"
+                                    },
+                                    {
+                                        "reason": "Found 4 Security Vulnerabilities with Status OPEN"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "isError": false,
+    "errorMessage": null
+}

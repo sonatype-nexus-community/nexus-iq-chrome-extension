@@ -15,7 +15,7 @@
  */
 // import {Puff} from '@agney/react-loading'
 import { NxTab, NxTabList, NxTabPanel, NxTabs, NxP, NxFooter } from '@sonatype/react-shared-components'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../context/NexusContext'
 import { DATA_SOURCE } from '../../utils/Constants'
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage'

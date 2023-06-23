@@ -173,7 +173,7 @@ export async function getAllComponentVersions(request: MessageRequest): Promise<
         })
 }
 
-export async function getApplications(request: MessageRequest): Promise<MessageResponse> {
+export async function getApplications(): Promise<MessageResponse> {
     return _get_iq_api_configuration()
         .then((apiConfig) => {
             return apiConfig

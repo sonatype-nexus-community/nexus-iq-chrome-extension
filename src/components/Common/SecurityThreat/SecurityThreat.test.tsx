@@ -66,8 +66,7 @@ describe('<SecurityThreat />', () => {
                     policyDetails: policyJson,
                     applications: new Set<Application>(),
                     currentUrl: new URL('about:blank'),
-                }}
-            >
+                }}>
                 <SecurityThreat />
             </NexusContext.Provider>
         )
@@ -88,8 +87,7 @@ describe('<SecurityThreat />', () => {
                     componentDetails: component,
                     applications: new Set<Application>(),
                     currentUrl: new URL('about:blank'),
-                }}
-            >
+                }}>
                 <SecurityThreat />
             </NexusContext.Provider>
         )

@@ -30,9 +30,7 @@ import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
 import { LogLevel } from '../logger/Logger'
 import {
     ApiComponentDetailsDTOV2,
-    ApiComponentEvaluationResultDTOV2,
     ApiComponentRemediationDTO,
-    ApiLicenseLegalComponentReportDTO,
     ApiLicenseLegalMetadataDTO,
 } from '@sonatype/nexus-iq-api-client'
 import { ComponentReport } from '@sonatype/ossindex-api-client'
