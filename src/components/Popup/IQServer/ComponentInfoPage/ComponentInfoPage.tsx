@@ -17,6 +17,7 @@ import {
     NxDescriptionList,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
+    NxTextLink,
     NxTooltip,
     ThreatLevelNumber,
 } from '@sonatype/react-shared-components'
@@ -29,6 +30,14 @@ import './ComponentInfoPage.css'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
 
+const formatDate = (date: Date | undefined | null): string => {
+    if (date) {
+        const dateTime = new Date(date)
+        const noTime = dateTime.toUTCString().split(' ').slice(0, 4).join(' ')
+        return noTime
+    }
+    return 'N/A'
+}
 
 function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentPolicyViolationListDTOV2 }) {
     return (
@@ -51,96 +60,8 @@ function IqComponentInfo() {
         return <NxLoadingSpinner />
     }
     return (
-<<<<<<< Updated upstream
-      <React.Fragment>
-        <div className="nx-grid-row popup-content-row">
-          <section className="nx-grid-col nx-grid-col--67 nx-scrollable">
-            <header className="nx-grid-header">
-
-                  <NxTooltip
-                      placement="top"
-                      title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}
-                  >
-                    <h3 className="nx-h2 nx-grid-header__title">
-                        {popupContext.iq?.componentDetails?.component?.displayName}
-                    </h3>
-                  </NxTooltip>
-            </header>
-                <NxDescriptionList>
-                    {popupContext.iq?.componentDetails?.component?.hash != null && (
-                        <NxDescriptionList.Item>
-                            <NxDescriptionList.Term>Hash</NxDescriptionList.Term>
-                            <NxDescriptionList.Description>
-                                {popupContext.iq?.componentDetails?.component?.hash}
-                            </NxDescriptionList.Description>
-                        </NxDescriptionList.Item>
-                    )}
-                  {popupContext.iq?.componentDetails.projectData !== undefined &&
-                     popupContext.iq?.componentDetails.projectData?.projectMetadata?.organization !== undefined && (
-                         <NxDescriptionList.Item>
-                           <NxDescriptionList.Term>Project</NxDescriptionList.Term>
-                           <NxDescriptionList.Description>
-                             {popupContext.iq?.componentDetails.projectData?.projectMetadata.organization}
-                           </NxDescriptionList.Description>
-                         </NxDescriptionList.Item>
-                     )}
-                     {popupContext.iq?.componentDetails.projectData && 
-                      popupContext.iq?.componentDetails.projectData.projectMetadata?.description !== undefined && (
-                          <NxDescriptionList.Item>
-                            <NxDescriptionList.Term>Description</NxDescriptionList.Term>
-                            <NxDescriptionList.Description>
-                              {popupContext.iq?.componentDetails.projectData?.projectMetadata.description}
-                            </NxDescriptionList.Description>
-                          </NxDescriptionList.Item>
-                      )}
-                  {popupContext.iq?.componentDetails.integrityRating != null && (
-                      <NxDescriptionList.Item>
-                        <NxDescriptionList.Term>
-
-                          <NxTextLink
-                              external
-                              href="https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components"
-                          >Integrity Rating
-                          </NxTextLink></NxDescriptionList.Term>
-                        <NxDescriptionList.Description>
-                          {popupContext.iq?.componentDetails.integrityRating}
-                        </NxDescriptionList.Description>
-                      </NxDescriptionList.Item>
-                  )}
-                  {popupContext.iq?.componentDetails.hygieneRating != null && (
-                      <NxDescriptionList.Item>
-                        <NxDescriptionList.Term><NxTextLink
-                            external
-                            href="https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings"
-                        >Hygiene Rating
-                        </NxTextLink></NxDescriptionList.Term>
-                        <NxDescriptionList.Description>
-                          {popupContext.iq?.componentDetails.hygieneRating}
-                        </NxDescriptionList.Description>
-                      </NxDescriptionList.Item>
-                  )}
- 
-                  {popupContext.iq?.componentDetails.projectData &&
-                      popupContext.iq?.componentDetails.projectData.lastReleaseDate && (
-                          <NxDescriptionList.Item>
-                            <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
-                            <NxDescriptionList.Description>
-                              {formatDate(
-                                  new Date(popupContext.iq?.componentDetails.projectData?.lastReleaseDate)
-                              )}
-                            </NxDescriptionList.Description>
-                          </NxDescriptionList.Item>
-                      )}
-                    {popupContext.iq?.componentDetails.projectData &&
-                    popupContext.iq?.componentDetails.projectData.firstReleaseDate && (
-                        <NxDescriptionList.Item>
-                          <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
-                          <NxDescriptionList.Description>
-                            {formatDate(
-                                new Date(popupContext.iq?.componentDetails.projectData?.firstReleaseDate)
-=======
         <React.Fragment>
-            <div className='nx-grid-row'>
+            <div className='nx-grid-row popup-content-row'>
                 <section className='nx-grid-col nx-grid-col--67 nx-scrollable'>
                     <header className='nx-grid-header'>
                         <NxTooltip
@@ -169,33 +90,88 @@ function IqComponentInfo() {
                                         {popupContext.iq?.componentDetails.projectData?.projectMetadata.organization}
                                     </NxDescriptionList.Description>
                                 </NxDescriptionList.Item>
->>>>>>> Stashed changes
                             )}
-                          </NxDescriptionList.Description>
-                        </NxDescriptionList.Item>
-                    )}
+                        {popupContext.iq?.componentDetails.projectData &&
+                            popupContext.iq?.componentDetails.projectData.projectMetadata?.description !==
+                                undefined && (
+                                <NxDescriptionList.Item>
+                                    <NxDescriptionList.Term>Description</NxDescriptionList.Term>
+                                    <NxDescriptionList.Description>
+                                        {popupContext.iq?.componentDetails.projectData?.projectMetadata.description}
+                                    </NxDescriptionList.Description>
+                                </NxDescriptionList.Item>
+                            )}
+                        {popupContext.iq?.componentDetails.integrityRating != null && (
+                            <NxDescriptionList.Item>
+                                <NxDescriptionList.Term>
+                                    <NxTextLink
+                                        external
+                                        href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'>
+                                        Integrity Rating
+                                    </NxTextLink>
+                                </NxDescriptionList.Term>
+                                <NxDescriptionList.Description>
+                                    {popupContext.iq?.componentDetails.integrityRating}
+                                </NxDescriptionList.Description>
+                            </NxDescriptionList.Item>
+                        )}
+                        {popupContext.iq?.componentDetails.hygieneRating != null && (
+                            <NxDescriptionList.Item>
+                                <NxDescriptionList.Term>
+                                    <NxTextLink
+                                        external
+                                        href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'>
+                                        Hygiene Rating
+                                    </NxTextLink>
+                                </NxDescriptionList.Term>
+                                <NxDescriptionList.Description>
+                                    {popupContext.iq?.componentDetails.hygieneRating}
+                                </NxDescriptionList.Description>
+                            </NxDescriptionList.Item>
+                        )}
 
-                  {popupContext.iq?.componentDetails.catalogDate != null && (
-                      <NxDescriptionList.Item>
-                        <NxTooltip
-                            placement="top"
-                            // className="gallery-tooltip-example"
-                            title={<>The date this component version was added to Nexus Intelligence</>}
-                        >
-                          <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
-                        </NxTooltip>
-                        <NxTooltip
-                            placement="top"
-                            // className="gallery-tooltip-example"
-                            title={<>{popupContext.iq?.componentDetails.catalogDate}</>}
-                        >
-                          <NxDescriptionList.Description>
-                            {formatDate(new Date(popupContext.iq?.componentDetails.catalogDate))}
-                          </NxDescriptionList.Description>
-                        </NxTooltip>
-                      </NxDescriptionList.Item>
-                  )}
-                </NxDescriptionList>
+                        {popupContext.iq?.componentDetails.projectData &&
+                            popupContext.iq?.componentDetails.projectData.lastReleaseDate && (
+                                <NxDescriptionList.Item>
+                                    <NxDescriptionList.Term>Last Release Date</NxDescriptionList.Term>
+                                    <NxDescriptionList.Description>
+                                        {formatDate(
+                                            new Date(popupContext.iq?.componentDetails.projectData?.lastReleaseDate)
+                                        )}
+                                    </NxDescriptionList.Description>
+                                </NxDescriptionList.Item>
+                            )}
+                        {popupContext.iq?.componentDetails.projectData &&
+                            popupContext.iq?.componentDetails.projectData.firstReleaseDate && (
+                                <NxDescriptionList.Item>
+                                    <NxDescriptionList.Term>First Release Date</NxDescriptionList.Term>
+                                    <NxDescriptionList.Description>
+                                        {formatDate(
+                                            new Date(popupContext.iq?.componentDetails.projectData?.firstReleaseDate)
+                                        )}
+                                    </NxDescriptionList.Description>
+                                </NxDescriptionList.Item>
+                            )}
+
+                        {popupContext.iq?.componentDetails.catalogDate != null && (
+                            <NxDescriptionList.Item>
+                                <NxTooltip
+                                    placement='top'
+                                    // className="gallery-tooltip-example"
+                                    title={<>The date this component version was added to Nexus Intelligence</>}>
+                                    <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
+                                </NxTooltip>
+                                <NxTooltip
+                                    placement='top'
+                                    // className="gallery-tooltip-example"
+                                    title={<>{popupContext.iq?.componentDetails.catalogDate}</>}>
+                                    <NxDescriptionList.Description>
+                                        {formatDate(new Date(popupContext.iq?.componentDetails.catalogDate))}
+                                    </NxDescriptionList.Description>
+                                </NxTooltip>
+                            </NxDescriptionList.Item>
+                        )}
+                    </NxDescriptionList>
                 </section>
                 <section className='nx-grid-col nx-grid-col--33'>
                     {popupContext.iq?.componentDetails?.policyData != undefined && (
