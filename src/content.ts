@@ -97,8 +97,7 @@ function handle_message_received_propogate_component_state(
             logger.logMessage('Adding CSS Classes', LogLevel.DEBUG)
             const repoType = findRepoType(window.location.href) as RepoType
             const componentState = request.params.componentState as ComponentState
-            let vulnClass = 'sonatype-iq-extension-vuln-low'
-            //         addClasses(vulnClass, element);
+            let vulnClass = 'sonatype-iq-extension-vuln-none'
             switch (componentState) {
                 case ComponentState.CRITICAL:
                     vulnClass = 'sonatype-iq-extension-vuln-severe'

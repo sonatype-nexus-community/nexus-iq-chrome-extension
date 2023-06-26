@@ -115,15 +115,21 @@ function IqPopup() {
                                     <NxTabPanel>
                                         <RemediationPage />
                                     </NxTabPanel>
-                                    <NxTabPanel>
-                                        <PolicyPage />
-                                    </NxTabPanel>
-                                    <NxTabPanel>
-                                        <SecurityPage />
-                                    </NxTabPanel>
-                                    <NxTabPanel>
-                                        <LicensePage />
-                                    </NxTabPanel>
+                                    {policyViolations.length > 0 && (
+                                        <NxTabPanel>
+                                            <PolicyPage />
+                                        </NxTabPanel>
+                                    )}
+                                    {securityIssues.length > 0 && (
+                                        <NxTabPanel>
+                                            <SecurityPage />
+                                        </NxTabPanel>
+                                    )}
+                                    {effectiveLicenses.length > 0 && (
+                                        <NxTabPanel>
+                                            <LicensePage />
+                                        </NxTabPanel>
+                                    )}
                                 </NxTabs>
                             </div>
 

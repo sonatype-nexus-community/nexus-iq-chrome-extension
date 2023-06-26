@@ -25,7 +25,7 @@ export enum ComponentState {
 }
 
 export function getMaxThreatLevelForPolicyViolations(policydata: ApiComponentPolicyViolationListDTOV2): number {
-    if (policydata.policyViolations !== undefined) {
+    if (policydata.policyViolations !== undefined && policydata.policyViolations.length > 0) {
         return Math.max(
             ...policydata.policyViolations.map((violation) =>
                 violation.threatLevel != undefined ? violation.threatLevel : 0
