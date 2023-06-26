@@ -159,7 +159,7 @@ function IqComponentInfo() {
                                 </NxDescriptionList.Item>
                             )}
 
-                        {popupContext.iq?.componentDetails.catalogDate != null && (
+                        {/* {popupContext.iq?.componentDetails.catalogDate != null && (
                             <NxDescriptionList.Item>
                                 <NxTooltip
                                     placement='top'
@@ -172,11 +172,11 @@ function IqComponentInfo() {
                                     // className="gallery-tooltip-example"
                                     title={<>{popupContext.iq?.componentDetails.catalogDate}</>}>
                                     <NxDescriptionList.Description>
-                                        {formatDate(new Date(popupContext.iq?.componentDetails.catalogDate))}
+                                        {(popupContext.iq?.componentDetails.catalogDate as Date).toISOString()}
                                     </NxDescriptionList.Description>
                                 </NxTooltip>
                             </NxDescriptionList.Item>
-                        )}
+                        )} */}
                     </NxDescriptionList>
                 </section>
                 <section className='nx-grid-col nx-grid-col--33'>
