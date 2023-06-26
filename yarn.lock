@@ -1607,10 +1607,10 @@
     in-publish "^2.0.0"
     prop-types "^15.5.10"
 
-"@sonatype/react-shared-components@^12.10.30":
-  version "12.15.3"
-  resolved "https://registry.npmjs.org/@sonatype/react-shared-components/-/react-shared-components-12.15.3.tgz#c571ca50c9bdd7dd68ebaeec66cfd885c6299137"
-  integrity sha512-Qm9brzLMZHvmzK4oNCSUqiGZJjVIItN61/hSmrPR7lgFrDFk6UHkyPoMX0Uyjnfgp1d5Yfocv2Nl4Xl2MkByjA==
+"@sonatype/react-shared-components@12.16.2":
+  version "12.16.2"
+  resolved "https://registry.npmjs.org/@sonatype/react-shared-components/-/react-shared-components-12.16.2.tgz#ee82483a8c1cac3f67ec2fcf28fab50acfa651c2"
+  integrity sha512-5SFU9k35jtOyGXdHh+ZTokkwJ+B7wHRDoCdhoNu0BQZQBU8VaFbbEWnEEOjt1M1ERCkTix6ogaUlzoUL5UI1Ug==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "1.2.36"
     "@fortawesome/free-regular-svg-icons" "^5.15.4"
@@ -6983,10 +6983,10 @@ ts-loader@^9.2.4:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-ts-toolbelt@^6.15.1:
-  version "6.15.5"
-  resolved "https://registry.npmjs.org/ts-toolbelt/-/ts-toolbelt-6.15.5.tgz#cb3b43ed725cb63644782c64fbcad7d8f28c0a83"
-  integrity sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==
+ts-toolbelt@^9.6.0:
+  version "9.6.0"
+  resolved "https://registry.npmjs.org/ts-toolbelt/-/ts-toolbelt-9.6.0.tgz#50a25426cfed500d4a09bd1b3afb6f28879edfd5"
+  integrity sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==
 
 tsconfig-paths@^3.14.1:
   version "3.14.2"
@@ -7069,6 +7069,13 @@ typedarray-to-buffer@^3.1.5:
   integrity sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
   dependencies:
     is-typedarray "^1.0.0"
+
+types-ramda@^0.29.3:
+  version "0.29.3"
+  resolved "https://registry.npmjs.org/types-ramda/-/types-ramda-0.29.3.tgz#0a611b4d414bf7c51ba417c3fd3352985b0de97f"
+  integrity sha512-6z8/UCI5/kRorQ91Mo+TUXImHpGAhmhg8ZIdT/tNrG+xSQvDwJXYyT5Nlw2U5VpoKetUZVqQXYYLQyq5Bzccsg==
+  dependencies:
+    ts-toolbelt "^9.6.0"
 
 typescript@^4.9.5:
   version "4.9.5"

@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-    NxThreatIndicator,
-    NxList,
-    NxPolicyViolationIndicator,
-    ThreatLevelNumber,
-    NxTable,
-} from '@sonatype/react-shared-components'
+import { NxTable } from '@sonatype/react-shared-components'
 import * as React from 'react'
-import { useContext } from 'react'
-import {
-    ExtensionConfigurationContext,
-    ExtensionPopupContext,
-    NexusContext,
-    NexusContextInterface,
-} from '../../../../../context/NexusContext'
-import { SecurityIssue } from '../../../../../types/ArtifactMessage'
 import '../SecurityPage.css'
-import VulnDetails from './VulnDetails/VulnDetails'
 import { ApiSecurityIssueDTO } from '@sonatype/nexus-iq-api-client'
-import { DATA_SOURCE } from '../../../../../utils/Constants'
-import { ConstraintViolation, Reason } from '@sonatype/js-sona-types'
+import { ExtensionConfigurationContext } from '../../../../../context/NexusContext'
+import { stripTrailingSlash } from '../../../../../utils/Helpers'
 
 type SecurityItemProps = {
     securityIssue: ApiSecurityIssueDTO
@@ -45,104 +30,21 @@ type SecurityItemProps = {
 
 export function IqSecurityItemDisplay(props: SecurityItemProps) {
     // const popupContext = useContext(ExtensionPopupContext)
+    const extensionContext = React.useContext(ExtensionConfigurationContext)
+    const iqServerUrl = stripTrailingSlash(extensionContext.host as string)
+    const cveUrl = `${iqServerUrl}/assets/index.html#/vulnerabilities/${props.securityIssue.reference}`
 
     return (
-        // <NxAccordion
-        //   open={props.open}
-        //   // onToggle={() => {
-        //   //   props.remediationEvent(props.securityIssue.reference as string);
-        //   //   if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
-        //   //     nexusContext.getVulnDetails(props.securityIssue.reference);
-        //   //   }
-        //   // }}
-        // >
-        <NxTable.Row isClickable className='nx-table-row'>
+        <NxTable.Row
+            isClickable
+            className='nx-table-row'
+            key={`row-${props.securityIssue.reference}`}
+            onClick={() => window.open(cveUrl, '_blank')}>
             <React.Fragment key={props.securityIssue.reference}>
                 <NxTable.Cell className='nx-cell'>{props.securityIssue.severity}</NxTable.Cell>
                 <NxTable.Cell className='nx-cell'>{props.securityIssue.reference}</NxTable.Cell>
+                <NxTable.Cell chevron />
             </React.Fragment>
         </NxTable.Row>
-        // <NxList>
-        //   <NxList.ButtonItem>
-        //       <NxThreatIndicator threatLevelCategory={props.threatLevelCategory} presentational={false}/>
-        //       <NxList.Text><span className="nx-threat-number">[ {props.securityIssue.severity} ]</span> {props.securityIssue.reference}</NxList.Text>
-        //   </NxList.ButtonItem>
-        // </NxList>
     )
-    {
-        /*<NxAccordion.Header>*/
-    }
-    {
-        /*  <NxAccordion.Title>*/
-    }
-    {
-        /*    /!*<NxAccordion.Title className="nx-accordion__header-title">*!/*/
-    }
-    {
-        /*    {props.securityIssue.reference}*/
-    }
-    {
-        /*  </NxAccordion.Title>*/
-    }
-    {
-        /*<div className="nx-btn-bar">*/
-    }
-    {
-        /*<NxPolicyViolationIndicator*/
-    }
-    {
-        /*    style={{*/
-    }
-    {
-        /*      width: '10px !important',*/
-    }
-    {
-        /*      margin: 'none !important'*/
-    }
-    {
-        /*    }}*/
-    }
-    {
-        /*    policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}*/
-    }
-    {
-        /*>*/
-    }
-    {
-        /*  {props.securityIssue.severity.toString()}*/
-    }
-    {
-        /*</NxPolicyViolationIndicator>*/
-    }
-    {
-        /*<NxPolicyViolationIndicator*/
-    }
-    {
-        /*  policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}*/
-    }
-    {
-        /*/>*/
-    }
-    {
-        /*</div>*/
-    }
-    {
-        /*</NxAccordion.Header>*/
-    }
-    //   <p className="nx-p">
-    //     {/*<VulnDetails />*/}
-    //   </p>
-    // </NxAccordion>
 }
-
-// export default function SecurityItemDisplay() {
-//   const extensionContext = useContext(ExtensionConfigurationContext)
-//
-//   return (
-//       <div>
-//         {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && (
-//             <IqSecurityItemDisplay/>
-//         )}
-//       </div>
-//   )
-// }

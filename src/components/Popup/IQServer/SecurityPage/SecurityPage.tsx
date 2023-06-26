@@ -53,8 +53,9 @@ function IqSecurityPage() {
                         <NxTable.Head>
                             <NxTable.Row isClickable className='nx-table-row nx-table-row--header'>
                                 {/*<th className="nx-cell nx-cell--header nx-cell--num">Threat</th>*/}
-                                <th className='nx-cell nx-cell--header'>CVSS</th>
-                                <th className='nx-cell nx-cell--header'>Issue</th>
+                                <NxTable.Cell>CVSS</NxTable.Cell>
+                                <NxTable.Cell>Issue</NxTable.Cell>
+                                <NxTable.Cell chevron />
                             </NxTable.Row>
                         </NxTable.Head>
                         <NxTable.Body>
