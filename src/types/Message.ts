@@ -19,6 +19,7 @@
  */
 export enum MESSAGE_REQUEST_TYPE {
     CALCULATE_PURL_FOR_PAGE = 'calculatePurlForPage',
+    EVALUATE_COMPOENNT_BY_PURL = 'evaluateComponentByPurl',
     GET_APPLICATIONS = 'getApplications',
     GET_COMPONENT_DETAILS = 'getComponentDetails',
     GET_COMPONENT_LEGAL_DETAILS = 'getComponentLegalDetails',

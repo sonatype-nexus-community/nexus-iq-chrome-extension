@@ -42,8 +42,6 @@ import {
     ApiComponentRemediationDTO,
     ApiLicenseLegalComponentReportDTO,
 } from '@sonatype/nexus-iq-api-client'
-import { propogateCurrentComponentState } from '../../messages/ComponentStateMessages'
-import { getForComponentPolicyViolations } from '../../types/Component'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
@@ -54,7 +52,7 @@ export default function ExtensionPopup() {
         getDefaultPopupContext(extensionConfig.dataSource)
     )
     const [purl, setPurl] = useState<PackageURL | undefined>(undefined)
-    const [currentTab, setCurrentTab] = useState<chrome.tabs.Tab | browser.tabs.Tab | undefined>(undefined)
+    // const [currentTab, setCurrentTab] = useState<chrome.tabs.Tab | browser.tabs.Tab | undefined>(undefined)
 
     /**
      * Load Extension Settings and get PURL for current active tab.
@@ -76,7 +74,9 @@ export default function ExtensionPopup() {
         logger.logMessage('Popup requesting PURL for current active Tab', LogLevel.INFO)
         _browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
             const [tab] = tabs
-            setCurrentTab(tab)
+            const newPopupContextWithTab = { ...popupContext }
+            newPopupContextWithTab.currentTab = tab
+            setPopupContext(newPopupContextWithTab)
             logger.logMessage(`Requesting PURL from Tab ${tab.url}`, LogLevel.DEBUG)
             if (tab.status != 'unloaded') {
                 _browser.tabs.sendMessage(
@@ -109,101 +109,81 @@ export default function ExtensionPopup() {
     useEffect(() => {
         if (purl !== undefined) {
             logger.logMessage(`In ExtensionPopup and PURL changed: ${purl}`, LogLevel.DEBUG)
-            requestComponentEvaluationByPurls({
-                type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,
-                params: {
-                    purls: [purl.toString()],
-                },
-            }).then((r2) => {
-                if (chrome.runtime.lastError) {
-                    logger.logMessage('Error handling Eval Comp Purl', LogLevel.ERROR)
+
+            const newPopupContextWithPurl = { ...popupContext }
+            newPopupContextWithPurl.currentPurl = purl
+            setPopupContext(newPopupContextWithPurl)
+
+            _browser.storage.local.get('componentDetails').then((response) => {
+                console.log('Look what I found in the session folks: ', response)
+                const newPopupContextWithComponentDetails = { ...newPopupContextWithPurl }
+                if (!newPopupContextWithComponentDetails.iq) {
+                    newPopupContextWithComponentDetails.iq = {}
                 }
-
-                const evaluateRequestTicketResponse = r2.data as ApiComponentEvaluationTicketDTOV2
-
-                const { promise, stopPolling } = pollForComponentEvaluationResult(
-                    evaluateRequestTicketResponse.applicationId === undefined
-                        ? ''
-                        : evaluateRequestTicketResponse.applicationId,
-                    evaluateRequestTicketResponse.resultId === undefined ? '' : evaluateRequestTicketResponse.resultId,
-                    1000
+                newPopupContextWithComponentDetails.iq = response
+                logger.logMessage(
+                    `Updating PopUp Context with Component Details from Storage`,
+                    LogLevel.DEBUG,
+                    newPopupContextWithComponentDetails
                 )
+                setPopupContext(newPopupContextWithComponentDetails)
 
-                promise
-                    .then((evalResponse) => {
-                        const newPopupContext = { ...popupContext }
-                        if (!newPopupContext.iq) {
-                            newPopupContext.iq = {}
-                        }
-                        newPopupContext.currentTab = currentTab
-                        newPopupContext.iq.componentDetails = (
-                            evalResponse as ApiComponentEvaluationResultDTOV2
-                        ).results?.pop()
-                        logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
-                        setPopupContext(newPopupContext)
-                    })
-                    .catch((err) => {
-                        logger.logMessage(`Error in Poll: ${err}`, LogLevel.ERROR)
-                    })
-                    .finally(() => {
-                        logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
-                        stopPolling()
-
-                        /**
-                         * Share the state of the Component
-                         */
-                        if (currentTab) {
-                            propogateCurrentComponentState(
-                                currentTab,
-                                getForComponentPolicyViolations(popupContext.iq?.componentDetails?.policyData)
-                            )
-                        }
-
-                        /**
-                         * Get additional detail about this Component Version
-                         *
-                         * projectData is not populated in the Evaluation Response :-(
-                         */
-                        getComponentDetails({
-                            type: MESSAGE_REQUEST_TYPE.GET_COMPONENT_DETAILS,
-                            params: {
-                                purls: [purl.toString()],
-                            },
-                        }).then((componentDetailsResponse) => {
-                            if (componentDetailsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-                                logger.logMessage(
-                                    'Got Response to GetComponentDetails',
-                                    LogLevel.DEBUG,
-                                    componentDetailsResponse
-                                )
-                                if (
-                                    componentDetailsResponse.data !== undefined &&
-                                    'componentDetails' in componentDetailsResponse.data
-                                ) {
-                                    const componentDetails = (
-                                        componentDetailsResponse.data
-                                            .componentDetails as Array<ApiComponentDetailsDTOV2>
-                                    ).pop()
-                                    if (componentDetails) {
-                                        const newPopupContext = { ...popupContext }
-                                        if (!newPopupContext.iq) {
-                                            newPopupContext.iq = {}
-                                        }
-                                        if (newPopupContext.iq.componentDetails) {
-                                            newPopupContext.iq.componentDetails.projectData =
-                                                componentDetails.projectData
-                                            logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
-                                            newPopupContext.currentTab = currentTab
-                                            newPopupContext.currentPurl = purl
-                                            setPopupContext(newPopupContext)
-                                        }
-                                    }
+                /**
+                 * Get additional detail about this Component Version
+                 *
+                 * projectData is not populated in the Evaluation Response :-(
+                 */
+                getComponentDetails({
+                    type: MESSAGE_REQUEST_TYPE.GET_COMPONENT_DETAILS,
+                    params: {
+                        purls: [purl.toString()],
+                    },
+                }).then((componentDetailsResponse) => {
+                    if (componentDetailsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+                        logger.logMessage(
+                            'Got Response to GetComponentDetails',
+                            LogLevel.DEBUG,
+                            componentDetailsResponse
+                        )
+                        if (
+                            componentDetailsResponse.data !== undefined &&
+                            'componentDetails' in componentDetailsResponse.data
+                        ) {
+                            const componentDetails = (
+                                componentDetailsResponse.data.componentDetails as Array<ApiComponentDetailsDTOV2>
+                            ).pop()
+                            if (componentDetails) {
+                                const newPopupContextWithMoreComponentDetails = {
+                                    ...newPopupContextWithComponentDetails,
+                                }
+                                if (!newPopupContextWithMoreComponentDetails.iq) {
+                                    newPopupContextWithMoreComponentDetails.iq = {}
+                                }
+                                if (newPopupContextWithMoreComponentDetails.iq.componentDetails) {
+                                    newPopupContextWithMoreComponentDetails.iq.componentDetails.projectData =
+                                        componentDetails.projectData
+                                    logger.logMessage(
+                                        `Updating PopUp Context with additional Component Details`,
+                                        LogLevel.DEBUG,
+                                        newPopupContextWithMoreComponentDetails
+                                    )
+                                    setPopupContext(newPopupContextWithMoreComponentDetails)
                                 }
                             }
-                        })
-                    })
+                        }
+                    }
+                })
             })
+        }
+    }, [purl])
 
+    /**
+     * Separate effect for readability trigger when the PURL changes.
+     *
+     * Obtain Component Legal Details and Compoennt
+     */
+    useEffect(() => {
+        if (purl !== undefined) {
             /**
              * Load all known versions of the current Component
              */
@@ -266,15 +246,18 @@ export default function ExtensionPopup() {
 
                             promise
                                 .then((evalResponse) => {
+                                    const newPopupContext = { ...popupContext }
                                     if (!newPopupContext.iq) {
                                         newPopupContext.iq = {}
                                     }
-                                    newPopupContext.currentPurl = purl
-                                    newPopupContext.currentTab = currentTab
                                     newPopupContext.iq.allVersions = (
                                         evalResponse as ApiComponentEvaluationResultDTOV2
                                     ).results
-                                    logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
+                                    logger.logMessage(
+                                        `Updating PopUp Context with All Component Versions`,
+                                        LogLevel.DEBUG,
+                                        newPopupContext
+                                    )
                                     setPopupContext(newPopupContext)
                                 })
                                 .catch((err) => {
@@ -286,12 +269,10 @@ export default function ExtensionPopup() {
                                 })
                         })
                     }
-                    logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
-                    setPopupContext(newPopupContext)
                 }
             })
         }
-    }, [purl])
+    }, [popupContext.iq?.componentDetails])
 
     /**
      * Separate effect for readability trigger when the PURL changes.
@@ -326,9 +307,8 @@ export default function ExtensionPopup() {
                         if (!newPopupContext.iq) {
                             newPopupContext.iq = {}
                         }
-
                         newPopupContext.iq.componentLegalDetails = componentLegalDetails.licenseLegalMetadata
-                        logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
+                        logger.logMessage(`Updating PopUp Context with Legal Details`, LogLevel.DEBUG, newPopupContext)
                         setPopupContext(newPopupContext)
                     }
                 }
@@ -364,7 +344,7 @@ export default function ExtensionPopup() {
                             newPopupContext.iq.remediationDetails
                         )
                     }
-                    logger.logMessage(`Updating PopUp Context`, LogLevel.DEBUG, newPopupContext)
+                    logger.logMessage(`Updating PopUp Context wtih Remediation`, LogLevel.DEBUG, newPopupContext)
                     setPopupContext(newPopupContext)
                 } else {
                     logger.logMessage(
@@ -375,7 +355,7 @@ export default function ExtensionPopup() {
                 }
             })
         }
-    }, [purl])
+    }, [popupContext.iq?.componentDetails])
 
     return (
         <ExtensionConfigurationContext.Provider value={extensionConfig}>

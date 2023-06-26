@@ -21,7 +21,14 @@ import { logger, LogLevel } from './logger/Logger'
 import { findRepoType } from './utils/UrlParsing'
 
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponseFunction } from './types/Message'
-import { requestComponentEvaluationByPurls, getApplications } from './messages/IqMessages'
+import { propogateCurrentComponentState } from './messages/ComponentStateMessages'
+import {
+    requestComponentEvaluationByPurls,
+    getApplications,
+    pollForComponentEvaluationResult,
+} from './messages/IqMessages'
+import { ApiComponentEvaluationResultDTOV2, ApiComponentEvaluationTicketDTOV2 } from '@sonatype/nexus-iq-api-client'
+import { ComponentState, getForComponentPolicyViolations } from './types/Component'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
@@ -215,6 +222,58 @@ function handle_message_received(
     logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
 
     switch (request.type) {
+        // case MESSAGE_REQUEST_TYPE.EVALUATE_COMPOENNT_BY_PURL:
+        //     if (request.params && 'purl' in request.params) {
+        //         requestComponentEvaluationByPurls({
+        //             type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,
+        //             params: {
+        //                 purl: 'purl' in request.params ? (request.params['purl'] as string) : '',
+        //             },
+        //         }).then((r2) => {
+        //             if (chrome.runtime.lastError || browser.runtime.lastError) {
+        //                 logger.logMessage('Error handling requestComponentEvaluationByPurls', LogLevel.ERROR)
+        //             }
+
+        //             const evaluateRequestTicketResponse = r2.data as ApiComponentEvaluationTicketDTOV2
+
+        //             const { promise, stopPolling } = pollForComponentEvaluationResult(
+        //                 evaluateRequestTicketResponse.applicationId === undefined
+        //                     ? ''
+        //                     : evaluateRequestTicketResponse.applicationId,
+        //                 evaluateRequestTicketResponse.resultId === undefined
+        //                     ? ''
+        //                     : evaluateRequestTicketResponse.resultId,
+        //                 1000
+        //             )
+
+        //             promise
+        //                 .then((evalResponse) => {
+        //                     sendResponse({
+        //                         status: MESSAGE_RESPONSE_STATUS.SUCCESS,
+        //                         data: {
+        //                             componentDetails: (
+        //                                 evalResponse as ApiComponentEvaluationResultDTOV2
+        //                             ).results?.pop(),
+        //                         },
+        //                     })
+        //                 })
+        //                 .catch((err) => {
+        //                     logger.logMessage(`Error in Poll: ${err}`, LogLevel.ERROR)
+        //                 })
+        //                 .finally(() => {
+        //                     logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
+        //                     stopPolling()
+        //                 })
+        //         })
+        //     } else {
+        //         sendResponse({
+        //             status: MESSAGE_RESPONSE_STATUS.FAILURE,
+        //             status_detail: {
+        //                 message: 'No PURL supplied in Message Request',
+        //             },
+        //         })
+        //     }
+        //     break
         case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
             getApplications().then((response) => {
                 sendResponse(response)
@@ -269,20 +328,69 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
             },
             (response) => {
                 if (chrome.runtime.lastError) {
-                    console.error('ERROR in here', chrome.runtime.lastError.message, response)
+                    console.error('ERROR in here', response)
                 }
                 logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
                 if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-                    _browser.action.enable(tabId, () => {
-                        chrome.action.setIcon({
-                            tabId: tabId,
-                            path: '/images/sonatype-lifecycle-icon-white-32x32.png',
-                        })
+                    requestComponentEvaluationByPurls({
+                        type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,
+                        params: {
+                            purls: [response.data.purl],
+                        },
+                    }).then((r2) => {
+                        if (chrome.runtime.lastError) {
+                            logger.logMessage('Error handling requestComponentEvaluationByPurls', LogLevel.ERROR)
+                        }
+
+                        const evaluateRequestTicketResponse = r2.data as ApiComponentEvaluationTicketDTOV2
+
+                        const { promise, stopPolling } = pollForComponentEvaluationResult(
+                            evaluateRequestTicketResponse.applicationId === undefined
+                                ? ''
+                                : evaluateRequestTicketResponse.applicationId,
+                            evaluateRequestTicketResponse.resultId === undefined
+                                ? ''
+                                : evaluateRequestTicketResponse.resultId,
+                            1000
+                        )
+
+                        promise
+                            .then((evalResponse) => {
+                                const componentDetails = (
+                                    evalResponse as ApiComponentEvaluationResultDTOV2
+                                ).results?.pop()
+                                const componentState = getForComponentPolicyViolations(componentDetails?.policyData)
+
+                                propogateCurrentComponentState(tabId, componentState)
+
+                                _browser.action.enable(tabId, () => {
+                                    _browser.action.setIcon({
+                                        tabId: tabId,
+                                        path:
+                                            componentState == ComponentState.NONE
+                                                ? '/images/sonatype-lifecycle-icon-white-32x32.png'
+                                                : '/images/sonatype-lifecycle-icon_Vulnerable-32x32.png',
+                                    })
+                                })
+
+                                console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
+
+                                _browser.storage.local
+                                    .set({
+                                        componentDetails: componentDetails,
+                                    })
+                                    .then(() => {
+                                        console.log('We wrote to the session')
+                                    })
+                            })
+                            .catch((err) => {
+                                logger.logMessage(`Error in Poll: ${err}`, LogLevel.ERROR)
+                            })
+                            .finally(() => {
+                                logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
+                                stopPolling()
+                            })
                     })
-                    console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
-                    /**
-                     * @todo Get the policy/security threat level and update the
-                     */
                 } else {
                     logger.logMessage(
                         `Disabling Sonatype Browser Extension for ${url} - Could not determine PURL.`,

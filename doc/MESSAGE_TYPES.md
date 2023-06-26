@@ -54,9 +54,7 @@ Example request:
 {
     "type": "evaluateComponentByPurl",
     "params": {
-        "purls": [
-            // List of purl strings
-        ]
+        "purl": PURL STRING
     }
 }
 ```
@@ -67,7 +65,7 @@ Response (SUCCESS):
 {
     "status": "SUCCESS",
     "data": [
-        purl: data
+        componentDetails: ApiComponentEvaluationResultDTOV2
     ]
 }
 ```
