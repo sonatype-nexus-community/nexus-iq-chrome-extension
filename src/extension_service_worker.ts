@@ -380,7 +380,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                                         componentDetails: componentDetails,
                                     })
                                     .then(() => {
-                                        console.log('We wrote to the session')
+                                        console.log('We wrote to the session', componentDetails)
                                     })
                             })
                             .catch((err) => {
