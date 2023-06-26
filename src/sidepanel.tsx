@@ -26,7 +26,7 @@ const container = document.getElementById('ui')
 const root = ReactDOM.createRoot(container)
 root.render(
     <React.StrictMode>
-        <UiContext.Provider value={UI_MODE.POPUP}>
+        <UiContext.Provider value={UI_MODE.SIDE_PANEL}>
             <ExtensionPopup />
         </UiContext.Provider>
     </React.StrictMode>

@@ -331,6 +331,11 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                     console.error('ERROR in here', response)
                 }
                 logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
+
+                // chrome.sidePanel.setPanelBehavior({
+                //     openPanelOnActionClick: true,
+                // })
+
                 if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                     requestComponentEvaluationByPurls({
                         type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,

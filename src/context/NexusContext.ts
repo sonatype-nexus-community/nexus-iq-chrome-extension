@@ -128,3 +128,10 @@ export const ExtensionConfigurationContext = React.createContext<ExtensionConfig
     dataSource: DATA_SOURCE.NEXUSIQ,
     logLevel: LogLevel.ERROR,
 })
+
+export enum UI_MODE {
+    POPUP,
+    SIDE_PANEL,
+}
+
+export const UiContext = React.createContext<UI_MODE>(UI_MODE.POPUP)
