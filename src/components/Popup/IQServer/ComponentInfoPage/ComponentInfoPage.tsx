@@ -184,13 +184,14 @@ function IqComponentInfo() {
                         <React.Fragment>
                             <GetPolicyViolationIndicator policyData={popupContext.iq.componentDetails.policyData} />
                             {popupContext.iq !== undefined && (
-                                <NxList>
-                                    <NxList.LinkItem
-                                        href={`${iqServerUrl}/api/v2/search/advanced?query=componentHash%3A${popupContext.iq.componentDetails.component.hash}&page=0&allComponents=true
-`}>
+                                <>
+                                    <h3 className={'nx-h3'}>Lifecycle Quick Links</h3>
+                                    <NxTextLink
+                                        href={`${iqServerUrl}/api/v2/search/advanced?query=componentHash%3A${popupContext.iq.componentDetails.component.hash}&page=0&allComponents=true`}
+                                        external>
                                         Advanced Search Resuts
-                                    </NxList.LinkItem>
-                                </NxList>
+                                    </NxTextLink>
+                                </>
                             )}
                         </React.Fragment>
                     )}

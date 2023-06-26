@@ -311,6 +311,12 @@ export default function ExtensionPopup() {
                         logger.logMessage(`Updating PopUp Context with Legal Details`, LogLevel.DEBUG, newPopupContext)
                         setPopupContext(newPopupContext)
                     }
+                } else {
+                    logger.logMessage(
+                        'Unable to get response to getComponentLegalDetails',
+                        LogLevel.ERROR,
+                        componentLegalDetailsResponse.status_detail
+                    )
                 }
             })
 
