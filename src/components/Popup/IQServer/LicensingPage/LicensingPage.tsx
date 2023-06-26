@@ -35,115 +35,114 @@ function IqLicensePage() {
 
         return (
             <React.Fragment>
-                <div className='nx-grid-row'>
-                    <section className='nx-grid-col nx-grid-col--67'>
-                        <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
-                            <NxTabList>
-                                {effectiveLicenses && effectiveLicenses.length > 0 && (
-                                    <NxTab>
-                                        Effective
-                                        <span className={'nx-counter'}>{effectiveLicenses?.length}</span>
-                                    </NxTab>
-                                )}
-                                {observedLicenses && observedLicenses.length > 0 && (
-                                    <NxTab>
-                                        Observed
-                                        <span className={'nx-counter'}>{observedLicenses?.length}</span>
-                                    </NxTab>
-                                )}
-                                {declaredLicenses && declaredLicenses.length > 0 && (
-                                    <NxTab>
-                                        Declared
-                                        <span className={'nx-counter'}>{declaredLicenses?.length}</span>
-                                    </NxTab>
-                                )}
-                            </NxTabList>
+                {/* <div className='nx-grid-row'> */}
+                {/* <section className='nx-grid-col nx-grid-col--67'> */}
+                <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+                    <NxTabList>
+                        {effectiveLicenses && effectiveLicenses.length > 0 && (
+                            <NxTab>
+                                Effective
+                                <span className={'nx-counter'}>{effectiveLicenses?.length}</span>
+                            </NxTab>
+                        )}
+                        {observedLicenses && observedLicenses.length > 0 && (
+                            <NxTab>
+                                Observed
+                                <span className={'nx-counter'}>{observedLicenses?.length}</span>
+                            </NxTab>
+                        )}
+                        {declaredLicenses && declaredLicenses.length > 0 && (
+                            <NxTab>
+                                Declared
+                                <span className={'nx-counter'}>{declaredLicenses?.length}</span>
+                            </NxTab>
+                        )}
+                    </NxTabList>
 
-                            <NxTabPanel className='nx-scrollable'>
-                                <React.Fragment>
-                                    <NxList bulleted>
-                                        {licenseData.effectiveLicenses?.sort().map((license: LicenseDetail) => {
-                                            return (
-                                                <NxList.Item key={`effective-${license.licenseId}`}>
-                                                    <NxList.Text>{license.licenseName}</NxList.Text>
-                                                </NxList.Item>
-                                            )
-                                        })}
-                                    </NxList>
-                                </React.Fragment>
-                            </NxTabPanel>
+                    <NxTabPanel className='nx-scrollable'>
+                        <React.Fragment>
+                            <NxList bulleted>
+                                {licenseData.effectiveLicenses?.sort().map((license: LicenseDetail) => {
+                                    return (
+                                        <NxList.Item key={`effective-${license.licenseId}`}>
+                                            <NxList.Text>{license.licenseName}</NxList.Text>
+                                        </NxList.Item>
+                                    )
+                                })}
+                            </NxList>
+                        </React.Fragment>
+                    </NxTabPanel>
 
-                            <NxTabPanel className='nx-scrollable'>
-                                {observedLicenses && observedLicenses.length > 0 && (
-                                    <React.Fragment>
-                                        <NxList bulleted>
-                                            {observedLicenses.sort().map((license: LicenseDetail) => {
-                                                return (
-                                                    <NxList.Item key={`observed-${license.licenseId}`}>
-                                                        <NxList.Text>{license.licenseName}</NxList.Text>
-                                                    </NxList.Item>
-                                                )
-                                            })}
-                                        </NxList>
-                                    </React.Fragment>
-                                )}
-                            </NxTabPanel>
-                            <NxTabPanel className='nx-scrollable'>
-                                {declaredLicenses && declaredLicenses.length > 0 && (
-                                    <React.Fragment>
-                                        <NxList bulleted>
-                                            {declaredLicenses.sort().map((license: LicenseDetail) => {
-                                                return (
-                                                    <NxList.Item key={`declared-${license.licenseId}`}>
-                                                        <NxList.Text>{license.licenseName}</NxList.Text>
-                                                    </NxList.Item>
-                                                )
-                                            })}
-                                        </NxList>
-                                    </React.Fragment>
-                                )}
-                            </NxTabPanel>
-                        </NxTabs>
-                    </section>
-                    <section className='nx-grid-col nx-grid-col--33 nx-scrollable'>
+                    <NxTabPanel className='nx-scrollable'>
+                        {observedLicenses && observedLicenses.length > 0 && (
+                            <React.Fragment>
+                                <NxList bulleted>
+                                    {observedLicenses.sort().map((license: LicenseDetail) => {
+                                        return (
+                                            <NxList.Item key={`observed-${license.licenseId}`}>
+                                                <NxList.Text>{license.licenseName}</NxList.Text>
+                                            </NxList.Item>
+                                        )
+                                    })}
+                                </NxList>
+                            </React.Fragment>
+                        )}
+                    </NxTabPanel>
+                    <NxTabPanel className='nx-scrollable'>
+                        {declaredLicenses && declaredLicenses.length > 0 && (
+                            <React.Fragment>
+                                <NxList bulleted>
+                                    {declaredLicenses.sort().map((license: LicenseDetail) => {
+                                        return (
+                                            <NxList.Item key={`declared-${license.licenseId}`}>
+                                                <NxList.Text>{license.licenseName}</NxList.Text>
+                                            </NxList.Item>
+                                        )
+                                    })}
+                                </NxList>
+                            </React.Fragment>
+                        )}
+                    </NxTabPanel>
+                </NxTabs>
+                {/* </section> */}
+                {/* <section className='nx-grid-col nx-grid-col--33 nx-scrollable'>
                         <LicenseThreat />
-                    </section>
-                </div>
+                    </section> */}
+                {/* </div> */}
 
                 <hr className='nx-grid-h-keyline' />
-                <div className='nx-grid-row'>
-                    <section className='nx-grid-col nx-grid-col--100'>
-                        <span style={{ textAlign: 'center' }}>
-                            {/*<NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>*/}
-                            <NxButton id='nx-drawer-legal-open-button'>
-                                <div>
-                                    <span>View License Files</span>
-                                </div>
-                            </NxButton>
-                            <span className={'smaller-font-for-legal'}>
-                                <div>
-                                    Powered by{' '}
-                                    <NxTextLink
-                                        external
-                                        href='https://help.sonatype.com/iqserver/product-information/add-on-packs/advanced-legal-pack-quickstart'
-                                    >
-                                        Advanced Legal Pack
-                                    </NxTextLink>
-                                </div>
-                                <div>
-                                    <span>A Sonatype Lifecycle Add-On</span>
-                                </div>
-                            </span>
-                            <span>
-                                <img
-                                    src='/images/add-on-sonatype-icon-logoblue.png'
-                                    className='nx-popup-logo'
-                                    alt='Powered by Advanced Legal Pack'
-                                />
-                            </span>
-                        </span>
-                    </section>
-                </div>
+                {/* <div className='nx-grid-row'> */}
+                {/* <section className='nx-grid-col nx-grid-col--100'> */}
+                <span style={{ textAlign: 'center' }}>
+                    {/*<NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>*/}
+                    <NxButton id='nx-drawer-legal-open-button'>
+                        <div>
+                            <span>View License Files</span>
+                        </div>
+                    </NxButton>
+                    <span className={'smaller-font-for-legal'}>
+                        <div>
+                            Powered by{' '}
+                            <NxTextLink
+                                external
+                                href='https://help.sonatype.com/iqserver/product-information/add-on-packs/advanced-legal-pack-quickstart'>
+                                Advanced Legal Pack
+                            </NxTextLink>
+                        </div>
+                        <div>
+                            <span>A Sonatype Lifecycle Add-On</span>
+                        </div>
+                    </span>
+                    <span>
+                        <img
+                            src='/images/add-on-sonatype-icon-logoblue.png'
+                            className='nx-popup-logo'
+                            alt='Powered by Advanced Legal Pack'
+                        />
+                    </span>
+                </span>
+                {/* </section> */}
+                {/* </div> */}
             </React.Fragment>
         )
     } else {

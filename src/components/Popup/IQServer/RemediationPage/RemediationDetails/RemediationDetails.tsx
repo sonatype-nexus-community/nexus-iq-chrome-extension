@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NxDescriptionList, NxH3 } from '@sonatype/react-shared-components'
+import { NxDescriptionList, NxH3, NxList } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
 import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../../context/NexusContext'
 import { DATA_SOURCE, REMEDIATION_LABELS } from '../../../../../utils/Constants'
@@ -28,7 +28,7 @@ function IqRemediationDetails() {
     return (
         <React.Fragment>
             {versionChanges && versionChanges.length > 0 && <NxH3>Recommended Versions</NxH3>}
-
+            {/* 
             <NxDescriptionList emptyMessage={'No recommended versions available.'}>
                 {versionChanges?.map((change, id) => {
                     const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
@@ -47,7 +47,27 @@ function IqRemediationDetails() {
                         )
                     }
                 })}
-            </NxDescriptionList>
+            </NxDescriptionList> */}
+            <NxList>
+                {versionChanges?.map((change, id) => {
+                    const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
+                    if (change !== undefined) {
+                        return (
+                            <NxList.LinkItem
+                                href='#'
+                                key={id}
+                                onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}>
+                                <NxList.Text>{REMEDIATION_LABELS[change.type as string]}</NxList.Text>
+                                <NxList.Subtext>
+                                    <strong>
+                                        {change.data?.component?.componentIdentifier?.coordinates ? version : 'UNKNOWN'}
+                                    </strong>
+                                </NxList.Subtext>
+                            </NxList.LinkItem>
+                        )
+                    }
+                })}
+            </NxList>
         </React.Fragment>
     )
 }

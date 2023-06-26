@@ -36,9 +36,6 @@ import { Puff } from '@agney/react-loading'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser
-
 function IqPopup() {
     const popupContext = useContext(ExtensionPopupContext)
     const [activeTabId, setActiveTabId] = useState(0)
@@ -76,7 +73,7 @@ function IqPopup() {
                             <div className='nx-tile-subsection nx-viewport-sized__container'>
                                 {/*<NxTextInput type="textarea" value={JSON.stringify(popupContext.iq)} isPristine={true}/>*/}
 
-                                <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+                                <NxTabs activeTab={activeTabId} onTabSelect={(index) => setActiveTabId(index)}>
                                     <NxTabList>
                                         <NxTab>Info</NxTab>
                                         <NxTab>
@@ -107,18 +104,6 @@ function IqPopup() {
                                                             url: 'options.html',
                                                         })
                                                         window.close()
-                                                        // _browser.tabs.sendMessage(
-                                                        //     popupContext.currentTab?.id,
-                                                        //     {
-                                                        //         reason: 'install',
-                                                        //     },
-                                                        //     (response) => {
-                                                        //         logger.logMessage(
-                                                        //             `Got response from calling install to get options page - ${response}`,
-                                                        //             LogLevel.DEBUG
-                                                        //         )
-                                                        //     }
-                                                        // )
                                                     }}
                                                 />
                                             </NxTab>

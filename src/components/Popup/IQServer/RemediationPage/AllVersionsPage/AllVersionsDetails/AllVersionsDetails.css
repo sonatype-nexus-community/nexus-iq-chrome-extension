@@ -20,4 +20,11 @@
     justify-content: start;
     margin-top: 10px;
     width: 75px !important;
+    margin-bottom: unset;
+}
+
+.nx-meter {
+    color: rgb(139, 199, 62) !important;
+    width: 100px !important;
+    margin-left: 10px;
 }

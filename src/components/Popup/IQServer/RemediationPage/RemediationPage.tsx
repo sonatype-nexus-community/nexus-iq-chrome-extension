@@ -26,10 +26,10 @@ function IqRemediationPage() {
     return (
         <React.Fragment>
             <div className='nx-grid-row'>
-                <section className='nx-grid-col nx-grid-col--67 nx-scrollable'>
+                <section className='nx-grid-col nx-grid-col--50 nx-scrollable'>
                     <RemediationDetails />
                 </section>
-                <section className='nx-grid-col nx-grid-col--33 nx-scrollable'>
+                <section className='nx-grid-col nx-grid-col--50 nx-scrollable'>
                     <NxH3>All Versions ({popupContext.iq?.allVersions?.length})</NxH3>
                     <AllVersionsDetails />
                 </section>

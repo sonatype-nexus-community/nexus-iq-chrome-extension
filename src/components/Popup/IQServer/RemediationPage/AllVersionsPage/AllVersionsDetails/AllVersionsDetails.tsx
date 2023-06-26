@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 import {
+    NxGrid,
     NxList,
     NxLoadingSpinner,
+    NxMeter,
     NxPolicyViolationIndicator,
-    NxProgressBar,
+    NxTooltip,
     ThreatLevelNumber,
 } from '@sonatype/react-shared-components'
 import { PackageURL } from 'packageurl-js'
@@ -79,23 +81,36 @@ function IqAllVersionDetails() {
                                     )
                                 }
                                 ref={currentPurl?.version == versionPurl.version ? currentVersionRef : null}>
-                                {version.policyData != undefined && (
-                                    <NxPolicyViolationIndicator
-                                        style={{ marginBottom: '16px !important' }}
-                                        policyThreatLevel={
-                                            Math.round(getMaxViolation(version.policyData)) as ThreatLevelNumber
-                                        }>
-                                        {versionPurl.version}
-                                    </NxPolicyViolationIndicator>
-                                )}
-                                {version.relativePopularity !== undefined && (
-                                    <NxProgressBar
-                                        value={version.relativePopularity}
-                                        label='Popularity'
-                                        max={100}
-                                        inlineCounter={true}
-                                    />
-                                )}
+                                <NxGrid.Row
+                                    style={{
+                                        marginTop: '0px',
+                                        marginBottom: '0px',
+                                    }}>
+                                    <NxGrid.Column className='nx-grid-col--50'>
+                                        {version.policyData != undefined && (
+                                            <NxPolicyViolationIndicator
+                                                style={{ marginBottom: '16px !important' }}
+                                                policyThreatLevel={
+                                                    Math.round(getMaxViolation(version.policyData)) as ThreatLevelNumber
+                                                }>
+                                                {versionPurl.version}
+                                            </NxPolicyViolationIndicator>
+                                        )}
+                                    </NxGrid.Column>
+                                    {version.relativePopularity !== undefined && (
+                                        <NxGrid.Column className='nx-grid-col--50'>
+                                            <NxTooltip title={`Popularity: ${version.relativePopularity}`}>
+                                                <>
+                                                    <NxMeter
+                                                        value={version.relativePopularity as number}
+                                                        max={100}
+                                                        children={''}
+                                                    />
+                                                </>
+                                            </NxTooltip>
+                                        </NxGrid.Column>
+                                    )}
+                                </NxGrid.Row>
                             </NxList.Text>
                         </NxList.LinkItem>
                     )
