@@ -22,14 +22,16 @@ import { DATA_SOURCE } from '../../../../utils/Constants'
 
 function IqRemediationPage() {
     const popupContext = useContext(ExtensionPopupContext)
+    const versionChanges = popupContext.iq?.remediationDetails?.remediation?.versionChanges
 
     return (
         <React.Fragment>
             <div className='nx-grid-row'>
-                <section className='nx-grid-col nx-grid-col--50 nx-scrollable'>
+                <section className='nx-grid-col nx-grid-col--33 nx-scrollable'>
+                    {versionChanges && versionChanges.length > 0 && <NxH3>Recommended Versions</NxH3>}
                     <RemediationDetails />
                 </section>
-                <section className='nx-grid-col nx-grid-col--50 nx-scrollable'>
+                <section className='nx-grid-col nx-grid-col--67 nx-scrollable'>
                     <NxH3>All Versions ({popupContext.iq?.allVersions?.length})</NxH3>
                     <AllVersionsDetails />
                 </section>

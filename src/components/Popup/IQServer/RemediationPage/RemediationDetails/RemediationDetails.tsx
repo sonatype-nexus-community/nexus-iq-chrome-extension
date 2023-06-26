@@ -27,8 +27,7 @@ function IqRemediationDetails() {
 
     return (
         <React.Fragment>
-            {versionChanges && versionChanges.length > 0 && <NxH3>Recommended Versions</NxH3>}
-            {/* 
+            {/* { 
             <NxDescriptionList emptyMessage={'No recommended versions available.'}>
                 {versionChanges?.map((change, id) => {
                     const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
@@ -48,7 +47,7 @@ function IqRemediationDetails() {
                     }
                 })}
             </NxDescriptionList> */}
-            <NxList>
+            <NxList emptyMessage="No recommended versions are available based on this application's policy.">
                 {versionChanges?.map((change, id) => {
                     const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
                     if (change !== undefined) {
@@ -57,7 +56,9 @@ function IqRemediationDetails() {
                                 href='#'
                                 key={id}
                                 onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}>
-                                <NxList.Text>{REMEDIATION_LABELS[change.type as string]}</NxList.Text>
+                                <NxList.Text>
+                                    <small>{REMEDIATION_LABELS[change.type as string]}</small>
+                                </NxList.Text>
                                 <NxList.Subtext>
                                     <strong>
                                         {change.data?.component?.componentIdentifier?.coordinates ? version : 'UNKNOWN'}

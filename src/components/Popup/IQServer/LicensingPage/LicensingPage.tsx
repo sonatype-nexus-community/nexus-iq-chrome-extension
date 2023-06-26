@@ -20,6 +20,7 @@ import { LicenseDetail } from '../../../../types/ArtifactMessage'
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat'
 import { DATA_SOURCE } from '../../../../utils/Constants'
 import './LicensingDisplay.css'
+import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay'
 
 function IqLicensePage() {
     const popupContext = useContext(ExtensionPopupContext)
@@ -37,7 +38,13 @@ function IqLicensePage() {
             <React.Fragment>
                 {/* <div className='nx-grid-row'> */}
                 {/* <section className='nx-grid-col nx-grid-col--67'> */}
-                <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
+                <NxTabs
+                    activeTab={activeTabId}
+                    onTabSelect={setActiveTabId}
+                    style={{
+                        maxHeight: '300px',
+                        // marginBottom: '0px',
+                    }}>
                     <NxTabList>
                         {effectiveLicenses && effectiveLicenses.length > 0 && (
                             <NxTab>
@@ -57,6 +64,16 @@ function IqLicensePage() {
                                 <span className={'nx-counter'}>{declaredLicenses?.length}</span>
                             </NxTab>
                         )}
+                        <NxTab>
+                            <img
+                                height='24px'
+                                width='24px'
+                                src='/images/add-on-sonatype-icon-logoblue.png'
+                                className='nx-popup-logo'
+                                alt='Powered by Advanced Legal Pack'
+                            />{' '}
+                            View Files
+                        </NxTab>
                     </NxTabList>
 
                     <NxTabPanel className='nx-scrollable'>
@@ -103,46 +120,38 @@ function IqLicensePage() {
                             </React.Fragment>
                         )}
                     </NxTabPanel>
+                    <NxTabPanel className='nx-scrollable'>
+                        <span style={{ textAlign: 'center' }}>
+                            <AdvancedLegalDisplay />
+                            {/*<NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>*/}
+                            {/* <NxButton id='nx-drawer-legal-open-button'>
+                                <div>
+                                    <span>View License Files</span>
+                                </div>
+                            </NxButton> */}
+                            <span className={'smaller-font-for-legal'}>
+                                <div>
+                                    Powered by{' '}
+                                    <NxTextLink
+                                        external
+                                        href='https://help.sonatype.com/iqserver/product-information/add-on-packs/advanced-legal-pack-quickstart'>
+                                        Advanced Legal Pack
+                                    </NxTextLink>
+                                </div>
+                                <div>
+                                    <span>A Sonatype Lifecycle Add-On</span>
+                                </div>
+                            </span>
+                            {/* <span>
+                                <img
+                                    src='/images/add-on-sonatype-icon-logoblue.png'
+                                    className='nx-popup-logo'
+                                    alt='Powered by Advanced Legal Pack'
+                                />
+                            </span> */}
+                        </span>
+                    </NxTabPanel>
                 </NxTabs>
-                {/* </section> */}
-                {/* <section className='nx-grid-col nx-grid-col--33 nx-scrollable'>
-                        <LicenseThreat />
-                    </section> */}
-                {/* </div> */}
-
-                <hr className='nx-grid-h-keyline' />
-                {/* <div className='nx-grid-row'> */}
-                {/* <section className='nx-grid-col nx-grid-col--100'> */}
-                <span style={{ textAlign: 'center' }}>
-                    {/*<NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>*/}
-                    <NxButton id='nx-drawer-legal-open-button'>
-                        <div>
-                            <span>View License Files</span>
-                        </div>
-                    </NxButton>
-                    <span className={'smaller-font-for-legal'}>
-                        <div>
-                            Powered by{' '}
-                            <NxTextLink
-                                external
-                                href='https://help.sonatype.com/iqserver/product-information/add-on-packs/advanced-legal-pack-quickstart'>
-                                Advanced Legal Pack
-                            </NxTextLink>
-                        </div>
-                        <div>
-                            <span>A Sonatype Lifecycle Add-On</span>
-                        </div>
-                    </span>
-                    <span>
-                        <img
-                            src='/images/add-on-sonatype-icon-logoblue.png'
-                            className='nx-popup-logo'
-                            alt='Powered by Advanced Legal Pack'
-                        />
-                    </span>
-                </span>
-                {/* </section> */}
-                {/* </div> */}
             </React.Fragment>
         )
     } else {
@@ -157,10 +166,5 @@ function IqLicensePage() {
 export default function LicensePage() {
     const extensionContext = useContext(ExtensionConfigurationContext)
 
-    return (
-        // <div>
-        <React.Fragment>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqLicensePage />}</React.Fragment>
-
-        // </div>
-    )
+    return <React.Fragment>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqLicensePage />}</React.Fragment>
 }

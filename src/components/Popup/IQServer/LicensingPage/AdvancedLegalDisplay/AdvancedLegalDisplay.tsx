@@ -32,38 +32,37 @@ function IqAdvancedLegalDisplay() {
             <div className='nx-grid-row'>
                 <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
                     <NxH3>Copy License Text</NxH3>
-                    {/*<NxList>*/}
-                    {/*  {popupContext.iq?.componentDetails?.licenseData.licenseLegalData.licenseFiles.map(*/}
-                    {/*    (licenses, index) => {*/}
-                    {/*      return (*/}
-                    {/*        <NxList.Item key={`${licenses.id}_${index}`}>*/}
-                    {/*          <NxList.Text>{licenses.relPath}</NxList.Text>*/}
-                    {/*          <NxList.Actions>*/}
-                    {/*            <NxButton*/}
-                    {/*              title="Copy License Text"*/}
-                    {/*              variant="icon-only"*/}
-                    {/*              onClick={(event) => copyToClipboard(event, licenses.content)}*/}
-                    {/*            >*/}
-                    {/*              <NxFontAwesomeIcon icon={faCopy as IconDefinition} />*/}
-                    {/*            </NxButton>*/}
-                    {/*          </NxList.Actions>*/}
-                    {/*        </NxList.Item>*/}
-                    {/*      );*/}
-                    {/*    }*/}
-                    {/*  )}*/}
-                    {/*</NxList>*/}
+                    <NxList emptyMessage='No License Text Available'>
+                        {/* {popupContext.iq?.componentDetails?.licenseData?.licenseLegalData.licenseFiles.map(
+                                (licenses, index) => {
+                                    return (
+                                        <NxList.Item key={`${licenses.id}_${index}`}>
+                                            <NxList.Text>{licenses.relPath}</NxList.Text>
+                                            <NxList.Actions>
+                                                <NxButton
+                                                    title='Copy License Text'
+                                                    variant='icon-only'
+                                                    onClick={(event) => copyToClipboard(event, licenses.content)}>
+                                                    <NxFontAwesomeIcon icon={faCopy as IconDefinition} />
+                                                </NxButton>
+                                            </NxList.Actions>
+                                        </NxList.Item>
+                                    )
+                                }
+                            )} */}
+                    </NxList>
                     <NxH3>Copyright Statements</NxH3>
-                    {/*<NxList>*/}
-                    {/*  {nexusContext.licenseDetails.component.licenseLegalData.copyrights.map(*/}
-                    {/*    (copyrights) => {*/}
-                    {/*      return (*/}
-                    {/*        <NxList.Item key={copyrights.originalContentHash}>*/}
-                    {/*          <NxList.Text>{copyrights.content}</NxList.Text>*/}
-                    {/*        </NxList.Item>*/}
-                    {/*      );*/}
-                    {/*    }*/}
-                    {/*  )}*/}
-                    {/*</NxList>*/}
+                    <NxList emptyMessage='No Copyright Statements Available'>
+                        {/* {popupContext.iq?.componentDetails?.licenseData?.licenseLegalData.copyrights.map(
+                                (copyrights) => {
+                                    return (
+                                        <NxList.Item key={copyrights.originalContentHash}>
+                                            <NxList.Text>{copyrights.content}</NxList.Text>
+                                        </NxList.Item>
+                                    )
+                                }
+                            )} */}
+                    </NxList>
                 </section>
             </div>
         </React.Fragment>

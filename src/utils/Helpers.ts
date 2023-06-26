@@ -27,6 +27,10 @@ function stripHtmlComments(html: string): string {
     return html.replace(/<!--[\s\S]*?(?:-->)/g, '')
 }
 
+function stripTrailingSlash(url: string): string {
+    return url.endsWith('/') ? url.slice(0, -1) : url
+}
+
 function getNewUrlandGo(currentTab, currentPurlVersion: string, version: string) {
     const currentTabUrl = currentTab.url
     // const currentPurlVersion = popupContext.currentPurl?.version
@@ -48,4 +52,4 @@ function getNewUrlandGo(currentTab, currentPurlVersion: string, version: string)
         )
     }
 }
-export { ensure, stripHtmlComments, getNewUrlandGo }
+export { ensure, stripHtmlComments, getNewUrlandGo, stripTrailingSlash }

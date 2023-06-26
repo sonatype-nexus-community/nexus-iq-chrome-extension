@@ -15,6 +15,7 @@
  */
 import {
     NxDescriptionList,
+    NxList,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
     NxTextLink,
@@ -29,6 +30,7 @@ import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat'
 import './ComponentInfoPage.css'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
+import { stripTrailingSlash } from '../../../../utils/Helpers'
 
 const formatDate = (date: Date | undefined | null): string => {
     if (date) {
@@ -56,6 +58,9 @@ function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentP
 
 function IqComponentInfo() {
     const popupContext = useContext(ExtensionPopupContext)
+    const extensionContext = useContext(ExtensionConfigurationContext)
+    const iqServerUrl = stripTrailingSlash(extensionContext.host as string)
+
     if (popupContext.iq?.componentDetails?.component?.displayName == undefined) {
         return <NxLoadingSpinner />
     }
@@ -83,7 +88,8 @@ function IqComponentInfo() {
                         )}
                         {popupContext.iq?.componentDetails.projectData !== undefined &&
                             popupContext.iq?.componentDetails.projectData?.projectMetadata?.organization !==
-                                undefined && (
+                                undefined &&
+                            popupContext.iq?.componentDetails.projectData?.projectMetadata?.organization.length > 0 && (
                                 <NxDescriptionList.Item>
                                     <NxDescriptionList.Term>Project</NxDescriptionList.Term>
                                     <NxDescriptionList.Description>
@@ -177,6 +183,15 @@ function IqComponentInfo() {
                     {popupContext.iq?.componentDetails?.policyData != undefined && (
                         <React.Fragment>
                             <GetPolicyViolationIndicator policyData={popupContext.iq.componentDetails.policyData} />
+                            {popupContext.iq !== undefined && (
+                                <NxList>
+                                    <NxList.LinkItem
+                                        href={`${iqServerUrl}/api/v2/search/advanced?query=componentHash%3A${popupContext.iq.componentDetails.component.hash}&page=0&allComponents=true
+`}>
+                                        Advanced Search Resuts
+                                    </NxList.LinkItem>
+                                </NxList>
+                            )}
                         </React.Fragment>
                     )}
                 </section>

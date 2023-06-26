@@ -86,7 +86,7 @@ function IqAllVersionDetails() {
                                         marginTop: '0px',
                                         marginBottom: '0px',
                                     }}>
-                                    <NxGrid.Column className='nx-grid-col--50'>
+                                    <NxGrid.Column className='nx-grid-col-50'>
                                         {version.policyData != undefined && (
                                             <NxPolicyViolationIndicator
                                                 style={{ marginBottom: '16px !important' }}
@@ -98,13 +98,17 @@ function IqAllVersionDetails() {
                                         )}
                                     </NxGrid.Column>
                                     {version.relativePopularity !== undefined && (
-                                        <NxGrid.Column className='nx-grid-col--50'>
+                                        <NxGrid.Column className='nx-grid-col-50'>
                                             <NxTooltip title={`Popularity: ${version.relativePopularity}`}>
                                                 <>
                                                     <NxMeter
                                                         value={version.relativePopularity as number}
                                                         max={100}
                                                         children={''}
+                                                        style={{
+                                                            color: 'rgb(139, 199, 62) !important',
+                                                            // marginTop: '0px',
+                                                        }}
                                                     />
                                                 </>
                                             </NxTooltip>
