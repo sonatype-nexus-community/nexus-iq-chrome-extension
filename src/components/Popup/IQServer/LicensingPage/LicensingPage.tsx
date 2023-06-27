@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import {
-    NxButton,
     NxList,
     NxTextLink,
     NxTab,
@@ -22,7 +21,6 @@ import {
     NxTabs,
     NxTabPanel,
     NxTable,
-    NxThreatIndicator,
     ThreatLevelNumber,
     NxPolicyViolationIndicator,
 } from '@sonatype/react-shared-components'
@@ -30,7 +28,6 @@ import React, { useContext, useState } from 'react'
 import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
 import { LicenseDetail } from '../../../../types/ArtifactMessage'
-import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat'
 import { DATA_SOURCE } from '../../../../utils/Constants'
 import './LicensingDisplay.css'
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay'
@@ -64,8 +61,6 @@ function IqLicensePage() {
 
         return (
             <React.Fragment>
-                {/* <div className='nx-grid-row'> */}
-                {/* <section className='nx-grid-col nx-grid-col--67'> */}
                 <NxTabs
                     activeTab={activeTabId}
                     onTabSelect={setActiveTabId}
@@ -109,15 +104,6 @@ function IqLicensePage() {
                             height: '500px',
                             // maxHeight: '300px',
                         }}>
-                        {/* <NxList bulleted>
-                                {licenseData.effectiveLicenses?.sort().map((license: LicenseDetail) => {
-                                    return (
-                                        <NxList.Item key={`effective-${license.licenseId}`}>
-                                            <NxList.Text>{license.licenseName}</NxList.Text>
-                                        </NxList.Item>
-                                    )
-                                })}
-                            </NxList> */}
                         <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
                             <NxTable
                                 className='nx-table'
@@ -165,9 +151,6 @@ function IqLicensePage() {
                                 </NxTable.Body>
                             </NxTable>
                         </section>
-                        {/* <NxList bulleted> */}
-
-                        {/* </NxList> */}
                     </NxTabPanel>
 
                     <NxTabPanel className='nx-scrollable'>

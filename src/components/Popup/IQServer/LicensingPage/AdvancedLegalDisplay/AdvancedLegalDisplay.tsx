@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-import { faCopy } from '@fortawesome/free-solid-svg-icons'
-import { NxButton, NxFontAwesomeIcon, NxH3, NxList } from '@sonatype/react-shared-components'
+import { NxH3, NxList } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
-import { ExtensionPopupContext } from '../../../../../context/ExtensionPopupContext'
+// import { ExtensionPopupContext } from '../../../../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../../../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE } from '../../../../../utils/Constants'
 
 function IqAdvancedLegalDisplay() {
-    const popupContext = useContext(ExtensionPopupContext)
+    // const popupContext = useContext(ExtensionPopupContext)
 
-    const copyToClipboard = (_event: React.MouseEvent, text: string) => {
-        navigator.clipboard.writeText(text)
-    }
+    // const copyToClipboard = (_event: React.MouseEvent, text: string) => {
+    //     navigator.clipboard.writeText(text)
+    // }
 
     return (
         <React.Fragment>

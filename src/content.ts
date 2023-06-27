@@ -82,11 +82,7 @@ function handle_message_received_calculate_purl_for_page(
  *
  * This always returns True to cause handling to be asynchronous.
  */
-function handle_message_received_propogate_component_state(
-    request: MessageRequest,
-    sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
-    sendResponse: MessageResponseFunction
-): void {
+function handle_message_received_propogate_component_state(request: MessageRequest): void {
     if (request.type == MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE) {
         logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
         if (request.params !== undefined && 'componentState' in request.params) {

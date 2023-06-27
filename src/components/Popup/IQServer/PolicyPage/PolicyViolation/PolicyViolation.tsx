@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ConstraintViolation, PolicyViolation, Reason } from '@sonatype/js-sona-types'
+
 import { NxList, NxPolicyViolationIndicator, NxTextLink, ThreatLevelNumber } from '@sonatype/react-shared-components'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import '../PolicyPage.css'
-import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
+import {
+    ApiConstraintViolationDTO,
+    ApiConstraintViolationReasonDTO,
+    ApiPolicyViolationDTOV2,
+} from '@sonatype/nexus-iq-api-client'
 
 type PolicyViolationProps = {
     policyViolation: ApiPolicyViolationDTOV2
@@ -25,8 +29,6 @@ type PolicyViolationProps = {
 }
 
 const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
-    // // const [open, setOpen] = useState(false);
-
     const formatReason = (reason: string, iqServerUrl: string) => {
         iqServerUrl = iqServerUrl.endsWith('/') ? iqServerUrl.slice(0, -1) : iqServerUrl
         const CVERegex = /((?:CVE|sonatype)-[0-9]{4}-[0-9]+)/g
@@ -46,7 +48,6 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
     }
 
     const printPolicyViolation = (policyViolation: ApiPolicyViolationDTOV2, iqServerUrl: string) => {
-        // if (policyViolation) {
         return (
             <tr className='nx-table-row'>
                 <td className='nx-cell'>
@@ -59,17 +60,22 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
                         {policyViolation?.threatLevel?.toString()}
                     </NxPolicyViolationIndicator>
                 </td>
-                {policyViolation?.constraintViolations?.map((constraint: ConstraintViolation, index) => (
+                {policyViolation?.constraintViolations?.map((constraint: ApiConstraintViolationDTO, index) => (
                     <React.Fragment key={`constraint${index}`}>
                         <td className='nx-cell'>{policyViolation.policyName}</td>
                         <td className='nx-cell'>{constraint.constraintName}</td>
                         <td className='nx-cell'>
                             {/* {constraint.reasons.map((reason: Reason) => ( */}
                             <NxList>
-                                {constraint.reasons.map((reason: Reason, index) => (
+                                {constraint.reasons?.map((reason: ApiConstraintViolationReasonDTO, index) => (
                                     // eslint-disable-next-line react/jsx-key
                                     <NxList.Item key={`policy${index}`} className='nx-list-in-cell'>
-                                        <NxList.Text>{formatReason(reason.reason, iqServerUrl)}</NxList.Text>
+                                        <NxList.Text>
+                                            {formatReason(
+                                                reason.reason !== undefined ? reason.reason : '',
+                                                iqServerUrl
+                                            )}
+                                        </NxList.Text>
                                     </NxList.Item>
                                 ))}
                             </NxList>
@@ -79,8 +85,6 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
                 ))}
             </tr>
         )
-        // }
-        return null
     }
 
     return printPolicyViolation(props.policyViolation, props.iqServerUrl)

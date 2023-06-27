@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NxDescriptionList, NxH3, NxList } from '@sonatype/react-shared-components'
+import { NxList } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
 import { ExtensionPopupContext } from '../../../../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../../../../context/ExtensionConfigurationContext'
@@ -28,26 +28,6 @@ function IqRemediationDetails() {
 
     return (
         <React.Fragment>
-            {/* { 
-            <NxDescriptionList emptyMessage={'No recommended versions available.'}>
-                {versionChanges?.map((change, id) => {
-                    const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
-                    if (change !== undefined) {
-                        return (
-                            <NxDescriptionList.ButtonItem
-                                onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}
-                                key={id}
-                                term={REMEDIATION_LABELS[change.type as string]}
-                                description={
-                                    change.data?.component?.componentIdentifier?.coordinates
-                                        ? change.data.component.componentIdentifier.coordinates.version
-                                        : 'UNKNOWN'
-                                }
-                            />
-                        )
-                    }
-                })}
-            </NxDescriptionList> */}
             <NxList emptyMessage="No recommended versions are available based on this application's policy.">
                 {versionChanges?.map((change, id) => {
                     const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
