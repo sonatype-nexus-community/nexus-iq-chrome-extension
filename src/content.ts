@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-// import {ComponentDetails} from '@sonatype/js-sona-types'
 import $, { Cash } from 'cash-dom'
-// import {ArtifactMessage} from './types/ArtifactMessage'
 import { getArtifactDetailsFromDOM } from './utils/PageParsing'
 import { findRepoType } from './utils/UrlParsing'
-// import { RepoType } from './utils/Constants'
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponseFunction } from './types/Message'
 import { logger, LogLevel } from './logger/Logger'
 import { ComponentState } from './types/Component'
 import { RepoType } from './utils/Constants'
-import { dom } from '@fortawesome/fontawesome-svg-core'
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
@@ -93,10 +89,11 @@ function handle_message_received_propogate_component_state(
 ): void {
     if (request.type == MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE) {
         logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
+        removeClasses
         if (request.params !== undefined && 'componentState' in request.params) {
-            logger.logMessage('Adding CSS Classes', LogLevel.DEBUG)
             const repoType = findRepoType(window.location.href) as RepoType
             const componentState = request.params.componentState as ComponentState
+            logger.logMessage('Adding CSS Classes', LogLevel.DEBUG, ComponentState)
             let vulnClass = 'sonatype-iq-extension-vuln-none'
             switch (componentState) {
                 case ComponentState.CRITICAL:
@@ -111,12 +108,15 @@ function handle_message_received_propogate_component_state(
                 case ComponentState.LOW:
                     vulnClass = 'sonatype-iq-extension-vuln-low'
                     break
+                case ComponentState.EVALUATING:
+                    vulnClass = 'sonatype-iq-extension-vuln-evaluating'
+                    break
             }
 
             const domElement = $(repoType.titleSelector)
             if (domElement.length > 0) {
-                domElement.addClass(vulnClass)
                 domElement.addClass('sonatype-iq-extension-vuln')
+                domElement.addClass(vulnClass)
             }
         }
     }
@@ -205,6 +205,7 @@ const removeClasses = (element) => {
     element.removeClass('sonatype-iq-extension-vuln-severe')
     element.removeClass('sonatype-iq-extension-vuln-high')
     element.removeClass('sonatype-iq-extension-vuln-low')
+    element.removeClass('sonatype-iq-extension-vuln-none')
 }
 
 // const checkPage = () => {
