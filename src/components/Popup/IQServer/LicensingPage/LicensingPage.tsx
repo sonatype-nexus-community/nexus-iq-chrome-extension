@@ -23,6 +23,9 @@ import {
     NxTable,
     ThreatLevelNumber,
     NxPolicyViolationIndicator,
+    NxFontAwesomeIcon,
+    NxButton,
+    NxTooltip,
 } from '@sonatype/react-shared-components'
 import React, { useContext, useState } from 'react'
 import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
@@ -33,6 +36,8 @@ import './LicensingDisplay.css'
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay'
 import { ApiLicenseLegalMetadataDTO } from '@sonatype/nexus-iq-api-client'
 import { Puff } from '@agney/react-loading'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { faCopy } from '@fortawesome/free-solid-svg-icons'
 
 function IqLicensePage() {
     const popupContext = useContext(ExtensionPopupContext)
@@ -48,6 +53,10 @@ function IqLicensePage() {
 
         if (popupContext.iq?.componentLegalDetails === undefined) {
             return <Puff />
+        }
+
+        const copyToClipboard = (_event: React.MouseEvent, text: string) => {
+            navigator.clipboard.writeText(text)
         }
 
         let licenseLegalMetadataArray: ApiLicenseLegalMetadataDTO[] = []
@@ -86,16 +95,6 @@ function IqLicensePage() {
                                 <span className={'nx-counter'}>{declaredLicenses?.length}</span>
                             </NxTab>
                         )}
-                        <NxTab>
-                            <img
-                                height='24px'
-                                width='24px'
-                                src='/images/add-on-sonatype-icon-logoblue.png'
-                                className='nx-popup-logo'
-                                alt='Powered by Advanced Legal Pack'
-                            />{' '}
-                            View Files
-                        </NxTab>
                     </NxTabList>
 
                     <NxTabPanel
@@ -114,6 +113,7 @@ function IqLicensePage() {
                                     <NxTable.Row className='nx-table-row nx-table-row--header'>
                                         <NxTable.Cell>Threat Group</NxTable.Cell>
                                         <NxTable.Cell>License</NxTable.Cell>
+                                        <NxTable.Cell hasIcon>Copy Text</NxTable.Cell>
                                     </NxTable.Row>
                                 </NxTable.Head>
                                 <NxTable.Body
@@ -143,6 +143,24 @@ function IqLicensePage() {
                                                             <NxTable.Cell className='nx-cell'>
                                                                 {licenseLegalMetadata.licenseName}
                                                             </NxTable.Cell>
+                                                            <NxTable.Cell hasIcon>
+                                                                {licenseLegalMetadata.licenseText !== undefined && (
+                                                                    <NxTooltip title='Copy License Text'>
+                                                                        <NxButton
+                                                                            variant='icon-only'
+                                                                            onClick={(event) =>
+                                                                                copyToClipboard(
+                                                                                    event,
+                                                                                    licenseLegalMetadata.licenseText as string
+                                                                                )
+                                                                            }>
+                                                                            <NxFontAwesomeIcon
+                                                                                icon={faCopy as IconDefinition}
+                                                                            />
+                                                                        </NxButton>
+                                                                    </NxTooltip>
+                                                                )}
+                                                            </NxTable.Cell>
                                                         </React.Fragment>
                                                     </NxTable.Row>
                                                 )
@@ -155,64 +173,65 @@ function IqLicensePage() {
 
                     <NxTabPanel className='nx-scrollable'>
                         {observedLicenses && observedLicenses.length > 0 && (
-                            <React.Fragment>
-                                <NxList bulleted>
+                            <NxTable
+                                className='nx-table'
+                                style={{
+                                    height: '400px',
+                                }}>
+                                <NxTable.Head>
+                                    <NxTable.Row className='nx-table-row nx-table-row--header'>
+                                        <NxTable.Cell>License</NxTable.Cell>
+                                    </NxTable.Row>
+                                </NxTable.Head>
+                                <NxTable.Body
+                                    style={{
+                                        height: '300px',
+                                        maxHeight: '300px',
+                                    }}>
                                     {observedLicenses.sort().map((license: LicenseDetail) => {
                                         return (
-                                            <NxList.Item key={`observed-${license.licenseId}`}>
-                                                <NxList.Text>{license.licenseName}</NxList.Text>
-                                            </NxList.Item>
+                                            <NxTable.Row
+                                                // isClickable
+                                                className='nx-table-row'
+                                                key={`row-${license.licenseId}`}>
+                                                <NxTable.Cell className='nx-cell'>{license.licenseName}</NxTable.Cell>
+                                            </NxTable.Row>
                                         )
                                     })}
-                                </NxList>
-                            </React.Fragment>
+                                </NxTable.Body>
+                            </NxTable>
                         )}
                     </NxTabPanel>
                     <NxTabPanel className='nx-scrollable'>
                         {declaredLicenses && declaredLicenses.length > 0 && (
-                            <React.Fragment>
-                                <NxList bulleted>
+                            <NxTable
+                                className='nx-table'
+                                style={{
+                                    height: '400px',
+                                }}>
+                                <NxTable.Head>
+                                    <NxTable.Row className='nx-table-row nx-table-row--header'>
+                                        <NxTable.Cell>License</NxTable.Cell>
+                                    </NxTable.Row>
+                                </NxTable.Head>
+                                <NxTable.Body
+                                    style={{
+                                        height: '300px',
+                                        maxHeight: '300px',
+                                    }}>
                                     {declaredLicenses.sort().map((license: LicenseDetail) => {
                                         return (
-                                            <NxList.Item key={`declared-${license.licenseId}`}>
-                                                <NxList.Text>{license.licenseName} </NxList.Text>
-                                            </NxList.Item>
+                                            <NxTable.Row
+                                                // isClickable
+                                                className='nx-table-row'
+                                                key={`row-${license.licenseId}`}>
+                                                <NxTable.Cell className='nx-cell'>{license.licenseName}</NxTable.Cell>
+                                            </NxTable.Row>
                                         )
                                     })}
-                                </NxList>
-                            </React.Fragment>
+                                </NxTable.Body>
+                            </NxTable>
                         )}
-                    </NxTabPanel>
-                    <NxTabPanel className='nx-scrollable'>
-                        <span style={{ textAlign: 'center' }}>
-                            <AdvancedLegalDisplay />
-                            {/*<NxButton id="nx-drawer-legal-open-button" onClick={nexusContext.toggleAlpDrawer}>*/}
-                            {/* <NxButton id='nx-drawer-legal-open-button'>
-                                <div>
-                                    <span>View License Files</span>
-                                </div>
-                            </NxButton> */}
-                            <span className={'smaller-font-for-legal'}>
-                                <div>
-                                    Powered by{' '}
-                                    <NxTextLink
-                                        external
-                                        href='https://help.sonatype.com/iqserver/product-information/add-on-packs/advanced-legal-pack-quickstart'>
-                                        Advanced Legal Pack
-                                    </NxTextLink>
-                                </div>
-                                <div>
-                                    <span>A Sonatype Lifecycle Add-On</span>
-                                </div>
-                            </span>
-                            {/* <span>
-                                <img
-                                    src='/images/add-on-sonatype-icon-logoblue.png'
-                                    className='nx-popup-logo'
-                                    alt='Powered by Advanced Legal Pack'
-                                />
-                            </span> */}
-                        </span>
                     </NxTabPanel>
                 </NxTabs>
             </React.Fragment>
