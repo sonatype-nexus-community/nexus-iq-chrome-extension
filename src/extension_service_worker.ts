@@ -48,7 +48,7 @@ function handle_message_received(
     request: MessageRequest,
     sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
     sendResponse: MessageResponseFunction
-): undefined {
+): void {
     logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
 
     switch (request.type) {
