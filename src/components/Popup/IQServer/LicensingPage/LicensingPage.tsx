@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 import {
-    NxList,
-    NxTextLink,
     NxTab,
     NxTabList,
     NxTabs,
@@ -33,7 +31,6 @@ import { ExtensionConfigurationContext } from '../../../../context/ExtensionConf
 import { LicenseDetail } from '../../../../types/ArtifactMessage'
 import { DATA_SOURCE } from '../../../../utils/Constants'
 import './LicensingDisplay.css'
-import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay'
 import { ApiLicenseLegalMetadataDTO } from '@sonatype/nexus-iq-api-client'
 import { Puff } from '@agney/react-loading'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
