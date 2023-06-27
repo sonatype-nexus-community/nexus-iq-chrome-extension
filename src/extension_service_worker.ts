@@ -48,7 +48,7 @@ function handle_message_received(
     request: MessageRequest,
     sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
     sendResponse: MessageResponseFunction
-): void {
+): boolean {
     logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
 
     switch (request.type) {
@@ -64,6 +64,9 @@ function handle_message_received(
             })
             break
     }
+
+    // Handlers are async - so return true
+    return true
 }
 
 /**
@@ -71,11 +74,7 @@ function handle_message_received(
  */
 _browser.runtime.onInstalled.addListener((details) => {
     if (details.reason === 'install') {
-        _browser.tabs.create({ url: 'options.html?install' }, () => {
-            if (chrome.runtime.lastError || browser.runtime.lastError) {
-                console.error('Error in install handler opening tab')
-            }
-        })
+        _browser.tabs.create({ url: 'options.html?install' })
     }
 })
 
@@ -94,16 +93,15 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
         // We support this Repository!
         logger.logMessage(`Enabling Sonatype Browser Extension for ${url}`, LogLevel.DEBUG)
         propogateCurrentComponentState(tabId, ComponentState.EVALUATING)
-        _browser.tabs.sendMessage(
-            tabId,
-            {
+        _browser.tabs
+            .sendMessage(tabId, {
                 type: MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE,
                 params: {
                     tabId: tabId,
                     url: url,
                 },
-            },
-            (response) => {
+            })
+            .then((response) => {
                 if (chrome.runtime.lastError) {
                     logger.logMessage('Error response from CALCULATE_PURL_FOR_PAGE', LogLevel.ERROR, response)
                 }
@@ -185,8 +183,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                         console.log('Sonatype Extension DISABLED for ', url)
                     })
                 }
-            }
-        )
+            })
     } else {
         logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Not a supported Registry.`, LogLevel.DEBUG)
         chrome.action.disable(tabId, () => {

@@ -30,7 +30,7 @@ import './IQServerOptionsPage.css'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from '../../../types/Message'
+import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageResponse } from '../../../types/Message'
 import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../../types/ExtensionConfiguration'
 import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
 import { isHttpUriValidator, nonEmptyValidator } from '../../Common/Validators'
@@ -48,7 +48,7 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
     const extensionSettings = useContext(ExtensionConfigurationContext)
     const [hasPermissions, setHasPermission] = useState(false)
     const [iqAuthenticated, setIqAuthenticated] = useState<boolean | undefined>()
-    const [iqServerApplicationList, setiqServerApplicationList] = useState([])
+    const [iqServerApplicationList, setiqServerApplicationList] = useState<Array<ApiApplicationDTO>>([])
     const setExtensionConfig = props.setExtensionConfig
 
     /**
@@ -72,9 +72,9 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
                 {
                     origins: [extensionSettings.host],
                 },
-                (granted) => {
+                (granted: boolean) => {
                     console.log('Response from Permission Request', granted)
-                    setHasPermission(granted as boolean)
+                    setHasPermission(granted)
                 }
             )
         }
@@ -86,9 +86,9 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
                 {
                     origins: [extensionSettings.host],
                 },
-                (result) => {
+                (result: boolean) => {
                     if (chrome.runtime.lastError) {
-                        console.log('Error in hasOriginPermission', chrome.runtime.lastError.message)
+                        logger.logMessage('Error in hasOriginPermission', LogLevel.WARN)
                     }
                     if (result) {
                         setHasPermission(true)
@@ -131,23 +131,33 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
     }
 
     function handleLoginCheck() {
-        _browser.runtime.sendMessage(
-            {
+        _browser.runtime
+            .sendMessage({
                 type: MESSAGE_REQUEST_TYPE.GET_APPLICATIONS,
-            },
-            (response) => {
+            })
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .then((response: any) => {
                 if (chrome.runtime.lastError) {
                     logger.logMessage('Error handleLoginCheck', LogLevel.ERROR)
+                    return
                 }
-                if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-                    setIqAuthenticated(true)
-                    setiqServerApplicationList(response.data.applications)
-                } else {
-                    setIqAuthenticated(false)
-                    setiqServerApplicationList([])
+                logger.logMessage(`Response to GET_APPLICATIONS: ${response}`, LogLevel.DEBUG)
+                if (response !== undefined) {
+                    logger.logMessage(`Processing response to message GET_APPLICATIONS: ${response}`, LogLevel.DEBUG)
+                    const msgResponse = response as MessageResponse
+                    if (
+                        msgResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS &&
+                        msgResponse.data &&
+                        'applications' in msgResponse.data
+                    ) {
+                        setIqAuthenticated(true)
+                        setiqServerApplicationList(msgResponse.data.applications as Array<ApiApplicationDTO>)
+                    } else {
+                        setIqAuthenticated(false)
+                        setiqServerApplicationList([])
+                    }
                 }
-            }
-        )
+            })
     }
 
     return (
