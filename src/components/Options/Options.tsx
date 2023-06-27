@@ -57,24 +57,21 @@ export default function Options() {
     }
 
     function handleSaveClose() {
-        // @todo add Save logic
         window.close()
     }
 
     useEffect(() => {
-        if (extensionConfig == DEFAULT_EXTENSION_SETTINGS) {
-            readExtensionConfiguration().then((response) => {
-                console.log('Options useEffect Response:', response)
-                if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-                    if (response.data === undefined) {
-                        setExtensionConfig(DEFAULT_EXTENSION_SETTINGS)
-                    } else {
-                        setExtensionConfig(response.data as ExtensionConfiguration)
-                    }
+        readExtensionConfiguration().then((response) => {
+            console.log('Options useEffect Response:', response)
+            if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+                if (response.data === undefined) {
+                    setExtensionConfig(DEFAULT_EXTENSION_SETTINGS)
+                } else {
+                    setExtensionConfig(response.data as ExtensionConfiguration)
                 }
-            })
-        }
-    })
+            }
+        })
+    }, [])
 
     return (
         <ExtensionConfigurationContext.Provider value={extensionConfig}>
@@ -93,8 +90,7 @@ export default function Options() {
                                         value={DATA_SOURCE.NEXUSIQ}
                                         onChange={handleDataSourceChange}
                                         isChecked={extensionConfig.dataSource === DATA_SOURCE.NEXUSIQ}
-                                        radioId='scanType-IQ-Server'
-                                    >
+                                        radioId='scanType-IQ-Server'>
                                         Sonatype IQ Server
                                     </NxRadio>
                                     <NxRadio
@@ -102,8 +98,7 @@ export default function Options() {
                                         value={DATA_SOURCE.OSSINDEX}
                                         onChange={handleDataSourceChange}
                                         isChecked={extensionConfig.dataSource === DATA_SOURCE.OSSINDEX}
-                                        radioId='scanType-OSS-Index'
-                                    >
+                                        radioId='scanType-OSS-Index'>
                                         Sonatype OSS Index
                                     </NxRadio>
                                 </NxFieldset>
