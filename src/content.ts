@@ -89,6 +89,7 @@ function handle_message_received_propogate_component_state(
 ): void {
     if (request.type == MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE) {
         logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
+        removeClasses
         if (request.params !== undefined && 'componentState' in request.params) {
             const repoType = findRepoType(window.location.href) as RepoType
             const componentState = request.params.componentState as ComponentState
@@ -114,8 +115,8 @@ function handle_message_received_propogate_component_state(
 
             const domElement = $(repoType.titleSelector)
             if (domElement.length > 0) {
-                domElement.addClass(vulnClass)
                 domElement.addClass('sonatype-iq-extension-vuln')
+                domElement.addClass(vulnClass)
             }
         }
     }
