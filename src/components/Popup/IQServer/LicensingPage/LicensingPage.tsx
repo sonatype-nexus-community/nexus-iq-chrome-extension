@@ -13,7 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NxButton, NxList, NxTextLink, NxTab, NxTabList, NxTabs, NxTabPanel } from '@sonatype/react-shared-components'
+import {
+    NxButton,
+    NxList,
+    NxTextLink,
+    NxTab,
+    NxTabList,
+    NxTabs,
+    NxTabPanel,
+    NxTable,
+    NxThreatIndicator,
+    ThreatLevelNumber,
+    NxPolicyViolationIndicator,
+} from '@sonatype/react-shared-components'
 import React, { useContext, useState } from 'react'
 import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../context/NexusContext'
 import { LicenseDetail } from '../../../../types/ArtifactMessage'
@@ -57,8 +69,7 @@ function IqLicensePage() {
                     activeTab={activeTabId}
                     onTabSelect={setActiveTabId}
                     style={{
-                        maxHeight: '300px',
-                        // marginBottom: '0px',
+                        height: '400px',
                     }}>
                     <NxTabList>
                         {effectiveLicenses && effectiveLicenses.length > 0 && (
@@ -91,7 +102,12 @@ function IqLicensePage() {
                         </NxTab>
                     </NxTabList>
 
-                    <NxTabPanel className='nx-scrollable'>
+                    <NxTabPanel
+                        className='nx-scrollable'
+                        style={{
+                            height: '500px',
+                            // maxHeight: '300px',
+                        }}>
                         {/* <NxList bulleted>
                                 {licenseData.effectiveLicenses?.sort().map((license: LicenseDetail) => {
                                     return (
@@ -101,16 +117,56 @@ function IqLicensePage() {
                                     )
                                 })}
                             </NxList> */}
-                        <NxList bulleted>
-                            {licenseLegalMetadataArray !== undefined &&
-                                licenseLegalMetadataArray.map((licenseLegalMetadata: ApiLicenseLegalMetadataDTO) => {
-                                    return (
-                                        <NxList.Item key={`effective-${licenseLegalMetadata.licenseId}`}>
-                                            {licenseLegalMetadata.licenseName}
-                                        </NxList.Item>
-                                    )
-                                })}
-                        </NxList>
+                        <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
+                            <NxTable
+                                className='nx-table'
+                                style={{
+                                    height: '400px',
+                                }}>
+                                <NxTable.Head>
+                                    <NxTable.Row className='nx-table-row nx-table-row--header'>
+                                        <NxTable.Cell>Threat Group</NxTable.Cell>
+                                        <NxTable.Cell>License</NxTable.Cell>
+                                    </NxTable.Row>
+                                </NxTable.Head>
+                                <NxTable.Body
+                                    style={{
+                                        height: '300px',
+                                        maxHeight: '300px',
+                                    }}>
+                                    {licenseLegalMetadataArray !== undefined &&
+                                        licenseLegalMetadataArray.map(
+                                            (licenseLegalMetadata: ApiLicenseLegalMetadataDTO) => {
+                                                return (
+                                                    <NxTable.Row
+                                                        // isClickable
+                                                        className='nx-table-row'
+                                                        key={`row-${licenseLegalMetadata.licenseId}`}>
+                                                        <React.Fragment key={licenseLegalMetadata.licenseId}>
+                                                            <NxTable.Cell className='nx-cell'>
+                                                                <NxPolicyViolationIndicator
+                                                                    style={{ marginBottom: '16px !important' }}
+                                                                    policyThreatLevel={
+                                                                        licenseLegalMetadata.threatGroup
+                                                                            ?.threatLevel as ThreatLevelNumber
+                                                                    }>
+                                                                    {licenseLegalMetadata.threatGroup?.name}
+                                                                </NxPolicyViolationIndicator>
+                                                            </NxTable.Cell>
+                                                            <NxTable.Cell className='nx-cell'>
+                                                                {licenseLegalMetadata.licenseName}
+                                                            </NxTable.Cell>
+                                                        </React.Fragment>
+                                                    </NxTable.Row>
+                                                )
+                                            }
+                                        )}
+                                </NxTable.Body>
+                            </NxTable>
+                        </section>
+                        {/* <NxList bulleted> */}
+
+                        {/* </NxList> */}
                     </NxTabPanel>
 
                     <NxTabPanel className='nx-scrollable'>
