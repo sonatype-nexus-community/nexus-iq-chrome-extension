@@ -1,10 +1,24 @@
 {
   "branches": [
-    "main"
+    "main",
+    { 
+      "name": "feat/*",
+      "channel": "alpha",
+      "prerelease": false
+    },
+    { 
+      "name": "dev/*",
+      "channel": "beta",
+      "prerelease": false
+    }
   ],
   "plugins": [
     "@semantic-release/commit-analyzer", 
     "@semantic-release/release-notes-generator", 
+    ["semantic-release-chrome", {
+      "extensionId": "mjehedmoboadebjmbmobpedkdgenmlhd",
+      "asset": "my-extension.zip"
+    }],
     ["@semantic-release/github", {
       "assets": "dist/*.tgz"
     }]

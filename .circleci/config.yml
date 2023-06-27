@@ -20,7 +20,7 @@ jobs:
     build_and_test:
         docker:
             - image: 'cimg/base:stable'
-        resource_class: large
+        resource_class: medium+
         steps:
             - checkout
             - node/install:
@@ -47,16 +47,50 @@ jobs:
                   path: build/nexus-iq-chrome-plugin.zip
                   destination: nexus-iq-chrome-plugin.zip
 
-    release_build:
+    prerelease_build:
         docker:
             - image: 'cimg/base:stable'
+        resource_class: medium+
         steps:
             - checkout
-            - node/install-packages:
-                  pkg-manager: yarn
+            - node/install:
+                  install-yarn: true
+                  node-version: '18.14.2' # LTS of 18 @ 24-Feb-2023
             - run:
                   name: Confirm Node Version
                   command: node --version
+            - run:
+                  name: Lint
+                  command: yarn run lint
+            - run:
+                  name: Build
+                  command: yarn webpack --mode production --env production --no-watch
+            - run:
+                  name: Test
+                  command: yarn run test
+            - run:
+                  name: Semantic Release
+                  command: npx semantic-release
+            - run:
+                  # See https://circleci.com/blog/continuously-deploy-a-chrome-extension/
+                  name: Publish to Chrome Store
+                  command: echo 'Coming soon...'
+
+    release_build:
+        docker:
+            - image: 'cimg/base:stable'
+        resource_class: medium+
+        steps:
+            - checkout
+            - node/install:
+                  install-yarn: true
+                  node-version: '18.14.2' # LTS of 18 @ 24-Feb-2023
+            - run:
+                  name: Confirm Node Version
+                  command: node --version
+            - run:
+                  name: Lint
+                  command: yarn run lint
             - run:
                   name: Build
                   command: yarn webpack --mode production --env production --no-watch
