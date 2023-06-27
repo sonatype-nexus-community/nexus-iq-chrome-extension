@@ -22,6 +22,7 @@ export enum ComponentState {
     MODERATE,
     LOW,
     NONE,
+    EVALUATING,
 }
 
 export function getMaxThreatLevelForPolicyViolations(policydata: ApiComponentPolicyViolationListDTOV2): number {

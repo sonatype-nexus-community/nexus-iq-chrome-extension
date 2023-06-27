@@ -33,6 +33,13 @@
     box-shadow: 5px 5px 8px var(--nx-color-threat-none);
 }
 
+.sonatype-iq-extension-vuln-evaluating {
+    border: 3px solid var(--nx-color-threat-none) !important;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 5px 5px 8px var(--nx-color-threat-none);
+}
+
 .sonatype-iq-extension-vuln:before {
     content: url('chrome-extension://__MSG_@@extension_id__/images/sonatype-lifecycle-icon_Vulnerable-32x32.png');
     vertical-align: middle;
