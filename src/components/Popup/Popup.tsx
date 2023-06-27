@@ -20,9 +20,9 @@ import {
     NxTabPanel,
     NxTabs,
     NxP,
-    NxFooter,
     NxFontAwesomeIcon,
     NxTextInput,
+    NxFooter,
 } from '@sonatype/react-shared-components'
 import React, { useContext, useState } from 'react'
 import { ExtensionPopupContext } from '../../context/ExtensionPopupContext'
@@ -114,11 +114,11 @@ function OssiPopup() {
                                 </NxTabs> */}
                             </div>
 
-                            <NxFooter>
+                            {/* <NxFooter>
                                 <NxP style={{ textAlign: 'center' }}>
                                     Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype OSS Index
                                 </NxP>
-                            </NxFooter>
+                            </NxFooter> */}
                         </section>
                     </main>
                 </div>
