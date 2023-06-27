@@ -47,9 +47,8 @@ function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentP
             </header>
             <NxPolicyViolationIndicator
                 style={{ marginBottom: '16px !important' }}
-                policyThreatLevel={
-                    Math.round(getMaxThreatLevelForPolicyViolations(policyData)) as ThreatLevelNumber
-                }></NxPolicyViolationIndicator>
+                policyThreatLevel={Math.round(getMaxThreatLevelForPolicyViolations(policyData)) as ThreatLevelNumber}
+            ></NxPolicyViolationIndicator>
         </React.Fragment>
     )
 }
@@ -69,7 +68,8 @@ function IqComponentInfo() {
                     <header className='nx-grid-header'>
                         <NxTooltip
                             placement='top'
-                            title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}>
+                            title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}
+                        >
                             <h3 className='nx-h2 nx-grid-header__title'>
                                 {popupContext.iq?.componentDetails?.component?.displayName}
                             </h3>
@@ -110,7 +110,8 @@ function IqComponentInfo() {
                                 <NxDescriptionList.Term>
                                     <NxTextLink
                                         external
-                                        href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'>
+                                        href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'
+                                    >
                                         Integrity Rating
                                     </NxTextLink>
                                 </NxDescriptionList.Term>
@@ -124,7 +125,8 @@ function IqComponentInfo() {
                                 <NxDescriptionList.Term>
                                     <NxTextLink
                                         external
-                                        href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'>
+                                        href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'
+                                    >
                                         Hygiene Rating
                                     </NxTextLink>
                                 </NxDescriptionList.Term>
@@ -186,7 +188,8 @@ function IqComponentInfo() {
                                     <h3 className={'nx-h3'}>Lifecycle Quick Links</h3>
                                     <NxTextLink
                                         href={`${iqServerUrl}/api/v2/search/advanced?query=componentHash%3A${popupContext.iq.componentDetails.component.hash}&page=0&allComponents=true`}
-                                        external>
+                                        external
+                                    >
                                         Advanced Search Resuts
                                     </NxTextLink>
                                 </>

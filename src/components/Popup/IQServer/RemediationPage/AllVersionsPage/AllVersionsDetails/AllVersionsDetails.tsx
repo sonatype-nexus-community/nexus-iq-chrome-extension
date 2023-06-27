@@ -72,7 +72,8 @@ function IqAllVersionDetails() {
                         <NxList.LinkItem
                             href=''
                             key={version.component?.packageUrl}
-                            selected={versionPurl.version == currentPurl?.version}>
+                            selected={versionPurl.version == currentPurl?.version}
+                        >
                             <NxList.Text
                                 onClick={() =>
                                     getNewUrlandGo(
@@ -81,19 +82,22 @@ function IqAllVersionDetails() {
                                         versionPurl.version as string
                                     )
                                 }
-                                ref={currentPurl?.version == versionPurl.version ? currentVersionRef : null}>
+                                ref={currentPurl?.version == versionPurl.version ? currentVersionRef : null}
+                            >
                                 <NxGrid.Row
                                     style={{
                                         marginTop: '0px',
                                         marginBottom: '0px',
-                                    }}>
+                                    }}
+                                >
                                     <NxGrid.Column className='nx-grid-col-50'>
                                         {version.policyData != undefined && (
                                             <NxPolicyViolationIndicator
                                                 style={{ marginBottom: '16px !important' }}
                                                 policyThreatLevel={
                                                     Math.round(getMaxViolation(version.policyData)) as ThreatLevelNumber
-                                                }>
+                                                }
+                                            >
                                                 {versionPurl.version}
                                             </NxPolicyViolationIndicator>
                                         )}

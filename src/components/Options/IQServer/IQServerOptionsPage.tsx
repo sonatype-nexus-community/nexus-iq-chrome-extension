@@ -226,7 +226,8 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
                                 <NxFormSelect
                                     defaultValue={`${extensionSettings.iqApplicationInternalId}|${extensionSettings.iqApplicationPublidId}`}
                                     onChange={handleIqApplicationChange}
-                                    disabled={!iqAuthenticated}>
+                                    disabled={!iqAuthenticated}
+                                >
                                     {iqServerApplicationList.map((app: ApiApplicationDTO) => {
                                         return (
                                             <option key={app.id} value={`${app.id}|${app.publicId}`}>

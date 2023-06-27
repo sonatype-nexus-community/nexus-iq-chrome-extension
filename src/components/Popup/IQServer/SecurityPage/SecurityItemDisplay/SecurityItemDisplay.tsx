@@ -37,7 +37,8 @@ export function IqSecurityItemDisplay(props: SecurityItemProps) {
             isClickable
             className='nx-table-row'
             key={`row-${props.securityIssue.reference}`}
-            onClick={() => window.open(cveUrl, '_blank')}>
+            onClick={() => window.open(cveUrl, '_blank')}
+        >
             <React.Fragment key={props.securityIssue.reference}>
                 <NxTable.Cell className='nx-cell'>{props.securityIssue.severity}</NxTable.Cell>
                 <NxTable.Cell className='nx-cell'>{props.securityIssue.reference}</NxTable.Cell>

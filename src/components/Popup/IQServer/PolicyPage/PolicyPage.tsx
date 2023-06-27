@@ -55,7 +55,8 @@ function IqPolicyPage() {
                                         <PolicyViolation
                                             key={`violation${index}`}
                                             policyViolation={violation}
-                                            iqServerUrl={extensionContext.host as string}></PolicyViolation>
+                                            iqServerUrl={extensionContext.host as string}
+                                        ></PolicyViolation>
                                     )
                                 })}
                         </tbody>

@@ -27,7 +27,8 @@ export default function AlpDrawer() {
             onClose={() => {
                 setAlpDrawerOpen(false)
             }}
-            aria-labelledby='drawer-legal-title'>
+            aria-labelledby='drawer-legal-title'
+        >
             <NxDrawer.Header>
                 <NxDrawer.HeaderTitle id='drawer-legal-title'>
                     <span>

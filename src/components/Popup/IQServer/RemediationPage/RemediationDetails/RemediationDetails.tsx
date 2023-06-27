@@ -36,7 +36,8 @@ function IqRemediationDetails() {
                             <NxList.LinkItem
                                 href='#'
                                 key={id}
-                                onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}>
+                                onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}
+                            >
                                 <NxList.Text>
                                     <small>{REMEDIATION_LABELS[change.type as string]}</small>
                                 </NxList.Text>

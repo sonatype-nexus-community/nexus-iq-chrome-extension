@@ -38,7 +38,8 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
                 <NxTextLink
                     key={`textLink${index}`}
                     external
-                    href={`${iqServerUrl}/assets/index.html#/vulnerabilities/${segment}`}>
+                    href={`${iqServerUrl}/assets/index.html#/vulnerabilities/${segment}`}
+                >
                     {segment}
                 </NxTextLink>
             ) : (
@@ -56,7 +57,8 @@ const PolicyViolation = (props: PolicyViolationProps): JSX.Element | null => {
                             width: '10px !important',
                             margin: 'none !important',
                         }}
-                        policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}>
+                        policyThreatLevel={policyViolation.threatLevel as ThreatLevelNumber}
+                    >
                         {policyViolation?.threatLevel?.toString()}
                     </NxPolicyViolationIndicator>
                 </td>
