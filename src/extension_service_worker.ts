@@ -33,176 +33,6 @@ import { ComponentState, getForComponentPolicyViolations } from './types/Compone
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
 const _browser: any = chrome ? chrome : browser
 
-// const handleURLOSSIndex = (purl: string, settings: Settings): Promise<ComponentDetails> => {
-//   const manifestData = chrome.runtime.getManifest();
-//   return new Promise((resolve, reject) => {
-//     const requestService = new OSSIndexRequestService(
-//       {
-//         token: settings.token as unknown as string,
-//         browser: true,
-//         user: settings.user as unknown as string,
-//         application: settings.application as unknown as string,
-//         logger: logger,
-//         product: manifestData.name,
-//         version: manifestData.version
-//       },
-//       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//       localforage as any
-//     );
-
-//     const purlObj = PackageURL.fromString(purl);
-
-//     requestService
-//       .getComponentDetails([purlObj])
-//       .then((componentDetails) => {
-//         resolve(componentDetails);
-//       })
-//       .catch((err) => {
-//         reject(err);
-//       });
-//   });
-// };
-
-// const handleOSSIndexWrapper = (purl: string, settings: Settings) => {
-//   handleURLOSSIndex(purl, settings)
-//     .then((componentDetails) => {
-//       logger.logMessage('Got back response from OSS Index', LogLevel.INFO);
-//       logger.logMessage('Response from OSS Index', LogLevel.TRACE, componentDetails);
-//       sendNotificationAndMessage(purl, componentDetails);
-//     })
-//     .catch((err) => {
-//       logger.logMessage('Error: Unable to handle OSS Index wrapper', LogLevel.ERROR, err.message);
-//       throw new Error(err);
-//     });
-// };
-
-// const sendNotificationAndMessage = (purl: string, details: ComponentDetails) => {
-//   if (
-//     // details.componentDetails &&
-//     details.componentDetails.length > 0 &&
-//     details.componentDetails[0].securityData !== undefined &&
-//     details.componentDetails[0].securityData !== null &&
-//     // details.componentDetails[0].securityData.securityIssues &&
-//     details.componentDetails[0].securityData.securityIssues?.length > 0
-//   ) {
-//     getActiveTabId()
-//       .then((tabId) => {
-//         chrome.action.setIcon({tabId: tabId, path: '/images/sonatype-lifecycle-icon_Vulnerable.png'});
-//       })
-//       .catch((err) => {
-//         logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-//       });
-
-//     logger.logMessage('Sending notification that component is vulnerable', LogLevel.INFO);
-//     chrome.notifications.create(
-//       {
-//         title: `Sonatype Scan Results - ${purl}`,
-//         iconUrl: '/images/sonatype-lifecycle-icon_Vulnerable.png',
-//         type: 'basic',
-//         message: 'Vulnerabilities have been found in this version',
-//         priority: 1,
-//         buttons: [
-//           {
-//             title: 'Close'
-//           }
-//         ],
-//         isClickable: true
-//       },
-//       (notificationId) => {
-//         logger.logMessage('Notification sent', LogLevel.TRACE, notificationId);
-//       }
-//     );
-//   } else {
-//     getActiveTabId()
-//       .then((tabId) => {
-//         chrome.action.setIcon({
-//           tabId: tabId,
-//           path: '/images/sonatype-lifecycle-icon-white-32x32.png'
-//         });
-//       })
-//       .catch((err) => {
-//         logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-//       });
-//   }
-
-//   getActiveTabId()
-//     .then((tabId) => {
-//       chrome.tabs.sendMessage(tabId, {
-//         type: 'artifactDetailsFromServiceWorker',
-//         componentDetails: details
-//       }, (response) => {
-//         if (chrome.runtime.lastError) {
-//           console.error('Error in getActiveTabId 1')
-//         }
-//       });
-//     })
-//     .catch((err) => {
-//       logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-//     });
-// };
-
-// const getActiveTabId = (): Promise<number> => {
-//   return new Promise((resolve, reject) => {
-//     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-//       if (chrome.runtime.lastError) {
-//         console.error('Error in getActiveTabId 2')
-//       }
-
-//       const tab = tabs.length > 0 ? tabs[0] : undefined;
-//       const tabId = tab?.id !== undefined ? tab.id : undefined;
-//       if (tab !== undefined && tabId !== undefined) {
-//         resolve(tabId);
-//       } else {
-//         reject('No valid tab');
-//       }
-//     });
-//   });
-// };
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//   logger.logMessage('Request received', LogLevel.INFO, request);
-//   console.info('Message received: ', request);
-
-//   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-//   if (request && request.type) {
-//     if (request.type === 'getArtifactDetailsFromPurl') {
-//       logger.logMessage('Getting settings in getArtifactDetailsFromPurl', LogLevel.INFO);
-//       console.info('Getting settings in getArtifactDetailsFromPurl');
-//       getSettings()
-//         .then((settings: Settings) => {
-//           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-//           if (!settings.host || !settings.application || !settings.scanType || !settings.user || !settings.token ) {
-//             console.error('Unable to get settings need to make IQ connection: ', settings);
-//           }
-//           if (settings.logLevel) {
-//             logger.setLevel(settings.logLevel as unknown as LogLevel);
-//           }
-//           try {
-//             if ((settings.scanType as unknown as string) === 'NEXUSIQ') {
-//               logger.logMessage('Attempting to call Nexus IQ Server', LogLevel.INFO);
-//               handleIQServerWrapper(request.purl, settings);
-//             } else {
-//               logger.logMessage('Attempting to call OSS Index', LogLevel.INFO);
-//               handleOSSIndexWrapper(request.purl, settings);
-//             }
-//           } catch (err) {
-//             logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-//             console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
-
-//           }
-//         })
-//         .catch((err) => {
-//           logger.logMessage('Error encountered', LogLevel.ERROR, err.message);
-//           console.error('Error encountered in getArtifactDetailsFromPurl', err.message);
-//         });
-//     }
-//     if (request.type === 'togglePage') {
-//       toggleIcon(request.show);
-//     }
-//   }
-// });
-
 /**
  * New listener for messages received by Service Worker.
  *
@@ -218,7 +48,7 @@ function handle_message_received(
     request: MessageRequest,
     sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
     sendResponse: MessageResponseFunction
-): boolean {
+): undefined {
     logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
 
     switch (request.type) {
@@ -234,8 +64,6 @@ function handle_message_received(
             })
             break
     }
-
-    return true
 }
 
 /**

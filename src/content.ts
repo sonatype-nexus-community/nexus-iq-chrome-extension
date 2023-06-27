@@ -41,7 +41,7 @@ function handle_message_received_calculate_purl_for_page(
     request: MessageRequest,
     sender: chrome.runtime.MessageSender | browser.runtime.MessageSender,
     sendResponse: MessageResponseFunction
-): boolean {
+): void {
     if (request.type == MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE) {
         logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
         logger.logMessage('Deriving PackageURL', LogLevel.INFO, request.params)
@@ -73,8 +73,6 @@ function handle_message_received_calculate_purl_for_page(
             }
         }
     }
-
-    return true
 }
 
 /**
