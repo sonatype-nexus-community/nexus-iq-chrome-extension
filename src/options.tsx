@@ -49,8 +49,7 @@ root.render(
             toggleOpenIcon={faArrowLeft as IconDefinition}
             logoImg='images/sonatype-lifecycle-logo-nav-white.svg'
             logoAltText='Sonatype Browser Extension'
-            logoLink='#'
-        >
+            logoLink='#'>
             <NxGlobalSidebarNavigation>
                 <NxGlobalSidebarNavigationLink
                     icon={faPlay as IconDefinition}

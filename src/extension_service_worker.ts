@@ -222,58 +222,6 @@ function handle_message_received(
     logger.logMessage('Service Worker - Handle Received Message', LogLevel.INFO, request.type)
 
     switch (request.type) {
-        // case MESSAGE_REQUEST_TYPE.EVALUATE_COMPOENNT_BY_PURL:
-        //     if (request.params && 'purl' in request.params) {
-        //         requestComponentEvaluationByPurls({
-        //             type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,
-        //             params: {
-        //                 purl: 'purl' in request.params ? (request.params['purl'] as string) : '',
-        //             },
-        //         }).then((r2) => {
-        //             if (chrome.runtime.lastError || browser.runtime.lastError) {
-        //                 logger.logMessage('Error handling requestComponentEvaluationByPurls', LogLevel.ERROR)
-        //             }
-
-        //             const evaluateRequestTicketResponse = r2.data as ApiComponentEvaluationTicketDTOV2
-
-        //             const { promise, stopPolling } = pollForComponentEvaluationResult(
-        //                 evaluateRequestTicketResponse.applicationId === undefined
-        //                     ? ''
-        //                     : evaluateRequestTicketResponse.applicationId,
-        //                 evaluateRequestTicketResponse.resultId === undefined
-        //                     ? ''
-        //                     : evaluateRequestTicketResponse.resultId,
-        //                 1000
-        //             )
-
-        //             promise
-        //                 .then((evalResponse) => {
-        //                     sendResponse({
-        //                         status: MESSAGE_RESPONSE_STATUS.SUCCESS,
-        //                         data: {
-        //                             componentDetails: (
-        //                                 evalResponse as ApiComponentEvaluationResultDTOV2
-        //                             ).results?.pop(),
-        //                         },
-        //                     })
-        //                 })
-        //                 .catch((err) => {
-        //                     logger.logMessage(`Error in Poll: ${err}`, LogLevel.ERROR)
-        //                 })
-        //                 .finally(() => {
-        //                     logger.logMessage('Stopping poll for results - they are in!', LogLevel.INFO)
-        //                     stopPolling()
-        //                 })
-        //         })
-        //     } else {
-        //         sendResponse({
-        //             status: MESSAGE_RESPONSE_STATUS.FAILURE,
-        //             status_detail: {
-        //                 message: 'No PURL supplied in Message Request',
-        //             },
-        //         })
-        //     }
-        //     break
         case MESSAGE_REQUEST_TYPE.GET_APPLICATIONS:
             getApplications().then((response) => {
                 sendResponse(response)
