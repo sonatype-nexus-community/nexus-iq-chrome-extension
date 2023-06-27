@@ -54,8 +54,8 @@ export class BrowserExtensionLogger implements ILogger {
                 case LogLevel.WARN:
                     console.warn(message, LogLevel[level].toString(), meta)
                     break
-                case LogLevel.LOG:
-                    console.log(message, LogLevel[level].toString(), meta)
+                case LogLevel.OFF:
+                    // Silence!
                     break
                 default:
                     console.log(message, meta)
