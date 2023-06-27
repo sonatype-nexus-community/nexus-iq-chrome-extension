@@ -155,5 +155,13 @@ export default function Popup() {
         console.log(`Popup: ${extensionContext}`)
     })
 
-    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}</div>
+    return (
+        <div
+            style={{
+                maxWidth: '800px',
+                width: '800px',
+            }}>
+            {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}
+        </div>
+    )
 }
