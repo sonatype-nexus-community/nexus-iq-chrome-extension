@@ -43,6 +43,11 @@ export default function Options() {
     function handleDataSourceChange(e) {
         const newExtensionConfig = extensionConfig
         newExtensionConfig.dataSource = e
+        newExtensionConfig.host = undefined
+        newExtensionConfig.iqApplicationInternalId = undefined
+        newExtensionConfig.iqApplicationPublidId = undefined
+        newExtensionConfig.token = undefined
+        newExtensionConfig.user = undefined
         handleNewExtensionConfig(newExtensionConfig)
     }
 
@@ -106,7 +111,7 @@ export default function Options() {
                             <section className='nx-grid-col nx-grid-col--33'>
                                 <NxButtonBar>
                                     <NxButton onClick={handleSaveClose}>
-                                        <span>Save & Close</span>
+                                        <span>Close</span>
                                     </NxButton>
                                 </NxButtonBar>
                             </section>
@@ -114,18 +119,19 @@ export default function Options() {
 
                         <NxTabs activeTab={activeTabId} onTabSelect={setActiveTabId}>
                             <NxTabList>
-                                <NxTab key={DATA_SOURCE.NEXUSIQ}>Sonatype IQ Server</NxTab>
-                                <NxTab key={DATA_SOURCE.OSSINDEX}>Sonatype OSS Index</NxTab>
+                                <NxTab key={`DATA_SOURCE`}>Sonatype Configuration</NxTab>
                                 <NxTab key={`GENERAL`}>General Options</NxTab>
                             </NxTabList>
                             <NxTabPanel>
-                                <IQServerOptionsPage setExtensionConfig={handleNewExtensionConfig} />
+                                {extensionConfig.dataSource === DATA_SOURCE.NEXUSIQ && (
+                                    <IQServerOptionsPage setExtensionConfig={handleNewExtensionConfig} />
+                                )}
+                                {extensionConfig.dataSource === DATA_SOURCE.OSSINDEX && (
+                                    <OSSIndexOptionsPage setExtensionConfig={handleNewExtensionConfig} />
+                                )}
                             </NxTabPanel>
                             <NxTabPanel>
-                                <OSSIndexOptionsPage />
-                            </NxTabPanel>
-                            <NxTabPanel>
-                                <GeneralOptionsPage />
+                                <GeneralOptionsPage setExtensionConfig={handleNewExtensionConfig} />
                             </NxTabPanel>
                         </NxTabs>
                     </NxTile.Content>

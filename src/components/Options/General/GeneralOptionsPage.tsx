@@ -13,58 +13,91 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LogLevel } from '@sonatype/js-sona-types'
+
 import { NxFormGroup, NxFormSelect, nxFormSelectStateHelpers } from '@sonatype/react-shared-components'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { ExtensionConfiguration } from '../../../types/ExtensionConfiguration'
+import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
+import { LogLevel } from '../../../logger/Logger'
 
-const LOG_LEVEL = 'logLevel'
+export default function GeneralOptionsPage({
+    setExtensionConfig,
+}: {
+    setExtensionConfig: (settings: ExtensionConfiguration) => void
+}) {
+    const extensionSettings = useContext(ExtensionConfigurationContext)
 
-const GeneralOptionsPage = (): JSX.Element | null => {
-    const [logLevel, setLogLevel] = nxFormSelectStateHelpers.useNxFormSelectState<number>(LogLevel.ERROR)
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        chrome.storage.local.get((items: { [key: string]: any }) => {
-            if (items[LOG_LEVEL] !== undefined) {
-                setLogLevel(items[LOG_LEVEL])
-            }
-            setLoading(false)
-        })
-        // eslint-disable-next-line
-    }, [logLevel])
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const setItem = (func: any, event: any, key: string) => {
-        console.log(event.target.value)
-        func(parseInt(event.target.value))
-        chrome.storage.local.set({ [key]: parseInt(event.target.value) })
+    function handleLogLevelChange(e) {
+        const newExtensionSettings = extensionSettings as ExtensionConfiguration
+        newExtensionSettings.logLevel = e.target.value as number
+        setExtensionConfig(newExtensionSettings)
     }
 
-    const renderOptions = () => {
-        if (!loading) {
-            return (
-                <form className='nx-form'>
-                    <NxFormGroup label={`Extension Log Level`} isRequired>
-                        <NxFormSelect onChange={(event) => setItem(setLogLevel, event, LOG_LEVEL)} {...logLevel}>
-                            {Object.keys(LogLevel)
-                                .filter((key) => !isNaN(Number(LogLevel[key])))
-                                .map((val, key) => {
-                                    return (
-                                        <option key={key} value={key}>
-                                            {LogLevel[key]}
-                                        </option>
-                                    )
-                                })}
-                        </NxFormSelect>
-                    </NxFormGroup>
-                </form>
-            )
-        }
-        return null
-    }
-
-    return renderOptions()
+    return (
+        <form className='nx-form'>
+            <NxFormGroup label={`Extension Log Level`} isRequired>
+                <NxFormSelect defaultValue={extensionSettings.logLevel} onChange={handleLogLevelChange}>
+                    {Object.keys(LogLevel)
+                        .filter((key) => !isNaN(Number(LogLevel[key])))
+                        .map((val, key) => {
+                            return (
+                                <option key={key} value={key}>
+                                    {LogLevel[key]}
+                                </option>
+                            )
+                        })}
+                </NxFormSelect>
+            </NxFormGroup>
+        </form>
+    )
 }
 
-export default GeneralOptionsPage
+// const GeneralOptionsPage = (): JSX.Element | null => {
+//     const [logLevel, setLogLevel] = nxFormSelectStateHelpers.useNxFormSelectState<number>(LogLevel.ERROR)
+//     const [loading, setLoading] = useState(true)
+
+//     useEffect(() => {
+//         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//         chrome.storage.local.get((items: { [key: string]: any }) => {
+//             if (items[LOG_LEVEL] !== undefined) {
+//                 setLogLevel(items[LOG_LEVEL])
+//             }
+//             setLoading(false)
+//         })
+//         // eslint-disable-next-line
+//     }, [logLevel])
+
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     const setItem = (func: any, event: any, key: string) => {
+//         console.log(event.target.value)
+//         func(parseInt(event.target.value))
+//         chrome.storage.local.set({ [key]: parseInt(event.target.value) })
+//     }
+
+//     const renderOptions = () => {
+//         if (!loading) {
+//             return (
+//                 <form className='nx-form'>
+//                     <NxFormGroup label={`Extension Log Level`} isRequired>
+//                         <NxFormSelect onChange={(event) => setItem(setLogLevel, event, LOG_LEVEL)} {...logLevel}>
+//                             {Object.keys(LogLevel)
+//                                 .filter((key) => !isNaN(Number(LogLevel[key])))
+//                                 .map((val, key) => {
+//                                     return (
+//                                         <option key={key} value={key}>
+//                                             {LogLevel[key]}
+//                                         </option>
+//                                     )
+//                                 })}
+//                         </NxFormSelect>
+//                     </NxFormGroup>
+//                 </form>
+//             )
+//         }
+//         return null
+//     }
+
+//     return renderOptions()
+// }
+
+// export default GeneralOptionsPage

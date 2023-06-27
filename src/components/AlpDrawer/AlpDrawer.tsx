@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 import { NxDrawer } from '@sonatype/react-shared-components'
-import React, { useContext } from 'react'
-import { NexusContext } from '../../context/ExtensionPopupContext'
+import React, { useState } from 'react'
 import AdvancedLegalDisplay from '../Popup/IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay'
 
-const AlpDrawer = (): JSX.Element | null => {
-    const nexusContext = useContext(NexusContext)
+export default function AlpDrawer() {
+    const [alpDrawerOpen, setAlpDrawerOpen] = useState<boolean>(false)
 
     return (
         <NxDrawer
             id='nx-drawer-legal'
-            open={nexusContext.showAlpDrawer}
-            onClose={nexusContext.toggleAlpDrawer}
+            open={alpDrawerOpen}
+            onClose={() => {
+                setAlpDrawerOpen(false)
+            }}
             aria-labelledby='drawer-legal-title'>
             <NxDrawer.Header>
                 <NxDrawer.HeaderTitle id='drawer-legal-title'>
@@ -45,5 +46,3 @@ const AlpDrawer = (): JSX.Element | null => {
         </NxDrawer>
     )
 }
-
-export default AlpDrawer
