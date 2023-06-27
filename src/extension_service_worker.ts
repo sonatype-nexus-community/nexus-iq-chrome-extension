@@ -317,7 +317,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
     if (repoType !== undefined) {
         // We support this Repository!
         logger.logMessage(`Enabling Sonatype Browser Extension for ${url}`, LogLevel.DEBUG)
-        // propogateCurrentComponentState(tabId, ComponentState.EVALUATING)
+        propogateCurrentComponentState(tabId, ComponentState.EVALUATING)
         _browser.tabs.sendMessage(
             tabId,
             {

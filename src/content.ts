@@ -89,7 +89,6 @@ function handle_message_received_propogate_component_state(
 ): void {
     if (request.type == MESSAGE_REQUEST_TYPE.PROPOGATE_COMPONENT_STATE) {
         logger.logMessage('Content Script - Handle Received Message', LogLevel.INFO, request.type)
-        removeClasses
         if (request.params !== undefined && 'componentState' in request.params) {
             const repoType = findRepoType(window.location.href) as RepoType
             const componentState = request.params.componentState as ComponentState
@@ -115,6 +114,7 @@ function handle_message_received_propogate_component_state(
 
             const domElement = $(repoType.titleSelector)
             if (domElement.length > 0) {
+                removeClasses(domElement)
                 domElement.addClass('sonatype-iq-extension-vuln')
                 domElement.addClass(vulnClass)
             }
@@ -199,13 +199,14 @@ function handle_message_received_propogate_component_state(
 // });
 
 const removeClasses = (element) => {
-    //remove the class
-    console.info('removing classes', element)
+    logger.logMessage(`Remving Sonatype added classes`, LogLevel.DEBUG, element)
+
     element.removeClass('sonatype-iq-extension-vuln')
     element.removeClass('sonatype-iq-extension-vuln-severe')
     element.removeClass('sonatype-iq-extension-vuln-high')
     element.removeClass('sonatype-iq-extension-vuln-low')
     element.removeClass('sonatype-iq-extension-vuln-none')
+    element.removeClass('sonatype-iq-extension-vuln-evaluating')
 }
 
 // const checkPage = () => {
