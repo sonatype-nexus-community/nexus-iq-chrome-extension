@@ -25,7 +25,7 @@ import {
 } from '@sonatype/react-shared-components'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import * as pack from '../package.json'
+import { homepage as packageHomepage, version as packageVersion } from '../package.json'
 import { NexusOptionsContainer } from './NexusOptionsContainer'
 import { logger, LogLevel } from './logger/Logger'
 import { MESSAGE_REQUEST_TYPE } from './types/Message'
@@ -65,8 +65,8 @@ root.render(
             </NxGlobalSidebarNavigation>
             <NxGlobalSidebarFooter
                 supportText={`Request Support`}
-                supportLink={pack.homepage}
-                releaseText={`Release ${pack.version}`}
+                supportLink={packageHomepage}
+                releaseText={`Release ${packageVersion}`}
                 productTagLine='Powered by Sonatype IQ Server & Sonatype OSS Index'
                 showCreatedBy={true}
             />
