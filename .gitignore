@@ -37,6 +37,5 @@ yarn.lock
 # Sonatype IQ Config
 .sonatype-config
 
-
 # CI (local config)
 .circleci/local*.yml
