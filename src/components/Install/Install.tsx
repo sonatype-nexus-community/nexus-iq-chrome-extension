@@ -18,30 +18,18 @@ import React, { useState } from 'react'
 import IQServerOptionsPage from '../Options/IQServer/IQServerOptionsPage'
 import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../types/ExtensionConfiguration'
 import { ExtensionConfigurationContext } from '../../context/NexusContext'
-import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from '../../types/Message'
+import { MESSAGE_RESPONSE_STATUS } from '../../types/Message'
 import { updateExtensionConfiguration } from '../../messages/SettingsMessages'
+import { logger, LogLevel } from '../../logger/Logger'
 
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
-const _browser: any = chrome ? chrome : browser
-
-function Install() {
+export default function Install() {
     const [extensionConfig, setExtensionConfig] = useState<ExtensionConfiguration>(DEFAULT_EXTENSION_SETTINGS)
 
     function handleNewExtensionConfig(settings: ExtensionConfiguration) {
-        console.log(`Install handleNewExtensionConfig`, settings)
-        // _browser.runtime.sendMessage({
-        //   'type': MESSAGE_REQUEST_TYPE.UPDATE_SETTINGS,
-        //   'params': settings
-        // }, (response) => {
-        //   console.log('Install Response', response)
-        //   if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-        //     setExtensionConfig((response.data as ExtensionSettings))
-        //   }
-        // })
+        logger.logMessage(`Install handleNewExtensionConfig`, LogLevel.DEBUG)
         updateExtensionConfiguration(settings).then((response) => {
-            console.log('Install Response', response)
+            logger.logMessage(`Install handleNewExtensionConfig response: ${response}`, LogLevel.DEBUG)
             if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-                console.log('Install Set Extension Response:', response)
                 setExtensionConfig(response.data as ExtensionConfiguration)
             }
         })
@@ -71,5 +59,3 @@ function Install() {
         </ExtensionConfigurationContext.Provider>
     )
 }
-
-export default Install

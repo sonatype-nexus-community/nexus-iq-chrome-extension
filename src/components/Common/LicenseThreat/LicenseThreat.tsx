@@ -15,12 +15,7 @@
  */
 import { NxLoadingSpinner, NxPolicyViolationIndicator, ThreatLevelNumber } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
-import {
-    ExtensionConfigurationContext,
-    ExtensionPopupContext,
-    NexusContext,
-    NexusContextInterface,
-} from '../../../context/NexusContext'
+import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../context/NexusContext'
 import { DATA_SOURCE } from '../../../utils/Constants'
 
 function LicenseThreatIndicator() {

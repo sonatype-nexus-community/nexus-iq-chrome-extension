@@ -52,7 +52,6 @@ export default function ExtensionPopup() {
         getDefaultPopupContext(extensionConfig.dataSource)
     )
     const [purl, setPurl] = useState<PackageURL | undefined>(undefined)
-    // const [currentTab, setCurrentTab] = useState<chrome.tabs.Tab | browser.tabs.Tab | undefined>(undefined)
 
     /**
      * Load Extension Settings and get PURL for current active tab.
@@ -61,7 +60,7 @@ export default function ExtensionPopup() {
      */
     useEffect(() => {
         readExtensionConfiguration().then((response) => {
-            console.log('ExtensionPopup useEffect Response:', response)
+            logger.logMessage(`ExtensionPopup useEffect Response: ${response}`, LogLevel.DEBUG)
             if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                 if (response.data === undefined) {
                     setExtensionConfig(DEFAULT_EXTENSION_SETTINGS)
