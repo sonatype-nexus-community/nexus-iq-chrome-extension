@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import $, { Cash } from 'cash-dom'
+import $ from 'cash-dom'
 import { getArtifactDetailsFromDOM } from './utils/PageParsing'
 import { findRepoType } from './utils/UrlParsing'
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS, MessageRequest, MessageResponseFunction } from './types/Message'

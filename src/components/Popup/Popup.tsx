@@ -22,6 +22,7 @@ import {
     NxP,
     NxFooter,
     NxFontAwesomeIcon,
+    NxTextInput,
 } from '@sonatype/react-shared-components'
 import React, { useContext, useState } from 'react'
 import { ExtensionPopupContext } from '../../context/ExtensionPopupContext'
@@ -36,6 +37,97 @@ import SecurityPage from './IQServer/SecurityPage/SecurityPage'
 import { Puff } from '@agney/react-loading'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+
+function OssiPopup() {
+    const popupContext = useContext(ExtensionPopupContext)
+
+    if (popupContext !== undefined && popupContext.ossindex?.componentDetails !== undefined) {
+        return (
+            <React.Fragment>
+                <div className='nx-page-content'>
+                    <main className='nx-page-main'>
+                        <section className='nx-tile'>
+                            <div className='nx-tile-subsection nx-viewport-sized__container'>
+                                <NxTextInput
+                                    type='textarea'
+                                    value={JSON.stringify(popupContext.ossindex)}
+                                    isPristine={true}
+                                />
+
+                                {/* <NxTabs activeTab={activeTabId} onTabSelect={(index) => setActiveTabId(index)}>
+                                    <NxTabList>
+                                        <NxTab>Info</NxTab>
+                                        <NxTab>
+                                            {popupContext.iq.componentDetails.policyData?.policyViolations
+                                                ? 'Remediation'
+                                                : 'Versions'}
+                                        </NxTab>
+
+                                        {policyViolations.length > 0 && (
+                                            <NxTab>
+                                                Policy
+                                                <span className={'nx-counter'}>{policyViolations.length}</span>
+                                            </NxTab>
+                                        )}
+                                        {securityIssues.length > 0 && (
+                                            <NxTab>
+                                                Security
+                                                <span className={'nx-counter'}>{securityIssues.length}</span>
+                                            </NxTab>
+                                        )}
+                                        {effectiveLicenses.length > 0 && <NxTab>Legal</NxTab>}
+                                        {popupContext.currentTab !== undefined && (
+                                            <NxTab>
+                                                <NxFontAwesomeIcon
+                                                    icon={faGear as IconDefinition}
+                                                    onClick={() => {
+                                                        chrome.tabs.update({
+                                                            url: 'options.html',
+                                                        })
+                                                        window.close()
+                                                    }}
+                                                />
+                                            </NxTab>
+                                        )}
+                                    </NxTabList>
+                                    <NxTabPanel>
+                                        <ComponentInfoPage />
+                                    </NxTabPanel>
+                                    <NxTabPanel>
+                                        <RemediationPage />
+                                    </NxTabPanel>
+                                    {policyViolations.length > 0 && (
+                                        <NxTabPanel>
+                                            <PolicyPage />
+                                        </NxTabPanel>
+                                    )}
+                                    {securityIssues.length > 0 && (
+                                        <NxTabPanel>
+                                            <SecurityPage />
+                                        </NxTabPanel>
+                                    )}
+                                    {effectiveLicenses.length > 0 && (
+                                        <NxTabPanel>
+                                            <LicensePage />
+                                        </NxTabPanel>
+                                    )}
+                                </NxTabs> */}
+                            </div>
+
+                            <NxFooter>
+                                <NxP style={{ textAlign: 'center' }}>
+                                    Copyright © 2008-present Sonatype, Inc. | Powered by Sonatype OSS Index
+                                </NxP>
+                            </NxFooter>
+                        </section>
+                    </main>
+                </div>
+            </React.Fragment>
+        )
+    } else {
+        return <Puff />
+    }
+}
 
 function IqPopup() {
     const popupContext = useContext(ExtensionPopupContext)
@@ -159,6 +251,7 @@ export default function Popup() {
                 width: '800px',
             }}>
             {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}
+            {extensionContext.dataSource === DATA_SOURCE.OSSINDEX && <OssiPopup />}
         </div>
     )
 }

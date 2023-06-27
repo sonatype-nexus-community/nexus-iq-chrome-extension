@@ -91,6 +91,7 @@ export default function Options() {
                             <section className='nx-grid-col nx-grid-col--66'>
                                 <NxFieldset label={`Current Connection Type: ${extensionConfig.dataSource}`} isRequired>
                                     <NxRadio
+                                        defaultChecked={true}
                                         name='scanType'
                                         value={DATA_SOURCE.NEXUSIQ}
                                         onChange={handleDataSourceChange}
@@ -98,14 +99,14 @@ export default function Options() {
                                         radioId='scanType-IQ-Server'>
                                         Sonatype IQ Server
                                     </NxRadio>
-                                    <NxRadio
+                                    {/* <NxRadio
                                         name='scanType'
                                         value={DATA_SOURCE.OSSINDEX}
                                         onChange={handleDataSourceChange}
                                         isChecked={extensionConfig.dataSource === DATA_SOURCE.OSSINDEX}
                                         radioId='scanType-OSS-Index'>
                                         Sonatype OSS Index
-                                    </NxRadio>
+                                    </NxRadio> */}
                                 </NxFieldset>
                             </section>
                             <section className='nx-grid-col nx-grid-col--33'>
