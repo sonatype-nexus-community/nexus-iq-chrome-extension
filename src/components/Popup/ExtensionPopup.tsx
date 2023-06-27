@@ -24,6 +24,8 @@ import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../types/
 import { readExtensionConfiguration } from '../../messages/SettingsMessages'
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from '../../types/Message'
 import { PackageURL } from 'packageurl-js'
+import merge from 'ts-deepmerge'
+
 import {
     getAllComponentVersions,
     getComponentDetails,
@@ -54,6 +56,8 @@ export default function ExtensionPopup() {
      * Load Extension Settings and get PURL for current active tab.
      *
      * This is our onComponentDidMount equivalent.
+     *
+     * We read our current ExtensionConfig and request the PURL for the current active Tab.
      */
     useEffect(() => {
         readExtensionConfiguration().then((response) => {
@@ -70,9 +74,8 @@ export default function ExtensionPopup() {
         logger.logMessage('Popup requesting PURL for current active Tab', LogLevel.INFO)
         _browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
             const [tab] = tabs
-            const newPopupContextWithTab = { ...popupContext }
-            newPopupContextWithTab.currentTab = tab
-            setPopupContext(newPopupContextWithTab)
+            const newPopupContextWithTab = { currentTab: tab as chrome.tabs.Tab | browser.tabs.Tab }
+            setPopupContext((c) => merge(c, newPopupContextWithTab))
             logger.logMessage(`Requesting PURL from Tab ${tab.url}`, LogLevel.DEBUG)
             if (tab.status != 'unloaded') {
                 _browser.tabs.sendMessage(
@@ -100,29 +103,29 @@ export default function ExtensionPopup() {
 
     /**
      * When PURL changes (initially caused by our onComponentDidMount useEffect above),
-     * we kick off data gathering for the Componet to put back into state.
+     * we kick off data gathering for the Component to put back into state.
      */
     useEffect(() => {
         if (purl !== undefined) {
             logger.logMessage(`In ExtensionPopup and PURL changed: ${purl}`, LogLevel.DEBUG)
 
-            const newPopupContextWithPurl = { ...popupContext }
-            newPopupContextWithPurl.currentPurl = purl
-            setPopupContext(newPopupContextWithPurl)
+            const newPopupContextWithPurl = { currentPurl: purl }
+            setPopupContext((c) => ({
+                ...c,
+                ...newPopupContextWithPurl,
+            }))
 
             _browser.storage.local.get('componentDetails').then((response) => {
                 console.log('Look what I found in the session folks: ', response)
-                const newPopupContextWithComponentDetails = { ...newPopupContextWithPurl }
-                if (!newPopupContextWithComponentDetails.iq) {
-                    newPopupContextWithComponentDetails.iq = {}
+                const newPopupContextWithComponentDetails = {
+                    iq: response,
                 }
-                newPopupContextWithComponentDetails.iq = response
                 logger.logMessage(
                     `Updating PopUp Context with Component Details from Storage`,
                     LogLevel.DEBUG,
                     newPopupContextWithComponentDetails
                 )
-                setPopupContext(newPopupContextWithComponentDetails)
+                setPopupContext((c) => merge(c, newPopupContextWithComponentDetails))
 
                 /**
                  * Get additional detail about this Component Version
@@ -150,21 +153,19 @@ export default function ExtensionPopup() {
                             ).pop()
                             if (componentDetails) {
                                 const newPopupContextWithMoreComponentDetails = {
-                                    ...newPopupContextWithComponentDetails,
+                                    iq: {
+                                        componentDetails: {
+                                            projectData: componentDetails.projectData,
+                                        },
+                                    },
                                 }
-                                if (!newPopupContextWithMoreComponentDetails.iq) {
-                                    newPopupContextWithMoreComponentDetails.iq = {}
-                                }
-                                if (newPopupContextWithMoreComponentDetails.iq.componentDetails) {
-                                    newPopupContextWithMoreComponentDetails.iq.componentDetails.projectData =
-                                        componentDetails.projectData
-                                    logger.logMessage(
-                                        `Updating PopUp Context with additional Component Details`,
-                                        LogLevel.DEBUG,
-                                        newPopupContextWithMoreComponentDetails
-                                    )
-                                    setPopupContext(newPopupContextWithMoreComponentDetails)
-                                }
+
+                                logger.logMessage(
+                                    `Updating PopUp Context with additional Component Details`,
+                                    LogLevel.DEBUG,
+                                    newPopupContextWithMoreComponentDetails
+                                )
+                                setPopupContext((c) => merge(c, newPopupContextWithMoreComponentDetails))
                             }
                         }
                     }
@@ -176,7 +177,7 @@ export default function ExtensionPopup() {
     /**
      * Separate effect for readability trigger when the PURL changes.
      *
-     * Obtain Component Legal Details and Compoennt
+     * Obtain All Versions of the Component
      */
     useEffect(() => {
         if (purl !== undefined) {
@@ -195,16 +196,11 @@ export default function ExtensionPopup() {
                      *       These results are used to display the threat indicator on the all versions page.
                      */
                     logger.logMessage('Got Response to getAllComponentVersions', LogLevel.DEBUG, allVersionsResponse)
-                    const newPopupContext = { ...popupContext }
-                    if (!newPopupContext.iq) {
-                        newPopupContext.iq = {}
-                    }
                     if (allVersionsResponse.data !== undefined) {
                         const allVersions =
                             'versions' in allVersionsResponse.data
                                 ? (allVersionsResponse.data.versions as Array<string>)
                                 : []
-                        // const allVersionsPurl: PackageURL[] = [];
                         const allVersionsPurl: string[] = []
                         allVersions.map((version) => {
                             const versionPurl = PackageURL.fromString(purl.toString())
@@ -242,19 +238,17 @@ export default function ExtensionPopup() {
 
                             promise
                                 .then((evalResponse) => {
-                                    const newPopupContext = { ...popupContext }
-                                    if (!newPopupContext.iq) {
-                                        newPopupContext.iq = {}
+                                    const newPopupContextAllVersions = {
+                                        iq: {
+                                            allVersions: (evalResponse as ApiComponentEvaluationResultDTOV2).results,
+                                        },
                                     }
-                                    newPopupContext.iq.allVersions = (
-                                        evalResponse as ApiComponentEvaluationResultDTOV2
-                                    ).results
                                     logger.logMessage(
                                         `Updating PopUp Context with All Component Versions`,
                                         LogLevel.DEBUG,
-                                        newPopupContext
+                                        newPopupContextAllVersions
                                     )
-                                    setPopupContext(newPopupContext)
+                                    setPopupContext((c) => merge(c, newPopupContextAllVersions))
                                 })
                                 .catch((err) => {
                                     logger.logMessage(`Error in Poll: ${err}`, LogLevel.ERROR)
@@ -268,12 +262,12 @@ export default function ExtensionPopup() {
                 }
             })
         }
-    }, [popupContext.iq?.componentDetails])
+    }, [purl])
 
     /**
      * Separate effect for readability trigger when the PURL changes.
      *
-     * Obtain Component Legal Details and Compoennt
+     * Obtain Component Legal Details and Remediation
      */
     useEffect(() => {
         if (purl !== undefined) {
@@ -299,13 +293,17 @@ export default function ExtensionPopup() {
                     ) {
                         const componentLegalDetails = componentLegalDetailsResponse.data
                             .componentLegalDetails as ApiLicenseLegalComponentReportDTO
-                        const newPopupContext = { ...popupContext }
-                        if (!newPopupContext.iq) {
-                            newPopupContext.iq = {}
+                        const newPopupContextLegalDetails = {
+                            iq: {
+                                componentLegalDetails: componentLegalDetails.licenseLegalMetadata,
+                            },
                         }
-                        newPopupContext.iq.componentLegalDetails = componentLegalDetails.licenseLegalMetadata
-                        logger.logMessage(`Updating PopUp Context with Legal Details`, LogLevel.DEBUG, newPopupContext)
-                        setPopupContext(newPopupContext)
+                        logger.logMessage(
+                            `Updating PopUp Context with Legal Details`,
+                            LogLevel.DEBUG,
+                            newPopupContextLegalDetails
+                        )
+                        setPopupContext((c) => merge(c, newPopupContextLegalDetails))
                     }
                 } else {
                     logger.logMessage(
@@ -331,23 +329,20 @@ export default function ExtensionPopup() {
                         LogLevel.DEBUG,
                         remediationResponse
                     )
-                    const newPopupContext = { ...popupContext }
-                    if (!newPopupContext.iq) {
-                        newPopupContext.iq = {}
+                    const newPopupContextRemediationDetails = {
+                        iq: {
+                            remediationDetails:
+                                'remediation' in (remediationResponse.data as ApiComponentRemediationDTO)
+                                    ? (remediationResponse.data as ApiComponentRemediationDTO)
+                                    : undefined,
+                        },
                     }
-                    if (remediationResponse.data !== undefined) {
-                        newPopupContext.iq.remediationDetails =
-                            'remediation' in remediationResponse.data
-                                ? (remediationResponse.data as ApiComponentRemediationDTO)
-                                : undefined
-                        logger.logMessage(
-                            'Setting remediation into newPopupContext',
-                            LogLevel.DEBUG,
-                            newPopupContext.iq.remediationDetails
-                        )
-                    }
-                    logger.logMessage(`Updating PopUp Context wtih Remediation`, LogLevel.DEBUG, newPopupContext)
-                    setPopupContext(newPopupContext)
+                    logger.logMessage(
+                        `Updating PopUp Context wtih Remediation`,
+                        LogLevel.DEBUG,
+                        newPopupContextRemediationDetails
+                    )
+                    setPopupContext((c) => merge(c, newPopupContextRemediationDetails))
                 } else {
                     logger.logMessage(
                         'Unable to get response to getRemediationDetailsForComponent',
@@ -357,7 +352,7 @@ export default function ExtensionPopup() {
                 }
             })
         }
-    }, [popupContext.iq?.componentDetails])
+    }, [purl])
 
     return (
         <ExtensionConfigurationContext.Provider value={extensionConfig}>

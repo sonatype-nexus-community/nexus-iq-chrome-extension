@@ -15,7 +15,6 @@
  */
 import {
     NxDescriptionList,
-    NxList,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
     NxTextLink,
@@ -25,9 +24,7 @@ import {
 import React, { useContext } from 'react'
 import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
-import { DATA_SOURCE, DATA_SOURCES } from '../../../../utils/Constants'
-import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat'
-import SecurityThreat from '../../../Common/SecurityThreat/SecurityThreat'
+import { DATA_SOURCE } from '../../../../utils/Constants'
 import './ComponentInfoPage.css'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'

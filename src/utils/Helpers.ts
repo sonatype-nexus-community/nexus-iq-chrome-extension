@@ -52,4 +52,5 @@ function getNewUrlandGo(currentTab, currentPurlVersion: string, version: string)
         )
     }
 }
+
 export { ensure, stripHtmlComments, getNewUrlandGo, stripTrailingSlash }

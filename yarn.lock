@@ -7397,6 +7397,11 @@ tr46@~0.0.3:
   resolved "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
+ts-deepmerge@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmjs.org/ts-deepmerge/-/ts-deepmerge-6.1.0.tgz#1a77431d062fbe45f2dd5abc553c5499d98bed1e"
+  integrity sha512-YVJBhdIwYAZv6QoYz/mihpgbv+r0+QfQazTcSS6WXhQkbCxjTRoV+IOLtyArtz3au7xb+fPQVp1d7o5Qw1f1fg==
+
 ts-jest@^27.0.4:
   version "27.1.5"
   resolved "https://registry.npmjs.org/ts-jest/-/ts-jest-27.1.5.tgz#0ddf1b163fbaae3d5b7504a1e65c914a95cff297"

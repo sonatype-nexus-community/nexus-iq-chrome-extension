@@ -15,13 +15,10 @@
  */
 
 import { NxFormGroup, NxStatefulTextInput } from '@sonatype/react-shared-components'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../../types/ExtensionConfiguration'
 import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
 import { nonEmptyValidator } from '../../Common/Validators'
-
-const OSS_INDEX_USER = 'ossIndexUser'
-const OSS_INDEX_TOKEN = 'ossIndexToken'
 
 export interface OssiServerOptionsPageInterface {
     setExtensionConfig: (settings: ExtensionConfiguration) => void

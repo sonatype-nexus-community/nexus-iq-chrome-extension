@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NxLoadingSpinner, NxPolicyViolationIndicator, ThreatLevelNumber } from '@sonatype/react-shared-components'
+
 import React, { useContext } from 'react'
-import { ExtensionPopupContext } from '../../../context/ExtensionPopupContext'
+// import { ExtensionPopupContext } from '../../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE } from '../../../utils/Constants'
 
 function LicenseThreatIndicator() {
-    const popupContext = useContext(ExtensionPopupContext)
+    // const popupContext = useContext(ExtensionPopupContext)
 
     return (
         <React.Fragment>
