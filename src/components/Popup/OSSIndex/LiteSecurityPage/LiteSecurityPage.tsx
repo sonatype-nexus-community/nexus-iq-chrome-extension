@@ -27,7 +27,7 @@ import {
 } from '@sonatype/react-shared-components'
 import * as React from 'react'
 import { useContext } from 'react'
-import { NexusContext, NexusContextInterface } from '../../../../context/NexusContext'
+import { NexusContext, NexusContextInterface } from '../../../../context/ExtensionPopupContext'
 import { CvssVectorExplainer, VectorDetails } from '../../../../utils/CvssVectorExplainer'
 
 const LiteSecurityPage = (): JSX.Element | null => {
@@ -68,8 +68,7 @@ const LiteSecurityPage = (): JSX.Element | null => {
                                             <NxDescriptionList.Term>Severity</NxDescriptionList.Term>
                                             <NxDescriptionList.Description>
                                                 <NxPolicyViolationIndicator
-                                                    policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}
-                                                >
+                                                    policyThreatLevel={Math.round(issue.severity) as ThreatLevelNumber}>
                                                     {issue.severity.toString()}
                                                 </NxPolicyViolationIndicator>
                                             </NxDescriptionList.Description>
@@ -88,10 +87,9 @@ const LiteSecurityPage = (): JSX.Element | null => {
                                                         return (
                                                             <NxTag
                                                                 key={key}
-                                                                color={(value as VectorDetails).color}
-                                                            >{`${key} - ${(value as VectorDetails).quickExplanation} ${
-                                                                (value as VectorDetails).vector
-                                                            }`}</NxTag>
+                                                                color={(value as VectorDetails).color}>{`${key} - ${
+                                                                (value as VectorDetails).quickExplanation
+                                                            } ${(value as VectorDetails).vector}`}</NxTag>
                                                         )
                                                     })}
                                                 </React.Fragment>

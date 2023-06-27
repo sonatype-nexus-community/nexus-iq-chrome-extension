@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// import {Puff} from '@agney/react-loading'
+
 import {
     NxTab,
     NxTabList,
@@ -23,8 +23,9 @@ import {
     NxFooter,
     NxFontAwesomeIcon,
 } from '@sonatype/react-shared-components'
-import React, { useContext, useEffect, useState } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../context/NexusContext'
+import React, { useContext, useState } from 'react'
+import { ExtensionPopupContext } from '../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE } from '../../utils/Constants'
 import ComponentInfoPage from './IQServer/ComponentInfoPage/ComponentInfoPage'
 import PolicyPage from './IQServer/PolicyPage/PolicyPage'
@@ -150,10 +151,6 @@ function IqPopup() {
 
 export default function Popup() {
     const extensionContext = useContext(ExtensionConfigurationContext)
-
-    useEffect(() => {
-        console.log(`Popup: ${extensionContext}`)
-    })
 
     return (
         <div

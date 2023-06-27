@@ -15,11 +15,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import {
-    getDefaultPopupContext,
-    ExtensionConfigurationContext,
-    ExtensionPopupContext,
-} from '../../context/NexusContext'
+import { getDefaultPopupContext, ExtensionPopupContext } from '../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../context/ExtensionConfigurationContext'
 import AlpDrawer from '../AlpDrawer/AlpDrawer'
 import Popup from './Popup'
 import { logger, LogLevel } from '../../logger/Logger'

@@ -20,7 +20,8 @@ import {
     ThreatLevelNumber,
 } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../context/NexusContext'
+import { ExtensionPopupContext } from '../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE } from '../../../utils/Constants'
 
 function IqSecurity() {

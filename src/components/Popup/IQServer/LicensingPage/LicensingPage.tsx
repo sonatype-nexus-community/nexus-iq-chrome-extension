@@ -27,7 +27,8 @@ import {
     NxPolicyViolationIndicator,
 } from '@sonatype/react-shared-components'
 import React, { useContext, useState } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../context/NexusContext'
+import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
 import { LicenseDetail } from '../../../../types/ArtifactMessage'
 import LicenseThreat from '../../../Common/LicenseThreat/LicenseThreat'
 import { DATA_SOURCE } from '../../../../utils/Constants'

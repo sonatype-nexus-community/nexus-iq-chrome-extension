@@ -18,7 +18,7 @@ import { describe, expect, test } from '@jest/globals'
 import { Application, LogLevel, SecurityData, TestLogger } from '@sonatype/js-sona-types'
 import React from 'react'
 import renderer from 'react-test-renderer'
-import { NexusContext } from '../../../context/NexusContext'
+import { NexusContext } from '../../../context/ExtensionPopupContext'
 import { DATA_SOURCES } from '../../../utils/Constants'
 import SecurityThreat from './SecurityThreat'
 const policyJson = require('./iq_server_policy_result.json')

@@ -17,7 +17,8 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import { NxButton, NxFontAwesomeIcon, NxH3, NxList } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../../context/NexusContext'
+import { ExtensionPopupContext } from '../../../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE } from '../../../../../utils/Constants'
 
 function IqAdvancedLegalDisplay() {

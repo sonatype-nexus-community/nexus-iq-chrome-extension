@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 import React, { useContext } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../context/NexusContext'
+import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
 import './PolicyPage.css'
 import PolicyViolation from './PolicyViolation/PolicyViolation'
 import { DATA_SOURCE } from '../../../../utils/Constants'
@@ -54,8 +55,7 @@ function IqPolicyPage() {
                                         <PolicyViolation
                                             key={`violation${index}`}
                                             policyViolation={violation}
-                                            iqServerUrl={extensionContext.host as string}
-                                        ></PolicyViolation>
+                                            iqServerUrl={extensionContext.host as string}></PolicyViolation>
                                     )
                                 })}
                         </tbody>

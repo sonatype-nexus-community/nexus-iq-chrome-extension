@@ -15,7 +15,8 @@
  */
 import { NxDescriptionList, NxH3, NxList } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../../context/NexusContext'
+import { ExtensionPopupContext } from '../../../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE, REMEDIATION_LABELS } from '../../../../../utils/Constants'
 import './RemediationDetails.css'
 import { getNewUrlandGo } from '../../../../../utils/Helpers'

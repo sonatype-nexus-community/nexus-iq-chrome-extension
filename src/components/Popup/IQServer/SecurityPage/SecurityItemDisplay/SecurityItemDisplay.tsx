@@ -17,7 +17,7 @@ import { NxTable } from '@sonatype/react-shared-components'
 import * as React from 'react'
 import '../SecurityPage.css'
 import { ApiSecurityIssueDTO } from '@sonatype/nexus-iq-api-client'
-import { ExtensionConfigurationContext } from '../../../../../context/NexusContext'
+import { ExtensionConfigurationContext } from '../../../../../context/ExtensionConfigurationContext'
 import { stripTrailingSlash } from '../../../../../utils/Helpers'
 
 type SecurityItemProps = {

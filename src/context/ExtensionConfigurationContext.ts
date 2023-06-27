@@ -13,21 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react'
-import ReactDOM from 'react-dom/client'
-import ExtensionPopup from './components/Popup/ExtensionPopup'
-import { UI_MODE, UiContext } from './context/UiContext'
+import { DATA_SOURCE } from '../utils/Constants'
+import { ExtensionConfiguration } from '../types/ExtensionConfiguration'
+import { LogLevel } from '../logger/Logger'
 
-/**
- * This is essentially the UI that appears in the Extension Popup.
- */
-
-const container = document.getElementById('ui')
-const root = ReactDOM.createRoot(container)
-root.render(
-    <React.StrictMode>
-        <UiContext.Provider value={UI_MODE.SIDE_PANEL}>
-            <ExtensionPopup />
-        </UiContext.Provider>
-    </React.StrictMode>
-)
+export const ExtensionConfigurationContext = React.createContext<ExtensionConfiguration>({
+    dataSource: DATA_SOURCE.NEXUSIQ,
+    logLevel: LogLevel.ERROR,
+})

@@ -15,7 +15,7 @@
  */
 import { NxDrawer } from '@sonatype/react-shared-components'
 import React, { useContext } from 'react'
-import { NexusContext } from '../../context/NexusContext'
+import { NexusContext } from '../../context/ExtensionPopupContext'
 import AdvancedLegalDisplay from '../Popup/IQServer/LicensingPage/AdvancedLegalDisplay/AdvancedLegalDisplay'
 
 const AlpDrawer = (): JSX.Element | null => {
@@ -26,8 +26,7 @@ const AlpDrawer = (): JSX.Element | null => {
             id='nx-drawer-legal'
             open={nexusContext.showAlpDrawer}
             onClose={nexusContext.toggleAlpDrawer}
-            aria-labelledby='drawer-legal-title'
-        >
+            aria-labelledby='drawer-legal-title'>
             <NxDrawer.Header>
                 <NxDrawer.HeaderTitle id='drawer-legal-title'>
                     <span>

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 import React, { useContext, useState } from 'react'
-import { ExtensionConfigurationContext, ExtensionPopupContext } from '../../../../context/NexusContext'
+import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
 import { IqSecurityItemDisplay } from './SecurityItemDisplay/SecurityItemDisplay'
 import './SecurityPage.css'
 import { DATA_SOURCE } from '../../../../utils/Constants'

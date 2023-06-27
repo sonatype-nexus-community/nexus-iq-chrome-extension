@@ -32,7 +32,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 import { MESSAGE_REQUEST_TYPE, MESSAGE_RESPONSE_STATUS } from '../../../types/Message'
 import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../../types/ExtensionConfiguration'
-import { ExtensionConfigurationContext } from '../../../context/NexusContext'
+import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
 import { isHttpUriValidator, nonEmptyValidator } from '../../Common/Validators'
 import { logger, LogLevel } from '../../../logger/Logger'
 import { ApiApplicationDTO } from '@sonatype/nexus-iq-api-client'

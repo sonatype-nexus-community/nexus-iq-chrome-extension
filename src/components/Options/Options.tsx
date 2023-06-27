@@ -26,7 +26,7 @@ import {
     NxButtonBar,
 } from '@sonatype/react-shared-components'
 import React, { useEffect, useState } from 'react'
-import { ExtensionConfigurationContext } from '../../context/NexusContext'
+import { ExtensionConfigurationContext } from '../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE } from '../../utils/Constants'
 import { MESSAGE_RESPONSE_STATUS } from '../../types/Message'
 import GeneralOptionsPage from './General/GeneralOptionsPage'

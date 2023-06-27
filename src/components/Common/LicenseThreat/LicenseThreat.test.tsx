@@ -17,7 +17,7 @@ import { describe, expect, test } from '@jest/globals'
 import { IqServerLicenseLegalMetadataResult, LogLevel, TestLogger, Application } from '@sonatype/js-sona-types'
 import React from 'react'
 import renderer from 'react-test-renderer'
-import { NexusContext } from '../../../context/NexusContext'
+import { NexusContext } from '../../../context/ExtensionPopupContext'
 import { DATA_SOURCES } from '../../../utils/Constants'
 import LicenseThreat from './LicenseThreat'
 
@@ -74,8 +74,7 @@ describe('<LicenseThreat />', () => {
                     logger: new TestLogger(LogLevel.ERROR),
                     applications: new Set<Application>(),
                     currentUrl: new URL('about:blank'),
-                }}
-            >
+                }}>
                 <LicenseThreat />
             </NexusContext.Provider>
         )

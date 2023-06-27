@@ -16,10 +16,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import ExtensionPopup from './components/Popup/ExtensionPopup'
-import { UI_MODE, UiContext } from './context/NexusContext'
+import { UI_MODE, UiContext } from './context/UiContext'
 
 /**
- * This is essentially the UI that appears in the Extension Popup.
+ * This is essentially the UI that appears in the Extension Popup or Side Panel.
  */
 
 const container = document.getElementById('ui')
