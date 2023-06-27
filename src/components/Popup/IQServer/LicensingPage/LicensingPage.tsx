@@ -22,11 +22,11 @@ import { DATA_SOURCE } from '../../../../utils/Constants'
 import './LicensingDisplay.css'
 import AdvancedLegalDisplay from './AdvancedLegalDisplay/AdvancedLegalDisplay'
 import { ApiLicenseLegalMetadataDTO } from '@sonatype/nexus-iq-api-client'
+import { Puff } from '@agney/react-loading'
 
 function IqLicensePage() {
     const popupContext = useContext(ExtensionPopupContext)
     const licenseData = popupContext.iq?.componentDetails?.licenseData
-    const licenseLegalMetadataSet = popupContext.iq?.componentLegalDetails
     const [activeTabId, setActiveTabId] = useState(0)
 
     if (licenseData !== undefined) {
@@ -35,6 +35,14 @@ function IqLicensePage() {
         )
         const declaredLicenses = licenseData?.declaredLicenses
         const effectiveLicenses = licenseData?.effectiveLicenses
+
+        if (popupContext.iq?.componentLegalDetails === undefined) {
+            return <Puff />
+        }
+
+        const licenseLegalMetadataArray = [...popupContext.iq?.componentLegalDetails].sort((a, b) =>
+            a.licenseName.localeCompare(b.licenseName)
+        )
 
         return (
             <React.Fragment>
@@ -79,7 +87,6 @@ function IqLicensePage() {
                     </NxTabList>
 
                     <NxTabPanel className='nx-scrollable'>
-                        {/* <React.Fragment> */}
                         {/* <NxList bulleted>
                                 {licenseData.effectiveLicenses?.sort().map((license: LicenseDetail) => {
                                     return (
@@ -90,18 +97,15 @@ function IqLicensePage() {
                                 })}
                             </NxList> */}
                         <NxList bulleted>
-                            {/* {licenseLegalMetadataSet !== undefined &&
-                                licenseLegalMetadataSet.map(
-                                    (licenseLegalMetadata: ApiLicenseLegalMetadataDTO) => {
-                                        return (
-                                            <NxList.Item key={`effective-${licenseLegalMetadata.licenseId}`}>
-                                                {licenseLegalMetadata.licenseName}
-                                            </NxList.Item>
-                                        )
-                                    }
-                                )} */}
+                            {licenseLegalMetadataArray !== undefined &&
+                                licenseLegalMetadataArray.map((licenseLegalMetadata: ApiLicenseLegalMetadataDTO) => {
+                                    return (
+                                        <NxList.Item key={`effective-${licenseLegalMetadata.licenseId}`}>
+                                            {licenseLegalMetadata.licenseName}
+                                        </NxList.Item>
+                                    )
+                                })}
                         </NxList>
-                        {/* </React.Fragment> */}
                     </NxTabPanel>
 
                     <NxTabPanel className='nx-scrollable'>

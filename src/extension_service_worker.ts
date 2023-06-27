@@ -328,7 +328,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
             },
             (response) => {
                 if (chrome.runtime.lastError) {
-                    console.error('ERROR in here', response)
+                    logger.logMessage('Error response from CALCULATE_PURL_FOR_PAGE', LogLevel.ERROR, response)
                 }
                 logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
 
