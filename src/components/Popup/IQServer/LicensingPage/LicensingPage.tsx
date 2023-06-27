@@ -40,9 +40,14 @@ function IqLicensePage() {
             return <Puff />
         }
 
-        const licenseLegalMetadataArray = [...popupContext.iq?.componentLegalDetails].sort((a, b) =>
-            a.licenseName.localeCompare(b.licenseName)
-        )
+        let licenseLegalMetadataArray: ApiLicenseLegalMetadataDTO[] = []
+        if (popupContext.iq.componentLegalDetails !== undefined) {
+            licenseLegalMetadataArray = [...popupContext.iq.componentLegalDetails].sort((a, b) =>
+                (a.licenseName !== undefined ? a.licenseName : '').localeCompare(
+                    b.licenseName !== undefined ? b.licenseName : ''
+                )
+            )
+        }
 
         return (
             <React.Fragment>
