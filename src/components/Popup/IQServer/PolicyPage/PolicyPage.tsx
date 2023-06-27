@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { useContext } from 'react'
 import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
@@ -25,7 +26,6 @@ import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 function IqPolicyPage() {
     const popupContext = useContext(ExtensionPopupContext)
     const extensionContext = useContext(ExtensionConfigurationContext)
-    // const iqServerUrl = extensionContext.host ? extensionContext.host : 'UNKNOWN'
     const policyData = popupContext.iq?.componentDetails?.policyData
     const violationCount = policyData?.policyViolations ? policyData.policyViolations?.length : 0
 

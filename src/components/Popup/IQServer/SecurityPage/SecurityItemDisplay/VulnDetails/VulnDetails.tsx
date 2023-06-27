@@ -23,8 +23,10 @@
 
 //     const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
 //         if (nexusContext && nexusContext.vulnDetails) {
-//             return <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails as VulnerabilityDetails} />
-//         }
+//             <React.Fragment>
+//                <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails as VulnerabilityDetails} />
+//                <CVSSExplained vector={nexusContext.vulnDetails.mainSeverity.vector as string} />
+//             </React.Fragment>
 //         return null
 //     }
 

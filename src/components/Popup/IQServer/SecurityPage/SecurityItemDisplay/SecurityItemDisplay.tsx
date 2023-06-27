@@ -25,11 +25,9 @@ type SecurityItemProps = {
     open: boolean
     packageUrl: string
     remediationEvent: (vulnID: string) => void
-    // threatLevelCategory:  "unspecified" | "none" | "low" | "moderate" | "severe" | "critical" | undefined;
 }
 
 export function IqSecurityItemDisplay(props: SecurityItemProps) {
-    // const popupContext = useContext(ExtensionPopupContext)
     const extensionContext = React.useContext(ExtensionConfigurationContext)
     const iqServerUrl = stripTrailingSlash(extensionContext.host as string)
     const cveUrl = `${iqServerUrl}/assets/index.html#/vulnerabilities/${props.securityIssue.reference}`

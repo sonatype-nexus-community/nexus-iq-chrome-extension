@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { useContext, useState } from 'react'
 import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
@@ -22,8 +23,6 @@ import { DATA_SOURCE } from '../../../../utils/Constants'
 import { ApiSecurityIssueDTO } from '@sonatype/nexus-iq-api-client'
 import { sortSecurityIssues, SecurityIssue } from '../../../../types/ArtifactMessage'
 import { NxTable } from '@sonatype/react-shared-components'
-
-// type SecurityProps = object;
 
 function IqSecurityPage() {
     const popupContext = useContext(ExtensionPopupContext)
