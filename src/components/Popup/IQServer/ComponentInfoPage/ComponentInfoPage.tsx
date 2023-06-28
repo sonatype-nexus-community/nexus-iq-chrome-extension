@@ -28,7 +28,6 @@ import { DATA_SOURCE } from '../../../../utils/Constants'
 import './ComponentInfoPage.css'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
-import { stripTrailingSlash } from '../../../../utils/Helpers'
 
 const formatDate = (date: Date | undefined | null): string => {
     if (date) {
@@ -47,16 +46,15 @@ function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentP
             </header>
             <NxPolicyViolationIndicator
                 style={{ marginBottom: '16px !important' }}
-                policyThreatLevel={Math.round(getMaxThreatLevelForPolicyViolations(policyData)) as ThreatLevelNumber}
-            ></NxPolicyViolationIndicator>
+                policyThreatLevel={
+                    Math.round(getMaxThreatLevelForPolicyViolations(policyData)) as ThreatLevelNumber
+                }></NxPolicyViolationIndicator>
         </React.Fragment>
     )
 }
 
 function IqComponentInfo() {
     const popupContext = useContext(ExtensionPopupContext)
-    const extensionContext = useContext(ExtensionConfigurationContext)
-    const iqServerUrl = stripTrailingSlash(extensionContext.host as string)
 
     if (popupContext.iq?.componentDetails?.component?.displayName == undefined) {
         return <NxLoadingSpinner />
@@ -68,8 +66,7 @@ function IqComponentInfo() {
                     <header className='nx-grid-header'>
                         <NxTooltip
                             placement='top'
-                            title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}
-                        >
+                            title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}>
                             <h3 className='nx-h2 nx-grid-header__title'>
                                 {popupContext.iq?.componentDetails?.component?.displayName}
                             </h3>
@@ -110,8 +107,7 @@ function IqComponentInfo() {
                                 <NxDescriptionList.Term>
                                     <NxTextLink
                                         external
-                                        href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'
-                                    >
+                                        href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'>
                                         Integrity Rating
                                     </NxTextLink>
                                 </NxDescriptionList.Term>
@@ -125,8 +121,7 @@ function IqComponentInfo() {
                                 <NxDescriptionList.Term>
                                     <NxTextLink
                                         external
-                                        href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'
-                                    >
+                                        href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'>
                                         Hygiene Rating
                                     </NxTextLink>
                                 </NxDescriptionList.Term>
@@ -183,7 +178,7 @@ function IqComponentInfo() {
                     {popupContext.iq?.componentDetails?.policyData != undefined && (
                         <React.Fragment>
                             <GetPolicyViolationIndicator policyData={popupContext.iq.componentDetails.policyData} />
-                            {popupContext.iq !== undefined && (
+                            {/* {popupContext.iq !== undefined && (
                                 <>
                                     <h3 className={'nx-h3'}>Lifecycle Quick Links</h3>
                                     <NxTextLink
@@ -193,7 +188,7 @@ function IqComponentInfo() {
                                         Advanced Search Resuts
                                     </NxTextLink>
                                 </>
-                            )}
+                            )} */}
                         </React.Fragment>
                     )}
                 </section>
