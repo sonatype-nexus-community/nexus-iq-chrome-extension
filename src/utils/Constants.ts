@@ -220,6 +220,8 @@ export const REPO_TYPES: RepoType[] = [
         versionPath: '{url}/{groupid}/{artifactid}/{versionNumber}',
         dataSource: DATA_SOURCES.NEXUSIQ,
         appendVersionPath: '',
+        pathRegex:
+            /^(?<groupArtifactId>([^#?&]*)+)\/(?<version>[^/#&?]+)\/?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?/,
     },
     {
         url: 'https://repo.maven.apache.org/maven2/',
