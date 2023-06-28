@@ -147,6 +147,8 @@ export const REPO_TYPES: RepoType[] = [
         versionPath: '',
         dataSource: DATA_SOURCES.NEXUSIQ,
         appendVersionPath: '',
+        pathRegex: /^(?<artifactId>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+        versionDomPath: 'h1 > span',
     },
     {
         url: 'https://conan.io/center/',
