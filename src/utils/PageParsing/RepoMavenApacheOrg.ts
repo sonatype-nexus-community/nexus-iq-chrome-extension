@@ -13,37 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/
-//"purl": "pkg:maven/com.mycompany.myproduct/artifact-name@2.1.7",
-import { PackageURL } from 'packageurl-js'
-import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
-import { generatePackageURLComplete } from './PurlUtils'
 
-//pkg:type/namespace/name@version?qualifiers#subpath
-//Sonatype expects: "packageUrl": "pkg:maven/org.yaml/snakeyaml@1.17?type=jar"
-const parseMavenApache = (url: string): PackageURL | undefined => {
+import { PackageURL } from 'packageurl-js'
+import { logger, LogLevel } from '../../logger/Logger'
+import { generatePackageURLComplete } from './PurlUtils'
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
+
+export const parseRepoMavenApacheOrg = (url: string): PackageURL | undefined => {
     const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.repoMavenApacheOrg)
-    console.debug('*** REPO TYPE: ', repoType)
+    logger.logMessage(`Parsing ${repoType?.url}`, LogLevel.DEBUG)
     if (repoType) {
         if (repoType.pathRegex) {
             const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-            console.debug(pathResult?.groups)
             if (pathResult && pathResult.groups) {
+                const gaParts = pathResult.groups.groupArtifactId.trim().split('/')
+                const artifactId = gaParts.pop()
+                const groupId = gaParts.join('.')
                 return generatePackageURLComplete(
                     FORMATS.maven,
-                    encodeURIComponent(pathResult.groups.artifactId),
+                    encodeURIComponent(artifactId as string),
                     encodeURIComponent(pathResult.groups.version),
-                    encodeURIComponent(pathResult.groups.groupId),
+                    encodeURIComponent(groupId),
                     { type: 'jar' },
                     undefined
                 )
             }
         }
     } else {
-        console.error('Unable to determine REPO TYPE.')
+        logger.logMessage('Unable to determine REPO TYPE.', LogLevel.INFO)
     }
 
     return undefined
 }
-
-export { parseMavenApache }
