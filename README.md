@@ -16,7 +16,28 @@ Version 2.x.x brings a host of changes over the 1.x.x release, and to enable us 
 
 ## Contents
 
--   [Format & Ecosystem Support]
+-   [Welcome](#welcome)
+-   [Contents](#contents)
+    -   [Notable Features not yet in 2.x.x](#notable-features-not-yet-in-2xx)
+-   [Format \& Ecosystem Support](#format--ecosystem-support)
+    -   [Public Registries](#public-registries)
+    -   [Private Hosted Registries](#private-hosted-registries)
+    -   [Missing or unsupported Registry?](#missing-or-unsupported-registry)
+-   [Installation](#installation)
+    -   [Installation on Chrome](#installation-on-chrome)
+-   [Configuration](#configuration)
+-   [Usage](#usage)
+    -   [Pinning the Extension](#pinning-the-extension)
+    -   [Opening the Extension](#opening-the-extension)
+    -   [Component Information](#component-information)
+    -   [Remediation Advice](#remediation-advice)
+    -   [Policy Violation(s)](#policy-violations)
+    -   [Known Security Issues](#known-security-issues)
+    -   [Open Source License(s)](#open-source-licenses)
+-   [Development](#development)
+-   [Uninstallation](#uninstallation)
+-   [Version History](#version-history)
+-   [The Fine Print](#the-fine-print)
 
 ### Notable Features not yet in 2.x.x
 
@@ -175,7 +196,7 @@ All source code is in `src/` and follows a fairly normal React application setup
 
 To remove the Sonatype Platform Browser Extension, follow the instructions for your browser to remove it.
 
-### Version History
+## Version History
 
 Our version history is kept in our [change log](CHANGELOG.md).
 
