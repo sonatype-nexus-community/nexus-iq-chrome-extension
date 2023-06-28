@@ -1,59 +1,99 @@
-# Chrome Extension for Sonatype Nexus IQ
+# Sonatype Platform Browser Extension
 
-[![CircleCI](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension.svg?style=svg)](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension)
+[![CircleCI](https://circleci.com/gh/sonatype-nexus-community/vscode-iq-plugin/tree/main.svg?style=shield)](https://circleci.com/gh/sonatype-nexus-community/vscode-iq-plugin/tree/main)
+[![GitHub license](https://img.shields.io/github/license/sonatype-nexus-community/vscode-iq-plugin)](https://github.com/sonatype-nexus-community/vscode-iq-plugin/blob/main/LICENSE.txt)
+[![GitHub issues](https://img.shields.io/github/issues/sonatype-nexus-community/vscode-iq-plugin)](https://github.com/sonatype-nexus-community/vscode-iq-plugin/issues)
+[![GitHub forks](https://img.shields.io/github/forks/sonatype-nexus-community/vscode-iq-plugin)](https://github.com/sonatype-nexus-community/vscode-iq-plugin/network)
+[![GitHub stars](https://img.shields.io/github/stars/sonatype-nexus-community/vscode-iq-plugin)](https://github.com/sonatype-nexus-community/vscode-iq-plugin/stargazers)
 
-## Table of Contents
+[![Available on the Chrome Webstore](https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png)](https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd)
 
--   [Purpose](#purpose)
--   [Documentation](#Documentation)
--   [Data](#data)
--   [Usage](#usage)
--   [Examples](#examples)
--   [Installation](#installation)
--   [Contributing](#contributing)
--   [Fine Print](#The-Fine-Print)
+## Welcome
 
-## Purpose
+The Sonatype Platform Browser Extension (revised name for release 2.0.0 onwards) allows Developers to get insight from Sonatype Lifecycle for Open Source packages as you browse Public Open Source Registries - i.e. before a package is even downloaded!
 
-To allow you to inspect a package before you download it. The plugin requires a valid [Sonatype Lifecycle](https://www.sonatype.com/nexus-lifecycle) instance, or you can use Sonatype's OSS Index for free if you do not have access to a licensed installation of [Sonatype Lifecycle](https://www.sonatype.com/nexus-lifecycle).
+Version 2.x.x brings a host of changes over the 1.x.x release, and to enable us to get feedback, some features of the 1.x.x version have not yet been ported to the 2.x.x version - we'll get to these in the coming weeks and months. If you rely on features in 1.x.x - please stay on the latest 1.x.x version.
 
-## Package Ecosystem Support
+### Notable Features not yet in 2.x.x
 
-The plugin works on the following open source registry sites.
+-   Support for Sonatype OSS Index as a (free) data source
+-   Some public registry formats have not yet been ported - see table below
+-   Support for repositores on Sonatype Nexus Repository and jFrog Artifactory has not yet been ported - coming soon
 
-**NOTE:** For the initial versions of 2.x.x, support for OSS Index has been removed (so we could ship quicker!) We'll update
-here when support is re-introduced.
+## Format & Ecosystem Support
 
-| Registry               | Language Group      | URL                              | Sonatype Lifecycle | Sonatype OSS Index |
-| ---------------------- | ------------------- | -------------------------------- | ------------------ | ------------------ |
-| Alpine Linux           | Alpine Linux        | `https://pkgs.alpinelinux.org/`  | ✅                 | ❌                 |
-| CocoaPods              | Swift / Objective-C | `https://cocoapods.org/`         | ✅                 | ❌                 |
-| Conan IO               | C / C++             | `https://conan.io/center/`       | ✅                 | ❌                 |
-| CRAN                   | R                   | `https://cran.r-project.org`     | ✅                 | ❌                 |
-| Maven Central          | Java                | `https://central.sonatype.com/`  | ✅                 | ✅                 |
-| Maven Central (simple) | Java                | `https://repo.maven.apache.org/` | ✅                 | ✅                 |
-| Maven Central (simple) | Java                | `https://repo1.maven.org/`       | ✅                 | ✅                 |
-| Maven Central (old)    | Java                | `https://search.maven.org/`      | ✅                 | ✅                 |
-| MVN Repository         | Java                | `https://mvnrepository.com/`     | ✅                 | ✅                 |
-| NPM JS                 | Javascript          | `https://www.npmjs.com/`         | ✅                 | ✅                 |
-| NuGet Gallery          | .NET                | `https://www.nuget.org/`         | ✅                 | ✅                 |
-| Packagist              | PHP                 | `https://packagist.org/`         | ✅                 | ✅                 |
-| PyPI                   | Python              | `https://pypi.org/`              | ✅                 | ✅                 |
-| RubGems                | Ruby                | `https://rubygems.org/`          | ✅                 | ✅                 |
+### Public Registries
 
-7. Conda – Python – `https://anaconda.org/anaconda/`
-8. Debian – Linux – `https://packages.debian.org/`
-9. Debian – Linux – `https://tracker.debian.org/pkg/`
-10. Golang – Go – `https://search.gocenter.io/`
-11. Java – Maven – `https://repo.spring.io/list/`
-12. Rust – Crates – `https://crates.io/`
-13. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-14. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
-15. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+**NOTE:** For the initial versions of 2.x.x, support for OSS Index has been removed (so we could ship quicker!) We'll update here when support is re-introduced.
+
+| Registry                | Language            | Enabled in 2.x.x | Enabled in 1.x.x | URL                                 | Sonatype Lifecycle | Sonatype OSS Index |
+| ----------------------- | ------------------- | ---------------- | ---------------- | ----------------------------------- | ------------------ | ------------------ |
+| Alpine Linux            | Alpine Linux        | ✅               | ✅               | `https://pkgs.alpinelinux.org/`     | ✅                 | ❌                 |
+| Anaconda                | Python              | ? TBC ?          | ✅               | `https://anaconda.org/anaconda/`    | ✅                 |                    |
+| Clojars                 | Java                | ❌               | ❌               | `https://clojars.org/`              | ✅                 | ✅                 |
+| CocoaPods               | Swift / Objective-C | ✅               | ✅               | `https://cocoapods.org/`            | ✅                 | ❌                 |
+| Conan IO                | C / C++             | ✅               | ✅               | `https://conan.io/center/`          | ✅                 | ❌                 |
+| Conda Forge             | Python              | ? TBC ?          | ✅               | `https://anaconda.org/conda-forge/` | ✅                 |                    |
+| CRAN                    | R                   | ✅               | ✅               | `https://cran.r-project.org`        | ✅                 | ❌                 |
+| Crates.io               | Rust                | ❌ ^2            | ✅               | `https://crates.io/`                | ✅                 | ✅                 |
+| Debian Packages         | Debian Linux        | ❌ ^5            | ✅               | `https://packages.debian.org/`      | ❌                 | ✅                 |
+| Debian Security Tracker | Debian Linux        | ❌ ^5            | ✅               | `https://tracker.debian.org/pkg/`   | ❌                 | ✅                 |
+| Go.dev                  | Go                  | ❌ ^3            | ✅               | `https://pkg.go.dev/`               | ✅                 | ✅                 |
+| Maven Central           | Java                | ✅               | ❌ ^1            | `https://central.sonatype.com/`     | ✅                 | ✅                 |
+| Maven Central (simple)  | Java                | ✅               | ✅               | `https://repo.maven.apache.org/`    | ✅                 | ✅                 |
+| Maven Central (simple)  | Java                | ✅               | ✅               | `https://repo1.maven.org/`          | ✅                 | ✅                 |
+| Maven Central (old)     | Java                | ✅               | ✅               | `https://search.maven.org/`         | ✅                 | ✅                 |
+| MVN Repository          | Java                | ✅               | ✅               | `https://mvnrepository.com/`        | ✅                 | ✅                 |
+| NPM JS                  | Javascript          | ✅               | ✅               | `https://www.npmjs.com/`            | ✅                 | ✅                 |
+| NuGet Gallery           | .NET                | ✅               | ✅               | `https://www.nuget.org/`            | ✅                 | ✅                 |
+| Packagist               | PHP                 | ✅               | ✅               | `https://packagist.org/`            | ✅                 | ✅                 |
+| PyPI                    | Python              | ✅               | ✅               | `https://pypi.org/`                 | ✅                 | ✅                 |
+| RubGems                 | Ruby                | ✅               | ✅               | `https://rubygems.org/`             | ✅                 | ✅                 |
+| Spring.io               | Java                | ❌ ^4            | ✅               | `https://repo.spring.io/list/`      | ✅                 | ✅                 |
+
+_Notes:_
+
+1. Maven Central has changed since version 1.x.x was released. Fixes not planned to be backported.
+2. See issue [#237](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/issues/237)
+3. See issue [#130](https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/issues/130)
+4. Run on a public instance of jFrog Artifactory - support coming in 2.x.x soon
+5. Support has been removed and is not planned to be added back
+
+### Private Hosted Registries
+
+Some public registires are hosted on instances of Sonatype Nexus Repository and jFrog Artifactory. You might also have private instances.
+
+Version 1.x.x has support for both of these types, but this has yet to be ported to version 2.x.x.
+
+Version 1.x.x supported URLs with formats:
+
+-   Proxy repositories in Sonatype Nexus Repository Manager – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+-   Proxy repositories in jFrog Artifactory – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+-   jFrog Artifactory lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+
+### Missing or unsupported Registry?
+
+Missing format or ecosystem? Why not raise an Issue to request?
+
+## Installation
+
+### Installation on Chrome
+
+Visit [Chrome Web Store](https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd) to add to Chrome.
+
+## Configuration
+
+## Usage
+
+When you browse to a website that is supported by the Sonatype Platform Browser Extension, such as [Maven Central](https://central.sonatype.com/) the extension will assess the component you are viewing and alert you if there are known issues.
+
+### Opening the Extension
+
+###
 
 ## Development
 
-We use node, yarn, React and webpack.
+We use Node 18 and Yarn 1.22.x.
 
 To get started developing:
 
@@ -64,21 +104,6 @@ To get started developing:
 You can run `yarn test` as well to ensure everything is setup correctly!
 
 All source code is in `src/` and follows a fairly normal React application setup.
-
-## Documentation
-
-[Sonatype Nexus Lifecycle nexus-iq-chrome-extension](https://sonatype-nexus-community.github.io/nexus-iq-chrome-extension/)
-
-## Data
-
-**NOTE:** For the initial versions of 2.x.x, support for OSS Index has been removed (so we could ship quicker!) We'll update
-here when support is re-introduced.
-
-The data is sourced from Sonatype Nexus Lifecycle's IQ Server, which accesses the Sonatype Data Services for those supported ecosystems. For some repositories e.g. Chocolatey, the extension gets its data from Sonatype OSSIndex ( https://ossindex.sonatype.org/ ).
-
-## Usage
-
-When you browse to a website that is covered by the tool, such as Maven Central and click on the plugin, it will open with the Sonatype Lifecycle data relevant to that library.<br/>
 
 ### Main icon
 
@@ -266,10 +291,6 @@ If you do not want to use the extension then you can right click on the icon and
 
 Go to the [changelog](CHANGELOG.md)
 
-## Contributing
-
-Please read the [Contributing guide](contributing.md)
-
 ## The Fine Print
 
-Supported by Sonatype
+Supported by Sonatype Inc.

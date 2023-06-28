@@ -5,6 +5,7 @@
         "name": "Sonatype Community",
         "email": "community-group@sonatype.com"
     },
+    "license": "Apache-2.0",
     "private": true,
     "repository": "git@github.com:sonatype-nexus-community/nexus-iq-chrome-extension.git",
     "homepage": "https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/",
