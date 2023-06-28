@@ -56,8 +56,6 @@ function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentP
 
 function IqComponentInfo() {
     const popupContext = useContext(ExtensionPopupContext)
-    const extensionContext = useContext(ExtensionConfigurationContext)
-    const iqServerUrl = stripTrailingSlash(extensionContext.host as string)
 
     if (popupContext.iq?.componentDetails?.component?.displayName == undefined) {
         return <NxLoadingSpinner />
