@@ -40,7 +40,7 @@ export default function Install() {
             <React.Fragment>
                 <h1>
                     <NxPageTitle>
-                        &#127881; Thanks for installing the Sonatype Nexus Browser Extension &#127881;
+                        &#127881; Thanks for installing the Sonatype Platform Browser Extension &#127881;
                     </NxPageTitle>
                 </h1>
                 <NxTile>
@@ -49,8 +49,9 @@ export default function Install() {
                     </NxTile.Header>
                     <NxTile.Content>
                         <p className='nx-p nx-page-content--full-width'>
-                            If you are using OSS Index, you are good to go and can skip this. If you want to use this
-                            extension with Nexus IQ Server, follow the quick setup below!
+                            {/* If you are using OSS Index, you are good to go and can skip this. If you want to use this
+                            extension with Nexus IQ Server, follow the quick setup below! */}
+                            Please now follow the steps below to connect this extension to your Sonatype IQ Server.
                         </p>
                         <IQServerOptionsPage setExtensionConfig={handleNewExtensionConfig} />
                     </NxTile.Content>

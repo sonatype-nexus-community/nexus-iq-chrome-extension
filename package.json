@@ -1,6 +1,6 @@
 {
-    "name": "sonatype-browser-extension",
-    "version": "2.0.1",
+    "name": "sonatype-platform-browser-extension",
+    "version": "2.0.0",
     "author": {
         "name": "Sonatype Community",
         "email": "community-group@sonatype.com"

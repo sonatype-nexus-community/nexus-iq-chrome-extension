@@ -165,8 +165,8 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
             <NxGrid.Row>
                 <section className='nx-grid-col nx-grid-col--100'>
                     <p className='nx-p'>
-                        <strong>1)</strong> Enter the URL for the Sonatype IQ Server and grant the permissions needed
-                        for the extension to communicate with the Sonatype IQ Server.
+                        <strong>1)</strong> Enter the URL for your Sonatype IQ Server and then grant the permissions
+                        needed for this extension to communicate with your Sonatype IQ Server.
                     </p>
 
                     <div className='nx-form-row'>
@@ -188,8 +188,8 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
                     {hasPermissions && (
                         <div>
                             <p className='nx-p'>
-                                <strong>2)</strong> Provide your username and token for the Sonatype IQ Server. Then
-                                connect to retrieve the list of applications available.
+                                <strong>2)</strong> Provide your username and token for your Sonatype IQ Server. Then
+                                connect to retrieve the list of available applications.
                             </p>
                             <div className='nx-form-row'>
                                 <NxFormGroup label={`Username`} isRequired>
@@ -216,7 +216,8 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
                     {iqAuthenticated === true && iqServerApplicationList.length > 0 && (
                         <React.Fragment>
                             <p className='nx-p'>
-                                <strong>3)</strong> Choose the Sonatype Lifecycle Application.
+                                <strong>3)</strong> Select an Application from the list available on your Sonatype IQ
+                                Server.
                                 <NxTooltip title='The application policies that components will be evaluated against.'>
                                     <NxFontAwesomeIcon icon={faQuestionCircle as IconDefinition} />
                                 </NxTooltip>
@@ -226,8 +227,7 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
                                 <NxFormSelect
                                     defaultValue={`${extensionSettings.iqApplicationInternalId}|${extensionSettings.iqApplicationPublidId}`}
                                     onChange={handleIqApplicationChange}
-                                    disabled={!iqAuthenticated}
-                                >
+                                    disabled={!iqAuthenticated}>
                                     {iqServerApplicationList.map((app: ApiApplicationDTO) => {
                                         return (
                                             <option key={app.id} value={`${app.id}|${app.publicId}`}>
@@ -242,8 +242,7 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
 
                     {iqAuthenticated === true && (
                         <NxStatefulSuccessAlert>
-                            Congrats! You are able to sign in to your Sonatype IQ Server! If you need to choose an
-                            application, do so now.
+                            Congratulations! You successfully authenticated with your Sonatype IQ Server!
                         </NxStatefulSuccessAlert>
                     )}
                     {iqAuthenticated === false && (

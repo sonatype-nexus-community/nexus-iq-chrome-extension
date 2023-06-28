@@ -14,6 +14,10 @@ The Sonatype Platform Browser Extension (revised name for release 2.0.0 onwards)
 
 Version 2.x.x brings a host of changes over the 1.x.x release, and to enable us to get feedback, some features of the 1.x.x version have not yet been ported to the 2.x.x version - we'll get to these in the coming weeks and months. If you rely on features in 1.x.x - please stay on the latest 1.x.x version.
 
+## Contents
+
+-   [Format & Ecosystem Support]
+
 ### Notable Features not yet in 2.x.x
 
 -   Support for Sonatype OSS Index as a (free) data source
@@ -83,13 +87,75 @@ Visit [Chrome Web Store](https://chrome.google.com/webstore/detail/sonatype-nexu
 
 ## Configuration
 
+Upon successfully addition of the Sonatype Platform Browser Extension, you'll automatically be shown the "Getting Started" screen to make the necessary configuration.
+
+![Installation Step 1](./docs/images/install-01.png)
+
+Enter the URL of your Sonatype IQ Server and click "Grant Permissions to your Sonatype IQ Server".
+
+![Installation Step 2](./docs/images/install-02.png)
+
+Click "Allow".
+
+You can now enter your credentials for your Sonatype IQ Server and click "Connect". Upon successful authentication, you'll be provided a list of Applications you have permissions for in your Sonatype IQ Server - choose one!
+
+![Installation Step 3](./docs/images/install-03.png)
+
+That's it - you have configured the Sonatype Platform Browser Extension. You can close the configuration tab. If you need to make changes to the configuration
+
 ## Usage
 
 When you browse to a website that is supported by the Sonatype Platform Browser Extension, such as [Maven Central](https://central.sonatype.com/) the extension will assess the component you are viewing and alert you if there are known issues.
 
+### Pinning the Extension
+
+Extension by default are not always visible - we recommend you Pin the Sonatype Platform Browser Extension so it is easily accessible as you navigate. To do this find the "Extensions" icon in the top right of your browser (usually) as highlighed in red:
+
+![Pinning the Extension - Step 1](./docs/images/pin-extension-01.png)
+
+Then click the Pin icon as highlighted next to the Sonatype Platform Browser Extension.
+
+![Pinning the Extension - Step 2](./docs/images/pin-extension-02.png)
+
+You'll now always have the Sonatype Platform Browser Extension icon visible in the top right.
+
 ### Opening the Extension
 
-###
+As you browse supported registries, you'll notice the Sonatype Platform Browser Extension change colour to warn you when your Sonatype IQ Server reports issues for the component you are viewing.
+
+![Browsing Maven Central](./docs/images/browse-01.png)
+
+To get the details behind the warning, click the Sonatype Platform Browser Extension icon (top right).
+
+### Component Information
+
+When you acess the Sonatype Platform Browser Extension, you'll be shown the information known by Sonatype about the component you are viewing.
+
+![Component Information](./docs/images/extension-open-01.png)
+
+### Remediation Advice
+
+Accessing the "Remediation" tab will provide easy access to recommended versions along with a timeline of all known versions and how they stack up against your organisations policies in your Sonatype IQ Server.
+
+![Remediation Information](./docs/images/extension-open-02.png)
+
+### Policy Violation(s)
+
+The "Policy" tab allows you to understand why your Organisational policies were violated - i.e. what caused the violations.
+
+![Policy Violation(s) Details](./docs/images/extension-open-03.png)
+
+### Known Security Issues
+
+The "Security" tab allows you to understand what known security issues affect the component you are viewing.
+
+![Known Security Issues](./docs/images/extension-open-04.png)
+
+### Open Source License(s)
+
+The "Legal" tab allows you to understand what open source licenses apply or might apply to the component you are viewing.
+
+![Known Security Issues](./docs/images/extension-open-05.png)
 
 ## Development
 
@@ -105,191 +171,13 @@ You can run `yarn test` as well to ensure everything is setup correctly!
 
 All source code is in `src/` and follows a fairly normal React application setup.
 
-### Main icon
+## Uninstallation
 
-<img src="images/PluginRun.gif" alt="Open Plugin" width="300"/>
-<br/>
-
-### Remediation Guidance
-
-![](images/Remediation.gif)
-
-1. The install will create a new icon in your Chrome Browser next to the location box.
-   <img src="images/Extensions_Icon_created.png" alt="Extensions Icon Created" width="300"/>
-   <br/>
-2. The plugin will work on any page that matches the URL list above.
-   <br/>
-3. Navigate to one of the pages that the extension is compatible with (see the detailed list below).
-   <br/>
-4. Click on the blue Sonatype logo...<br/>
-   <img src="images/Extension_lodash_-_npm_4.17.9.png" alt="Extension Lodash 4.17.9" width="300"/>
-   <br/>
-   4.1 ...The solution will think for a second and show the Sonatype hexagon logo while it retrieves the data...Then show the Data.<br/>
-   <img src="images/Extension_thinking_icon.png" alt="Extension Thinking Icon" width="300"/>
-   <br/>
-5. Component Information<br/>
-   <img src="images/Extension_Component_info.png" alt="Extension Componen Info" width="300"/>
-   <br/>
-6. Security Information<br/>
-   The security data is presented in a list with clickable sections for each vulnerability.<br/>
-   <img src="images/Extension_Security.png" alt="Extension Security List" width="300"/>
-   <br/>
-7. Security Details<br/>
-   The security details for each vulnerability is available. Click on the reference to display the security details.<br/>
-   <img src="images/Extension_Vulnerability_Detail.png" alt="Extension Vulnerability Detail" width="300"/>
-   <br/>
-8. Remediation<br/>
-   The version history is available for each component.<br/>
-   <img src="images/Extension_VersionHistoryGraph.png" alt="Extension Version History" width="300"/>
-   <br/>
-9. Remediation Guidance<br/>
-   The remediation guidance API has been added. The recommended fix version will be listed at the top of the screen.
-   <br/>
-10. License Information<br/>
-    <img src="images/Extension_Licensing.png" alt="Extension Licensing" width="300"/>
-    <br/>
-11. Unsupported Page<br/>
-    If you click on an unsupported page then the following screen will appear.
-    <img src="images/unsupported_page.png" alt="Unsupported Page" width="300"/>
-    <br/>
-
-## Examples
-
-The list of pages that are supported are here:
-
-1. Alpine – Linux – https://pkgs.alpinelinux.org/
-2. Chocolatey – Windows – https://chocolatey.org/
-3. Clojars – Clojure – https://clojars.org/
-4. Cocoa pods – iOS – https://cocoapods.org/
-5. Conan – C/C++ – https://conan.io/center/
-6. Conda – Python – https://anaconda.org/anaconda/
-7. Debian – Linux – https://packages.debian.org/
-8. Debian – Linux – https://tracker.debian.org/pkg/
-
-### dotNet - nuget
-
-Pattern - `https://www.nuget.org/packages/<package>/<version>`
-<br/>e.g. <https://www.nuget.org/packages/LibGit2Sharp/0.20.1>
-
-### Github - any language supported by OSSIndex but only supports the releases tag at this stage
-
-<https://github.com/jquery/jquery/releases/tag/1.11.1>
-
-### Golang - Gocenter
-
-`https://search.gocenter.io/`
-<br/>e.g. <https://search.gocenter.io/github.com~2Fetcd-io~2Fetcd/versions>
-
-### Java - Maven
-
-Pattern - `https://search.maven.org/artifact/<group>/<artifact>/<version>/<extension>`
-<br/>e.g. <https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar>
-
-Pattern -`https://mvnrepository.com/artifact/<group>/<artifact>/<version>`
-<br/>e.g. <https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1>
-
-Pattern - `https://repo1.maven.org/maven2/<group>/<artifact>/<version>/`
-<br/> e.g. <https://repo1.maven.org/maven2/commons-collections/commons-collections/3.2.1/>
-
-Pattern - `https://repo.maven.apache.org/maven2/<group>/<artifact>/<version>/`
-<br/> e.g. <https://repo.maven.apache.org/maven2/commons-collections/commons-collections/3.2.1/>
-
-### JS/Node - npm
-
-Pattern - `https://www.npmjs.com/package/<package>`
-<br/>e.g. <https://www.npmjs.com/package/lodash/>
-<br/>and
-<br/>Pattern - `https://www.npmjs.com/package/<package>/v/<version>`
-<br/>e.g. <https://www.npmjs.com/package/lodash/v/4.17.9>
-
-### PHP - Packagist/Composer
-
-Pattern - `https://packagist.org/`
-<br/>e.g. <https://packagist.org/packages/drupal/drupal>
-
-### Ruby - rubygems
-
-Pattern - `https://rubygems.org/gems/<package>`
-<br/>e.g. <https://rubygems.org/gems/bundler>
-
-### Python - pypi
-
-Pattern - `https://pypi.org/<package>/`
-<br/>e.g. <https://pypi.org/project/Django/>
-<br/>or Pattern - `https://pypi.org/<package>/<version>/`
-<br/>e.g. <https://pypi.org/project/Django/1.6/>
-
-### R - CRAN
-
-Pattern - `https://cran.r-project.org/`
-<br/>e.g. <https://cran.r-project.org/web/packages/A3/index.html>
-
-21. Ruby – RubyGems – https://rubygems.org/
-
-### Rust - Crates
-
-Pattern - `https://crates.io/`
-<br/>e.g. <https://crates.io/crates/random>
-
-### NexusRepo - npm, Maven and rubygems
-
-e.g. <http://nexus:8081/#browse/browse:rubygems-proxy:nexus%2F1.4.0%2Fnexus-1.4.0.gem>
-
-## Installation
-
-### Production
-
-1. Install from [Chrome Store](https://chrome.google.com/webstore/detail/mjehedmoboadebjmbmobpedkdgenmlhd/)
-2. Click `Add to Chrome`
-
-Note: You will be asked to "Add Sonatype Nexus IQ Extension". Click "Add extension"
-
-3. You will be prompted to enter your login details. (Important: Please note that this version stores your details in plain text in Chrome Storage. We are investigated secure storage but at this time we do not support it. You can use a token for your password though. <https://help.sonatype.com/iqserver/managing/user-management/user-tokens>)
-   <br/>
-   <img src="images/Extensions_Empty_login.png" alt="drawing" width="300"/>
-   <br/>
-4. Select an Application to link to this plugin. The application is required to perform the advanced history and remediation scanning now available.
-   <br/>
-   <img src="images/Extension_Application_List.png" alt="drawing" width="300"/>
-   <br/>
-5. Click Save to save your credentials.
-   <br/>
-6. You will be advised that your details are saved. Click Close when you are done and You will be taken back to the Extensions Install screen in Chrome. Close the screen and begin using.
-7. The installer will have created a new icon in your Chrome Menu Bar.
-   <br/>
-   <img src="images/Extensions_Icon_created.png" alt="drawing" width="300"/>
-   <br/>
-
-### Developer mode
-
-1. Download the plugin from GitHub
-   `git clone https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension.git`
-2. Open Chrome Browser.
-3. Click on the three dots, then More Tools, then Extensions.
-   <br/>
-   <img src="images/Extensions.png" alt="drawing" width="300"/>
-   <br/>
-4. Click on load unpacked (requires "Developer Mode" to be enabled).
-   <img src="images/Extension_Develop_Mode.png" alt="drawing" width="300"/>
-   <br/>
-   <img src="images/Extensions_Load_upacked.png" alt="drawing" width="300"/>
-   <br/>
-5. Navigate to the folder where you downloaded the plugin from GitHub onto your local machine. Select the src subdirectory and then click select
-   <br/>
-   <img src="images/Extensions_Choose_Folder.png" alt="drawing" width="300"/>
-   <br/>
-6. Configure the plugin like in the Production mode...
-
-### Uninstall
-
-If you do not want to use the extension then you can right click on the icon and choose Remove from Chrome
-<br/>
-<img src="images/Extension_Disabled.png" alt="drawing" width="300"/>
-<br/>
+To remove the Sonatype Platform Browser Extension, follow the instructions for your browser to remove it.
 
 ### Version History
 
-Go to the [changelog](CHANGELOG.md)
+Our version history is kept in our [change log](CHANGELOG.md).
 
 ## The Fine Print
 
