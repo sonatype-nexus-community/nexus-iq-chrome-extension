@@ -1,419 +1,573 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>chelsea | RubyGems.org | your community gem host</title>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
-    <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
-    <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
-      <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icons/apple-touch-icon-57x57.png" />
-      <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icons/apple-touch-icon-72x72.png" />
-      <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icons/apple-touch-icon-76x76.png" />
-      <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icons/apple-touch-icon-114x114.png" />
-      <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icons/apple-touch-icon-120x120.png" />
-      <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icons/apple-touch-icon-144x144.png" />
-      <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icons/apple-touch-icon-152x152.png" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icons/apple-touch-icon-180x180.png" />
-    <link rel="mask-icon" href="/rubygems_logo.svg" color="#e9573f">
-    <link rel="fluid-icon" href="/fluid-icon.png"/>
-    <link rel="search" type="application/opensearchdescription+xml" title="RubyGems.org" href="/opensearch.xml">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <head>
+        <title>chelsea | RubyGems.org | your community gem host</title>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport" />
+        <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
+        <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icons/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icons/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icons/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icons/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icons/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icons/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icons/apple-touch-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icons/apple-touch-icon-180x180.png" />
+        <link rel="mask-icon" href="/rubygems_logo.svg" color="#e9573f" />
+        <link rel="fluid-icon" href="/fluid-icon.png" />
+        <link rel="search" type="application/opensearchdescription+xml" title="RubyGems.org" href="/opensearch.xml" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
-    <link rel="stylesheet" href="/assets/application-a26f0b3c9d7564f45951cf21206e2cc05b0d04e3d9a641982cec37e64d21ca57.css" />
-    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
-    
-<link rel="alternate" type="application/atom+xml" href="https://feeds.feedburner.com/gemcutter-latest" title="RubyGems.org | Latest Gems">
+        <link
+            rel="stylesheet"
+            href="/assets/application-a26f0b3c9d7564f45951cf21206e2cc05b0d04e3d9a641982cec37e64d21ca57.css"
+        />
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext"
+            rel="stylesheet"
+            type="text/css"
+        />
 
-    <meta name="csrf-param" content="authenticity_token" />
-<meta name="csrf-token" content="PQOe46vYEm9y5RdJ57iB5xs_xu7pDmtcZFSR98hfpnd0fQ-q-s2jq-TGxdQh13vS-laMF1U7vR2UM7t8bfIebg" />
-      <link rel="alternate" type="application/atom+xml" title="chelsea Version Feed" href="/gems/chelsea/versions.atom" />
-    <link rel="canonical" href="https://rubygems.org/gems/chelsea/versions/0.0.35" />
+        <link
+            rel="alternate"
+            type="application/atom+xml"
+            href="https://feeds.feedburner.com/gemcutter-latest"
+            title="RubyGems.org | Latest Gems"
+        />
 
-  </head>
+        <meta name="csrf-param" content="authenticity_token" />
+        <meta
+            name="csrf-token"
+            content="PQOe46vYEm9y5RdJ57iB5xs_xu7pDmtcZFSR98hfpnd0fQ-q-s2jq-TGxdQh13vS-laMF1U7vR2UM7t8bfIebg"
+        />
+        <link
+            rel="alternate"
+            type="application/atom+xml"
+            title="chelsea Version Feed"
+            href="/gems/chelsea/versions.atom"
+        />
+        <link rel="canonical" href="https://rubygems.org/gems/chelsea/versions/0.0.35" />
+    </head>
 
-  <body class="">
-    <header class="header header--interior">
-      <div class="l-wrap--header">
-        <a title="RubyGems" class="header__logo-wrap" href="/">
-          <span class="header__logo" data-icon="⬡">⬢</span>
-          <span class="t-hidden">RubyGems</span>
-</a>        <a class="header__club-sandwich" href="#">
-          <span class="t-hidden">Navigation menu</span>
-        </a>
+    <body class="">
+        <header class="header header--interior">
+            <div class="l-wrap--header">
+                <a title="RubyGems" class="header__logo-wrap" href="/">
+                    <span class="header__logo" data-icon="⬡">⬢</span>
+                    <span class="t-hidden">RubyGems</span>
+                </a>
+                <a class="header__club-sandwich" href="#">
+                    <span class="t-hidden">Navigation menu</span>
+                </a>
 
-        <div class="header__nav-links-wrap">
-          <form class="header__search-wrap" action="/search" accept-charset="UTF-8" method="get">
-            <input type="search" name="query" id="query" placeholder="Search Gems&hellip;" class="header__search" autocomplete="off" />
-            <ul id="suggest" class="suggest-list"></ul>
-            <label for="query">
-              <span class="t-hidden">Search Gems&hellip;</span>
-</label>            <input type="submit" value="⌕" id="search_submit" class="header__search__icon" data-disable-with="⌕" />
-</form>
-          <nav class="header__nav-links">
+                <div class="header__nav-links-wrap">
+                    <form class="header__search-wrap" action="/search" accept-charset="UTF-8" method="get">
+                        <input
+                            type="search"
+                            name="query"
+                            id="query"
+                            placeholder="Search Gems&hellip;"
+                            class="header__search"
+                            autocomplete="off"
+                        />
+                        <ul id="suggest" class="suggest-list"></ul>
+                        <label for="query">
+                            <span class="t-hidden">Search Gems&hellip;</span>
+                        </label>
+                        <input
+                            type="submit"
+                            value="⌕"
+                            id="search_submit"
+                            class="header__search__icon"
+                            data-disable-with="⌕"
+                        />
+                    </form>
+                    <nav class="header__nav-links">
+                        <a class="header__nav-link" href="https://rubygems.org/releases">Releases</a>
+                        <a class="header__nav-link" href="https://blog.rubygems.org">Blog</a>
 
-            <a class="header__nav-link " href="https://rubygems.org/releases">Releases</a>
-            <a class="header__nav-link" href="https://blog.rubygems.org">Blog</a>
+                        <a class="header__nav-link" href="/gems">Gems</a>
 
-              <a class="header__nav-link" href="/gems">Gems</a>
+                        <a class="header__nav-link" href="https://guides.rubygems.org">Guides</a>
 
-            <a class="header__nav-link" href="https://guides.rubygems.org">Guides</a>
-
-              <a class="header__nav-link " href="/sign_in">Sign in</a>
-                <a class="header__nav-link " href="/sign_up">Sign up</a>
-          </nav>
-        </div>
-      </div>
-    </header>
-
-
-
-    <main class="main--interior">
-        <div class="l-wrap--b">
-            <h1 class="t-display page__heading">
-              chelsea
-
-                <i class="page__subheading">0.0.35</i>
-            </h1>
-          
-          
-
-
-<div class="l-overflow">
-  <div class="l-colspan--l colspan--l--has-border">
-      <div class="gem__intro">
-        <div id="markup" class="gem__desc">
-          <p>Audit Ruby package dependencies for security vulnerabilities.</p>
-        </div>
-      </div>
-
-      <div class="gem__install">
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          Gemfile:
-          <div class="gem__code-wrap">
-            <input type="text" class="gem__code" id="gemfile_text" value="gem &#39;chelsea&#39;, &#39;~&gt; 0.0.35&#39;" readonly="readonly">
-            <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-target="#gemfile_text">=</span>
-            <span class="gem__code__tooltip--copy">Copy to clipboard</span>
-            <span class="gem__code__tooltip--copied">Copied!</span>
-          </div>
-        </h2>
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          install:
-          <div class="gem__code-wrap">
-            <input type="text" class="gem__code" id="install_text" value="gem install chelsea" readonly="readonly">
-            <span class="gem__code__icon" id="js-gem__code--install" data-clipboard-target="#install_text">=</span>
-          </div>
-        </h2>
-      </div>
-
-      <div class="l-half--l">
-        <div class="versions">
-          <h3 class="t-list__heading">Versions:</h3>
-          <ol class="gem__versions t-list__items">
-            <li class="gem__version-wrap">
-  <a class="t-list__item" href="/gems/chelsea/versions/0.0.35">0.0.35</a>
-  <small class="gem__version__date">- September 28, 2022</small>
-
-  <span class="gem__version__date">(74.5 KB)</span>
-</li>
-<li class="gem__version-wrap">
-  <a class="t-list__item" href="/gems/chelsea/versions/0.0.34">0.0.34</a>
-  <small class="gem__version__date">- November 15, 2021</small>
-
-  <span class="gem__version__date">(74.5 KB)</span>
-</li>
-<li class="gem__version-wrap">
-  <a class="t-list__item" href="/gems/chelsea/versions/0.0.33">0.0.33</a>
-  <small class="gem__version__date">- July 08, 2021</small>
-
-  <span class="gem__version__date">(74.5 KB)</span>
-</li>
-<li class="gem__version-wrap">
-  <a class="t-list__item" href="/gems/chelsea/versions/0.0.32">0.0.32</a>
-  <small class="gem__version__date">- April 14, 2021</small>
-
-  <span class="gem__version__date">(74 KB)</span>
-</li>
-<li class="gem__version-wrap">
-  <a class="t-list__item" href="/gems/chelsea/versions/0.0.31">0.0.31</a>
-  <small class="gem__version__date">- April 14, 2021</small>
-
-  <span class="gem__version__date">(74 KB)</span>
-</li>
-
-          </ol>
-            <a class="gem__see-all-versions t-link--gray t-link--has-arrow" href="https://rubygems.org/gems/chelsea/versions">Show all versions (35 total)</a>
-        </div>
-      </div>
-
-    <div class = "l-half--l">
-        <div class="dependencies gem__dependencies" id="runtime_dependencies">
-    <h3 class="t-list__heading">Runtime Dependencies (8):</h3>
-    <div class="t-list__items">
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/bundler"><strong>bundler</strong></a>
-            &gt;= 1.2.0, &lt; 3
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/ox"><strong>ox</strong></a>
-            ~&gt; 2.13.2
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/pastel"><strong>pastel</strong></a>
-            ~&gt; 0.7.2
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/rest-client"><strong>rest-client</strong></a>
-            ~&gt; 2.0.2
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/slop"><strong>slop</strong></a>
-            ~&gt; 4.8.1
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/tty-font"><strong>tty-font</strong></a>
-            ~&gt; 0.5.0
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/tty-spinner"><strong>tty-spinner</strong></a>
-            ~&gt; 0.9.3
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/tty-table"><strong>tty-table</strong></a>
-            ~&gt; 0.11.0
-          </div>
-    </div>
-  </div>
-
-        <div class="dependencies gem__dependencies" id="development_dependencies">
-    <h3 class="t-list__heading">Development Dependencies (5):</h3>
-    <div class="t-list__items">
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/byebug"><strong>byebug</strong></a>
-            ~&gt; 11.1.2
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/rake"><strong>rake</strong></a>
-            ~&gt; 12.3
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/rspec"><strong>rspec</strong></a>
-            ~&gt; 3.0
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/rspec_junit_formatter"><strong>rspec_junit_formatter</strong></a>
-            ~&gt; 0.4.1
-          </div>
-          <div class="gem__requirement-wrap">
-            <a class="t-list__item" href="/gems/webmock"><strong>webmock</strong></a>
-            ~&gt; 3.8.3
-          </div>
-    </div>
-  </div>
-
-        <div class="dependencies_list">
-          <a class="gem__see-all-versions t-link--gray t-link--has-arrow push--s" href="/gems/chelsea/versions/0.0.35/dependencies">Show all transitive dependencies</a>
-        </div>
-    </div>
-
-
-    <div class="gem__members">
-    <h3 class="t-list__heading">Owners:</h3>
-    <div class="gem__users">
-      <a alt="sonatype-nexus-community" title="sonatype-nexus-community" href="/profiles/sonatype-nexus-community"><img id="gravatar-145180" width="48" height="48" src="https://secure.gravatar.com/avatar/bc784e028cdcf5d4911653a7d9bc3181.png?d=retro&r=PG&s=48" /></a>
-    </div>
-
-
-    <h3 class="t-list__heading">Pushed by:</h3>
-    <div class="gem__users">
-      <a alt="sonatype-nexus-community" title="sonatype-nexus-community" href="/profiles/sonatype-nexus-community"><img id="gravatar-145180" width="48" height="48" src="https://secure.gravatar.com/avatar/bc784e028cdcf5d4911653a7d9bc3181.png?d=retro&r=PG&s=48" /></a>
-    </div>
-
-
-    <h3 class="t-list__heading">Authors:</h3>
-    <ul class="t-list__items">
-      <li class="t-list__item">
-        <p>Allister Beharry</p>
-      </li>
-    </ul>
-
-    <h3 class="t-list__heading">SHA 256 checksum:</h3>
-    <div class="gem__sha">
-      ad2610e8ca2db7b0aaae9f98e607e351004cb73b2fd1d25563143bec085840d9
-    </div>
-
-</div>
-
-    <div class="gem__navigation">
-    <a class="gem__previous__version" href="/gems/chelsea/versions/0.0.34">← Previous version</a>
-
-</div>
-
-  </div>
-
-  <div class="gem__aside l-col--r--pad">
-
-    <span class="github-btn" data-user="sonatype-nexus-community" data-repo="chelsea" data-type="star" data-count="true" data-size="large">
-  <a class="gh-btn" href="#" rel="noopener noreferrer" target="_blank">
-    <span class="gh-ico" aria-hidden="true"></span>
-    <span class="gh-text"></span>
-  </a>
-  <a class="gh-count" href="#" rel="noopener noreferrer" target="_blank" aria-hidden="true"></a>
-</span>
-
-
-  <div class="gem__downloads-wrap" data-href="/api/v1/downloads/chelsea-0.0.35.json">
-    <h2 class="gem__downloads__heading t-text--s">
-      Total downloads
-      <span class="gem__downloads">48,261</span>
-    </h2>
-    <h2 class="gem__downloads__heading t-text--s">
-      For this version
-      <span class="gem__downloads">651</span>
-    </h2>
-  </div>
-
-  <h2 class="gem__ruby-version__heading t-list__heading">
-    License:
-    <span class="gem__ruby-version">
-      <p>Apache-2.0</p>
-    </span>
-  </h2>
-
-  <h2 class="gem__ruby-version__heading t-list__heading">
-    Required Ruby Version:
-    <i class="gem__ruby-version">
-        &gt;= 2.6.6
-    </i>
-  </h2>
-
-
-
-
-  <h3 class="t-list__heading">Links:</h3>
-  <div class="t-list__items">
-      <a rel="nofollow" class="gem__link t-list__item" id="home" href="https://github.com/sonatype-nexus-community/chelsea">Homepage</a>
-      <a rel="nofollow" class="gem__link t-list__item" id="changelog" href="https://github.com/sonatype-nexus-community/chelsea/CHANGELOG">Changelog</a>
-      <a rel="nofollow" class="gem__link t-list__item" id="code" href="https://github.com/sonatype-nexus-community/chelsea">Source Code</a>
-      <a rel="nofollow" class="gem__link t-list__item" id="download" href="/downloads/chelsea-0.0.35.gem">Download</a>
-    <a class="gem__link t-list__item" href="https://my.diffend.io/gems/chelsea/prev/0.0.35">Review changes</a>
-    <a class="gem__link t-list__item" id="badge" href="https://badge.fury.io/rb/chelsea/install">Badge</a>
-    <a class="toggler gem__link t-list__item" id="subscribe" href="/sign_in">Subscribe</a>
-    <a class="gem__link t-list__item" id="rss" href="/gems/chelsea/versions.atom">RSS</a>
-    <a class="gem__link t-list__item" href="mailto:support@rubygems.org?subject=Reporting Abuse on chelsea">Report abuse</a>
-    <a rel="nofollow" class="gem__link t-list__item" id="reverse_dependencies" href="/gems/chelsea/reverse_dependencies">Reverse dependencies</a>
-    
-    
-    
-  </div>
-</div>
-
-</div>
-
-        </div>
-    </main>
-
-    <footer class="footer">
-      <div class="l-wrap--footer">
-        <div class="l-overflow">
-          <div class="nav--v l-col--r--pad">
-            <a class="nav--v__link--footer" href="https://status.rubygems.org">Status</a>
-            <a class="nav--v__link--footer" href="https://uptime.rubygems.org">Uptime</a>
-            <a class="nav--v__link--footer" href="https://github.com/rubygems/rubygems.org">Code</a>
-            <a class="nav--v__link--footer" href="/pages/data">Data</a>
-            <a class="nav--v__link--footer" href="https://groups.google.com/group/rubygems-org">Discuss</a>
-            <a class="nav--v__link--footer" href="/stats">Stats</a>
-            <a class="nav--v__link--footer" href="https://guides.rubygems.org/contributing/">Contribute</a>
-              <a class="nav--v__link--footer" href="/pages/about">About</a>
-            <a class="nav--v__link--footer" href="mailto:support@rubygems.org">Help</a>
-            <a class="nav--v__link--footer" href="https://guides.rubygems.org/rubygems-org-api">API</a>
-              <a class="nav--v__link--footer" href="/pages/security">Security</a>
-            <a class="nav--v__link--footer" href="/ownership_calls">maintainers wanted</a>
-          </div>
-          <div class="l-colspan--l colspan--l--has-border">
-            <div class="footer__about">
-              <p>
-                RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="https://guides.rubygems.org/publishing/">publish your gems</a> and then <a href="https://guides.rubygems.org/command-reference/#gem-install">install them</a>. Use <a href="https://guides.rubygems.org/rubygems-org-api/">the API</a> to find out more about <a href="/gems">available gems</a>. <a href="https://guides.rubygems.org/contributing/">Become a contributor</a> and improve the site yourself.
-              </p>
-              <p>
-                RubyGems.org is made possible through a partnership with the greater Ruby community. <a href="https://www.fastly.com/">Fastly</a> provides bandwidth and CDN support, <a href="https://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, and funds ongoing development and ops work. <a href="/pages/sponsors">Learn more about our sponsors and how they work together</a>.
-              </p>
-              <p>
-                We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone. <a href="https://rubycentral.org/#/portal/signup">Join Ruby Central today</a>.
-              </p>
+                        <a class="header__nav-link" href="/sign_in">Sign in</a>
+                        <a class="header__nav-link" href="/sign_up">Sign up</a>
+                    </nav>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="footer__sponsors-wrap">
-        <div class="footer__sponsors">
-          <a class="footer__sponsor footer__sponsor__ruby_central" href="https://rubycentral.org/" target="_blank">
-            Supported by
-            <span class="t-hidden">Ruby Central</span>
-          </a>
-          <a class="footer__sponsor footer__sponsor__dockyard" href="https://dockyard.com/ruby-on-rails-consulting" target="_blank">
-            Designed by
-            <span class="t-hidden">DockYard</span>
-          </a>
-          <a class="footer__sponsor footer__sponsor__dnsimple" href="https://dnsimple.link/resolving-rubygems" target="_blank">
-            Resolved with
-            <span class="t-hidden">DNSimple</span>
-          </a>
-          <a class="footer__sponsor footer__sponsor__datadog" href="https://www.datadoghq.com/" target="_blank">
-            Monitored by
-            <span class="t-hidden">Datadog</span>
-          </a>
-          <a class="footer__sponsor footer__sponsor__fastly" href="https://www.fastly.com/" target="_blank">
-            Gems served by
-            <span class="t-hidden">Fastly</span>
-          </a>
-          <a class="footer__sponsor footer__sponsor__honeybadger" href="https://www.honeybadger.io/" target="_blank">
-            Monitored by
-            <span class="t-hidden">Honeybadger</span>
-          </a>
-          <a class="footer__sponsor footer__sponsor__domainr" href="https://domainr.com/" target="_blank">
-            Verified by
-            <span class="t-hidden">Domainr</span>
-          </a>
-          <a class="footer__sponsor footer__sponsor__whitesource" href="https://www.whitesourcesoftware.com/" target="_blank">
-            Secured by
-            <span class="t-hidden">Whitesource</span>
-          </a>
-        </div>
-      </div>
-      <div class="footer__language_selector">
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=en">English</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=nl">Nederlands</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=zh-CN">简体中文</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=zh-TW">正體中文</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=pt-BR">Português do Brasil</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=fr">Français</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=es">Español</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=de">Deutsch</a>
-          </div>
-          <div class="footer__language">
-            <a class="nav--v__link--footer" href="/gems/chelsea?locale=ja">日本語</a>
-          </div>
-      </div>
-    </footer>
+        </header>
 
-    <script src="/assets/application-0af8950be40d1d56f4c1c18364cd8fc4c9895adbf7a9a2f89acb746c77cbb447.js"></script>
-    
-    <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>
-  </body>
+        <main class="main--interior">
+            <div class="l-wrap--b">
+                <h1 class="t-display page__heading">
+                    chelsea
+
+                    <i class="page__subheading">0.0.35</i>
+                </h1>
+
+                <div class="l-overflow">
+                    <div class="l-colspan--l colspan--l--has-border">
+                        <div class="gem__intro">
+                            <div id="markup" class="gem__desc">
+                                <p>Audit Ruby package dependencies for security vulnerabilities.</p>
+                            </div>
+                        </div>
+
+                        <div class="gem__install">
+                            <h2 class="gem__ruby-version__heading t-list__heading">
+                                Gemfile:
+                                <div class="gem__code-wrap">
+                                    <input
+                                        type="text"
+                                        class="gem__code"
+                                        id="gemfile_text"
+                                        value="gem &#39;chelsea&#39;, &#39;~&gt; 0.0.35&#39;"
+                                        readonly="readonly"
+                                    />
+                                    <span
+                                        class="gem__code__icon"
+                                        id="js-gem__code--gemfile"
+                                        data-clipboard-target="#gemfile_text"
+                                        >=</span
+                                    >
+                                    <span class="gem__code__tooltip--copy">Copy to clipboard</span>
+                                    <span class="gem__code__tooltip--copied">Copied!</span>
+                                </div>
+                            </h2>
+                            <h2 class="gem__ruby-version__heading t-list__heading">
+                                install:
+                                <div class="gem__code-wrap">
+                                    <input
+                                        type="text"
+                                        class="gem__code"
+                                        id="install_text"
+                                        value="gem install chelsea"
+                                        readonly="readonly"
+                                    />
+                                    <span
+                                        class="gem__code__icon"
+                                        id="js-gem__code--install"
+                                        data-clipboard-target="#install_text"
+                                        >=</span
+                                    >
+                                </div>
+                            </h2>
+                        </div>
+
+                        <div class="l-half--l">
+                            <div class="versions">
+                                <h3 class="t-list__heading">Versions:</h3>
+                                <ol class="gem__versions t-list__items">
+                                    <li class="gem__version-wrap">
+                                        <a class="t-list__item" href="/gems/chelsea/versions/0.0.35">0.0.35</a>
+                                        <small class="gem__version__date">- September 28, 2022</small>
+
+                                        <span class="gem__version__date">(74.5 KB)</span>
+                                    </li>
+                                    <li class="gem__version-wrap">
+                                        <a class="t-list__item" href="/gems/chelsea/versions/0.0.34">0.0.34</a>
+                                        <small class="gem__version__date">- November 15, 2021</small>
+
+                                        <span class="gem__version__date">(74.5 KB)</span>
+                                    </li>
+                                    <li class="gem__version-wrap">
+                                        <a class="t-list__item" href="/gems/chelsea/versions/0.0.33">0.0.33</a>
+                                        <small class="gem__version__date">- July 08, 2021</small>
+
+                                        <span class="gem__version__date">(74.5 KB)</span>
+                                    </li>
+                                    <li class="gem__version-wrap">
+                                        <a class="t-list__item" href="/gems/chelsea/versions/0.0.32">0.0.32</a>
+                                        <small class="gem__version__date">- April 14, 2021</small>
+
+                                        <span class="gem__version__date">(74 KB)</span>
+                                    </li>
+                                    <li class="gem__version-wrap">
+                                        <a class="t-list__item" href="/gems/chelsea/versions/0.0.31">0.0.31</a>
+                                        <small class="gem__version__date">- April 14, 2021</small>
+
+                                        <span class="gem__version__date">(74 KB)</span>
+                                    </li>
+                                </ol>
+                                <a
+                                    class="gem__see-all-versions t-link--gray t-link--has-arrow"
+                                    href="https://rubygems.org/gems/chelsea/versions"
+                                    >Show all versions (35 total)</a
+                                >
+                            </div>
+                        </div>
+
+                        <div class="l-half--l">
+                            <div class="dependencies gem__dependencies" id="runtime_dependencies">
+                                <h3 class="t-list__heading">Runtime Dependencies (8):</h3>
+                                <div class="t-list__items">
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/bundler"><strong>bundler</strong></a>
+                                        &gt;= 1.2.0, &lt; 3
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/ox"><strong>ox</strong></a>
+                                        ~&gt; 2.13.2
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/pastel"><strong>pastel</strong></a>
+                                        ~&gt; 0.7.2
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/rest-client"
+                                            ><strong>rest-client</strong></a
+                                        >
+                                        ~&gt; 2.0.2
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/slop"><strong>slop</strong></a>
+                                        ~&gt; 4.8.1
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/tty-font"><strong>tty-font</strong></a>
+                                        ~&gt; 0.5.0
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/tty-spinner"
+                                            ><strong>tty-spinner</strong></a
+                                        >
+                                        ~&gt; 0.9.3
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/tty-table"><strong>tty-table</strong></a>
+                                        ~&gt; 0.11.0
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dependencies gem__dependencies" id="development_dependencies">
+                                <h3 class="t-list__heading">Development Dependencies (5):</h3>
+                                <div class="t-list__items">
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/byebug"><strong>byebug</strong></a>
+                                        ~&gt; 11.1.2
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/rake"><strong>rake</strong></a>
+                                        ~&gt; 12.3
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/rspec"><strong>rspec</strong></a>
+                                        ~&gt; 3.0
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/rspec_junit_formatter"
+                                            ><strong>rspec_junit_formatter</strong></a
+                                        >
+                                        ~&gt; 0.4.1
+                                    </div>
+                                    <div class="gem__requirement-wrap">
+                                        <a class="t-list__item" href="/gems/webmock"><strong>webmock</strong></a>
+                                        ~&gt; 3.8.3
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dependencies_list">
+                                <a
+                                    class="gem__see-all-versions t-link--gray t-link--has-arrow push--s"
+                                    href="/gems/chelsea/versions/0.0.35/dependencies"
+                                    >Show all transitive dependencies</a
+                                >
+                            </div>
+                        </div>
+
+                        <div class="gem__members">
+                            <h3 class="t-list__heading">Owners:</h3>
+                            <div class="gem__users">
+                                <a
+                                    alt="sonatype-nexus-community"
+                                    title="sonatype-nexus-community"
+                                    href="/profiles/sonatype-nexus-community"
+                                    ><img
+                                        id="gravatar-145180"
+                                        width="48"
+                                        height="48"
+                                        src="https://secure.gravatar.com/avatar/bc784e028cdcf5d4911653a7d9bc3181.png?d=retro&r=PG&s=48"
+                                /></a>
+                            </div>
+
+                            <h3 class="t-list__heading">Pushed by:</h3>
+                            <div class="gem__users">
+                                <a
+                                    alt="sonatype-nexus-community"
+                                    title="sonatype-nexus-community"
+                                    href="/profiles/sonatype-nexus-community"
+                                    ><img
+                                        id="gravatar-145180"
+                                        width="48"
+                                        height="48"
+                                        src="https://secure.gravatar.com/avatar/bc784e028cdcf5d4911653a7d9bc3181.png?d=retro&r=PG&s=48"
+                                /></a>
+                            </div>
+
+                            <h3 class="t-list__heading">Authors:</h3>
+                            <ul class="t-list__items">
+                                <li class="t-list__item">
+                                    <p>Allister Beharry</p>
+                                </li>
+                            </ul>
+
+                            <h3 class="t-list__heading">SHA 256 checksum:</h3>
+                            <div class="gem__sha">ad2610e8ca2db7b0aaae9f98e607e351004cb73b2fd1d25563143bec085840d9</div>
+                        </div>
+
+                        <div class="gem__navigation">
+                            <a class="gem__previous__version" href="/gems/chelsea/versions/0.0.34"
+                                >← Previous version</a
+                            >
+                        </div>
+                    </div>
+
+                    <div class="gem__aside l-col--r--pad">
+                        <span
+                            class="github-btn"
+                            data-user="sonatype-nexus-community"
+                            data-repo="chelsea"
+                            data-type="star"
+                            data-count="true"
+                            data-size="large"
+                        >
+                            <a class="gh-btn" href="#" rel="noopener noreferrer" target="_blank">
+                                <span class="gh-ico" aria-hidden="true"></span>
+                                <span class="gh-text"></span>
+                            </a>
+                            <a
+                                class="gh-count"
+                                href="#"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                aria-hidden="true"
+                            ></a>
+                        </span>
+
+                        <div class="gem__downloads-wrap" data-href="/api/v1/downloads/chelsea-0.0.35.json">
+                            <h2 class="gem__downloads__heading t-text--s">
+                                Total downloads
+                                <span class="gem__downloads">48,261</span>
+                            </h2>
+                            <h2 class="gem__downloads__heading t-text--s">
+                                For this version
+                                <span class="gem__downloads">651</span>
+                            </h2>
+                        </div>
+
+                        <h2 class="gem__ruby-version__heading t-list__heading">
+                            License:
+                            <span class="gem__ruby-version">
+                                <p>Apache-2.0</p>
+                            </span>
+                        </h2>
+
+                        <h2 class="gem__ruby-version__heading t-list__heading">
+                            Required Ruby Version:
+                            <i class="gem__ruby-version"> &gt;= 2.6.6 </i>
+                        </h2>
+
+                        <h3 class="t-list__heading">Links:</h3>
+                        <div class="t-list__items">
+                            <a
+                                rel="nofollow"
+                                class="gem__link t-list__item"
+                                id="home"
+                                href="https://github.com/sonatype-nexus-community/chelsea"
+                                >Homepage</a
+                            >
+                            <a
+                                rel="nofollow"
+                                class="gem__link t-list__item"
+                                id="changelog"
+                                href="https://github.com/sonatype-nexus-community/chelsea/CHANGELOG"
+                                >Changelog</a
+                            >
+                            <a
+                                rel="nofollow"
+                                class="gem__link t-list__item"
+                                id="code"
+                                href="https://github.com/sonatype-nexus-community/chelsea"
+                                >Source Code</a
+                            >
+                            <a
+                                rel="nofollow"
+                                class="gem__link t-list__item"
+                                id="download"
+                                href="/downloads/chelsea-0.0.35.gem"
+                                >Download</a
+                            >
+                            <a class="gem__link t-list__item" href="https://my.diffend.io/gems/chelsea/prev/0.0.35"
+                                >Review changes</a
+                            >
+                            <a class="gem__link t-list__item" id="badge" href="https://badge.fury.io/rb/chelsea/install"
+                                >Badge</a
+                            >
+                            <a class="toggler gem__link t-list__item" id="subscribe" href="/sign_in">Subscribe</a>
+                            <a class="gem__link t-list__item" id="rss" href="/gems/chelsea/versions.atom">RSS</a>
+                            <a
+                                class="gem__link t-list__item"
+                                href="mailto:support@rubygems.org?subject=Reporting Abuse on chelsea"
+                                >Report abuse</a
+                            >
+                            <a
+                                rel="nofollow"
+                                class="gem__link t-list__item"
+                                id="reverse_dependencies"
+                                href="/gems/chelsea/reverse_dependencies"
+                                >Reverse dependencies</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="l-wrap--footer">
+                <div class="l-overflow">
+                    <div class="nav--v l-col--r--pad">
+                        <a class="nav--v__link--footer" href="https://status.rubygems.org">Status</a>
+                        <a class="nav--v__link--footer" href="https://uptime.rubygems.org">Uptime</a>
+                        <a class="nav--v__link--footer" href="https://github.com/rubygems/rubygems.org">Code</a>
+                        <a class="nav--v__link--footer" href="/pages/data">Data</a>
+                        <a class="nav--v__link--footer" href="https://groups.google.com/group/rubygems-org">Discuss</a>
+                        <a class="nav--v__link--footer" href="/stats">Stats</a>
+                        <a class="nav--v__link--footer" href="https://guides.rubygems.org/contributing/">Contribute</a>
+                        <a class="nav--v__link--footer" href="/pages/about">About</a>
+                        <a class="nav--v__link--footer" href="mailto:support@rubygems.org">Help</a>
+                        <a class="nav--v__link--footer" href="https://guides.rubygems.org/rubygems-org-api">API</a>
+                        <a class="nav--v__link--footer" href="/pages/security">Security</a>
+                        <a class="nav--v__link--footer" href="/ownership_calls">maintainers wanted</a>
+                    </div>
+                    <div class="l-colspan--l colspan--l--has-border">
+                        <div class="footer__about">
+                            <p>
+                                RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly
+                                <a href="https://guides.rubygems.org/publishing/">publish your gems</a> and then
+                                <a href="https://guides.rubygems.org/command-reference/#gem-install">install them</a>.
+                                Use <a href="https://guides.rubygems.org/rubygems-org-api/">the API</a> to find out more
+                                about <a href="/gems">available gems</a>.
+                                <a href="https://guides.rubygems.org/contributing/">Become a contributor</a> and improve
+                                the site yourself.
+                            </p>
+                            <p>
+                                RubyGems.org is made possible through a partnership with the greater Ruby community.
+                                <a href="https://www.fastly.com/">Fastly</a> provides bandwidth and CDN support,
+                                <a href="https://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, and
+                                funds ongoing development and ops work.
+                                <a href="/pages/sponsors">Learn more about our sponsors and how they work together</a>.
+                            </p>
+                            <p>
+                                We need your help to fund the developer time that keeps RubyGems.org running smoothly
+                                for everyone.
+                                <a href="https://rubycentral.org/#/portal/signup">Join Ruby Central today</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__sponsors-wrap">
+                <div class="footer__sponsors">
+                    <a
+                        class="footer__sponsor footer__sponsor__ruby_central"
+                        href="https://rubycentral.org/"
+                        target="_blank"
+                    >
+                        Supported by
+                        <span class="t-hidden">Ruby Central</span>
+                    </a>
+                    <a
+                        class="footer__sponsor footer__sponsor__dockyard"
+                        href="https://dockyard.com/ruby-on-rails-consulting"
+                        target="_blank"
+                    >
+                        Designed by
+                        <span class="t-hidden">DockYard</span>
+                    </a>
+                    <a
+                        class="footer__sponsor footer__sponsor__dnsimple"
+                        href="https://dnsimple.link/resolving-rubygems"
+                        target="_blank"
+                    >
+                        Resolved with
+                        <span class="t-hidden">DNSimple</span>
+                    </a>
+                    <a
+                        class="footer__sponsor footer__sponsor__datadog"
+                        href="https://www.datadoghq.com/"
+                        target="_blank"
+                    >
+                        Monitored by
+                        <span class="t-hidden">Datadog</span>
+                    </a>
+                    <a class="footer__sponsor footer__sponsor__fastly" href="https://www.fastly.com/" target="_blank">
+                        Gems served by
+                        <span class="t-hidden">Fastly</span>
+                    </a>
+                    <a
+                        class="footer__sponsor footer__sponsor__honeybadger"
+                        href="https://www.honeybadger.io/"
+                        target="_blank"
+                    >
+                        Monitored by
+                        <span class="t-hidden">Honeybadger</span>
+                    </a>
+                    <a class="footer__sponsor footer__sponsor__domainr" href="https://domainr.com/" target="_blank">
+                        Verified by
+                        <span class="t-hidden">Domainr</span>
+                    </a>
+                    <a
+                        class="footer__sponsor footer__sponsor__whitesource"
+                        href="https://www.whitesourcesoftware.com/"
+                        target="_blank"
+                    >
+                        Secured by
+                        <span class="t-hidden">Whitesource</span>
+                    </a>
+                </div>
+            </div>
+            <div class="footer__language_selector">
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=en">English</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=nl">Nederlands</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=zh-CN">简体中文</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=zh-TW">正體中文</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=pt-BR">Português do Brasil</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=fr">Français</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=es">Español</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=de">Deutsch</a>
+                </div>
+                <div class="footer__language">
+                    <a class="nav--v__link--footer" href="/gems/chelsea?locale=ja">日本語</a>
+                </div>
+            </div>
+        </footer>
+
+        <script src="/assets/application-0af8950be40d1d56f4c1c18364cd8fc4c9895adbf7a9a2f89acb746c77cbb447.js"></script>
+
+        <script
+            type="text/javascript"
+            defer
+            src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"
+        ></script>
+    </body>
 </html>

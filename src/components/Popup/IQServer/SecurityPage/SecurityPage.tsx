@@ -13,71 +13,89 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext, useState} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import {SecurityIssue, sortIssues} from '../../../../types/ArtifactMessage';
-import SecurityItemDisplay from './SecurityItemDisplay/SecurityItemDisplay';
-import './SecurityPage.css';
 
-// type SecurityProps = object;
+import React, { useContext, useState } from 'react'
+import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
+import { IqSecurityItemDisplay } from './SecurityItemDisplay/SecurityItemDisplay'
+import './SecurityPage.css'
+import { DATA_SOURCE } from '../../../../utils/Constants'
+import { ApiSecurityIssueDTO } from '@sonatype/nexus-iq-api-client'
+import { sortSecurityIssues, SecurityIssue } from '../../../../types/ArtifactMessage'
+import { NxTable } from '@sonatype/react-shared-components'
 
-const SecurityPage = (): JSX.Element | null => {
-  // props: SecurityProps
-  const [open, setOpen] = useState('');
+function IqSecurityPage() {
+    const popupContext = useContext(ExtensionPopupContext)
+    const [open, setOpen] = useState('')
 
-  const nexusContext = useContext(NexusContext);
-
-  const getRemediationAndOpen = (securityIssue: string): void => {
-    if (open == securityIssue) {
-      setOpen('');
-    } else {
-      setOpen(securityIssue);
+    const getRemediationAndOpen = (securityIssue: string): void => {
+        if (open == securityIssue) {
+            setOpen('')
+        } else {
+            setOpen(securityIssue)
+        }
     }
-  };
 
-  const isOpen = (issue: string): boolean => {
-    return issue == open;
-  };
+    const isOpen = (issue: string): boolean => {
+        return issue == open
+    }
 
-  const renderAccordion = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      // nexusContext.policyDetails.results &&
-      nexusContext.policyDetails.results.length > 0 // &&
-      // nexusContext.policyDetails.results[0].securityData
-    ) {
-      const purl = nexusContext.policyDetails.results[0].component.packageUrl;
-      const securityData = nexusContext.policyDetails.results[0].securityData;
-      const sortedIssues: SecurityIssue[] = sortIssues(securityData.securityIssues);
-      return (
+    const sortedIssues: SecurityIssue[] = sortSecurityIssues(
+        popupContext.iq?.componentDetails?.securityData?.securityIssues as SecurityIssue[]
+    )
+
+    return (
         <React.Fragment>
-          {' '}
-          <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              {sortedIssues.map((issue: SecurityIssue) => {
-                return (
-                  <React.Fragment>
-                    <SecurityItemDisplay
-                      key={issue.reference}
-                      open={isOpen(issue.reference)}
-                      packageUrl={purl}
-                      securityIssue={issue}
-                      remediationEvent={getRemediationAndOpen}
-                    />
-                    <hr />
-                  </React.Fragment>
-                );
-              })}
-            </section>
-          </div>
+            {' '}
+            <div className='nx-grid-row'>
+                <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
+                    <NxTable className='nx-table'>
+                        <NxTable.Head>
+                            <NxTable.Row isClickable className='nx-table-row nx-table-row--header'>
+                                {/*<th className="nx-cell nx-cell--header nx-cell--num">Threat</th>*/}
+                                <NxTable.Cell>CVSS</NxTable.Cell>
+                                <NxTable.Cell>Issue</NxTable.Cell>
+                                <NxTable.Cell chevron />
+                            </NxTable.Row>
+                        </NxTable.Head>
+                        <NxTable.Body>
+                            {sortedIssues.map((issue: ApiSecurityIssueDTO) => {
+                                return (
+                                    <IqSecurityItemDisplay
+                                        key={issue.reference}
+                                        open={isOpen(issue.reference as string)}
+                                        packageUrl={popupContext.currentPurl?.toString() as string}
+                                        securityIssue={issue}
+                                        remediationEvent={getRemediationAndOpen}
+                                    />
+                                )
+                            })}
+                        </NxTable.Body>
+                    </NxTable>
+                </section>
+            </div>
+            {/*<div className="nx-grid-row">*/}
+            {/*  <section className="nx-grid-col nx-grid-col--100 nx-scrollable">*/}
+            {/*    {securityData?.securityIssues?.map((issue: ApiSecurityIssueDTO) => {*/}
+            {/*      return (*/}
+            {/*        <IqSecurityItemDisplay*/}
+            {/*          key={issue.reference}*/}
+            {/*          open={isOpen(issue.reference as string)}*/}
+            {/*          packageUrl={popupContext.currentPurl?.toString() as string}*/}
+            {/*          securityIssue={issue}*/}
+            {/*          remediationEvent={getRemediationAndOpen}*/}
+            {/*          threatLevelCategory={issue.threatCategory}*/}
+            {/*        />*/}
+            {/*      )*/}
+            {/*    })}*/}
+            {/*  </section>*/}
+            {/*</div>*/}
         </React.Fragment>
-      );
-    }
-    return null;
-  };
+    )
+}
 
-  return renderAccordion(nexusContext);
-};
+export default function SecurityPage() {
+    const extensionContext = useContext(ExtensionConfigurationContext)
 
-export default SecurityPage;
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqSecurityPage />}</div>
+}

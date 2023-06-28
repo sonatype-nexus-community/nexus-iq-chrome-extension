@@ -15,34 +15,34 @@
  */
 //https://search.maven.org/artifact/org.apache.struts/struts2-core/2.3.30/jar
 //"purl": "pkg:maven/org.apache.struts/struts2-core/2.3.30/jar",
-import {PackageURL} from 'packageurl-js';
-import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
-import {generatePackageURLComplete} from './PurlUtils';
+import { PackageURL } from 'packageurl-js'
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
+import { generatePackageURLComplete } from './PurlUtils'
 
 //pkg:type/namespace/name@version?qualifiers#subpath
 const parseCentralSonatypeCom = (url: string): PackageURL | undefined => {
-  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.centralSonatypeCom)
-  console.debug('*** REPO TYPE: ', repoType)
-  if (repoType) {
-    if (repoType.pathRegex) {
-      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-      console.debug(pathResult?.groups)      
-      if (pathResult && pathResult.groups) {
-        return generatePackageURLComplete(
-          FORMATS.maven, 
-          encodeURIComponent(pathResult.groups.artifactId), 
-          encodeURIComponent(pathResult.groups.version), 
-          encodeURIComponent(pathResult.groups.groupId), 
-          {type: 'jar'}, 
-          undefined
-        )
-      }
+    const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.centralSonatypeCom)
+    console.debug('*** REPO TYPE: ', repoType)
+    if (repoType) {
+        if (repoType.pathRegex) {
+            const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+            console.debug(pathResult?.groups)
+            if (pathResult && pathResult.groups) {
+                return generatePackageURLComplete(
+                    FORMATS.maven,
+                    encodeURIComponent(pathResult.groups.artifactId),
+                    encodeURIComponent(pathResult.groups.version),
+                    encodeURIComponent(pathResult.groups.groupId),
+                    { type: 'jar' },
+                    undefined
+                )
+            }
+        }
+    } else {
+        console.error('Unable to determine REPO TYPE.')
     }
-  } else {
-    console.error('Unable to determine REPO TYPE.')
-  }
-  
-  return undefined;
-};
 
-export {parseCentralSonatypeCom};
+    return undefined
+}
+
+export { parseCentralSonatypeCom }

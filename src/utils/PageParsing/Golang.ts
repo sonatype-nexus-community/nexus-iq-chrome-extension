@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import $ from 'cash-dom';
-import {PackageURL} from 'packageurl-js';
-import {FORMATS} from '../Constants';
-import {generatePackageURLWithNamespace} from './PurlUtils';
+import $ from 'cash-dom'
+import { PackageURL } from 'packageurl-js'
+import { FORMATS } from '../Constants'
+import { generatePackageURLWithNamespace } from './PurlUtils'
 
 /*
   The following coordinates are missing for given format: [version]
@@ -28,88 +28,88 @@ import {generatePackageURLWithNamespace} from './PurlUtils';
 */
 
 const PKG_GO_DEV_VERSION_SELECTOR =
-  'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a';
-const GO_PKG_IN_V1 = /^gopkg.in\/([^.]+).*/;
-const GO_PKG_IN_V2 = /^gopkg.in\/([^/]+)\/([^.]+).*/;
+    'body > div.Site-content > div > header > div.UnitHeader-content > div > div.UnitHeader-details > span:nth-child(1) > a'
+const GO_PKG_IN_V1 = /^gopkg.in\/([^.]+).*/
+const GO_PKG_IN_V2 = /^gopkg.in\/([^/]+)\/([^.]+).*/
 
 const parseGolang = (url: string): PackageURL | undefined => {
-  return parsePkgGoDevURLIntoPackageURL(url);
-};
-
-const parsePkgGoDevURLIntoPackageURL = (url: string): PackageURL | undefined => {
-  const uri = new URL(url);
-  let nameAndNamespace: NamespaceContainer | undefined;
-  const nameVersion = uri.pathname.split('@');
-
-  let version = getVersionFromURI(uri);
-
-  if (version !== undefined) {
-    nameAndNamespace = getName(handleGoPkgIn(nameVersion[0].replace(/^\//, '')));
-  } else {
-    const found = $(PKG_GO_DEV_VERSION_SELECTOR);
-
-    if (typeof found !== 'undefined') {
-      nameAndNamespace = getName(handleGoPkgIn(uri.pathname.replace(/^\//, '')));
-
-      version = found.text().trim().replace('Version: ', '').trim();
-    }
-  }
-
-  if (nameAndNamespace && version != null) {
-    return generatePackageURLWithNamespace(
-      FORMATS.golang,
-      nameAndNamespace.name,
-      version,
-      nameAndNamespace.namespace
-    );
-  }
-
-  return undefined;
-};
-
-const getVersionFromURI = (uri: URL): string | undefined => {
-  const nameVersion = uri.pathname.split('@');
-
-  if (nameVersion.length > 1) {
-    //check that the version doesnt have slashes to handle @v1.26.0/runtime/protoimpl
-    return nameVersion[1].split('/')[0];
-  }
-
-  return undefined;
-};
-
-const getName = (name: string): NamespaceContainer | undefined => {
-  const nameAndNamespace = name.split('/');
-
-  if (nameAndNamespace.length > 0) {
-    if (nameAndNamespace.length > 2) {
-      const namespace = nameAndNamespace.slice(0, nameAndNamespace.length - 1).join('/');
-
-      return {name: nameAndNamespace[nameAndNamespace.length - 1], namespace: namespace};
-    }
-    return {name: nameAndNamespace[1], namespace: nameAndNamespace[0]};
-  }
-
-  return undefined;
-};
-
-const handleGoPkgIn = (namespace: string): string => {
-  const foundV2 = namespace.match(GO_PKG_IN_V2);
-  if (foundV2) {
-    return namespace.replace(GO_PKG_IN_V2, `github.com/$1/$2`);
-  }
-
-  const foundV1 = namespace.match(GO_PKG_IN_V1);
-  if (foundV1) {
-    return namespace.replace(GO_PKG_IN_V1, `github.com/go-$1/$1`);
-  }
-
-  return namespace;
-};
-
-interface NamespaceContainer {
-  name: string;
-  namespace: string;
+    return parsePkgGoDevURLIntoPackageURL(url)
 }
 
-export {parseGolang};
+const parsePkgGoDevURLIntoPackageURL = (url: string): PackageURL | undefined => {
+    const uri = new URL(url)
+    let nameAndNamespace: NamespaceContainer | undefined
+    const nameVersion = uri.pathname.split('@')
+
+    let version = getVersionFromURI(uri)
+
+    if (version !== undefined) {
+        nameAndNamespace = getName(handleGoPkgIn(nameVersion[0].replace(/^\//, '')))
+    } else {
+        const found = $(PKG_GO_DEV_VERSION_SELECTOR)
+
+        if (typeof found !== 'undefined') {
+            nameAndNamespace = getName(handleGoPkgIn(uri.pathname.replace(/^\//, '')))
+
+            version = found.text().trim().replace('Version: ', '').trim()
+        }
+    }
+
+    if (nameAndNamespace && version != null) {
+        return generatePackageURLWithNamespace(
+            FORMATS.golang,
+            nameAndNamespace.name,
+            version,
+            nameAndNamespace.namespace
+        )
+    }
+
+    return undefined
+}
+
+const getVersionFromURI = (uri: URL): string | undefined => {
+    const nameVersion = uri.pathname.split('@')
+
+    if (nameVersion.length > 1) {
+        //check that the version doesnt have slashes to handle @v1.26.0/runtime/protoimpl
+        return nameVersion[1].split('/')[0]
+    }
+
+    return undefined
+}
+
+const getName = (name: string): NamespaceContainer | undefined => {
+    const nameAndNamespace = name.split('/')
+
+    if (nameAndNamespace.length > 0) {
+        if (nameAndNamespace.length > 2) {
+            const namespace = nameAndNamespace.slice(0, nameAndNamespace.length - 1).join('/')
+
+            return { name: nameAndNamespace[nameAndNamespace.length - 1], namespace: namespace }
+        }
+        return { name: nameAndNamespace[1], namespace: nameAndNamespace[0] }
+    }
+
+    return undefined
+}
+
+const handleGoPkgIn = (namespace: string): string => {
+    const foundV2 = namespace.match(GO_PKG_IN_V2)
+    if (foundV2) {
+        return namespace.replace(GO_PKG_IN_V2, `github.com/$1/$2`)
+    }
+
+    const foundV1 = namespace.match(GO_PKG_IN_V1)
+    if (foundV1) {
+        return namespace.replace(GO_PKG_IN_V1, `github.com/go-$1/$1`)
+    }
+
+    return namespace
+}
+
+interface NamespaceContainer {
+    name: string
+    namespace: string
+}
+
+export { parseGolang }

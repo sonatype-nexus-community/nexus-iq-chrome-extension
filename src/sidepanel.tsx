@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as React from 'react';
-import {NxList} from '@sonatype/react-shared-components';
-import {LicenseDetail} from '../../../../../types/ArtifactMessage';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import ExtensionPopup from './components/Popup/ExtensionPopup'
+import { UI_MODE, UiContext } from './context/UiContext'
 
-type LicensingDisplayProps = {
-  licenseData: LicenseDetail;
-};
+/**
+ * This is essentially the UI that appears in the Extension Popup.
+ */
 
-const LicensingDisplay = (props: LicensingDisplayProps): JSX.Element => {
-  return (
-    <NxList.Item>
-      <NxList.Text>{props.licenseData.licenseName}</NxList.Text>
-    </NxList.Item>
-  );
-};
-
-export default LicensingDisplay;
+const container = document.getElementById('ui')
+const root = ReactDOM.createRoot(container)
+root.render(
+    <React.StrictMode>
+        <UiContext.Provider value={UI_MODE.SIDE_PANEL}>
+            <ExtensionPopup />
+        </UiContext.Provider>
+    </React.StrictMode>
+)

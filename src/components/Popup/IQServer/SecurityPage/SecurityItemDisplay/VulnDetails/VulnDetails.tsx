@@ -13,34 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NxVulnerabilityDetails} from '@sonatype/react-shared-components';
-import {VulnerabilityDetails} from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types';
-import React, { useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../../../context/NexusContext';
-import CVSSExplained from './CVSSExplained';
+// import { NxVulnerabilityDetails } from '@sonatype/react-shared-components'
+// import { VulnerabilityDetails } from '@sonatype/react-shared-components/components/NxVulnerabilityDetails/types'
+// import React, { useContext } from 'react'
+// import { NexusContext, NexusContextInterface } from '../../../../../../context/ExtensionPopupContext'
 
+// const VulnDetails = (): JSX.Element | null => {
+//     const nexusContext = useContext(NexusContext)
 
-const VulnDetails = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+//     const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
+//         if (nexusContext && nexusContext.vulnDetails) {
+//             <React.Fragment>
+//                <NxVulnerabilityDetails vulnerabilityDetails={nexusContext.vulnDetails as VulnerabilityDetails} />
+//                <CVSSExplained vector={nexusContext.vulnDetails.mainSeverity.vector as string} />
+//             </React.Fragment>
+//         return null
+//     }
 
-  const renderVulnerability = (nexusContext: NexusContextInterface | undefined) => {
-    console.log('vulnerabilityDetails', nexusContext && nexusContext.vulnDetails?nexusContext.vulnDetails:"");
-    if (nexusContext && nexusContext.vulnDetails) {
-      
-      return (
-        <React.Fragment>
-          <NxVulnerabilityDetails
-            vulnerabilityDetails={nexusContext.vulnDetails as VulnerabilityDetails}
-          />
-          <CVSSExplained vector={nexusContext.vulnDetails.mainSeverity.vector as string} />
-          
-        </React.Fragment>
-      );
-    }
-    return null;
-  };
+//     return renderVulnerability(nexusContext)
+// }
 
-  return renderVulnerability(nexusContext);
-};
-
-export default VulnDetails;
+// export default VulnDetails

@@ -1,24 +1,19 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "es6",
-    "lib": ["es6", "webworker"],
+    "compilerOptions": {
+        "target": "es6",
+        "module": "es6",
+        "lib": ["es6", "webworker", "ES2021.String"],
 
-    /* Strict Type-Checking Options */
-    /* Enable all strict type-checking options. */
-    "strictNullChecks": true,
+        /* Strict Type-Checking Options */
+        /* Enable all strict type-checking options. */
+        "strictNullChecks": true,
 
-    "moduleResolution": "node",
-    "outDir": "build",
-    "composite": true,
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "types": [
-      "chrome",
-      "firefox-webext-browser"
-    ]
-  },
-  "include": [
-    "src/extension_service_worker.ts"
-  ]
+        "moduleResolution": "node",
+        "outDir": "build",
+        "composite": true,
+        "sourceMap": true,
+        "allowSyntheticDefaultImports": true,
+        "types": ["chrome", "node", "firefox-webext-browser"]
+    },
+    "include": ["src/extension_service_worker.ts"]
 }

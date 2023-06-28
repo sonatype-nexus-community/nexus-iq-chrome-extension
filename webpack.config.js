@@ -93,6 +93,25 @@ const htmlPlugin = new HtmlWebpackPlugin({
   },
 });
 
+const htmlSidePanelPlugin = new HtmlWebpackPlugin({
+  inject: true,
+  chunks: ['main'],
+  template: './public/index.html',
+  filename: 'sidepanel.html',
+  minify: {
+    removeComments: true,
+    collapseWhitespace: true,
+    removeRedundantAttributes: true,
+    useShortDoctype: true,
+    removeEmptyAttributes: true,
+    removeStyleLinkTypeAttributes: true,
+    keepClosingSlash: true,
+    minifyJS: true,
+    minifyCSS: true,
+    minifyURLs: true,
+  },
+});
+
 const optionsHtmlPlugin = new HtmlWebpackPlugin({
   inject: true,
   chunks: ['options'],
@@ -113,7 +132,7 @@ const optionsHtmlPlugin = new HtmlWebpackPlugin({
 });
 
 
-const appConfig = {
+const popupConfig = {
   entry: {
     main: './src/index.tsx',
     content: './src/content.ts',
@@ -161,6 +180,64 @@ const appConfig = {
 
   plugins: [
     htmlPlugin,
+    cspHtmlWebpackPlugin,
+    miniCssExtractPlugin, 
+    forkTsCheckerWebpackPlugin,
+    copyWebpackPlugin,
+    copyWebpackPluginManifest,
+    new webpack.ProvidePlugin({process: "process"}),
+    new NodePolyfillPlugin()
+  ],
+};
+
+const sidePanelConfig = {
+  entry: {
+    main: './src/sidepanel.tsx',
+    content: './src/content.ts',
+  },
+
+  devtool: 'inline-source-map',
+
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.(ttf|eot|woff2?|svg|png)$/,
+        type: 'asset'
+      }
+    ],
+  },
+
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.json'],
+    fallback: {
+      "net": false,
+      "tls": false,
+    }
+  },
+
+  output: {
+    pathinfo: false,
+    filename: 'static/js/[name].js',
+    chunkFilename: 'static/js/[name].js',
+    path: path.resolve(__dirname, "build")
+  },
+  
+  optimization: {
+    minimize: false,
+    runtimeChunk: false,
+  },
+
+  plugins: [
+    htmlSidePanelPlugin,
     cspHtmlWebpackPlugin,
     miniCssExtractPlugin, 
     forkTsCheckerWebpackPlugin,
@@ -274,4 +351,4 @@ const serviceWorkerConfig = {
     new NodePolyfillPlugin()]
 };
 
-module.exports = [ appConfig, optionsConfig, serviceWorkerConfig ]
+module.exports = [ popupConfig, sidePanelConfig, optionsConfig, serviceWorkerConfig ]

@@ -13,17 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { logger, LogLevel } from '../logger/Logger'
 
 function ensure<T>(argument: T | undefined | null, message = 'This value was promised to be there.'): T {
-  if (argument === undefined || argument === null) {
-    throw new TypeError(message);
-  }
+    if (argument === undefined || argument === null) {
+        throw new TypeError(message)
+    }
 
-  return argument;
+    return argument
 }
 
-function stripHtmlComments (html: string): string {
-  return html.replace(/<!--[\s\S]*?(?:-->)/g, '')
+function stripHtmlComments(html: string): string {
+    return html.replace(/<!--[\s\S]*?(?:-->)/g, '')
 }
 
-export {ensure, stripHtmlComments}
+function stripTrailingSlash(url: string): string {
+    return url.endsWith('/') ? url.slice(0, -1) : url
+}
+
+function getNewUrlandGo(currentTab, currentPurlVersion: string, version: string) {
+    const currentTabUrl = currentTab.url
+    // const currentPurlVersion = popupContext.currentPurl?.version
+
+    logger.logMessage(`Remediation Details: Replacing URL with ${version}`, LogLevel.DEBUG)
+    if (currentPurlVersion !== undefined && currentTabUrl !== undefined) {
+        const currentVersion = new RegExp(currentPurlVersion as string)
+        const newUrl = currentTabUrl?.toString().replace(currentVersion, version)
+        logger.logMessage(`Remediation Details: Generated new URL ${newUrl}`, LogLevel.DEBUG)
+        // TODO: Make work with other browsers and error handling
+        chrome.tabs.update({
+            url: newUrl,
+        })
+        window.close()
+    } else {
+        logger.logMessage(
+            `Remediation Details: currentTabURL or currentPul are undefined when trying to replace with ${version}`,
+            LogLevel.ERROR
+        )
+    }
+}
+
+export { ensure, stripHtmlComments, getNewUrlandGo, stripTrailingSlash }

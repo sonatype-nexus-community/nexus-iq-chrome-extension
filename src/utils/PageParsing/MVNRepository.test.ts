@@ -13,49 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {describe, expect, test} from '@jest/globals';
-import {readFileSync} from 'fs';
-import {PackageURL} from 'packageurl-js';
-import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, REPO_TYPES} from '../Constants';
-import {ensure} from '../Helpers'
-import {getArtifactDetailsFromDOM} from '../PageParsing';
+import { describe, expect, test } from '@jest/globals'
+import { readFileSync } from 'fs'
+import { PackageURL } from 'packageurl-js'
+import { join } from 'path'
+import { DATA_SOURCES, FORMATS, REPOS, REPO_TYPES } from '../Constants'
+import { ensure } from '../Helpers'
+import { getArtifactDetailsFromDOM } from '../PageParsing'
 
 describe('MVNRepository Page Parsing', () => {
-  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.mvnRepositoryCom)
-  expect(repoType).toBeDefined()
-  
-  test('should parse a valid MVNRepository page with version', () => {
-    const html = readFileSync(join(__dirname, 'testdata/MVNRepository.html'));
+    const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.mvnRepositoryCom)
+    expect(repoType).toBeDefined()
 
-    window.document.body.innerHTML = html.toString();
+    test('should parse a valid MVNRepository page with version', () => {
+        const html = readFileSync(join(__dirname, 'testdata/MVNRepository.html'))
 
-    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
-      ensure(repoType),
-      'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3'
-    );
+        window.document.body.innerHTML = html.toString()
 
-    expect(packageURL).toBeDefined();
-    expect(packageURL?.type).toBe('maven');
-    expect(packageURL?.namespace).toBe('org.apache.struts');
-    expect(packageURL?.name).toBe('struts2-core');
-    expect(packageURL?.version).toBe('2.2.3');
-  });
+        const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
+            ensure(repoType),
+            'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3'
+        )
 
-  test('should parse a valid MVNRepository page with fragment', () => {
-    const html = readFileSync(join(__dirname, 'testdata/MVNRepository.html'));
+        expect(packageURL).toBeDefined()
+        expect(packageURL?.type).toBe('maven')
+        expect(packageURL?.namespace).toBe('org.apache.struts')
+        expect(packageURL?.name).toBe('struts2-core')
+        expect(packageURL?.version).toBe('2.2.3')
+    })
 
-    window.document.body.innerHTML = html.toString();
+    test('should parse a valid MVNRepository page with fragment', () => {
+        const html = readFileSync(join(__dirname, 'testdata/MVNRepository.html'))
 
-    const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
-      ensure(repoType),
-      'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3#ivy'
-    );
+        window.document.body.innerHTML = html.toString()
 
-    expect(packageURL).toBeDefined();
-    expect(packageURL?.type).toBe('maven');
-    expect(packageURL?.namespace).toBe('org.apache.struts');
-    expect(packageURL?.name).toBe('struts2-core');
-    expect(packageURL?.version).toBe('2.2.3');
-  });
-});
+        const packageURL: PackageURL | undefined = getArtifactDetailsFromDOM(
+            ensure(repoType),
+            'https://mvnrepository.com/artifact/org.apache.struts/struts2-core/2.2.3#ivy'
+        )
+
+        expect(packageURL).toBeDefined()
+        expect(packageURL?.type).toBe('maven')
+        expect(packageURL?.namespace).toBe('org.apache.struts')
+        expect(packageURL?.name).toBe('struts2-core')
+        expect(packageURL?.version).toBe('2.2.3')
+    })
+})

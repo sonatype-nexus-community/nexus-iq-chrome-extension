@@ -13,65 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SecurityData} from '@sonatype/js-sona-types';
 import {
-  NxH3,
-  NxPolicyViolationIndicator,
-  ThreatLevelNumber
-} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
+    NxH3,
+    NxLoadingSpinner,
+    NxPolicyViolationIndicator,
+    ThreatLevelNumber,
+} from '@sonatype/react-shared-components'
+import React, { useContext } from 'react'
+import { ExtensionPopupContext } from '../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
+import { DATA_SOURCE } from '../../../utils/Constants'
 
-const SecurityThreat = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+function IqSecurity() {
+    const popupContext = useContext(ExtensionPopupContext)
+    const securityData = popupContext.iq?.componentDetails?.securityData
 
-  const renderSecurityThreat = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.componentDetails &&
-      nexusContext.componentDetails.securityData
-    ) {
-      return getSecurityThreat(nexusContext.componentDetails.securityData);
-    } else if (
-      // TODO: when to show policy vs. componentDetails
-      nexusContext &&
-      nexusContext.policyDetails &&
-      nexusContext.policyDetails.results?.length > 0 // &&
-      // nexusContext.policyDetails.results[0].securityData
-    ) {
-      return getSecurityThreat(nexusContext.policyDetails.results[0].securityData);
+    function getMaxSecurity() {
+        if (securityData && securityData.securityIssues && securityData?.securityIssues?.length > 0) {
+            return Math.max(...securityData.securityIssues.map((issue) => issue.severity as number))
+        }
+
+        return 0
+    }
+
+    if (securityData == undefined) {
+        return <NxLoadingSpinner />
     } else {
-      return null;
+        return (
+            <React.Fragment>
+                <header className='nx-grid-header'>
+                    <NxH3 className={'nx-h3'}>Max Security Threat</NxH3>
+                </header>
+                <NxPolicyViolationIndicator policyThreatLevel={getMaxSecurity() as ThreatLevelNumber} />
+            </React.Fragment>
+        )
     }
-  };
+}
 
-  const getSecurityThreat = (securityData: SecurityData | undefined) => {
-    if (securityData && securityData.securityIssues.length > 0) {
-      const maxSeverity = Math.max(...securityData.securityIssues.map((issue) => issue.severity));
-      return (
-        <React.Fragment>
-          <header className="nx-grid-header">
-            <h3 className={'nx-h3'}>Max Security Threat</h3>
-          </header>
-          <NxPolicyViolationIndicator
-            policyThreatLevel={Math.round(maxSeverity) as ThreatLevelNumber}
-          />
-        </React.Fragment>
-      );
-    } else if (securityData && securityData.securityIssues.length == 0) {
-      return(
-      <React.Fragment>
-        <header className="nx-grid-header">
-          <NxH3>No Security Issues</NxH3>
-        </header>
-        <NxPolicyViolationIndicator threatLevelCategory="none">Woohoo!</NxPolicyViolationIndicator>
-      </React.Fragment>
-    )
-    }
-    return null;
-  };
+export default function SecurityThreat() {
+    const extensionContext = useContext(ExtensionConfigurationContext)
 
-  return renderSecurityThreat(nexusContext);
-};
-
-export default SecurityThreat;
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqSecurity />}</div>
+}

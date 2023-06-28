@@ -1,106 +1,108 @@
 {
-  "name": "Sonatype Nexus Lifecycle Evaluation",
-  "description": "Sonatype Nexus Lifecycle Evaluation - Scan Open Source Repositories for known Vulnerabilities.",
-  "author": "Cameron Townshend - ctownshend@sonatype.com",
-  "version": "2.0.0",
-  "minimum_chrome_version": "93",
-  "manifest_version": 3,
-  "content_security_policy": {
-    "script-src": "self",
-    "object-src": "self"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "View the details of this OSS component",
-    "default_icon": {
-      "16": "images/sonatype-lifecycle-icon-16x16.png",
-      "32": "images/sonatype-lifecycle-icon-32x32.png"
-    }
-  },
-  "icons": {
-    "16": "images/sonatype-lifecycle-icon-16x16.png",
-    "32": "images/sonatype-lifecycle-icon-32x32.png",
-    "48": "images/sonatype-lifecycle-icon-48x48.png",
-    "128": "images/sonatype-lifecycle-icon-128x128.png"
-  },
-  "background": {
-    "service_worker": "extension_service_worker.js"
-  },
-  "optional_host_permissions":[
-    "<all_urls>"
-  ],
-  "host_permissions": [
-    "https://pkgs.alpinelinux.org/",
-    "https://anaconda.org/",
-    "https://cocoapods.org/",
-    "https://conan.io/center/",
-    "https://cran.r-project.org/",
-    "https://crates.io/",
-    "https://packages.debian.org/",
-    "https://tracker.debian.org/pkg/",    
-    "https://mvnrepository.com/",
-    "https://www.npmjs.com/",
-    "https://www.nuget.org/",
-    "https://ossindex.sonatype.org/",
-    "https://packagist.org/",
-    "https://pypi.org/",
-    "https://repo1.maven.org/",
-    "https://repo.maven.apache.org/",
-    "https://repo.spring.io/list/",
-    "https://rpmfind.net/linux/RPM/epel/",
-    "https://rubygems.org/",
-    "https://search.gocenter.io/",
-    "https://search.maven.org/",
-    "https://pkg.go.dev/",
-    "https://central.sonatype.com/"
-  ],
-  "permissions": [
-    "activeTab", 
-    "declarativeContent", 
-    "cookies", 
-    "background", 
-    "storage", 
-    "tabs", 
-    "notifications"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://pkgs.alpinelinux.org/package/*",
-        "https://anaconda.org/*",
-        "https://cocoapods.org/*",
-        "https://conan.io/center/*",
-        "https://cran.r-project.org/*",
-        "https://crates.io/*",
-        "https://packages.debian.org/*",
-        "https://tracker.debian.org/pkg/*",
-        "https://mvnrepository.com/*",
-        "https://www.npmjs.com/*",
-        "https://www.nuget.org/*",
-        "https://ossindex.sonatype.org/*",
-        "https://packagist.org/*",
-        "https://pypi.org/*",
-        "https://repo1.maven.org/*",
-        "https://repo.maven.apache.org/*",
-        "https://repo.spring.io/list/*",
-        "https://rpmfind.net/linux/RPM/epel/*",
-        "https://rubygems.org/*",
-        "https://search.gocenter.io/*",
-        "https://search.maven.org/*",
-        "https://pkg.go.dev/*",
-        "https://central.sonatype.dev/*",
-        "https://central.sonatype.com/*"
-      ],
-      "css": ["/css/pagestyle.css"],
-      "js": ["/static/js/content.js"],
-      "run_at": "document_end"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["images/*", "static/*", "css/*"],
-      "matches": ["<all_urls>"]
-    }
-  ],
-  "options_page": "options.html"
+    "name": "Sonatype Browser Extension",
+    "description": "Shift Security Left wiht the Sonatype Browser Extension - Scan Open Source Repositories for known Vulnerabilities.",
+    "author": "Sonatype Community <community-group@sonatype.com>",
+    "version": "2.0.0",
+    "minimum_chrome_version": "93",
+    "manifest_version": 3,
+    "content_security_policy": {
+        "script-src": "self",
+        "object-src": "self"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "View the details of this OSS component",
+        "default_icon": {
+            "16": "images/sonatype-lifecycle-icon-16x16.png",
+            "32": "images/sonatype-lifecycle-icon-32x32.png"
+        }
+    },
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    },
+    "icons": {
+        "16": "images/sonatype-lifecycle-icon-16x16.png",
+        "32": "images/sonatype-lifecycle-icon-32x32.png",
+        "48": "images/sonatype-lifecycle-icon-48x48.png",
+        "128": "images/sonatype-lifecycle-icon-128x128.png"
+    },
+    "background": {
+        "service_worker": "extension_service_worker.js"
+    },
+    "optional_host_permissions": ["<all_urls>"],
+    "host_permissions": [
+        "https://pkgs.alpinelinux.org/",
+        "https://anaconda.org/",
+        "https://cocoapods.org/",
+        "https://conan.io/center/",
+        "https://cran.r-project.org/",
+        "https://crates.io/",
+        "https://packages.debian.org/",
+        "https://tracker.debian.org/pkg/",
+        "https://mvnrepository.com/",
+        "https://www.npmjs.com/",
+        "https://www.nuget.org/",
+        "https://ossindex.sonatype.org/",
+        "https://packagist.org/",
+        "https://pypi.org/",
+        "https://repo1.maven.org/",
+        "https://repo.maven.apache.org/",
+        "https://repo.spring.io/list/",
+        "https://rpmfind.net/linux/RPM/epel/",
+        "https://rubygems.org/",
+        "https://search.gocenter.io/",
+        "https://search.maven.org/",
+        "https://pkg.go.dev/",
+        "https://central.sonatype.com/"
+    ],
+    "permissions": [
+        "activeTab",
+        "declarativeContent",
+        "cookies",
+        "background",
+        "sidePanel",
+        "storage",
+        "tabs",
+        "notifications"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://pkgs.alpinelinux.org/package/*",
+                "https://anaconda.org/*",
+                "https://cocoapods.org/*",
+                "https://conan.io/center/*",
+                "https://cran.r-project.org/*",
+                "https://crates.io/*",
+                "https://packages.debian.org/*",
+                "https://tracker.debian.org/pkg/*",
+                "https://mvnrepository.com/*",
+                "https://www.npmjs.com/*",
+                "https://www.nuget.org/*",
+                "https://ossindex.sonatype.org/*",
+                "https://packagist.org/*",
+                "https://pypi.org/*",
+                "https://repo1.maven.org/*",
+                "https://repo.maven.apache.org/*",
+                "https://repo.spring.io/list/*",
+                "https://rpmfind.net/linux/RPM/epel/*",
+                "https://rubygems.org/*",
+                "https://search.gocenter.io/*",
+                "https://search.maven.org/*",
+                "https://pkg.go.dev/*",
+                "https://central.sonatype.dev/*",
+                "https://central.sonatype.com/*"
+            ],
+            "css": ["/css/pagestyle.css"],
+            "js": ["/static/js/content.js"],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["images/*", "static/*", "css/*"],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "options_page": "options.html"
 }

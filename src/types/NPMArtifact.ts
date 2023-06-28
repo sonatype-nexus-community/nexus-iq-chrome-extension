@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {PackageURL} from 'packageurl-js';
-import {DATA_SOURCES, FORMATS} from '../utils/Constants';
-import {Artifact} from './Artifact';
+import { PackageURL } from 'packageurl-js'
+import { DATA_SOURCES, FORMATS } from '../utils/Constants'
+import { Artifact } from './Artifact'
 
 export class NPMArtifact extends Artifact {
-  constructor(readonly packageName: string, readonly version: string) {
-    super(FORMATS.npm, null, DATA_SOURCES.NEXUSIQ, packageName, version);
-  }
+    constructor(readonly packageName: string, readonly version: string) {
+        super(FORMATS.npm, null, DATA_SOURCES.NEXUSIQ, packageName, version)
+    }
 
-  public display(): string {
-    return this.packageName;
-  }
+    public display(): string {
+        return this.packageName
+    }
 
-  public toPurl(): string {
-    return new PackageURL(
-      this.format,
-      undefined,
-      this.name,
-      this.version,
-      undefined,
-      undefined
-    ).toString();
-  }
+    public toPurl(): string {
+        return new PackageURL(this.format, undefined, this.name, this.version, undefined, undefined).toString()
+    }
 }

@@ -14,33 +14,35 @@
  * limitations under the License.
  */
 
-import $ from 'cash-dom';
-import {PackageURL} from 'packageurl-js';
-import {generatePackageURL} from './PurlUtils';
-import { FORMATS, REPOS, REPO_TYPES } from '../Constants';
+import $ from 'cash-dom'
+import { PackageURL } from 'packageurl-js'
+import { generatePackageURL } from './PurlUtils'
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
 
 const parseNuget = (url: string): PackageURL | undefined => {
-  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.nugetOrg)
-  console.debug('*** REPO TYPE + URL: ', repoType, url)
-  if (repoType) {
-    if (repoType.pathRegex) {
-      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-      console.debug(pathResult?.groups)
-      if (pathResult && pathResult.groups) {
-        const pageVersion = $(repoType.versionDomPath).text().trim()
-        console.debug(`URL Version: ${pathResult.groups.version}, Page Version: ${pageVersion}`)
-        return generatePackageURL(
-          FORMATS.nuget, 
-          encodeURIComponent(pathResult.groups.artifactId),
-          encodeURIComponent((pathResult.groups.version !== undefined ? pathResult.groups.version : pageVersion))
-        )
-      }
+    const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.nugetOrg)
+    console.debug('*** REPO TYPE + URL: ', repoType, url)
+    if (repoType) {
+        if (repoType.pathRegex) {
+            const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+            console.debug(pathResult?.groups)
+            if (pathResult && pathResult.groups) {
+                const pageVersion = $(repoType.versionDomPath).text().trim()
+                console.debug(`URL Version: ${pathResult.groups.version}, Page Version: ${pageVersion}`)
+                return generatePackageURL(
+                    FORMATS.nuget,
+                    encodeURIComponent(pathResult.groups.artifactId),
+                    encodeURIComponent(
+                        pathResult.groups.version !== undefined ? pathResult.groups.version : pageVersion
+                    )
+                )
+            }
+        }
+    } else {
+        console.error('Unable to determine REPO TYPE.')
     }
-  } else {
-    console.error('Unable to determine REPO TYPE.')
-  }
-  
-  return undefined;
-};
 
-export {parseNuget};
+    return undefined
+}
+
+export { parseNuget }

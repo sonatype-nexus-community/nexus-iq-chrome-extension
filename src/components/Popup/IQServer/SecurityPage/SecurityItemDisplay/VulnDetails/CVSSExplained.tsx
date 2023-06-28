@@ -13,88 +13,77 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React  from 'react';
-import {CvssVectorExplainer, VectorDetails} from '../../../../../../utils/CvssVectorExplainer';
-import { Icon } from '@fortawesome/fontawesome-svg-core';
+import React from 'react'
+import { CvssVectorExplainer, VectorDetails } from '../../../../../../utils/CvssVectorExplainer'
+import { Icon } from '@fortawesome/fontawesome-svg-core'
 
-import {
-  faQuestionCircle
-} from '@fortawesome/free-solid-svg-icons';
-import {
-  
-  NxTable,
-  NxFontAwesomeIcon,
-  NxH3,
-  NxTooltip
-} from '@sonatype/react-shared-components';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { NxTable, NxFontAwesomeIcon, NxH3, NxTooltip } from '@sonatype/react-shared-components'
 
 const CVSSExplained = ({ vector }): JSX.Element | null => {
-  function getByValue(map, searchValue) {
-    // console.log("getByValue", map, searchValue);
-    for (const [key, value] of map.entries()) {
-      if (key === searchValue) return value;
+    function getByValue(map, searchValue) {
+        // console.log("getByValue", map, searchValue);
+        for (const [key, value] of map.entries()) {
+            if (key === searchValue) return value
+        }
     }
-  }
-  
-  const renderCVSS = (vector) => {    
-    
-    return (
-      <React.Fragment>
-        <div className="nx-vulnerability-details">
-          <div className="nx-grid-row">
-            <div className="nx-grid-col">
-              <dl className={'nx-read-only'}>
-                <dt></dt>
-                <dd>
-                  <span>{'\xa0'.repeat(29)}</span>
-                </dd>
-              </dl>
-            </div>
 
-            <div className="nx-grid-col">
-              <NxTable>
-                <NxTable.Head>
-                  <NxH3>CVSS Explained</NxH3>
-                </NxTable.Head>
-                <NxTable.Body>
-                  {renderCVSSVectorRow('AC', vector)}
-                  {renderCVSSVectorRow('C', vector)}
-                  {renderCVSSVectorRow('I', vector)}
-                  {renderCVSSVectorRow('A', vector)}
-                  {renderCVSSVectorRow('AV', vector)}
-                  {renderCVSSVectorRow('PR', vector)}
-                  {renderCVSSVectorRow('UI', vector)}
-                  {renderCVSSVectorRow('S', vector)}
-                </NxTable.Body>
-              </NxTable>
-            </div>
-          </div>
-        </div>
-      </React.Fragment>
-    );    
-    
+    const renderCVSS = (vector) => {
+        return (
+            <React.Fragment>
+                <div className='nx-vulnerability-details'>
+                    <div className='nx-grid-row'>
+                        <div className='nx-grid-col'>
+                            <dl className={'nx-read-only'}>
+                                <dt></dt>
+                                <dd>
+                                    <span>{'\xa0'.repeat(29)}</span>
+                                </dd>
+                            </dl>
+                        </div>
 
+                        <div className='nx-grid-col'>
+                            <NxTable>
+                                <NxTable.Head>
+                                    <NxH3>CVSS Explained</NxH3>
+                                </NxTable.Head>
+                                <NxTable.Body>
+                                    {renderCVSSVectorRow('AC', vector)}
+                                    {renderCVSSVectorRow('C', vector)}
+                                    {renderCVSSVectorRow('I', vector)}
+                                    {renderCVSSVectorRow('A', vector)}
+                                    {renderCVSSVectorRow('AV', vector)}
+                                    {renderCVSSVectorRow('PR', vector)}
+                                    {renderCVSSVectorRow('UI', vector)}
+                                    {renderCVSSVectorRow('S', vector)}
+                                </NxTable.Body>
+                            </NxTable>
+                        </div>
+                    </div>
+                </div>
+            </React.Fragment>
+        )
 
-    function renderCVSSVectorRow(key, vector) {
-      const cvssElements = vector.split('/');
-      const elements = CvssVectorExplainer(cvssElements);
-      const vectorDetails: VectorDetails = getByValue(elements, key);
-      // console.log('vector', vector, vectorDetails, cvssElements, elements);
-      return (
-        <NxTable.Row key={key}>
-          <NxTable.Cell>{vectorDetails.vectorName}:</NxTable.Cell>
-          <NxTable.Cell align="right">{vectorDetails.quickExplanation}</NxTable.Cell>
-          <NxTable.Cell>
-            <NxTooltip title={vectorDetails.tooltip} placement="top">
-              <NxFontAwesomeIcon icon={faQuestionCircle as Icon} color="rgb(4, 89, 200)" />
-            </NxTooltip>
-          </NxTable.Cell>
-        </NxTable.Row>
-      );
+        function renderCVSSVectorRow(key, vector) {
+            const cvssElements = vector.split('/')
+            const elements = CvssVectorExplainer(cvssElements)
+            const vectorDetails: VectorDetails = getByValue(elements, key)
+            // console.log('vector', vector, vectorDetails, cvssElements, elements);
+            return (
+                <NxTable.Row key={key}>
+                    <NxTable.Cell>{vectorDetails.vectorName}:</NxTable.Cell>
+                    <NxTable.Cell align='right'>{vectorDetails.quickExplanation}</NxTable.Cell>
+                    <NxTable.Cell>
+                        <NxTooltip title={vectorDetails.tooltip} placement='top'>
+                            <NxFontAwesomeIcon icon={faQuestionCircle as Icon} color='rgb(4, 89, 200)' />
+                        </NxTooltip>
+                    </NxTable.Cell>
+                </NxTable.Row>
+            )
+        }
     }
-  };
 
-  return renderCVSS(vector);
-};
+    return renderCVSS(vector)
+}
 
-export default CVSSExplained;
+export default CVSSExplained

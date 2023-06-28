@@ -13,15 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import NexusChromeExtensionContainer from './NexusChromeExtensionContainer';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import ExtensionPopup from './components/Popup/ExtensionPopup'
+import { UI_MODE, UiContext } from './context/UiContext'
 
-const container = document.getElementById('ui');
+/**
+ * This is essentially the UI that appears in the Extension Popup or Side Panel.
+ */
 
-const root = ReactDOM.createRoot(container);
+const container = document.getElementById('ui')
+const root = ReactDOM.createRoot(container)
 root.render(
-  <React.StrictMode>
-    <NexusChromeExtensionContainer />
-  </React.StrictMode>
-);
+    <React.StrictMode>
+        <UiContext.Provider value={UI_MODE.POPUP}>
+            <ExtensionPopup />
+        </UiContext.Provider>
+    </React.StrictMode>
+)

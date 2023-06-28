@@ -1,168 +1,466 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alpine Linux packages</title>
-    <link rel="stylesheet" href="/assets/pure-min.css">
-    <link rel="stylesheet" href="/assets/grids-responsive-min.css">
-    <link rel="stylesheet" href="/assets/hint.min.css">
-    <link rel="stylesheet" href="/assets/style.css">
-    <link rel="shortcut icon" href="/assets/favicon.ico">
-</head>
-<body>
-    <div id="wrapper">
-        <header class="pure-g" id="header">
-            <div class="pure-u-1 pure-u-lg-4-24">
-                <div class="logo">
-                    <a href="/"><img src="/assets/alpinelinux-logo.svg" class="pure-img" alt="" /></a>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Alpine Linux packages</title>
+        <link rel="stylesheet" href="/assets/pure-min.css" />
+        <link rel="stylesheet" href="/assets/grids-responsive-min.css" />
+        <link rel="stylesheet" href="/assets/hint.min.css" />
+        <link rel="stylesheet" href="/assets/style.css" />
+        <link rel="shortcut icon" href="/assets/favicon.ico" />
+    </head>
+    <body>
+        <div id="wrapper">
+            <header class="pure-g" id="header">
+                <div class="pure-u-1 pure-u-lg-4-24">
+                    <div class="logo">
+                        <a href="/"><img src="/assets/alpinelinux-logo.svg" class="pure-img" alt="" /></a>
+                    </div>
                 </div>
-            </div>
-            <input type="checkbox" id="menu-toggle-cb">
-            <label id="menu-toggle" for="menu-toggle-cb" onclick>
-                <s class="bar"></s>
-                <s class="bar"></s>
-                <s class="bar"></s>
-            </label>
-            <div class="pure-u-1 pure-u-lg-20-24 box-relative menu-wrapper">
-                <nav class="pure-menu pure-menu-horizontal menu-local">
-                    <ul class="pure-menu-list">
-                        <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
-                        <li class="pure-menu-item"><a href="/contents" class="pure-menu-link">Contents</a></li>
-                        <li class="pure-menu-item"><a href="/flagged" class="pure-menu-link">Flagged</a></li>
-                    </ul>
-                </nav>
-                <nav class="pure-menu pure-menu-horizontal menu-external">
-                    <ul class="pure-menu-list">
-                        <li class="pure-menu-item"><a href="https://wiki.alpinelinux.org" class="pure-menu-link">wiki</a></li>
-                        <li class="pure-menu-item"><a href="https://git.alpinelinux.org" class="pure-menu-link">git</a></li>
-                        <li class="pure-menu-item"><a href="https://bugs.alpinelinux.org/projects/alpine/issues" class="pure-menu-link">bugs</a></li>
-                        <li class="pure-menu-item"><a href="https://mirrors.alpinelinux.org" class="pure-menu-link">mirrors</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
+                <input type="checkbox" id="menu-toggle-cb" />
+                <label id="menu-toggle" for="menu-toggle-cb" onclick>
+                    <s class="bar"></s>
+                    <s class="bar"></s>
+                    <s class="bar"></s>
+                </label>
+                <div class="pure-u-1 pure-u-lg-20-24 box-relative menu-wrapper">
+                    <nav class="pure-menu pure-menu-horizontal menu-local">
+                        <ul class="pure-menu-list">
+                            <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
+                            <li class="pure-menu-item"><a href="/contents" class="pure-menu-link">Contents</a></li>
+                            <li class="pure-menu-item"><a href="/flagged" class="pure-menu-link">Flagged</a></li>
+                        </ul>
+                    </nav>
+                    <nav class="pure-menu pure-menu-horizontal menu-external">
+                        <ul class="pure-menu-list">
+                            <li class="pure-menu-item">
+                                <a href="https://wiki.alpinelinux.org" class="pure-menu-link">wiki</a>
+                            </li>
+                            <li class="pure-menu-item">
+                                <a href="https://git.alpinelinux.org" class="pure-menu-link">git</a>
+                            </li>
+                            <li class="pure-menu-item">
+                                <a href="https://bugs.alpinelinux.org/projects/alpine/issues" class="pure-menu-link"
+                                    >bugs</a
+                                >
+                            </li>
+                            <li class="pure-menu-item">
+                                <a href="https://mirrors.alpinelinux.org" class="pure-menu-link">mirrors</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
 
-    <main id="package">
-        <div class="grid-head">Package details</div>
-        <div class="grid-body">
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-lg-15-24">
-                    <div class="table-responsive">
-                        <table class="pure-table pure-table-striped" id="package">
-                            <tr>
-                                <th class="header">Package</th>
-                                <td>openssl</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Version</th>
-                                <td>
-                                    <strong>
-                                        <a class="hint--right text-success" aria-label="Flag this package out of date" href="&#x2F;flag&#x2F;main&#x2F;openssl&#x2F;1.1.1k-r0">1.1.1k-r0</a>
-                                    </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="header">Description</th>
-                                <td>Toolkit for Transport Layer Security (TLS)</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Project</th>
-                                <td><a href="https:&#x2F;&#x2F;www.openssl.org&#x2F;">https:&#x2F;&#x2F;www.openssl.org&#x2F;</a></td>
-                            </tr>
-                            <tr>
-                                <th class="header">License</th>
-                                <td>OpenSSL</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Branch</th>
-                                <td>edge</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Repository</th>
-                                <td>main</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Architecture</th>
-                                <td>x86</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Size</th>
-                                <td>268.92 kB</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Installed size</th>
-                                <td>656 kB</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Origin</th>
-                                <td><a href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl">openssl</a></td>
-                            </tr>
-                            <tr>
-                                <th class="header">Maintainer</th>
-                                <td>Timo Teras</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Build time</th>
-                                <td>2021-03-25 14:09:33</td>
-                            </tr>
-                            <tr>
-                                <th class="header">Commit</th>
-                                <td><a href="http:&#x2F;&#x2F;git.alpinelinux.org&#x2F;aports&#x2F;commit&#x2F;?id=92ff3f34184c589fa4d811f96fa7f607b803975a">92ff3f34184c589fa4d811f96fa7f607b803975a</a></td>
-                            </tr>
-                            <tr>
-                                <th class="header">Git repository</th>
-                                <td><a href="http:&#x2F;&#x2F;git.alpinelinux.org&#x2F;aports&#x2F;tree&#x2F;main&#x2F;openssl?h=master">Git repository</a></td>
-                            </tr>
-                            <tr>
-                                <th class="header">Build log</th>
-                                <td><a href="http:&#x2F;&#x2F;build.alpinelinux.org&#x2F;buildlogs&#x2F;build-edge-x86&#x2F;main&#x2F;openssl&#x2F;openssl-1.1.1k-r0.log">Build log</a></td>
-                            </tr>
-                            <tr>
-                                <th class="header">Contents</th>
-                                <td><a href="&#x2F;contents?branch=edge&amp;name=openssl&amp;arch=x86&amp;repo=main">Contents of package</a></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="flag-button">
-                        <a class="pure-button" href="&#x2F;flag&#x2F;main&#x2F;openssl&#x2F;1.1.1k-r0">Flag</a>
+            <main id="package">
+                <div class="grid-head">Package details</div>
+                <div class="grid-body">
+                    <div class="pure-g">
+                        <div class="pure-u-1 pure-u-lg-15-24">
+                            <div class="table-responsive">
+                                <table class="pure-table pure-table-striped" id="package">
+                                    <tr>
+                                        <th class="header">Package</th>
+                                        <td>openssl</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Version</th>
+                                        <td>
+                                            <strong>
+                                                <a
+                                                    class="hint--right text-success"
+                                                    aria-label="Flag this package out of date"
+                                                    href="&#x2F;flag&#x2F;main&#x2F;openssl&#x2F;1.1.1k-r0"
+                                                    >1.1.1k-r0</a
+                                                >
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Description</th>
+                                        <td>Toolkit for Transport Layer Security (TLS)</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Project</th>
+                                        <td>
+                                            <a href="https:&#x2F;&#x2F;www.openssl.org&#x2F;"
+                                                >https:&#x2F;&#x2F;www.openssl.org&#x2F;</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">License</th>
+                                        <td>OpenSSL</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Branch</th>
+                                        <td>edge</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Repository</th>
+                                        <td>main</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Architecture</th>
+                                        <td>x86</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Size</th>
+                                        <td>268.92 kB</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Installed size</th>
+                                        <td>656 kB</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Origin</th>
+                                        <td>
+                                            <a href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl"
+                                                >openssl</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Maintainer</th>
+                                        <td>Timo Teras</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Build time</th>
+                                        <td>2021-03-25 14:09:33</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Commit</th>
+                                        <td>
+                                            <a
+                                                href="http:&#x2F;&#x2F;git.alpinelinux.org&#x2F;aports&#x2F;commit&#x2F;?id=92ff3f34184c589fa4d811f96fa7f607b803975a"
+                                                >92ff3f34184c589fa4d811f96fa7f607b803975a</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Git repository</th>
+                                        <td>
+                                            <a
+                                                href="http:&#x2F;&#x2F;git.alpinelinux.org&#x2F;aports&#x2F;tree&#x2F;main&#x2F;openssl?h=master"
+                                                >Git repository</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Build log</th>
+                                        <td>
+                                            <a
+                                                href="http:&#x2F;&#x2F;build.alpinelinux.org&#x2F;buildlogs&#x2F;build-edge-x86&#x2F;main&#x2F;openssl&#x2F;openssl-1.1.1k-r0.log"
+                                                >Build log</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="header">Contents</th>
+                                        <td>
+                                            <a
+                                                href="&#x2F;contents?branch=edge&amp;name=openssl&amp;arch=x86&amp;repo=main"
+                                                >Contents of package</a
+                                            >
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="flag-button">
+                                <a class="pure-button" href="&#x2F;flag&#x2F;main&#x2F;openssl&#x2F;1.1.1k-r0">Flag</a>
+                            </div>
+                        </div>
+                        <div class="pure-u-1 pure-u-lg-3-24"></div>
+                        <div class="pure-u-1 pure-u-lg-6-24 multi-fields">
+                            <details>
+                                <summary>Depends (3)</summary>
+                                <div class="pure-menu custom-restricted-width">
+                                    <ul class="pure-menu-list">
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libcrypto1.1"
+                                                >libcrypto1.1</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libssl1.1"
+                                                >libssl1.1</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;musl"
+                                                >musl</a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details>
+                                <summary>Required by (28)</summary>
+                                <div class="pure-menu custom-restricted-width">
+                                    <ul class="pure-menu-list">
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;abuild"
+                                                >abuild</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;acf-alpine-conf"
+                                                >acf-alpine-conf</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;acf-openssl"
+                                                >acf-openssl</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;acme.sh"
+                                                >acme.sh</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;apache2-ssl"
+                                                >apache2-ssl</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;testing&#x2F;x86&#x2F;burp-server"
+                                                >burp-server</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;cesnet-tcs-cli"
+                                                >cesnet-tcs-cli</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;testing&#x2F;x86&#x2F;cjose"
+                                                >cjose</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;clamav-clamdscan"
+                                                >clamav-clamdscan</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;cups"
+                                                >cups</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;cups-dbg"
+                                                >cups-dbg</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;cups-lang"
+                                                >cups-lang</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;dovecot"
+                                                >dovecot</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;easy-rsa"
+                                                >easy-rsa</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;email"
+                                                >email</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;h2o"
+                                                >h2o</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;testing&#x2F;x86&#x2F;libexosip2"
+                                                >libexosip2</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;mblaze-crypto"
+                                                >mblaze-crypto</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;monkeysphere"
+                                                >monkeysphere</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;muacme"
+                                                >muacme</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;networkmanager-l2tp"
+                                                >networkmanager-l2tp</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;networkmanager-l2tp-lang"
+                                                >networkmanager-l2tp-lang</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;nikto"
+                                                >nikto</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;opendkim-utils"
+                                                >opendkim-utils</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;pmbootstrap"
+                                                >pmbootstrap</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;thonny"
+                                                >thonny</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;vde2"
+                                                >vde2</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;vde2-libs"
+                                                >vde2-libs</a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </details>
+                            <details>
+                                <summary>Sub Packages (6)</summary>
+                                <div class="pure-menu custom-restricted-width">
+                                    <ul class="pure-menu-list">
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libcrypto1.1"
+                                                >libcrypto1.1</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libssl1.1"
+                                                >libssl1.1</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-dbg"
+                                                >openssl-dbg</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-dev"
+                                                >openssl-dev</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-doc"
+                                                >openssl-doc</a
+                                            >
+                                        </li>
+                                        <li class="pure-menu-item">
+                                            <a
+                                                class="pure-menu-link"
+                                                href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-libs-static"
+                                                >openssl-libs-static</a
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </details>
+                        </div>
                     </div>
                 </div>
-                <div class="pure-u-1 pure-u-lg-3-24"></div>
-                <div class="pure-u-1 pure-u-lg-6-24 multi-fields">
-                    <details>
-                        <summary>Depends (3)</summary>
-                        <div class="pure-menu custom-restricted-width">
-                            <ul class="pure-menu-list">
-                                <li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libcrypto1.1">libcrypto1.1</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libssl1.1">libssl1.1</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;musl">musl</a></li>
-                                
-                            </ul>
-                        </div>
-                    </details>
-                    <details>
-                        <summary>Required by (28)</summary>
-                        <div class="pure-menu custom-restricted-width">
-                            <ul class="pure-menu-list">
-                                <li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;abuild">abuild</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;acf-alpine-conf">acf-alpine-conf</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;acf-openssl">acf-openssl</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;acme.sh">acme.sh</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;apache2-ssl">apache2-ssl</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;testing&#x2F;x86&#x2F;burp-server">burp-server</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;cesnet-tcs-cli">cesnet-tcs-cli</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;testing&#x2F;x86&#x2F;cjose">cjose</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;clamav-clamdscan">clamav-clamdscan</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;cups">cups</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;cups-dbg">cups-dbg</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;cups-lang">cups-lang</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;dovecot">dovecot</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;easy-rsa">easy-rsa</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;email">email</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;h2o">h2o</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;testing&#x2F;x86&#x2F;libexosip2">libexosip2</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;mblaze-crypto">mblaze-crypto</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;monkeysphere">monkeysphere</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;muacme">muacme</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;networkmanager-l2tp">networkmanager-l2tp</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;networkmanager-l2tp-lang">networkmanager-l2tp-lang</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;nikto">nikto</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;opendkim-utils">opendkim-utils</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;pmbootstrap">pmbootstrap</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;community&#x2F;x86&#x2F;thonny">thonny</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;vde2">vde2</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;vde2-libs">vde2-libs</a></li>
-                                
-                            </ul>
-                        </div>
-                    </details>
-                    <details>
-                        <summary>Sub Packages (6)</summary>
-                        <div class="pure-menu custom-restricted-width">
-                            <ul class="pure-menu-list">
-                                <li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libcrypto1.1">libcrypto1.1</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;libssl1.1">libssl1.1</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-dbg">openssl-dbg</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-dev">openssl-dev</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-doc">openssl-doc</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="&#x2F;package&#x2F;edge&#x2F;main&#x2F;x86&#x2F;openssl-libs-static">openssl-libs-static</a></li>
-                                
-                            </ul>
-                        </div>
-                    </details>
-                </div>
-            </div>
+            </main>
+            <footer>
+                © Copyright 2020 Alpine Linux Development Team all rights reserved |
+                <a href="https://alpinelinux.org/privacy-policy.html">Privacy Policy</a>
+            </footer>
         </div>
-    </main>
-        <footer>© Copyright 2020 Alpine Linux Development Team all rights reserved | <a href="https://alpinelinux.org/privacy-policy.html">Privacy Policy</a></footer>
-    </div>
-</body>
+    </body>
 </html>

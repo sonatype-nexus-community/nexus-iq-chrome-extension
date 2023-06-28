@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {RepoType, REPO_TYPES} from './Constants';
+import { RepoType, REPO_TYPES } from './Constants'
+import { LogLevel, logger } from '../logger/Logger'
 
 const findRepoType = (url: string): RepoType | undefined => {
-  for (let i = 0; i < REPO_TYPES.length; i++) {
-    if (url.search(REPO_TYPES[i].url) >= 0) {
-      console.info('Found matching url', REPO_TYPES[i].url, url);
-
-      return REPO_TYPES[i];
+    for (let i = 0; i < REPO_TYPES.length; i++) {
+        if (url.search(REPO_TYPES[i].url) >= 0) {
+            logger.logMessage(`Current URL ${url} matches ${REPO_TYPES[i].repoID}`, LogLevel.INFO)
+            return REPO_TYPES[i]
+        }
     }
-  }
 
-  return undefined;
-};
+    return undefined
+}
 
-export {findRepoType};
+export { findRepoType }

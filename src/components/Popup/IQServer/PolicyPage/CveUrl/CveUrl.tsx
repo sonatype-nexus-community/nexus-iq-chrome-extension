@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {useState} from 'react';
+import { useState } from 'react'
 
 // export interface ReasonString {
 //   reason: string;
 // }
 
 type ReasonProps = {
-  reasonString: string;
-};
+    reasonString: string
+}
 
-const CveUrl = (props: ReasonProps): {newReason: string} => {
-  const [iqServerUrl, setIqServerUrl] = useState('');
-  chrome.storage.local.get('iqServerURL', function (result) {
-    console.log(`get local storage result: ${result.iqServerURL}`);
-    setIqServerUrl(result.iqServerURL);
-  });
-  const newReason: string = props.reasonString.replace(
-    /((CVE|sonatype)-[0-9]{4}-[0-9]+)/,
-    `<NxTextLink external href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</NxTextLink>"`
-  );
+const CveUrl = (props: ReasonProps): { newReason: string } => {
+    const [iqServerUrl, setIqServerUrl] = useState('')
+    chrome.storage.local.get('iqServerURL', function (result) {
+        console.log(`get local storage result: ${result.iqServerURL}`)
+        setIqServerUrl(result.iqServerURL)
+    })
+    const newReason: string = props.reasonString.replace(
+        /((CVE|sonatype)-[0-9]{4}-[0-9]+)/,
+        `<NxTextLink external href="${iqServerUrl}/assets/index.html#/vulnerabilities/$1>$1</NxTextLink>"`
+    )
 
-  return {newReason};
-};
+    return { newReason }
+}
 
-export default CveUrl;
+export default CveUrl

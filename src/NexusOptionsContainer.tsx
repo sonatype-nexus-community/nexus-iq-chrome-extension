@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import Options from './components/Options/Options';
-import Install from './components/Install/Install';
-import Help from './components/Help/Help';
+import React from 'react'
+import Options from './components/Options/Options'
+import Install from './components/Install/Install'
+import Help from './components/Help/Help'
 
-type OptionsProps = {
-  install: boolean;
-  help: boolean;
-};
-
-class NexusOptionsContainer extends React.Component<OptionsProps> {
-  constructor(props: OptionsProps) {
-    super(props);
-  }
-
-  render(): JSX.Element {
-    return (
-      <React.Fragment>
-        {this.props.help && <Help />}
-        {this.props.install && <Install />}
-        {!this.props.help && !this.props.install && <Options />}
-      </React.Fragment>
-    );
-  }
+export interface NexusOptionsContainerInterace {
+    install: boolean
+    help: boolean
 }
 
-export default NexusOptionsContainer;
+export const NexusOptionsContainer = (props: NexusOptionsContainerInterace) => {
+    return (
+        <React.Fragment>
+            {props.help && <Help />}
+            {props.install && <Install />}
+            {!props.help && !props.install && <Options />}
+        </React.Fragment>
+    )
+}

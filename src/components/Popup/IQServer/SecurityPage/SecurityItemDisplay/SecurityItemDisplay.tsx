@@ -13,67 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  NxAccordion,
-  NxPolicyViolationIndicator,
-  ThreatLevelNumber
-} from '@sonatype/react-shared-components';
-import * as React from 'react';
-import {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../../context/NexusContext';
-import {SecurityIssue} from '../../../../../types/ArtifactMessage';
-import '../SecurityPage.css';
-import VulnDetails from './VulnDetails/VulnDetails';
+import { NxTable } from '@sonatype/react-shared-components'
+import * as React from 'react'
+import '../SecurityPage.css'
+import { ApiSecurityIssueDTO } from '@sonatype/nexus-iq-api-client'
+import { ExtensionConfigurationContext } from '../../../../../context/ExtensionConfigurationContext'
+import { stripTrailingSlash } from '../../../../../utils/Helpers'
 
 type SecurityItemProps = {
-  securityIssue: SecurityIssue;
-  open: boolean;
-  packageUrl: string;
-  remediationEvent: (vulnID: string) => void;
-};
+    securityIssue: ApiSecurityIssueDTO
+    open: boolean
+    packageUrl: string
+    remediationEvent: (vulnID: string) => void
+}
 
-const SecurityItemDisplay = (props: SecurityItemProps): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+export function IqSecurityItemDisplay(props: SecurityItemProps) {
+    const extensionContext = React.useContext(ExtensionConfigurationContext)
+    const iqServerUrl = stripTrailingSlash(extensionContext.host as string)
+    const cveUrl = `${iqServerUrl}/assets/index.html#/vulnerabilities/${props.securityIssue.reference}`
 
-  const renderSecurityItem = (nexusContext: NexusContextInterface | undefined) => {
-    if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
-      return (
-        <NxAccordion
-          open={props.open}
-          onToggle={() => {
-            props.remediationEvent(props.securityIssue.reference);
-            if (nexusContext !== undefined && nexusContext.getVulnDetails !== undefined) {
-              nexusContext.getVulnDetails(props.securityIssue.reference);
-            }
-          }}
+    return (
+        <NxTable.Row
+            isClickable
+            className='nx-table-row'
+            key={`row-${props.securityIssue.reference}`}
+            onClick={() => window.open(cveUrl, '_blank')}
         >
-          <NxAccordion.Header>
-            <NxAccordion.Title>
-              {/*<NxAccordion.Title className="nx-accordion__header-title">*/}
-              {props.securityIssue.reference}
-            </NxAccordion.Title>
-            {/*<div className="nx-btn-bar">*/}
-            <NxPolicyViolationIndicator
-              style={{
-                width: '10px !important',
-                margin: 'none !important'
-              }}
-              policyThreatLevel={Math.round(props.securityIssue.severity) as ThreatLevelNumber}
-            >
-              {props.securityIssue.severity.toString()}
-            </NxPolicyViolationIndicator>
-
-            {/*</div>*/}
-          </NxAccordion.Header>
-
-          <VulnDetails />
-        </NxAccordion>
-      );
-    }
-    return null;
-  };
-
-  return renderSecurityItem(nexusContext);
-};
-
-export default SecurityItemDisplay;
+            <React.Fragment key={props.securityIssue.reference}>
+                <NxTable.Cell className='nx-cell'>{props.securityIssue.severity}</NxTable.Cell>
+                <NxTable.Cell className='nx-cell'>{props.securityIssue.reference}</NxTable.Cell>
+                <NxTable.Cell chevron />
+            </React.Fragment>
+        </NxTable.Row>
+    )
+}

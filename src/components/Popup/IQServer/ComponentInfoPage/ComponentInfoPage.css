@@ -1,16 +1,16 @@
 .nx-list__term {
-  width: 150px !important;
-  font-size: 90% !important;
+    width: 150px !important;
+    font-size: 90% !important;
 }
 
 .nx-list__description {
-  font-size: 90% !important;
+    font-size: 90% !important;
 }
 
 .componentinfo-threat-indicator {
-  margin-bottom: var(--nx-spacing-4x) !important;
+    margin-bottom: var(--nx-spacing-4x) !important;
 }
 
 #security-threat {
-  padding-top: 10px !important;
+    padding-top: 10px !important;
 }

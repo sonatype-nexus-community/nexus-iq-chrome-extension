@@ -13,68 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useContext, useEffect, useState} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../../context/NexusContext';
-import './PolicyPage.css';
-import PolicyViolation from './PolicyViolation/PolicyViolation';
 
-const PolicyPage = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+import React, { useContext } from 'react'
+import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
+import './PolicyPage.css'
+import PolicyViolation from './PolicyViolation/PolicyViolation'
+import { DATA_SOURCE } from '../../../../utils/Constants'
+import { NxLoadingSpinner } from '@sonatype/react-shared-components'
+import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 
-  const [iqServerUrl, setIqServerUrl] = useState('');
+function IqPolicyPage() {
+    const popupContext = useContext(ExtensionPopupContext)
+    const extensionContext = useContext(ExtensionConfigurationContext)
+    const policyData = popupContext.iq?.componentDetails?.policyData
+    const violationCount = policyData?.policyViolations ? policyData.policyViolations?.length : 0
 
-  useEffect(() => {
-    chrome.storage.local.get('iqServerURL', function (result) {
-      console.log(`get local storage result: ${result.iqServerURL}`);
-      setIqServerUrl(result.iqServerURL);
-    });
-  });
-
-  const renderPolicyViolation = (nexusContext: NexusContextInterface | undefined) => {
-    if (
-      nexusContext &&
-      nexusContext.policyDetails &&
-      nexusContext.policyDetails.results.length > 0
-    ) {
-      const pv = nexusContext.policyDetails.results[0].policyData.policyViolations.sort(
-        (a, b) => b.threatLevel - a.threatLevel
-      );
-      // const ascMap = pv
-      // console.log( pv, ascMap);
-      return (
-        <React.Fragment>
-          <div className="nx-grid-row">
-            <section className="nx-grid-col nx-grid-col--100 nx-scrollable">
-              <table className="nx-table">
-                <thead>
-                  <tr className="nx-table-row nx-table-row--header">
-                    <th className="nx-cell nx-cell--header nx-cell--num">Threat</th>
-                    <th className="nx-cell nx-cell--header">Policy</th>
-                    <th className="nx-cell nx-cell--header">Constraint Name</th>
-                    <th className="nx-cell nx-cell--header">Condition</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pv.map((violation, index) => {
-                    return (
-                      <PolicyViolation
-                        key={`violation${index}`}
-                        policyViolation={violation}
-                        iqServerUrl={iqServerUrl}
-                      ></PolicyViolation>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </section>
-          </div>
-        </React.Fragment>
-      );
+    if (violationCount <= 0) {
+        return <NxLoadingSpinner />
     }
-    return null;
-  };
+    return (
+        <React.Fragment>
+            <div className='nx-grid-row'>
+                <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
+                    <table className='nx-table'>
+                        <thead>
+                            <tr className='nx-table-row nx-table-row--header'>
+                                <th className='nx-cell nx-cell--header nx-cell--num'>Threat</th>
+                                <th className='nx-cell nx-cell--header'>Policy</th>
+                                <th className='nx-cell nx-cell--header'>Constraint Name</th>
+                                <th className='nx-cell nx-cell--header'>Condition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {policyData?.policyViolations
+                                ?.sort((a: ApiPolicyViolationDTOV2, b: ApiPolicyViolationDTOV2) => {
+                                    return (b.threatLevel as number) > (a.threatLevel as number) ? 1 : -1
+                                })
+                                .map((violation, index) => {
+                                    return (
+                                        <PolicyViolation
+                                            key={`violation${index}`}
+                                            policyViolation={violation}
+                                            iqServerUrl={extensionContext.host as string}
+                                        ></PolicyViolation>
+                                    )
+                                })}
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </React.Fragment>
+    )
+}
 
-  return renderPolicyViolation(nexusContext);
-};
+export default function PolicyPage() {
+    const extensionContext = useContext(ExtensionConfigurationContext)
 
-export default PolicyPage;
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPolicyPage />}</div>
+}

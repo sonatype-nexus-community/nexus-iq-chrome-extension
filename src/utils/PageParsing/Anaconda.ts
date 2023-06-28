@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-import $ from 'cash-dom';
-import {PackageURL} from 'packageurl-js';
-import {FORMATS, REPOS, REPO_TYPES} from '../Constants';
-import {generatePackageURL} from './PurlUtils';
+import $ from 'cash-dom'
+import { PackageURL } from 'packageurl-js'
+import { FORMATS, REPOS, REPO_TYPES } from '../Constants'
+import { generatePackageURL } from './PurlUtils'
 
 /*
   https://anaconda.org/conda-forge/numpy
 */
 const parseConda = (url: string): PackageURL | undefined => {
-  const repoType = REPO_TYPES.find(e => e.repoID == REPOS.anacondaCom)
-  console.debug('*** REPO TYPE: ', repoType)
-  if (repoType) {
-    if (repoType.pathRegex) {
-      const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-      console.debug(pathResult?.groups)      
-      if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
-        const version = $(repoType.versionDomPath).text().trim();
-        return generatePackageURL(FORMATS.conda, encodeURIComponent(pathResult.groups.artifactId), version)
-      }
+    const repoType = REPO_TYPES.find((e) => e.repoID == REPOS.anacondaCom)
+    console.debug('*** REPO TYPE: ', repoType)
+    if (repoType) {
+        if (repoType.pathRegex) {
+            const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
+            console.debug(pathResult?.groups)
+            if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
+                const version = $(repoType.versionDomPath).text().trim()
+                return generatePackageURL(FORMATS.conda, encodeURIComponent(pathResult.groups.artifactId), version)
+            }
+        }
+    } else {
+        console.error('Unable to determine REPO TYPE.')
     }
-  } else {
-    console.error('Unable to determine REPO TYPE.')
-  }
-  
-  return undefined;
-};
 
-export {parseConda};
+    return undefined
+}
+
+export { parseConda }

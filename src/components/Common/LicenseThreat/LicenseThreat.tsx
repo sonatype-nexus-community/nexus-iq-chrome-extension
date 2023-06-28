@@ -13,52 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  NxLoadingSpinner,
-  NxPolicyViolationIndicator,
-  ThreatLevelNumber
-} from '@sonatype/react-shared-components';
-import React, {useContext} from 'react';
-import {NexusContext, NexusContextInterface} from '../../../context/NexusContext';
 
-const LicenseThreat = (): JSX.Element | null => {
-  const nexusContext = useContext(NexusContext);
+import React, { useContext } from 'react'
+// import { ExtensionPopupContext } from '../../../context/ExtensionPopupContext'
+import { ExtensionConfigurationContext } from '../../../context/ExtensionConfigurationContext'
+import { DATA_SOURCE } from '../../../utils/Constants'
 
-  const renderLicenseThreat = (nexusContext: NexusContextInterface | undefined) => {
-      if (nexusContext && nexusContext.getLicenseDetails && nexusContext.componentDetails &&
-          !nexusContext.licenseDetails) {
-          nexusContext.getLicenseDetails(nexusContext.componentDetails?.component.packageUrl)
-          console.log(nexusContext.licenseDetails);
-      }
-    if (nexusContext && nexusContext.licenseDetails) {
-      return getLicenseThreat(
-        nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
-          .licenseThreatGroupLevel,
-        nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
-          .licenseThreatGroupName
-      );
-    } else {
-      return <NxLoadingSpinner />;
-    }
-    return null;
-  };
+function LicenseThreatIndicator() {
+    // const popupContext = useContext(ExtensionPopupContext)
 
-  const getLicenseThreat = (threatGroupLevel: number, threatGroupName: string) => {
     return (
-      <React.Fragment>
-        <header className="nx-grid-header">
-          <h3 className={'nx-h3 nx-grid-header__title'}>Max License Threat</h3>
-        </header>
-        <NxPolicyViolationIndicator
-          policyThreatLevel={Math.round(threatGroupLevel) as ThreatLevelNumber}
-        >
-          {threatGroupName}
-        </NxPolicyViolationIndicator>
-      </React.Fragment>
-    );
-  };
+        <React.Fragment>
+            <header className='nx-grid-header'>
+                <h3 className={'nx-h3 nx-grid-header__title'}>Max License Threat</h3>
+            </header>
+            <span>Need license details from somewhere</span>
+            {/*<NxPolicyViolationIndicator*/}
+            {/*    policyThreatLevel={Math.round(threatGroupLevel) as ThreatLevelNumber}*/}
+            {/*>*/}
+            {/*    {threatGroupName}*/}
+            {/*</NxPolicyViolationIndicator>*/}
+        </React.Fragment>
+    )
 
-  return renderLicenseThreat(nexusContext);
-};
+    // const renderLicenseThreat = (nexusContext: NexusContextInterface | undefined) => {
+    //     if (nexusContext && nexusContext.getLicenseDetails && nexusContext.componentDetails &&
+    //         !nexusContext.licenseDetails) {
+    //         nexusContext.getLicenseDetails(nexusContext.componentDetails?.component.packageUrl)
+    //         console.log(nexusContext.licenseDetails);
+    //     }
+    //   if (nexusContext && nexusContext.licenseDetails) {
+    //     return getLicenseThreat(
+    //       nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
+    //         .licenseThreatGroupLevel,
+    //       nexusContext.licenseDetails.component.licenseLegalData.highestEffectiveLicenseThreatGroup
+    //         .licenseThreatGroupName
+    //     );
+    //   } else {
+    //     return <NxLoadingSpinner />;
+    //   }
+    // };
+}
 
-export default LicenseThreat;
+export default function LicenseThreat() {
+    const extensionContext = useContext(ExtensionConfigurationContext)
+
+    return <div>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <LicenseThreatIndicator />}</div>
+}

@@ -1,0 +1,30 @@
+.nx-list__term__remediation {
+    width: 75% !important;
+}
+
+.nx-progress-bar__progress,
+.nx-progress-bar__progress::-webkit-progress-bar {
+    background: var(--nx-color-progress-background);
+    border-radius: 12.5px;
+    height: 12px;
+    overflow: hidden;
+    width: 125px;
+}
+
+.nx-progress-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'bar';
+    grid-auto-flow: row;
+    gap: var(--nx-spacing-2x);
+    justify-content: start;
+    margin-top: 10px;
+    width: 75px !important;
+    margin-bottom: unset;
+}
+
+.nx-meter {
+    color: rgb(139, 199, 62) !important;
+    width: 100px !important;
+    margin-left: 10px;
+}

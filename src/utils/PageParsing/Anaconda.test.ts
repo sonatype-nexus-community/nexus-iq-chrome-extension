@@ -13,56 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {describe, expect, test} from '@jest/globals';
-import {readFileSync} from 'fs';
-import {join} from 'path';
-import {DATA_SOURCES, FORMATS, REPOS, RepoType} from '../Constants';
-import {getArtifactDetailsFromDOM} from '../PageParsing';
+import { describe, expect, test } from '@jest/globals'
+import { readFileSync } from 'fs'
+import { join } from 'path'
+import { DATA_SOURCES, FORMATS, REPOS, RepoType } from '../Constants'
+import { getArtifactDetailsFromDOM } from '../PageParsing'
 
 describe('Anaconda Page Parsing', () => {
-  test('should parse a valid Anaconda page', () => {
-    const html = readFileSync(join(__dirname, 'testdata/anaconda.html'));
+    test('should parse a valid Anaconda page', () => {
+        const html = readFileSync(join(__dirname, 'testdata/anaconda.html'))
 
-    window.document.body.innerHTML = html.toString();
+        window.document.body.innerHTML = html.toString()
 
-    const rt: RepoType = {
-      url: '',
-      repoFormat: FORMATS.conda,
-      repoID: REPOS.anacondaCom,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
-      appendVersionPath: ''
-    };
+        const rt: RepoType = {
+            url: '',
+            repoFormat: FORMATS.conda,
+            repoID: REPOS.anacondaCom,
+            titleSelector: '',
+            versionPath: '',
+            dataSource: DATA_SOURCES.OSSINDEX,
+            appendVersionPath: '',
+        }
 
-    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://anaconda.org/conda-forge/numpy');
+        const PackageURL = getArtifactDetailsFromDOM(rt, 'https://anaconda.org/conda-forge/numpy')
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe(FORMATS.conda);
-    expect(PackageURL?.name).toBe('numpy');
-    expect(PackageURL?.version).toBe('1.20.2');
-  });
+        expect(PackageURL).toBeDefined()
+        expect(PackageURL?.type).toBe(FORMATS.conda)
+        expect(PackageURL?.name).toBe('numpy')
+        expect(PackageURL?.version).toBe('1.20.2')
+    })
 
-  test('should parse a valid Anaconda page with query string', () => {
-    const html = readFileSync(join(__dirname, 'testdata/anaconda.html'));
+    test('should parse a valid Anaconda page with query string', () => {
+        const html = readFileSync(join(__dirname, 'testdata/anaconda.html'))
 
-    window.document.body.innerHTML = html.toString();
+        window.document.body.innerHTML = html.toString()
 
-    const rt: RepoType = {
-      url: '',
-      repoFormat: FORMATS.conda,
-      repoID: REPOS.anacondaCom,
-      titleSelector: '',
-      versionPath: '',
-      dataSource: DATA_SOURCES.OSSINDEX,
-      appendVersionPath: ''
-    };
+        const rt: RepoType = {
+            url: '',
+            repoFormat: FORMATS.conda,
+            repoID: REPOS.anacondaCom,
+            titleSelector: '',
+            versionPath: '',
+            dataSource: DATA_SOURCES.OSSINDEX,
+            appendVersionPath: '',
+        }
 
-    const PackageURL = getArtifactDetailsFromDOM(rt, 'https://anaconda.org/conda-forge/numpy?something=else');
+        const PackageURL = getArtifactDetailsFromDOM(rt, 'https://anaconda.org/conda-forge/numpy?something=else')
 
-    expect(PackageURL).toBeDefined();
-    expect(PackageURL?.type).toBe(FORMATS.conda);
-    expect(PackageURL?.name).toBe('numpy');
-    expect(PackageURL?.version).toBe('1.20.2');
-  });
-});
+        expect(PackageURL).toBeDefined()
+        expect(PackageURL?.type).toBe(FORMATS.conda)
+        expect(PackageURL?.name).toBe('numpy')
+        expect(PackageURL?.version).toBe('1.20.2')
+    })
+})
