@@ -27,7 +27,7 @@ export const parseConanIo = (url: string): PackageURL | undefined => {
             const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
             if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
                 const version = $(repoType.versionDomPath).text().trim().split('/')[1]
-                return generatePackageURL(FORMATS.cocoapods, encodeURIComponent(pathResult.groups.artifactId), version)
+                return generatePackageURL(FORMATS.conan, encodeURIComponent(pathResult.groups.artifactId), version)
             }
         }
     } else {
