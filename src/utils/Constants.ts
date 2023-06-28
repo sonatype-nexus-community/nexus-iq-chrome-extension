@@ -158,6 +158,8 @@ export const REPO_TYPES: RepoType[] = [
         versionPath: '',
         appendVersionPath: '',
         dataSource: DATA_SOURCES.NEXUSIQ,
+        pathRegex: /^(?<artifactId>[^/#?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+        versionDomPath: 'h1',
     },
     {
         url: 'https://cran.r-project.org/',
