@@ -25,9 +25,8 @@ export const parseCocoaPods = (url: string): PackageURL | undefined => {
     if (repoType) {
         if (repoType.pathRegex) {
             const pathResult = repoType.pathRegex.exec(url.replace(repoType.url, ''))
-            logger.logMessage(`Parsed URL ${pathResult?.groups}`, LogLevel.TRACE)
             if (pathResult && pathResult.groups && repoType.versionDomPath !== undefined) {
-                const version = $(repoType.versionDomPath).text().trim()
+                const version = $(repoType.versionDomPath).first().text().trim()
                 return generatePackageURL(FORMATS.cocoapods, encodeURIComponent(pathResult.groups.artifactId), version)
             }
         }
