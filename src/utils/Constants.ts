@@ -230,7 +230,7 @@ export const REPO_TYPES: RepoType[] = [
         dataSource: DATA_SOURCES.NEXUSIQ,
         appendVersionPath: '',
         pathRegex:
-            /^(?<groupId>[^/]*)\/(?<artifactId>[^/]*)\/(?<version>[^/#?]*)\/?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+            /^(?<groupArtifactId>([^#?&]*)+)\/(?<version>[^/#&?]+)\/?(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?/,
     },
     {
         url: 'https://search.maven.org/artifact/',

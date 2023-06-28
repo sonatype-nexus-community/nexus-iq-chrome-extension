@@ -24,32 +24,32 @@ The plugin works on the following open source registry sites.
 **NOTE:** For the initial versions of 2.x.x, support for OSS Index has been removed (so we could ship quicker!) We'll update
 here when support is re-introduced.
 
-| Registry            | Language Group      | URL                             | Sonatype Lifecycle | Sonatype OSS Index |
-| ------------------- | ------------------- | ------------------------------- | ------------------ | ------------------ |
-| Alpine Linux        | Alpine Linux        | `https://pkgs.alpinelinux.org/` | ✅                 | ❌                 |
-| CocoaPods           | Swift / Objective-C | `https://cocoapods.org/`        | ✅                 | ❌                 |
-| Conan IO            | C / C++             | `https://conan.io/center/`      | ✅                 | ❌                 |
-| CRAN                | R                   | `https://cran.r-project.org`    | ✅                 | ❌                 |
-| Maven Central       | Java                | `https://central.sonatype.com/` | ✅                 | ✅                 |
-| Maven Central (old) | Java                | `https://search.maven.org/`     | ✅                 | ✅                 |
-| MVN Repository      | Java                | `https://mvnrepository.com/`    | ✅                 | ✅                 |
-| NPM JS              | Javascript          | `https://www.npmjs.com/`        | ✅                 | ✅                 |
-| NuGet Gallery       | .NET                | `https://www.nuget.org/`        | ✅                 | ✅                 |
-| Packagist           | PHP                 | `https://packagist.org/`        | ✅                 | ✅                 |
-| PyPI                | Python              | `https://pypi.org/`             | ✅                 | ✅                 |
-| RubGems             | Ruby                | `https://rubygems.org/`         | ✅                 | ✅                 |
+| Registry               | Language Group      | URL                              | Sonatype Lifecycle | Sonatype OSS Index |
+| ---------------------- | ------------------- | -------------------------------- | ------------------ | ------------------ |
+| Alpine Linux           | Alpine Linux        | `https://pkgs.alpinelinux.org/`  | ✅                 | ❌                 |
+| CocoaPods              | Swift / Objective-C | `https://cocoapods.org/`         | ✅                 | ❌                 |
+| Conan IO               | C / C++             | `https://conan.io/center/`       | ✅                 | ❌                 |
+| CRAN                   | R                   | `https://cran.r-project.org`     | ✅                 | ❌                 |
+| Maven Central          | Java                | `https://central.sonatype.com/`  | ✅                 | ✅                 |
+| Maven Central (simple) | Java                | `https://repo.maven.apache.org/` | ✅                 | ✅                 |
+| Maven Central (old)    | Java                | `https://search.maven.org/`      | ✅                 | ✅                 |
+| MVN Repository         | Java                | `https://mvnrepository.com/`     | ✅                 | ✅                 |
+| NPM JS                 | Javascript          | `https://www.npmjs.com/`         | ✅                 | ✅                 |
+| NuGet Gallery          | .NET                | `https://www.nuget.org/`         | ✅                 | ✅                 |
+| Packagist              | PHP                 | `https://packagist.org/`         | ✅                 | ✅                 |
+| PyPI                   | Python              | `https://pypi.org/`              | ✅                 | ✅                 |
+| RubGems                | Ruby                | `https://rubygems.org/`          | ✅                 | ✅                 |
 
 7. Conda – Python – `https://anaconda.org/anaconda/`
 8. Debian – Linux – `https://packages.debian.org/`
 9. Debian – Linux – `https://tracker.debian.org/pkg/`
 10. Golang – Go – `https://search.gocenter.io/`
-11. Java – Maven – `https://repo.maven.apache.org/`
-12. Java – Maven – `https://repo.spring.io/list/`
-13. Java – Maven – `https://repo1.maven.org/`
-14. Rust – Crates – `https://crates.io/`
-15. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-16. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
-17. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+11. Java – Maven – `https://repo.spring.io/list/`
+12. Java – Maven – `https://repo1.maven.org/`
+13. Rust – Crates – `https://crates.io/`
+14. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+15. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+16. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Development
 
