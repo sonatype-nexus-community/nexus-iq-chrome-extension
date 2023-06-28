@@ -1,17 +1,27 @@
 {
     "name": "sonatype-platform-browser-extension",
     "version": "2.0.0",
-    "author": {
-        "name": "Sonatype Community",
-        "email": "community-group@sonatype.com"
-    },
-    "license": "Apache-2.0",
-    "private": true,
-    "repository": "git@github.com:sonatype-nexus-community/nexus-iq-chrome-extension.git",
+    "description": "Shift Security Left with the Sonatype Platform Browser Extension - Scan Open Source Repositories for known Vulnerabilities.",
+    "keywords": [
+        "sonatype",
+        "browser",
+        "extension",
+        "shift-left",
+        "sca",
+        "software composition analysis"
+    ],
     "homepage": "https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/",
     "bugs": {
         "url": "https://github.com/sonatype-nexus-community/nexus-iq-chrome-extension/issues"
     },
+    "license": "Apache-2.0",
+    "author": {
+        "name": "Sonatype Community",
+        "email": "community-group@sonatype.com",
+        "url": "https://github.com/sonatype-nexus-community"
+    },
+    "private": true,
+    "repository": "git@github.com:sonatype-nexus-community/nexus-iq-chrome-extension.git",
     "module": "es6",
     "dependencies": {
         "@agney/react-loading": "^0.1.2",
