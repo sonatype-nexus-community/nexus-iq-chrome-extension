@@ -28,6 +28,7 @@ here when support is re-introduced.
 | ------------------- | ------------------- | ------------------------------- | ------------------ | ------------------ |
 | Alpine Linux        | Alpine Linux        | `https://pkgs.alpinelinux.org/` | ✅                 | ❌                 |
 | CocoaPods           | Swift / Objective-C | `https://cocoapods.org/`        | ✅                 | ❌                 |
+| Conan IO            | C / C++             | `https://conan.io/center/`      | ✅                 | ❌                 |
 | CRAN                | R                   | `https://cran.r-project.org`    | ✅                 | ❌                 |
 | Maven Central       | Java                | `https://central.sonatype.com/` | ✅                 | ✅                 |
 | Maven Central (old) | Java                | `https://search.maven.org/`     | ✅                 | ✅                 |
@@ -38,7 +39,6 @@ here when support is re-introduced.
 | PyPI                | Python              | `https://pypi.org/`             | ✅                 | ✅                 |
 | RubGems             | Ruby                | `https://rubygems.org/`         | ✅                 | ✅                 |
 
-6. Conan – C/C++ – `https://conan.io/center/`
 7. Conda – Python – `https://anaconda.org/anaconda/`
 8. Debian – Linux – `https://packages.debian.org/`
 9. Debian – Linux – `https://tracker.debian.org/pkg/`
