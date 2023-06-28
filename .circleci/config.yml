@@ -42,7 +42,7 @@ jobs:
                   command: yarn run test
             - run:
                   name: Create ZIP of Build
-                  command: cd build && zip nexus-iq-chrome-plugin.zip * && cd ..
+                  command: cd build && zip -r nexus-iq-chrome-plugin.zip * && cd ..
             - store_artifacts:
                   path: build/nexus-iq-chrome-plugin.zip
                   destination: nexus-iq-chrome-plugin.zip
