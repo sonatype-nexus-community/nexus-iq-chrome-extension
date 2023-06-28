@@ -78,12 +78,12 @@ _browser.runtime.onInstalled.addListener((details) => {
     }
 })
 
-function enableDisableExtensionForUrl(url: string, tabId: number): void {
+function enableDisableExtensionForUrl(tab: chrome.tabs.Tab | browser.tabs.Tab, tabId: number): void {
     /**
      * Check if URL matches an ecosystem we support, and only then do something
      *
      */
-    const repoType = findRepoType(url)
+    const repoType = findRepoType(tab.url as string)
 
     /**
      * Make sure we get a valid PURL before we ENABLE - this may require DOM access (via Message)
@@ -91,14 +91,17 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
 
     if (repoType !== undefined) {
         // We support this Repository!
-        logger.logMessage(`Enabling Sonatype Browser Extension for ${url}`, LogLevel.DEBUG)
+        logger.logMessage(
+            `Enabling Sonatype Browser Extension for ${tab.url as string} - Tab State: ${tab.status}`,
+            LogLevel.DEBUG
+        )
         propogateCurrentComponentState(tabId, ComponentState.EVALUATING)
         _browser.tabs
             .sendMessage(tabId, {
                 type: MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE,
                 params: {
                     tabId: tabId,
-                    url: url,
+                    url: tab.url as string,
                 },
             })
             .then((response) => {
@@ -153,7 +156,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                                     })
                                 })
 
-                                console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
+                                console.log('Sonatype Extension ENABLED for ', tab.url, response.data.purl)
 
                                 _browser.storage.local
                                     .set({
@@ -173,24 +176,27 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                     })
                 } else {
                     logger.logMessage(
-                        `Disabling Sonatype Browser Extension for ${url} - Could not determine PURL.`,
+                        `Disabling Sonatype Browser Extension for ${tab.url} - Could not determine PURL.`,
                         LogLevel.DEBUG
                     )
                     chrome.action.disable(tabId, () => {
                         /**
                          * @todo Change Extension ICON
                          */
-                        console.log('Sonatype Extension DISABLED for ', url)
+                        console.log('Sonatype Extension DISABLED for ', tab.url)
                     })
                 }
             })
     } else {
-        logger.logMessage(`Disabling Sonatype Browser Extension for ${url} - Not a supported Registry.`, LogLevel.DEBUG)
+        logger.logMessage(
+            `Disabling Sonatype Browser Extension for ${tab.url} - Not a supported Registry.`,
+            LogLevel.DEBUG
+        )
         chrome.action.disable(tabId, () => {
             /**
              * @todo Change Extension ICON
              */
-            console.log('Sonatype Extension DISABLED for ', url)
+            console.log('Sonatype Extension DISABLED for ', tab.url)
         })
     }
 }
@@ -201,7 +207,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
 chrome.tabs.onActivated.addListener(({ tabId }) => {
     chrome.tabs.get(tabId, (tab) => {
         if (tab.url !== undefined) {
-            enableDisableExtensionForUrl(tab.url, tabId)
+            enableDisableExtensionForUrl(tab, tabId)
         }
     })
 })
@@ -211,6 +217,6 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status == 'complete' && tab.active && tab.url !== undefined) {
-        enableDisableExtensionForUrl(tab.url, tabId)
+        enableDisableExtensionForUrl(tab, tabId)
     }
 })

@@ -180,6 +180,8 @@ export const REPO_TYPES: RepoType[] = [
         versionPath: '{url}/{packagename}/{versionNumber}', // https://crates.io/crates/claxon/0.4.0
         dataSource: DATA_SOURCES.NEXUSIQ,
         appendVersionPath: '/{versionNumber}',
+        pathRegex: /^(?<artifactId>[^/#?]*)\/?(?<version>[^/#&?]*)(\?(?<query>([^#]*)))?(#(?<fragment>(.*)))?$/,
+        versionDomPath: 'h1 > small',
     },
     {
         url: 'https://packages.debian.org',

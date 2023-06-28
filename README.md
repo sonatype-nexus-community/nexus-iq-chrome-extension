@@ -30,6 +30,7 @@ here when support is re-introduced.
 | CocoaPods              | Swift / Objective-C | `https://cocoapods.org/`         | ✅                 | ❌                 |
 | Conan IO               | C / C++             | `https://conan.io/center/`       | ✅                 | ❌                 |
 | CRAN                   | R                   | `https://cran.r-project.org`     | ✅                 | ❌                 |
+| Crates IO              | Rust                | `https://crates.io/`             | ✅                 | ❌                 |
 | Maven Central          | Java                | `https://central.sonatype.com/`  | ✅                 | ✅                 |
 | Maven Central (simple) | Java                | `https://repo.maven.apache.org/` | ✅                 | ✅                 |
 | Maven Central (simple) | Java                | `https://repo1.maven.org/`       | ✅                 | ✅                 |
