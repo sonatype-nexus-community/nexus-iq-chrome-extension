@@ -28,7 +28,6 @@ import { DATA_SOURCE } from '../../../../utils/Constants'
 import './ComponentInfoPage.css'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
-import { stripTrailingSlash } from '../../../../utils/Helpers'
 
 const formatDate = (date: Date | undefined | null): string => {
     if (date) {
