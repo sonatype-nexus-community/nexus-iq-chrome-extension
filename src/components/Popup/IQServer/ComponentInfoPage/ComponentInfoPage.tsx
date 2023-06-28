@@ -118,13 +118,15 @@ function IqComponentInfo() {
                         )}
                         {popupContext.iq?.componentDetails.hygieneRating != null && (
                             <NxDescriptionList.Item>
-                                <NxDescriptionList.Term>
-                                    <NxTextLink
-                                        external
-                                        href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'>
-                                        Hygiene Rating
-                                    </NxTextLink>
-                                </NxDescriptionList.Term>
+                                <NxTooltip title='Tooltip!'>
+                                    <NxDescriptionList.Term>
+                                        <NxTextLink
+                                            external
+                                            href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'>
+                                            Hygiene Rating
+                                        </NxTextLink>
+                                    </NxDescriptionList.Term>
+                                </NxTooltip>
                                 <NxDescriptionList.Description>
                                     {popupContext.iq?.componentDetails.hygieneRating}
                                 </NxDescriptionList.Description>
