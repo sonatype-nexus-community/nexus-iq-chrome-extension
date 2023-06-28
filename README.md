@@ -8,17 +8,12 @@
 
 [![Available on the Chrome Webstore](https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png)](https://chrome.google.com/webstore/detail/sonatype-nexus-iq-evaluat/mjehedmoboadebjmbmobpedkdgenmlhd)
 
-## Welcome
-
 The Sonatype Platform Browser Extension (revised name for release 2.0.0 onwards) allows Developers to get insight from Sonatype Lifecycle for Open Source packages as you browse Public Open Source Registries - i.e. before a package is even downloaded!
 
 Version 2.x.x brings a host of changes over the 1.x.x release, and to enable us to get feedback, some features of the 1.x.x version have not yet been ported to the 2.x.x version - we'll get to these in the coming weeks and months. If you rely on features in 1.x.x - please stay on the latest 1.x.x version.
 
-## Contents
+**Contents**
 
--   [Welcome](#welcome)
--   [Contents](#contents)
-    -   [Notable Features not yet in 2.x.x](#notable-features-not-yet-in-2xx)
 -   [Format \& Ecosystem Support](#format--ecosystem-support)
     -   [Public Registries](#public-registries)
     -   [Private Hosted Registries](#private-hosted-registries)
