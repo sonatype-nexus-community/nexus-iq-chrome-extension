@@ -30,7 +30,7 @@ import { parseSearchMavenOrg } from './PageParsing/SearchMavenOrg'
 import { parseCentralSonatypeCom } from './PageParsing/CentralSonatypeCom'
 import { parseCocoaPods } from './PageParsing/CocoaPods'
 import { parseConanIo } from './PageParsing/ConanIo'
-import { parseRepoMavenApacheOrg } from './PageParsing/RepoMavenApacheOrg'
+import { parseRepo1MavenOrg, parseRepoMavenApacheOrg } from './PageParsing/RepoMavenApacheOrg'
 
 export const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): PackageURL | undefined => {
     logger.logMessage('In getArtifactDetailsFromDOM', LogLevel.TRACE, repoFormat, url)
@@ -40,8 +40,13 @@ export const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): Pa
             return parseCocoaPods(url)
         case REPOS.conanIo:
             return parseConanIo(url)
+
+        case REPOS.repo1MavenOrg:
+            return parseRepo1MavenOrg(url)
+
         case REPOS.repoMavenApacheOrg:
             return parseRepoMavenApacheOrg(url)
+
         case REPOS.npmJs: {
             return parseNPM(url)
         }

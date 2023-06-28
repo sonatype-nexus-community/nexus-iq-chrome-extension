@@ -32,6 +32,7 @@ here when support is re-introduced.
 | CRAN                   | R                   | `https://cran.r-project.org`     | ✅                 | ❌                 |
 | Maven Central          | Java                | `https://central.sonatype.com/`  | ✅                 | ✅                 |
 | Maven Central (simple) | Java                | `https://repo.maven.apache.org/` | ✅                 | ✅                 |
+| Maven Central (simple) | Java                | `https://repo1.maven.org/`       | ✅                 | ✅                 |
 | Maven Central (old)    | Java                | `https://search.maven.org/`      | ✅                 | ✅                 |
 | MVN Repository         | Java                | `https://mvnrepository.com/`     | ✅                 | ✅                 |
 | NPM JS                 | Javascript          | `https://www.npmjs.com/`         | ✅                 | ✅                 |
@@ -45,11 +46,10 @@ here when support is re-introduced.
 9. Debian – Linux – `https://tracker.debian.org/pkg/`
 10. Golang – Go – `https://search.gocenter.io/`
 11. Java – Maven – `https://repo.spring.io/list/`
-12. Java – Maven – `https://repo1.maven.org/`
-13. Rust – Crates – `https://crates.io/`
-14. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-15. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
-16. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+12. Rust – Crates – `https://crates.io/`
+13. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+14. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+15. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Development
 
