@@ -96,8 +96,7 @@ export default function Options() {
                                         value={DATA_SOURCE.NEXUSIQ}
                                         onChange={handleDataSourceChange}
                                         isChecked={extensionConfig.dataSource === DATA_SOURCE.NEXUSIQ}
-                                        radioId='scanType-IQ-Server'
-                                    >
+                                        radioId='scanType-IQ-Server'>
                                         Sonatype IQ Server
                                     </NxRadio>
                                     {/* <NxRadio
