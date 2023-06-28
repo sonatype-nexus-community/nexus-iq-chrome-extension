@@ -39,17 +39,20 @@ here when support is re-introduced.
 | PyPI                | Python              | `https://pypi.org/`             | ✅                 | ✅                 |
 | RubGems             | Ruby                | `https://rubygems.org/`         | ✅                 | ✅                 |
 
-7. Conda – Python – `https://anaconda.org/anaconda/`
-8. Debian – Linux – `https://packages.debian.org/`
-9. Debian – Linux – `https://tracker.debian.org/pkg/`
-10. Golang – Go – `https://search.gocenter.io/`
-11. Java – Maven – `https://repo.maven.apache.org/`
-12. Java – Maven – `https://repo.spring.io/list/`
-13. Java – Maven – `https://repo1.maven.org/`
-14. Rust – Crates – `https://crates.io/`
-15. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
-16. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
-17. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
+The following registries have been removed from the Sonatype Browser Extension beginnging in version 2.0.0:
+
+-   Debian – Linux – `https://packages.debian.org/`
+
+1. Conda – Python – `https://anaconda.org/anaconda/`
+
+2. Golang – Go – `https://search.gocenter.io/`
+3. Java – Maven – `https://repo.maven.apache.org/`
+4. Java – Maven – `https://repo.spring.io/list/`
+5. Java – Maven – `https://repo1.maven.org/`
+6. Rust – Crates – `https://crates.io/`
+7. Nexus Proxy Repos – supported repository formats are maven2, npm, rubygems and nuget e.g. `http://nexus:8081/#browse/browse:maven–central:commons–collections%2Fcommons–collections%2F3.2.1`
+8. Artifactory Proxy Repos – supported repository formats are maven2 and npm e.g. `https://artifactory-server/webapp/#/artifacts/browse/tree/General/npmjs–cache/parseurl/–/parseurl–1.0.1.tgz`
+9. Artifactory Repo lists – e.g. `https://repo.spring.io/list/jcenter–cache/org/cloudfoundry/cf–maven–plugin/1.1.3/`
 
 ## Development
 
