@@ -96,9 +96,9 @@ export function pollForComponentEvaluationResult(applicationId: string, resultId
 
     const stopPolling = () => {
         if (polling) {
-            console.log(new Date(), 'Polling was already stopped...')
+            logger.logMessage('Polling was already stopped...', LogLevel.DEBUG)
         } else {
-            console.log(new Date(), 'Stopping polling...')
+            logger.logMessage('Stopping polling...', LogLevel.DEBUG)
             polling = false
             rejectThis(new Error('Polling cancelled'))
         }
@@ -339,10 +339,7 @@ export async function getRemediationDetailsForComponent(request: MessageRequest)
 async function _get_iq_api_configuration(): Promise<Configuration> {
     return readExtensionConfiguration()
         .then((response) => {
-            if (chrome.runtime.lastError) {
-                console.log('Error _get_iq_api_configuration', chrome.runtime.lastError.message)
-            }
-            if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+            if (response !== undefined && response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                 const settings = response.data as ExtensionConfiguration
                 if (settings.dataSource !== DATA_SOURCE.NEXUSIQ) {
                     logger.logMessage(

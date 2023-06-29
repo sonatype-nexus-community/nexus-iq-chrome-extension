@@ -29,7 +29,6 @@ import { ExtensionConfigurationContext } from '../../../../../../context/Extensi
 import './AllVersionsDetails.css'
 import { DATA_SOURCE } from '../../../../../../utils/Constants'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
-import { logger, LogLevel } from '../../../../../../logger/Logger'
 import { getNewUrlandGo } from '../../../../../../utils/Helpers'
 
 function IqAllVersionDetails() {
@@ -37,7 +36,6 @@ function IqAllVersionDetails() {
     const allVersions = popupContext.iq?.allVersions
     const currentPurl = popupContext.currentPurl
     const currentVersionRef = useRef<HTMLElement>(null)
-    logger.logMessage('** currentPurl', LogLevel.DEBUG, currentPurl?.version)
 
     function getMaxViolation(policyData: ApiComponentPolicyViolationListDTOV2) {
         if (policyData.policyViolations && policyData.policyViolations.length > 0) {
@@ -52,7 +50,6 @@ function IqAllVersionDetails() {
 
     useEffect(() => {
         if (currentVersionRef.current) {
-            console.log(currentVersionRef.current)
             currentVersionRef.current.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
@@ -72,8 +69,7 @@ function IqAllVersionDetails() {
                         <NxList.LinkItem
                             href=''
                             key={version.component?.packageUrl}
-                            selected={versionPurl.version == currentPurl?.version}
-                        >
+                            selected={versionPurl.version == currentPurl?.version}>
                             <NxList.Text
                                 onClick={() =>
                                     getNewUrlandGo(
@@ -82,22 +78,19 @@ function IqAllVersionDetails() {
                                         versionPurl.version as string
                                     )
                                 }
-                                ref={currentPurl?.version == versionPurl.version ? currentVersionRef : null}
-                            >
+                                ref={currentPurl?.version == versionPurl.version ? currentVersionRef : null}>
                                 <NxGrid.Row
                                     style={{
                                         marginTop: '0px',
                                         marginBottom: '0px',
-                                    }}
-                                >
+                                    }}>
                                     <NxGrid.Column className='nx-grid-col-50'>
                                         {version.policyData != undefined && (
                                             <NxPolicyViolationIndicator
                                                 style={{ marginBottom: '16px !important' }}
                                                 policyThreatLevel={
                                                     Math.round(getMaxViolation(version.policyData)) as ThreatLevelNumber
-                                                }
-                                            >
+                                                }>
                                                 {versionPurl.version}
                                             </NxPolicyViolationIndicator>
                                         )}

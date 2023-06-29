@@ -22,7 +22,6 @@ import { NxTable, NxFontAwesomeIcon, NxH3, NxTooltip } from '@sonatype/react-sha
 
 const CVSSExplained = ({ vector }): JSX.Element | null => {
     function getByValue(map, searchValue) {
-        // console.log("getByValue", map, searchValue);
         for (const [key, value] of map.entries()) {
             if (key === searchValue) return value
         }
@@ -68,7 +67,6 @@ const CVSSExplained = ({ vector }): JSX.Element | null => {
             const cvssElements = vector.split('/')
             const elements = CvssVectorExplainer(cvssElements)
             const vectorDetails: VectorDetails = getByValue(elements, key)
-            // console.log('vector', vector, vectorDetails, cvssElements, elements);
             return (
                 <NxTable.Row key={key}>
                     <NxTable.Cell>{vectorDetails.vectorName}:</NxTable.Cell>

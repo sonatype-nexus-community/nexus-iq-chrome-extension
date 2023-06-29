@@ -67,7 +67,6 @@ export default function Options() {
 
     useEffect(() => {
         readExtensionConfiguration().then((response) => {
-            console.log('Options useEffect Response:', response)
             if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                 if (response.data === undefined) {
                     setExtensionConfig(DEFAULT_EXTENSION_SETTINGS)

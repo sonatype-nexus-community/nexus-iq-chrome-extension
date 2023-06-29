@@ -76,9 +76,6 @@ export async function getComponentDetails(request: MessageRequest): Promise<Mess
 function _get_ossindex_api_configuration(): Promise<Configuration> {
     return readExtensionConfiguration()
         .then((response) => {
-            if (chrome.runtime.lastError) {
-                console.log('Error _get_iq_api_configuration', chrome.runtime.lastError.message)
-            }
             if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                 const settings = response.data as ExtensionConfiguration
                 if (settings.dataSource !== DATA_SOURCE.OSSINDEX) {

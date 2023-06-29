@@ -78,25 +78,27 @@ export default function ExtensionPopup() {
             setPopupContext((c) => merge(c, newPopupContextWithTab))
             logger.logMessage(`Requesting PURL from Tab ${tab.url}`, LogLevel.DEBUG)
             if (tab.status != 'unloaded') {
-                _browser.tabs.sendMessage(
-                    tab.id,
-                    {
+                _browser.tabs
+                    .sendMessage(tab.id, {
                         type: MESSAGE_REQUEST_TYPE.CALCULATE_PURL_FOR_PAGE,
                         params: {
                             tabId: tab.id,
                             url: tab.url,
                         },
-                    },
-                    (response) => {
-                        if (chrome.runtime.lastError) {
-                            console.error('ERROR in here', chrome.runtime.lastError.message, response)
+                    })
+                    .catch((err) => {
+                        logger.logMessage(`Error caught calculating PURL from Tab`, LogLevel.DEBUG, err)
+                    })
+                    .then((response) => {
+                        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                        if (_browser.runtime.lastError) {
+                            console.error('ERROR in here', _browser.runtime.lastError.message, response)
                         }
                         logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
                         if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                             setPurl(PackageURL.fromString(response.data.purl))
                         }
-                    }
-                )
+                    })
             }
         })
     }, [])
@@ -116,7 +118,6 @@ export default function ExtensionPopup() {
             }))
 
             _browser.storage.local.get('componentDetails').then((response) => {
-                console.log('Look what I found in the session folks: ', response)
                 const newPopupContextWithComponentDetails = {
                     iq: response,
                 }
