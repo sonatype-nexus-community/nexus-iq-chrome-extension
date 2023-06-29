@@ -81,6 +81,7 @@ function GetPolicyViolationsIndicator({ policyData, policyType }) {
             </React.Fragment>
         )
     }
+    return <></>
 }
 
 function IqComponentInfo() {
