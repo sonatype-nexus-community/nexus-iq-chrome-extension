@@ -249,8 +249,7 @@ export default function Popup() {
             style={{
                 maxWidth: '800px',
                 width: '800px',
-            }}
-        >
+            }}>
             {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}
             {extensionContext.dataSource === DATA_SOURCE.OSSINDEX && <OssiPopup />}
         </div>

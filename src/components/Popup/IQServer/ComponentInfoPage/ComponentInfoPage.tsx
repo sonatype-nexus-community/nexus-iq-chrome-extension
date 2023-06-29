@@ -15,6 +15,7 @@
  */
 import {
     NxDescriptionList,
+    NxH3,
     NxList,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
@@ -30,6 +31,7 @@ import './ComponentInfoPage.css'
 import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
 import { LogLevel, logger } from '../../../../logger/Logger'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const formatDate = (date: Date | undefined | null): string => {
     if (date) {
@@ -86,6 +88,7 @@ function GetPolicyViolationsIndicator({ policyData, policyType }) {
 
 function IqComponentInfo() {
     const popupContext = useContext(ExtensionPopupContext)
+    // const containerElement = useRef<HTMLInputElement>(null)
 
     if (popupContext.iq?.componentDetails?.component?.displayName == undefined) {
         return <NxLoadingSpinner />
@@ -95,13 +98,12 @@ function IqComponentInfo() {
             <div className='nx-grid-row popup-content-row'>
                 <section className='nx-grid-col nx-grid-col--67 nx-scrollable'>
                     <header className='nx-grid-header'>
-                        <NxTooltip
+                        <Tooltip
                             placement='top'
+                            // PopperProps={{ container: containerElement.current }}
                             title={<>{popupContext.iq?.componentDetails?.component?.displayName}</>}>
-                            <h3 className='nx-h2 nx-grid-header__title'>
-                                {popupContext.iq?.componentDetails?.component?.displayName}
-                            </h3>
-                        </NxTooltip>
+                            <NxH3>{popupContext.iq?.componentDetails?.component?.displayName}</NxH3>
+                        </Tooltip>
                     </header>
                     <NxDescriptionList>
                         {popupContext.iq?.componentDetails?.component?.hash != null && (
@@ -210,18 +212,6 @@ function IqComponentInfo() {
                 <section className='nx-grid-col nx-grid-col--33'>
                     {popupContext.iq?.componentDetails?.policyData != undefined && (
                         <React.Fragment>
-                            {/* <GetPolicyAllViolationIndicator policyData={popupContext.iq.componentDetails.policyData} /> */}
-                            {/* {popupContext.iq !== undefined && (
-                                <>
-                                    <h3 className={'nx-h3'}>Lifecycle Quick Links</h3>
-                                    <NxTextLink
-                                        href={`${iqServerUrl}/api/v2/search/advanced?query=componentHash%3A${popupContext.iq.componentDetails.component.hash}&page=0&allComponents=true`}
-                                        external
-                                    >
-                                        Advanced Search Resuts
-                                    </NxTextLink>
-                                </>
-                            )} */}
                             {popupContext.iq.componentDetails.policyData.policyViolations &&
                                 popupContext.iq.componentDetails.policyData.policyViolations.length > 0 && (
                                     <React.Fragment>
@@ -229,10 +219,14 @@ function IqComponentInfo() {
                                             <h3 className={'nx-h3'}>{`Max Policy Threat`}</h3>
                                         </header>
                                         <NxList emptyMessage='No policy violations found.'>
-                                            <GetPolicyViolationsIndicator
-                                                policyData={popupContext.iq.componentDetails.policyData}
-                                                policyType={'All Policies'}
-                                            />
+                                            <Tooltip
+                                                // PopperProps={{ container: containerElement.current }}
+                                                title='The highest policy threat level across all policy types'>
+                                                <GetPolicyViolationsIndicator
+                                                    policyData={popupContext.iq.componentDetails.policyData}
+                                                    policyType={'All Policies'}
+                                                />
+                                            </Tooltip>
                                             <GetPolicyViolationsIndicator
                                                 policyData={popupContext.iq.componentDetails.policyData}
                                                 policyType={'Security'}
