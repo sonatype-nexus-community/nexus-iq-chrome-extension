@@ -26,7 +26,7 @@
     "dependencies": {
         "@agney/react-loading": "^0.1.2",
         "@fortawesome/free-solid-svg-icons": "^6.3.0",
-        "@sonatype/nexus-iq-api-client": "^0.156.3",
+        "@sonatype/nexus-iq-api-client": "^0.156.4",
         "@sonatype/ossindex-api-client": "^2023.5.2",
         "@sonatype/react-shared-components": "12.16.2",
         "@types/chrome": "^0.0.218",

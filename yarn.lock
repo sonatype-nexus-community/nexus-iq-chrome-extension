@@ -1547,10 +1547,10 @@
     pascalcase "^0.1.1"
     xss-filters "^1.2.6"
 
-"@sonatype/nexus-iq-api-client@^0.156.3":
-  version "0.156.3"
-  resolved "https://registry.npmjs.org/@sonatype/nexus-iq-api-client/-/nexus-iq-api-client-0.156.3.tgz#f67365637728edf6d17d85e4719afc9605d36953"
-  integrity sha512-AGTUNy0JE6bamDgOdw9eJju42OQOZT9IEht1OHRo1P2GMf+m7WTUa/CD0pocFXTtGKTRrcAgL8R8vdjZ5/4zVA==
+"@sonatype/nexus-iq-api-client@^0.156.4":
+  version "0.156.4"
+  resolved "https://registry.npmjs.org/@sonatype/nexus-iq-api-client/-/nexus-iq-api-client-0.156.4.tgz#9f95bd9b74880f220763f4fa046efe65576742e1"
+  integrity sha512-nA3EjF9Lm9/aIpRoFlhdcr2FnL23ZJ0AD9cPa1tZs/VWPSpyiOUbKrvZBP0I13fTU/ASZGLTO6zJ4r4fsCdS1Q==
 
 "@sonatype/ossindex-api-client@^2023.5.2":
   version "2023.5.2"
