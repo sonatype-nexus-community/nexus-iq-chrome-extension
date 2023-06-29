@@ -38,7 +38,7 @@ Version 2.x.x brings a host of changes over the 1.x.x release, and to enable us 
 
 -   Support for Sonatype OSS Index as a (free) data source
 -   Some public registry formats have not yet been ported - see table below
--   Support for repositores on Sonatype Nexus Repository and jFrog Artifactory has not yet been ported - coming soon
+-   Support for repositories on Sonatype Nexus Repository and jFrog Artifactory has not yet been ported - coming soon
 
 ## Format & Ecosystem Support
 
