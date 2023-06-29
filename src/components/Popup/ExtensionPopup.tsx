@@ -193,16 +193,18 @@ export default function ExtensionPopup() {
                 },
             }).then((allVersionsResponse) => {
                 if (allVersionsResponse.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
-                    /**
-                     * TODO: Call requestComponentEvaluationByPurls with the list of versions
-                     *       These results are used to display the threat indicator on the all versions page.
-                     */
                     logger.logMessage('Got Response to getAllComponentVersions', LogLevel.DEBUG, allVersionsResponse)
                     if (allVersionsResponse.data !== undefined) {
                         const allVersions =
                             'versions' in allVersionsResponse.data
                                 ? (allVersionsResponse.data.versions as Array<string>)
                                 : []
+
+                        if (allVersions.length == 0) {
+                            logger.logMessage(`No versions known for ${purl.toString()}`, LogLevel.INFO)
+                            return
+                        }
+
                         const allVersionsPurl: string[] = []
                         allVersions.map((version) => {
                             const versionPurl = PackageURL.fromString(purl.toString())
