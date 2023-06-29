@@ -3,6 +3,10 @@
     font-size: 90% !important;
 }
 
+.nx-policy-violation-indicator {
+    width: 150px !important;
+}
+
 .nx-list__description {
     font-size: 90% !important;
 }

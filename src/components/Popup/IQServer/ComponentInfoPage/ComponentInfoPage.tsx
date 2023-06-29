@@ -15,6 +15,7 @@
  */
 import {
     NxDescriptionList,
+    NxList,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
     NxTextLink,
@@ -26,8 +27,9 @@ import { ExtensionPopupContext } from '../../../../context/ExtensionPopupContext
 import { ExtensionConfigurationContext } from '../../../../context/ExtensionConfigurationContext'
 import { DATA_SOURCE } from '../../../../utils/Constants'
 import './ComponentInfoPage.css'
-import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
+import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
+import { LogLevel, logger } from '../../../../logger/Logger'
 
 const formatDate = (date: Date | undefined | null): string => {
     if (date) {
@@ -38,19 +40,47 @@ const formatDate = (date: Date | undefined | null): string => {
     return 'N/A'
 }
 
-function GetPolicyViolationIndicator({ policyData }: { policyData: ApiComponentPolicyViolationListDTOV2 }) {
-    return (
-        <React.Fragment>
-            <header className='nx-grid-header'>
-                <h3 className={'nx-h3'}>Max Policy Violation</h3>
-            </header>
-            <NxPolicyViolationIndicator
-                style={{ marginBottom: '16px !important' }}
-                policyThreatLevel={
-                    Math.round(getMaxThreatLevelForPolicyViolations(policyData)) as ThreatLevelNumber
-                }></NxPolicyViolationIndicator>
-        </React.Fragment>
-    )
+function GetPolicyViolationsIndicator({ policyData, policyType }) {
+    let filteredPolicies: ApiPolicyViolationDTOV2[] | undefined = []
+    const policyTypes = ['Security', 'License', 'Architecture']
+
+    if (policyType === 'All Policies') {
+        filteredPolicies = policyData.policyViolations
+    } else if (policyType === 'Other') {
+        filteredPolicies = policyData.policyViolations?.filter(
+            (policy) => policyTypes.some((type) => policy.policyName.includes(type)) == false
+        )
+    } else {
+        filteredPolicies = policyData.policyViolations?.filter((policy) => policy.policyName?.includes(policyType))
+    }
+
+    const policyTypeLabel = policyType === 'Architecture' ? 'Quality' : policyType
+
+    logger.logMessage(`GetPolicyViolationsIndicator for type: ${policyType} (${policyTypeLabel})`, LogLevel.DEBUG)
+
+    if (filteredPolicies !== undefined && filteredPolicies.length > 0) {
+        const maxPolicyThreatLevel = Math.round(
+            getMaxThreatLevelForPolicyViolations(filteredPolicies)
+        ) as ThreatLevelNumber
+        const policyCount: string = filteredPolicies.length.toString()
+        return (
+            <React.Fragment>
+                <NxList.Item>
+                    <NxList.Text>
+                        <NxPolicyViolationIndicator
+                            style={{
+                                width: '300px !important',
+                                margin: 'none !important',
+                            }}
+                            policyThreatLevel={maxPolicyThreatLevel}>
+                            {policyTypeLabel}
+                        </NxPolicyViolationIndicator>
+                        {policyType !== 'All Policies' && <span className={'nx-counter'}>{policyCount}</span>}
+                    </NxList.Text>
+                </NxList.Item>
+            </React.Fragment>
+        )
+    }
 }
 
 function IqComponentInfo() {
@@ -179,7 +209,7 @@ function IqComponentInfo() {
                 <section className='nx-grid-col nx-grid-col--33'>
                     {popupContext.iq?.componentDetails?.policyData != undefined && (
                         <React.Fragment>
-                            <GetPolicyViolationIndicator policyData={popupContext.iq.componentDetails.policyData} />
+                            {/* <GetPolicyAllViolationIndicator policyData={popupContext.iq.componentDetails.policyData} /> */}
                             {/* {popupContext.iq !== undefined && (
                                 <>
                                     <h3 className={'nx-h3'}>Lifecycle Quick Links</h3>
@@ -191,6 +221,36 @@ function IqComponentInfo() {
                                     </NxTextLink>
                                 </>
                             )} */}
+                            {popupContext.iq.componentDetails.policyData.policyViolations &&
+                                popupContext.iq.componentDetails.policyData.policyViolations.length > 0 && (
+                                    <React.Fragment>
+                                        <header className='nx-grid-header'>
+                                            <h3 className={'nx-h3'}>{`Max Policy Threat`}</h3>
+                                        </header>
+                                        <NxList emptyMessage='No policy violations found.'>
+                                            <GetPolicyViolationsIndicator
+                                                policyData={popupContext.iq.componentDetails.policyData}
+                                                policyType={'All Policies'}
+                                            />
+                                            <GetPolicyViolationsIndicator
+                                                policyData={popupContext.iq.componentDetails.policyData}
+                                                policyType={'Security'}
+                                            />
+                                            <GetPolicyViolationsIndicator
+                                                policyData={popupContext.iq.componentDetails.policyData}
+                                                policyType={'License'}
+                                            />
+                                            <GetPolicyViolationsIndicator
+                                                policyData={popupContext.iq.componentDetails.policyData}
+                                                policyType={'Architecture'}
+                                            />
+                                            <GetPolicyViolationsIndicator
+                                                policyData={popupContext.iq.componentDetails.policyData}
+                                                policyType={'Other'}
+                                            />
+                                        </NxList>
+                                    </React.Fragment>
+                                )}
                         </React.Fragment>
                     )}
                 </section>

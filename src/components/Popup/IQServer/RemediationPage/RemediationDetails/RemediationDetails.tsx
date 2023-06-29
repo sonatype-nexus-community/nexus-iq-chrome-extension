@@ -28,7 +28,7 @@ function IqRemediationDetails() {
 
     return (
         <React.Fragment>
-            <NxList emptyMessage="No recommended versions are available based on this application's policy.">
+            <NxList emptyMessage="No recommended newer versions are available based on this application's policy.">
                 {versionChanges?.map((change, id) => {
                     const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
                     if (change !== undefined) {
@@ -36,8 +36,7 @@ function IqRemediationDetails() {
                             <NxList.LinkItem
                                 href='#'
                                 key={id}
-                                onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}
-                            >
+                                onClick={() => getNewUrlandGo(popupContext.currentTab, currentPurlVersion, version)}>
                                 <NxList.Text>
                                     <small>{REMEDIATION_LABELS[change.type as string]}</small>
                                 </NxList.Text>
