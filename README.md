@@ -49,11 +49,11 @@ Version 2.x.x brings a host of changes over the 1.x.x release, and to enable us 
 | Registry                | Language            | Enabled in 2.x.x | Enabled in 1.x.x | URL                                 | Sonatype Lifecycle | Sonatype OSS Index |
 | ----------------------- | ------------------- | ---------------- | ---------------- | ----------------------------------- | ------------------ | ------------------ |
 | Alpine Linux            | Alpine Linux        | ✅               | ✅               | `https://pkgs.alpinelinux.org/`     | ✅                 | ❌                 |
-| Anaconda                | Python              | ? TBC ?          | ✅               | `https://anaconda.org/anaconda/`    | ✅                 |                    |
+| Anaconda                | Python              | ❌ ^5            | ✅               | `https://anaconda.org/anaconda/`    | ✅                 | ?                  |
 | Clojars                 | Java                | ❌               | ❌               | `https://clojars.org/`              | ✅                 | ✅                 |
 | CocoaPods               | Swift / Objective-C | ✅               | ✅               | `https://cocoapods.org/`            | ✅                 | ❌                 |
 | Conan IO                | C / C++             | ✅               | ✅               | `https://conan.io/center/`          | ✅                 | ❌                 |
-| Conda Forge             | Python              | ? TBC ?          | ✅               | `https://anaconda.org/conda-forge/` | ✅                 |                    |
+| Conda Forge             | Python              | ❌ ^5            | ✅               | `https://anaconda.org/conda-forge/` | ✅                 | ?                  |
 | CRAN                    | R                   | ✅               | ✅               | `https://cran.r-project.org`        | ✅                 | ❌                 |
 | Crates.io               | Rust                | ❌ ^2            | ✅               | `https://crates.io/`                | ✅                 | ✅                 |
 | Debian Packages         | Debian Linux        | ❌ ^5            | ✅               | `https://packages.debian.org/`      | ❌                 | ✅                 |
