@@ -76,6 +76,7 @@ function IqPopup() {
                     }}
                     productInfo={{ name: 'Platform Extension', version: '2.0.0' }}>
                     <NxButton
+                        variant='icon-only'
                         onClick={() => {
                             chrome.tabs.update({
                                 url: extensionConfigContext.host,
@@ -84,7 +85,7 @@ function IqPopup() {
                         }}>
                         IQ
                     </NxButton>
-                    <NxButton>
+                    <NxButton variant='icon-only'>
                         <NxFontAwesomeIcon
                             icon={faGear as IconDefinition}
                             onClick={() => {

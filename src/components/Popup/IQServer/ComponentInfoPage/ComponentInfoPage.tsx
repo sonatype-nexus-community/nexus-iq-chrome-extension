@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {
+    NxFontAwesomeIcon,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
     NxTextLink,
@@ -26,8 +27,9 @@ import { DATA_SOURCE } from '../../../../utils/Constants'
 import './ComponentInfoPage.css'
 import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
-import { LogLevel, logger } from '../../../../logger/Logger'
 import { Tooltip } from '@material-ui/core'
+import { faCodeFork, faStar } from '@fortawesome/free-solid-svg-icons'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 const formatDate = (date: Date | undefined | null): string => {
     if (date) {
@@ -50,16 +52,14 @@ function GetPolicyViolationsIndicator({ policyData, policyType }) {
         filteredPolicies = policyData.policyViolations?.filter(
             (policy) => !policyTypes.some((excludeItem) => policy.policyName.includes(excludeItem))
         )
-        // string does not include each any values in another array
-        // policyTypes.some((type) => !policy.policyName.includes(type))
     } else {
         filteredPolicies = policyData.policyViolations?.filter((policy) => policy.policyName?.includes(policyType))
     }
-    logger.logMessage(`filtered policies for type: ${policyType}`, LogLevel.DEBUG, filteredPolicies)
+    // logger.logMessage(`filtered policies for type: ${policyType}`, LogLevel.DEBUG, filteredPolicies)
 
     const policyTypeLabel = policyType === 'Architecture' ? 'Quality' : policyType
 
-    logger.logMessage(`GetPolicyViolationsIndicator for type: ${policyType} (${policyTypeLabel})`, LogLevel.DEBUG)
+    // logger.logMessage(`GetPolicyViolationsIndicator for type: ${policyType} (${policyTypeLabel})`, LogLevel.DEBUG)
 
     if (filteredPolicies !== undefined && filteredPolicies.length > 0) {
         const maxPolicyThreatLevel = Math.round(
@@ -101,60 +101,99 @@ function IqComponentInfo() {
     }
     return (
         <React.Fragment>
-            <section className='nx-tile'>
-                <header className='nx-tile-header'>
-                    <div className='nx-tile-header__title'>
-                        <h3 className='nx-h2'>{popupContext.iq?.componentDetails?.component?.displayName}</h3>
-                    </div>
-                </header>
-                <div className='nx-grid-row'>
-                    <div className='nx-grid-col nx-grid-col--67'>
-                        <dl>
-                            {popupContext.iq?.componentDetails?.component?.hash != null && (
-                                <div className='nx-read-only__item'>
-                                    {/* <dt className='nx-read-only__label'>Hash</dt> */}
-                                    <dd className='nx-read-only__data'>
-                                        Hash: {popupContext.iq?.componentDetails?.component?.hash}
-                                    </dd>
-                                </div>
-                            )}
-                            <div className='nx-grid-row'>
-                                <div className='nx-grid-col'>
-                                    {popupContext.iq?.componentDetails.integrityRating != null && (
-                                        <div className='nx-read-only__item'>
-                                            <dt className='nx-read-only__label'>
+            {/* <section className='nx-tile'> */}
+            <header className='nx-tile-header'>
+                <div className='nx-tile-header__title'>
+                    <h3 className='nx-h2'>{popupContext.iq?.componentDetails?.component?.displayName}</h3>
+                </div>
+            </header>
+            <div className='nx-grid-row'>
+                <div className='nx-grid-col nx-grid-col--67'>
+                    <dl>
+                        {popupContext.iq?.componentDetails?.component?.hash != null && (
+                            <div className='nx-read-only__item'>
+                                <dd className='nx-read-only__data'>
+                                    <span id='hash'>{popupContext.iq?.componentDetails?.component?.hash}</span>
+                                    {popupContext.iq?.componentDetails.projectData?.sourceControlManagement
+                                        ?.scmMetadata !== undefined && (
+                                        <>
+                                            <span className='nx-pull-right'>
+                                                <NxFontAwesomeIcon icon={faCodeFork as IconDefinition} title='Forks' />
+                                                Forks:
+                                                <span className='nx-counter'>
+                                                    {
+                                                        popupContext.iq?.componentDetails.projectData
+                                                            ?.sourceControlManagement?.scmMetadata?.forks
+                                                    }
+                                                </span>
+                                            </span>
+                                            <span className='nx-pull-right'>
+                                                <NxFontAwesomeIcon icon={faStar as IconDefinition} title='Stars' />
+                                                Stars:
+                                                <span className='nx-counter'>
+                                                    {
+                                                        popupContext.iq?.componentDetails.projectData
+                                                            ?.sourceControlManagement?.scmMetadata?.stars
+                                                    }
+                                                </span>
+                                            </span>
+
+                                            <span id='code-url' className='nx-pull-right'>
                                                 <NxTextLink
                                                     external
-                                                    href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'>
-                                                    Integrity Rating
+                                                    href={
+                                                        popupContext.iq?.componentDetails.projectData
+                                                            ?.sourceControlManagement?.scmUrl
+                                                    }>
+                                                    {
+                                                        popupContext.iq?.componentDetails.projectData
+                                                            ?.sourceControlManagement?.scmUrl
+                                                    }
                                                 </NxTextLink>
-                                            </dt>
+                                            </span>
+                                        </>
+                                    )}
+                                </dd>
+                            </div>
+                        )}
+                        <div className='nx-grid-row'>
+                            <div className='nx-grid-col'>
+                                {popupContext.iq?.componentDetails.integrityRating != null && (
+                                    <div className='nx-read-only__item'>
+                                        <dt className='nx-read-only__label'>
+                                            <NxTextLink
+                                                external
+                                                href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'>
+                                                Integrity Rating
+                                            </NxTextLink>
+                                        </dt>
+                                        <dd className='nx-read-only__data'>
+                                            {' '}
+                                            {popupContext.iq?.componentDetails.integrityRating}
+                                        </dd>
+                                    </div>
+                                )}
+                                {popupContext.iq?.componentDetails.catalogDate != null && (
+                                    <Tooltip title='The date this component was initially evaluated by Sonatype.'>
+                                        <div className='nx-read-only__item'>
+                                            <dt className='nx-read-only__label'>Catalog Date</dt>
                                             <dd className='nx-read-only__data'>
-                                                {' '}
-                                                {popupContext.iq?.componentDetails.integrityRating}
+                                                {formatDate(popupContext.iq?.componentDetails.catalogDate as Date)}
                                             </dd>
                                         </div>
-                                    )}
-                                    {popupContext.iq?.componentDetails.catalogDate != null && (
-                                        <Tooltip title='The date this component was initially evaluated by Sonatype.'>
-                                            <div className='nx-read-only__item'>
-                                                <dt className='nx-read-only__label'>Catalog Date</dt>
-                                                <dd className='nx-read-only__data'>
-                                                    {formatDate(popupContext.iq?.componentDetails.catalogDate as Date)}
-                                                </dd>
-                                            </div>
-                                        </Tooltip>
-                                    )}
-                                </div>
+                                    </Tooltip>
+                                )}
                             </div>
-                        </dl>
-                    </div>
+                        </div>
+                    </dl>
+                </div>
 
-                    {popupContext.iq?.componentDetails.projectData &&
-                        (popupContext.iq?.componentDetails.projectData.lastReleaseDate ||
-                            popupContext.iq?.componentDetails.projectData.firstReleaseDate) && (
-                            <div className='nx-grid-col nx-grid-col--33'>
-                                <dl>
+                <div className='nx-grid-col nx-grid-col--33'>
+                    <dl>
+                        {popupContext.iq?.componentDetails.projectData &&
+                            (popupContext.iq?.componentDetails.projectData.lastReleaseDate ||
+                                popupContext.iq?.componentDetails.projectData.firstReleaseDate) && (
+                                <>
                                     {popupContext.iq?.componentDetails.projectData.lastReleaseDate && (
                                         <div className='nx-read-only__item'>
                                             <dt className='nx-read-only__label'>Last Release Date</dt>
@@ -179,11 +218,12 @@ function IqComponentInfo() {
                                             </dd>
                                         </div>
                                     )}
-                                </dl>
-                            </div>
-                        )}
+                                </>
+                            )}
+                    </dl>
                 </div>
-            </section>
+            </div>
+            {/* </section> */}
             {popupContext.iq.componentDetails.policyData &&
                 popupContext.iq.componentDetails.policyData.policyViolations &&
                 popupContext.iq.componentDetails.policyData.policyViolations.length > 0 && (

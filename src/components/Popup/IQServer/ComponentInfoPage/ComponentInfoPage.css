@@ -40,3 +40,11 @@
     border: none !important;
     padding-top: 0px;
 }
+
+#hash {
+    color: hsl(0, 0%, 60%);
+}
+
+#code-url {
+    font-size: 12px;
+}
