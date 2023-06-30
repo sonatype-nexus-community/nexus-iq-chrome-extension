@@ -78,7 +78,7 @@ function IqLicensePage() {
                     <NxTabList
                         id='legalTabList'
                         style={{
-                            marginBottom: '5px !important',
+                            marginBottom: '15px !important',
                             marginTop: '0px',
                             paddingTop: '0px !important',
                         }}>
@@ -103,16 +103,14 @@ function IqLicensePage() {
                     </NxTabList>
                     <NxTabPanel
                         className='nx-scrollable'
-                        style={{
-                            height: '500px',
-                            // maxHeight: '300px',
-                        }}>
+                        style={
+                            {
+                                // height: '500px',
+                                // maxHeight: '300px',
+                            }
+                        }>
                         <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
-                            <NxTable
-                                className='nx-table'
-                                style={{
-                                    height: '400px',
-                                }}>
+                            <NxTable className='nx-table' id='license-table'>
                                 <NxTable.Head>
                                     <NxTable.Row className='nx-table-row nx-table-row--header'>
                                         <NxTable.Cell>Threat Group</NxTable.Cell>

@@ -188,12 +188,12 @@ function IqComponentInfo() {
                     </dl>
                 </div>
 
-                <div className='nx-grid-col nx-grid-col--33'>
-                    <dl>
-                        {popupContext.iq?.componentDetails.projectData &&
-                            (popupContext.iq?.componentDetails.projectData.lastReleaseDate ||
-                                popupContext.iq?.componentDetails.projectData.firstReleaseDate) && (
-                                <>
+                {popupContext.iq?.componentDetails.projectData &&
+                    (popupContext.iq?.componentDetails.projectData.lastReleaseDate ||
+                        popupContext.iq?.componentDetails.projectData.firstReleaseDate) && (
+                        <>
+                            <div className='nx-grid-col nx-grid-col--33'>
+                                <dl>
                                     {popupContext.iq?.componentDetails.projectData.lastReleaseDate && (
                                         <div className='nx-read-only__item'>
                                             <dt className='nx-read-only__label'>Last Release Date</dt>
@@ -218,10 +218,10 @@ function IqComponentInfo() {
                                             </dd>
                                         </div>
                                     )}
-                                </>
-                            )}
-                    </dl>
-                </div>
+                                </dl>
+                            </div>
+                        </>
+                    )}
             </div>
             {/* </section> */}
             {popupContext.iq.componentDetails.policyData &&
