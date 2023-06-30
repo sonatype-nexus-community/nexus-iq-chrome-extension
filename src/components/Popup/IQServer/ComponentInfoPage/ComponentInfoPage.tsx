@@ -129,7 +129,7 @@ function IqComponentInfo() {
                                             </dd>
                                         </div>
                                     )}
-                                    {popupContext.iq?.componentDetails.hygieneRating != null && (
+                                    {/* {popupContext.iq?.componentDetails.hygieneRating != null && (
                                         <div className='nx-read-only__item'>
                                             <dt className='nx-read-only__label'>
                                                 <NxTextLink
@@ -142,7 +142,7 @@ function IqComponentInfo() {
                                                 {popupContext.iq?.componentDetails.hygieneRating}
                                             </dd>
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
                         </dl>
