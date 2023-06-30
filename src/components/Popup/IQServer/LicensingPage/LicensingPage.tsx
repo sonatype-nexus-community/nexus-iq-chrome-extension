@@ -83,19 +83,19 @@ function IqLicensePage() {
                             paddingTop: '0px !important',
                         }}>
                         {effectiveLicenses && effectiveLicenses.length > 0 && (
-                            <NxTab>
+                            <NxTab className='nx-tab-ext'>
                                 Effective
                                 <span className={'nx-counter'}>{effectiveLicenses?.length}</span>
                             </NxTab>
                         )}
                         {observedLicenses && observedLicenses.length > 0 && (
-                            <NxTab>
+                            <NxTab className='nx-tab-ext'>
                                 Observed
                                 <span className={'nx-counter'}>{observedLicenses?.length}</span>
                             </NxTab>
                         )}
                         {declaredLicenses && declaredLicenses.length > 0 && (
-                            <NxTab>
+                            <NxTab className='nx-tab-ext'>
                                 Declared
                                 <span className={'nx-counter'}>{declaredLicenses?.length}</span>
                             </NxTab>

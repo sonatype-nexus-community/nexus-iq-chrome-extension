@@ -30,7 +30,7 @@ import { DATA_SOURCE } from '../../../../../../utils/Constants'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { logger, LogLevel } from '../../../../../../logger/Logger'
 import { getNewUrlandGo } from '../../../../../../utils/Helpers'
-import { Tooltip, withStyles, Typography } from '@material-ui/core'
+import { Tooltip, withStyles } from '@material-ui/core'
 
 function IqAllVersionDetails() {
     const popupContext = useContext(ExtensionPopupContext)
@@ -55,7 +55,7 @@ function IqAllVersionDetails() {
             console.log(currentVersionRef.current)
             currentVersionRef.current.scrollIntoView({
                 behavior: 'smooth',
-                block: 'center',
+                block: 'nearest',
                 inline: 'nearest',
             })
         }

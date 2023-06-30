@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {
+    NxDescriptionList,
     NxFontAwesomeIcon,
     NxLoadingSpinner,
     NxPolicyViolationIndicator,
@@ -109,83 +110,82 @@ function IqComponentInfo() {
             </header>
             <div className='nx-grid-row'>
                 <div className='nx-grid-col nx-grid-col--67'>
-                    <dl>
-                        {popupContext.iq?.componentDetails?.component?.hash != null && (
-                            <div className='nx-read-only__item'>
-                                <dd className='nx-read-only__data'>
-                                    <span id='hash'>{popupContext.iq?.componentDetails?.component?.hash}</span>
-                                    {popupContext.iq?.componentDetails.projectData?.sourceControlManagement
-                                        ?.scmMetadata !== undefined && (
-                                        <>
-                                            <span className='nx-pull-right'>
-                                                <NxFontAwesomeIcon icon={faCodeFork as IconDefinition} title='Forks' />
-                                                Forks:
-                                                <span className='nx-counter'>
-                                                    {
-                                                        popupContext.iq?.componentDetails.projectData
-                                                            ?.sourceControlManagement?.scmMetadata?.forks
-                                                    }
-                                                </span>
+                    {popupContext.iq?.componentDetails?.component?.hash != null && (
+                        <div className='nx-read-only__item'>
+                            <dd className='nx-read-only__data'>
+                                <span id='hash'>{popupContext.iq?.componentDetails?.component?.hash}</span>
+                                {popupContext.iq?.componentDetails.projectData?.sourceControlManagement?.scmMetadata !==
+                                    undefined && (
+                                    <>
+                                        <span className='nx-pull-right'>
+                                            <NxFontAwesomeIcon icon={faCodeFork as IconDefinition} title='Forks' />
+                                            Forks:
+                                            <span className='nx-counter'>
+                                                {
+                                                    popupContext.iq?.componentDetails.projectData
+                                                        ?.sourceControlManagement?.scmMetadata?.forks
+                                                }
                                             </span>
-                                            <span className='nx-pull-right'>
-                                                <NxFontAwesomeIcon icon={faStar as IconDefinition} title='Stars' />
-                                                Stars:
-                                                <span className='nx-counter'>
-                                                    {
-                                                        popupContext.iq?.componentDetails.projectData
-                                                            ?.sourceControlManagement?.scmMetadata?.stars
-                                                    }
-                                                </span>
+                                        </span>
+                                        <span className='nx-pull-right'>
+                                            <NxFontAwesomeIcon icon={faStar as IconDefinition} title='Stars' />
+                                            Stars:
+                                            <span className='nx-counter'>
+                                                {
+                                                    popupContext.iq?.componentDetails.projectData
+                                                        ?.sourceControlManagement?.scmMetadata?.stars
+                                                }
                                             </span>
+                                        </span>
 
-                                            <span id='code-url' className='nx-pull-right'>
-                                                <NxTextLink
-                                                    external
-                                                    href={
-                                                        popupContext.iq?.componentDetails.projectData
-                                                            ?.sourceControlManagement?.scmUrl
-                                                    }>
-                                                    {
-                                                        popupContext.iq?.componentDetails.projectData
-                                                            ?.sourceControlManagement?.scmUrl
-                                                    }
-                                                </NxTextLink>
-                                            </span>
-                                        </>
-                                    )}
-                                </dd>
-                            </div>
-                        )}
-                        <div className='nx-grid-row'>
-                            <div className='nx-grid-col'>
+                                        <span id='code-url' className='nx-pull-right'>
+                                            <NxTextLink
+                                                external
+                                                href={
+                                                    popupContext.iq?.componentDetails.projectData
+                                                        ?.sourceControlManagement?.scmUrl
+                                                }>
+                                                {
+                                                    popupContext.iq?.componentDetails.projectData
+                                                        ?.sourceControlManagement?.scmUrl
+                                                }
+                                            </NxTextLink>
+                                        </span>
+                                    </>
+                                )}
+                            </dd>
+                        </div>
+                    )}
+                    <div className='nx-grid-row'>
+                        <div className='nx-grid-col'>
+                            <NxDescriptionList>
                                 {popupContext.iq?.componentDetails.integrityRating != null && (
-                                    <div className='nx-read-only__item'>
-                                        <dt className='nx-read-only__label'>
+                                    <NxDescriptionList.Item>
+                                        <NxDescriptionList.Term>
                                             <NxTextLink
                                                 external
                                                 href='https://help.sonatype.com/fw/next-gen-firewall-features/protection-from-pending-and-suspicious-components'>
                                                 Integrity Rating
                                             </NxTextLink>
-                                        </dt>
-                                        <dd className='nx-read-only__data'>
-                                            {' '}
+                                        </NxDescriptionList.Term>
+                                        <NxDescriptionList.Description>
                                             {popupContext.iq?.componentDetails.integrityRating}
-                                        </dd>
-                                    </div>
+                                        </NxDescriptionList.Description>
+                                    </NxDescriptionList.Item>
                                 )}
                                 {popupContext.iq?.componentDetails.catalogDate != null && (
-                                    <Tooltip title='The date this component was initially evaluated by Sonatype.'>
-                                        <div className='nx-read-only__item'>
-                                            <dt className='nx-read-only__label'>Catalog Date</dt>
-                                            <dd className='nx-read-only__data'>
-                                                {formatDate(popupContext.iq?.componentDetails.catalogDate as Date)}
-                                            </dd>
-                                        </div>
-                                    </Tooltip>
+                                    <NxDescriptionList.Item>
+                                        <Tooltip title='The date this component was initially evaluated by Sonatype.'>
+                                            <NxDescriptionList.Term>Catalog Date</NxDescriptionList.Term>
+                                        </Tooltip>
+                                        <NxDescriptionList.Description>
+                                            {formatDate(popupContext.iq?.componentDetails.catalogDate as Date)}
+                                        </NxDescriptionList.Description>
+                                    </NxDescriptionList.Item>
                                 )}
-                            </div>
+                            </NxDescriptionList>
                         </div>
-                    </dl>
+                    </div>
                 </div>
 
                 {popupContext.iq?.componentDetails.projectData &&

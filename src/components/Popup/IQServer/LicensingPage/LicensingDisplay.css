@@ -1,5 +1,5 @@
 .smaller-font-for-legal {
-    font-size: 12px;
+    font-size: 10px;
 }
 
 #legalTabList {
@@ -8,4 +8,8 @@
 
 #license-table {
     margin-top: 10px !important;
+}
+
+.nx-tab-ext {
+    color: hsl(214, 96%, 80%);
 }
