@@ -28,7 +28,7 @@ function IqRemediationDetails() {
 
     return (
         <React.Fragment>
-            <NxList emptyMessage="No recommended newer versions are available based on this application's policy.">
+            <NxList emptyMessage="No newer version is available based on this application's policy.">
                 {versionChanges?.map((change, id) => {
                     const version = change.data?.component?.componentIdentifier?.coordinates?.version as string
                     if (change !== undefined) {

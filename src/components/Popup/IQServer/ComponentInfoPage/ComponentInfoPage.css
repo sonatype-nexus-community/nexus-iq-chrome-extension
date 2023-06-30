@@ -4,7 +4,7 @@
 }
 
 .nx-policy-violation-indicator {
-    width: 150px !important;
+    width: 100px !important;
 }
 
 .nx-list__description {
@@ -17,4 +17,17 @@
 
 #security-threat {
     padding-top: 10px !important;
+}
+
+.nx-card {
+    min-width: unset !important;
+    padding-top: 10px !important;
+}
+
+#max-policy-header {
+    margin-bottom: 0px !important;
+}
+
+#max-policy-content {
+    margin-top: 0px !important;
 }

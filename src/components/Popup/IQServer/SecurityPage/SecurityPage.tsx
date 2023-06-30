@@ -46,7 +46,6 @@ function IqSecurityPage() {
 
     return (
         <React.Fragment>
-            {' '}
             <div className='nx-grid-row'>
                 <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
                     <NxTable className='nx-table'>

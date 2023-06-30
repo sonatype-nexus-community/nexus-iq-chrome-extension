@@ -1,3 +1,7 @@
 .smaller-font-for-legal {
     font-size: 12px;
 }
+
+#legalTabList {
+    font-size: var(--nx-font-size-s);
+}

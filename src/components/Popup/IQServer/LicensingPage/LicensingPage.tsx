@@ -75,7 +75,13 @@ function IqLicensePage() {
                     style={{
                         height: '400px',
                     }}>
-                    <NxTabList>
+                    <NxTabList
+                        id='legalTabList'
+                        style={{
+                            marginBottom: '5px !important',
+                            marginTop: '0px',
+                            paddingTop: '0px !important',
+                        }}>
                         {effectiveLicenses && effectiveLicenses.length > 0 && (
                             <NxTab>
                                 Effective
@@ -95,7 +101,6 @@ function IqLicensePage() {
                             </NxTab>
                         )}
                     </NxTabList>
-
                     <NxTabPanel
                         className='nx-scrollable'
                         style={{
