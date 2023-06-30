@@ -31,3 +31,12 @@
 #max-policy-content {
     margin-top: 0px !important;
 }
+
+#first-release-date {
+    margin-top: 20px !important;
+}
+
+.nx-list-in-cell:first-child {
+    border: none !important;
+    padding-top: 0px;
+}

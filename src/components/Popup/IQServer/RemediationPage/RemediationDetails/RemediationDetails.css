@@ -1,3 +1,8 @@
 .nx-list__term__remediation {
     width: 75% !important;
 }
+
+.nx-list__item:first-child:first-child {
+    border: none !important;
+    padding-top: 0px;
+}

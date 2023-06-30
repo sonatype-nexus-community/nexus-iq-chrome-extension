@@ -27,17 +27,20 @@ import './ComponentInfoPage.css'
 import { ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getMaxThreatLevelForPolicyViolations } from '../../../../types/Component'
 import { LogLevel, logger } from '../../../../logger/Logger'
+import { Tooltip } from '@material-ui/core'
 
 const formatDate = (date: Date | undefined | null): string => {
     if (date) {
         const dateTime = new Date(date)
         const noTime = dateTime.toUTCString().split(' ').slice(0, 4).join(' ')
+        // const noTime = dateTime.toLocaleString().split(' ').slice(0, 4).join(' ')
         return noTime
     }
     return 'N/A'
 }
 
 function GetPolicyViolationsIndicator({ policyData, policyType }) {
+    const extConfigContext = useContext(ExtensionConfigurationContext)
     let filteredPolicies: ApiPolicyViolationDTOV2[] | undefined = []
     const policyTypes = ['Security', 'License', 'Architecture']
 
@@ -66,21 +69,24 @@ function GetPolicyViolationsIndicator({ policyData, policyType }) {
         // const label = `${maxPolicyThreatLevel.toString()} ${policyTypeLabel}`
         return (
             <React.Fragment>
-                <section className='nx-card nx-card--equal' aria-label={policyTypeLabel}>
-                    <div className='nx-card__content'>
-                        <div className='nx-card__call-out'>
-                            <NxPolicyViolationIndicator
-                                style={{
-                                    width: '10px !important',
-                                    margin: 'none !important',
-                                }}
-                                policyThreatLevel={maxPolicyThreatLevel as ThreatLevelNumber}>
-                                {maxPolicyThreatLevel.toString()}
-                            </NxPolicyViolationIndicator>
+                <Tooltip
+                    title={`The highest ${policyTypeLabel} policy threat level for application: ${extConfigContext.iqApplicationPublidId}`}>
+                    <section className='nx-card nx-card--equal' aria-label={policyTypeLabel}>
+                        <div className='nx-card__content'>
+                            <div className='nx-card__call-out'>
+                                <NxPolicyViolationIndicator
+                                    style={{
+                                        width: '10px !important',
+                                        margin: 'none !important',
+                                    }}
+                                    policyThreatLevel={maxPolicyThreatLevel as ThreatLevelNumber}>
+                                    {maxPolicyThreatLevel.toString()}
+                                </NxPolicyViolationIndicator>
+                            </div>
                         </div>
-                    </div>
-                    <footer className='nx-card__footer'>{policyTypeLabel}</footer>
-                </section>
+                        <footer className='nx-card__footer'>{policyTypeLabel}</footer>
+                    </section>
+                </Tooltip>
             </React.Fragment>
         )
     }
@@ -108,7 +114,7 @@ function IqComponentInfo() {
                                 <div className='nx-read-only__item'>
                                     {/* <dt className='nx-read-only__label'>Hash</dt> */}
                                     <dd className='nx-read-only__data'>
-                                        {popupContext.iq?.componentDetails?.component?.hash}
+                                        Hash: {popupContext.iq?.componentDetails?.component?.hash}
                                     </dd>
                                 </div>
                             )}
@@ -129,20 +135,16 @@ function IqComponentInfo() {
                                             </dd>
                                         </div>
                                     )}
-                                    {/* {popupContext.iq?.componentDetails.hygieneRating != null && (
-                                        <div className='nx-read-only__item'>
-                                            <dt className='nx-read-only__label'>
-                                                <NxTextLink
-                                                    external
-                                                    href='https://help.sonatype.com/iqserver/quickstart-guides/lifecycle-for-developers-quickstart#LifecycleforDevelopersQuickstart-HygieneRatings'>
-                                                    Hygiene Rating
-                                                </NxTextLink>
-                                            </dt>
-                                            <dd className='nx-read-only__data'>
-                                                {popupContext.iq?.componentDetails.hygieneRating}
-                                            </dd>
-                                        </div>
-                                    )} */}
+                                    {popupContext.iq?.componentDetails.catalogDate != null && (
+                                        <Tooltip title='The date this component was initially evaluated by Sonatype.'>
+                                            <div className='nx-read-only__item'>
+                                                <dt className='nx-read-only__label'>Catalog Date</dt>
+                                                <dd className='nx-read-only__data'>
+                                                    {formatDate(popupContext.iq?.componentDetails.catalogDate as Date)}
+                                                </dd>
+                                            </div>
+                                        </Tooltip>
+                                    )}
                                 </div>
                             </div>
                         </dl>
@@ -166,7 +168,7 @@ function IqComponentInfo() {
                                         </div>
                                     )}
                                     {popupContext.iq?.componentDetails.projectData.firstReleaseDate && (
-                                        <div className='nx-read-only__item'>
+                                        <div className='nx-read-only__item' id='first-release-date'>
                                             <dt className='nx-read-only__label'>First Release Date</dt>
                                             <dd className='nx-read-only__data'>
                                                 {formatDate(

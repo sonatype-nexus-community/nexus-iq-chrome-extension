@@ -154,6 +154,7 @@ export default function ExtensionPopup() {
                                 const newPopupContextWithMoreComponentDetails = {
                                     iq: {
                                         componentDetails: {
+                                            catalogDate: componentDetails.catalogDate,
                                             integrityRating: componentDetails.integrityRating,
                                             hygieneRating: componentDetails.hygieneRating,
                                             projectData: componentDetails.projectData,

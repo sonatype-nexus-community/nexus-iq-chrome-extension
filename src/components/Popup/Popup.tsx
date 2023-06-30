@@ -181,13 +181,5 @@ function IqPopup() {
 export default function Popup() {
     const extensionContext = useContext(ExtensionConfigurationContext)
 
-    return (
-        // <div
-        //     style={{
-        //         maxWidth: '700px !important',
-        //         width: '700px !important',
-        //     }}>
-        <>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}</>
-        // </div>
-    )
+    return <>{extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}</>
 }

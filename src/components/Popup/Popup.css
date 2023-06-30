@@ -1,7 +1,17 @@
+.nx-body {
+    overflow-x: hidden;
+}
+
+#ui {
+    overflow: hidden;
+    max-width: 800px !important;
+    width: 800px !important;
+}
+
 .nx-page-content {
     min-width: 800px !important;
     max-width: 800px !important;
-    height: 550px !important;
+    height: 530px !important;
     /* padding: unset !important; */
 }
 
@@ -12,11 +22,14 @@
 
 #ui.nx-page {
     display: block;
+    min-width: 800px !important;
+    min-height: 600px;
 }
 
 .nx-page-main {
     padding: 0px !important;
     margin: 0px !important;
+    height: 723px !important;
 }
 
 #popup-content-row {
