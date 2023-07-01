@@ -91,7 +91,28 @@ function GetPolicyViolationsIndicator({ policyData, policyType }) {
             </React.Fragment>
         )
     }
-    return <></>
+    return (
+        <React.Fragment>
+            <Tooltip
+                title={`The highest ${policyTypeLabel} policy threat level for application: ${extConfigContext.iqApplicationPublidId}`}>
+                <section className='nx-card nx-card--equal' aria-label={policyTypeLabel}>
+                    <div className='nx-card__content'>
+                        <div className='nx-card__call-out'>
+                            <NxPolicyViolationIndicator
+                                style={{
+                                    width: '10px !important',
+                                    margin: 'none !important',
+                                }}
+                                policyThreatLevel={0}>
+                                None
+                            </NxPolicyViolationIndicator>
+                        </div>
+                    </div>
+                    <footer className='nx-card__footer'>{policyTypeLabel}</footer>
+                </section>
+            </Tooltip>
+        </React.Fragment>
+    )
 }
 
 function IqComponentInfo() {
