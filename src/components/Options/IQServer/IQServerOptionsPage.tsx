@@ -73,7 +73,6 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
                     origins: [extensionSettings.host],
                 },
                 (granted: boolean) => {
-                    console.log('Response from Permission Request', granted)
                     setHasPermission(granted)
                 }
             )
@@ -135,9 +134,13 @@ export default function IQServerOptionsPage(props: IqServerOptionsPageInterface)
             .sendMessage({
                 type: MESSAGE_REQUEST_TYPE.GET_APPLICATIONS,
             })
+            .catch((err) => {
+                logger.logMessage(`Error caught calling GET_APPLICATIONS`, LogLevel.DEBUG, err)
+            })
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .then((response: any) => {
-                if (chrome.runtime.lastError) {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                if (_browser.runtime.lastError) {
                     logger.logMessage('Error handleLoginCheck', LogLevel.ERROR)
                     return
                 }

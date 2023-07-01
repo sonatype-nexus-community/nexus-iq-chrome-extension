@@ -40,7 +40,6 @@ function LicenseThreatIndicator() {
     //     if (nexusContext && nexusContext.getLicenseDetails && nexusContext.componentDetails &&
     //         !nexusContext.licenseDetails) {
     //         nexusContext.getLicenseDetails(nexusContext.componentDetails?.component.packageUrl)
-    //         console.log(nexusContext.licenseDetails);
     //     }
     //   if (nexusContext && nexusContext.licenseDetails) {
     //     return getLicenseThreat(

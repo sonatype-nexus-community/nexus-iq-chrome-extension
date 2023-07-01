@@ -28,7 +28,6 @@ import { ExtensionConfigurationContext } from '../../../../../../context/Extensi
 import './AllVersionsDetails.css'
 import { DATA_SOURCE } from '../../../../../../utils/Constants'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
-import { logger, LogLevel } from '../../../../../../logger/Logger'
 import { getNewUrlandGo } from '../../../../../../utils/Helpers'
 import { Tooltip, withStyles } from '@material-ui/core'
 
@@ -37,7 +36,6 @@ function IqAllVersionDetails() {
     const allVersions = popupContext.iq?.allVersions
     const currentPurl = popupContext.currentPurl
     const currentVersionRef = useRef<HTMLElement>(null)
-    logger.logMessage('** currentPurl', LogLevel.DEBUG, currentPurl?.version)
 
     function getMaxViolation(policyData: ApiComponentPolicyViolationListDTOV2) {
         if (policyData.policyViolations && policyData.policyViolations.length > 0) {
@@ -52,7 +50,6 @@ function IqAllVersionDetails() {
 
     useEffect(() => {
         if (currentVersionRef.current) {
-            console.log(currentVersionRef.current)
             currentVersionRef.current.scrollIntoView({
                 behavior: 'smooth',
                 block: 'nearest',

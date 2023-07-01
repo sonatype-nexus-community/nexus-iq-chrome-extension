@@ -26,7 +26,6 @@ type ReasonProps = {
 const CveUrl = (props: ReasonProps): { newReason: string } => {
     const [iqServerUrl, setIqServerUrl] = useState('')
     chrome.storage.local.get('iqServerURL', function (result) {
-        console.log(`get local storage result: ${result.iqServerURL}`)
         setIqServerUrl(result.iqServerURL)
     })
     const newReason: string = props.reasonString.replace(

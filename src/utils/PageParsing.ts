@@ -23,7 +23,6 @@ import { parseRuby } from './PageParsing/RubyGems'
 import { parseGolang } from './PageParsing/Golang'
 import { parsePyPIURL } from './PageParsing/PyPI'
 import { parseCRAN } from './PageParsing/CRAN'
-import { parseConda } from './PageParsing/Anaconda'
 import { parsePackagist } from './PageParsing/Packagist'
 import { parseMVNRepository } from './PageParsing/MVNRepository'
 import { parseSearchMavenOrg } from './PageParsing/SearchMavenOrg'
@@ -67,9 +66,6 @@ export const getArtifactDetailsFromDOM = (repoFormat: RepoType, url: string): Pa
         }
         case REPOS.cranRProject: {
             return parseCRAN(url)
-        }
-        case REPOS.anacondaCom: {
-            return parseConda(url)
         }
         case REPOS.packagistOrg: {
             return parsePackagist(url)

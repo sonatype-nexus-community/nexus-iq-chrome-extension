@@ -101,8 +101,12 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                     url: url,
                 },
             })
+            .catch((err) => {
+                logger.logMessage(`Error caught calling CALCULATE_PURL_FOR_PAGE`, LogLevel.DEBUG, err)
+            })
             .then((response) => {
-                if (chrome.runtime.lastError) {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                if (_browser.runtime.lastError) {
                     logger.logMessage('Error response from CALCULATE_PURL_FOR_PAGE', LogLevel.ERROR, response)
                 }
                 logger.logMessage('Calc Purl Response: ', LogLevel.INFO, response)
@@ -111,14 +115,15 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                 //     openPanelOnActionClick: true,
                 // })
 
-                if (response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
+                if (response !== undefined && response.status == MESSAGE_RESPONSE_STATUS.SUCCESS) {
                     requestComponentEvaluationByPurls({
                         type: MESSAGE_REQUEST_TYPE.REQUEST_COMPONENT_EVALUATION_BY_PURLS,
                         params: {
                             purls: [response.data.purl],
                         },
                     }).then((r2) => {
-                        if (chrome.runtime.lastError) {
+                        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                        if (_browser.runtime.lastError) {
                             logger.logMessage('Error handling requestComponentEvaluationByPurls', LogLevel.ERROR)
                         }
 
@@ -153,14 +158,17 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                                     })
                                 })
 
-                                console.log('Sonatype Extension ENABLED for ', url, response.data.purl)
+                                logger.logMessage(
+                                    `Sonatype Extension ENABLED for ${url} : ${response.data.purl}`,
+                                    LogLevel.INFO
+                                )
 
                                 _browser.storage.local
                                     .set({
                                         componentDetails: componentDetails,
                                     })
                                     .then(() => {
-                                        console.log('We wrote to the session', componentDetails)
+                                        logger.logMessage('We wrote to the session', LogLevel.DEBUG, componentDetails)
                                     })
                             })
                             .catch((err) => {
@@ -180,7 +188,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
                         /**
                          * @todo Change Extension ICON
                          */
-                        console.log('Sonatype Extension DISABLED for ', url)
+                        logger.logMessage(`Sonatype Extension DISABLED for ${url}`, LogLevel.INFO)
                     })
                 }
             })
@@ -190,7 +198,7 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
             /**
              * @todo Change Extension ICON
              */
-            console.log('Sonatype Extension DISABLED for ', url)
+            logger.logMessage(`Sonatype Extension DISABLED for ${url}`, LogLevel.INFO)
         })
     }
 }
