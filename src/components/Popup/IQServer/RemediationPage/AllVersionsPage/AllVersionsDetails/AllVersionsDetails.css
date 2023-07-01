@@ -28,3 +28,8 @@
     width: 100px !important;
     margin-left: 10px;
 }
+
+#all-versions-list {
+    overscroll-behavior: contain;
+    overflow: auto;
+}

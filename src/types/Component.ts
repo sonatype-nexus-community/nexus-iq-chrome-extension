@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
+import { ApiComponentPolicyViolationListDTOV2, ApiPolicyViolationDTOV2 } from '@sonatype/nexus-iq-api-client'
 
 export enum ComponentState {
     CRITICAL,
@@ -25,7 +25,7 @@ export enum ComponentState {
     EVALUATING,
 }
 
-export function getMaxThreatLevelForPolicyViolations(policydata: ApiComponentPolicyViolationListDTOV2): number {
+export function getMaxThreatLevelForPolicyData(policydata: ApiComponentPolicyViolationListDTOV2): number {
     if (policydata.policyViolations !== undefined && policydata.policyViolations.length > 0) {
         return Math.max(
             ...policydata.policyViolations.map((violation) =>
@@ -36,9 +36,18 @@ export function getMaxThreatLevelForPolicyViolations(policydata: ApiComponentPol
     return 0
 }
 
+export function getMaxThreatLevelForPolicyViolations(policyViolations: ApiPolicyViolationDTOV2[]): number {
+    if (policyViolations !== undefined && policyViolations.length > 0) {
+        return Math.max(
+            ...policyViolations.map((violation) => (violation.threatLevel != undefined ? violation.threatLevel : 0))
+        )
+    }
+    return 0
+}
+
 export function getForComponentPolicyViolations(policydata?: ApiComponentPolicyViolationListDTOV2): ComponentState {
     if (policydata !== undefined) {
-        const maxThreatLevel = getMaxThreatLevelForPolicyViolations(policydata)
+        const maxThreatLevel = getMaxThreatLevelForPolicyData(policydata)
         if (maxThreatLevel >= 8) {
             return ComponentState.CRITICAL
         } else if (maxThreatLevel >= 4) {

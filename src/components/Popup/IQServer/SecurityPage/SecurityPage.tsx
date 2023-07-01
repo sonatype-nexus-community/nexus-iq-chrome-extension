@@ -22,7 +22,7 @@ import './SecurityPage.css'
 import { DATA_SOURCE } from '../../../../utils/Constants'
 import { ApiSecurityIssueDTO } from '@sonatype/nexus-iq-api-client'
 import { sortSecurityIssues, SecurityIssue } from '../../../../types/ArtifactMessage'
-import { NxTable } from '@sonatype/react-shared-components'
+import { NxTable, NxThreatIndicatorLegend } from '@sonatype/react-shared-components'
 
 function IqSecurityPage() {
     const popupContext = useContext(ExtensionPopupContext)
@@ -46,9 +46,11 @@ function IqSecurityPage() {
 
     return (
         <React.Fragment>
-            {' '}
             <div className='nx-grid-row'>
-                <section className='nx-grid-col nx-grid-col--100 nx-scrollable'>
+                <section className='nx-grid-col nx-grid-col--25'>
+                    <NxThreatIndicatorLegend vertical critical severe moderate low />
+                </section>
+                <section className='nx-grid-col nx-grid-col--75 nx-scrollable'>
                     <NxTable className='nx-table'>
                         <NxTable.Head>
                             <NxTable.Row isClickable className='nx-table-row nx-table-row--header'>
