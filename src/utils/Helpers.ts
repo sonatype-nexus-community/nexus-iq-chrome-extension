@@ -15,6 +15,9 @@
  */
 import { logger, LogLevel } from '../logger/Logger'
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser
+
 function ensure<T>(argument: T | undefined | null, message = 'This value was promised to be there.'): T {
     if (argument === undefined || argument === null) {
         throw new TypeError(message)
@@ -40,8 +43,7 @@ function getNewUrlandGo(currentTab, currentPurlVersion: string, version: string)
         const currentVersion = new RegExp(currentPurlVersion as string)
         const newUrl = currentTabUrl?.toString().replace(currentVersion, version)
         logger.logMessage(`Remediation Details: Generated new URL ${newUrl}`, LogLevel.DEBUG)
-        // TODO: Make work with other browsers and error handling
-        chrome.tabs.update({
+        _browser.tabs.update({
             url: newUrl,
         })
         window.close()

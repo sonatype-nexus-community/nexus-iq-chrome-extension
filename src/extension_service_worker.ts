@@ -206,8 +206,8 @@ function enableDisableExtensionForUrl(url: string, tabId: number): void {
 /**
  * Fired when the current tab changes, but the tab may itself not change
  */
-chrome.tabs.onActivated.addListener(({ tabId }) => {
-    chrome.tabs.get(tabId, (tab) => {
+_browser.tabs.onActivated.addListener(({ tabId }: { tabId: number }) => {
+    _browser.tabs.get(tabId, (tab) => {
         if (tab.url !== undefined) {
             enableDisableExtensionForUrl(tab.url, tabId)
         }
@@ -217,8 +217,8 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
 /**
  * This is fired for every tab on every update - we should filter before sending a message - this is carnage!
  */
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status == 'complete' && tab.active && tab.url !== undefined) {
+_browser.tabs.onUpdated.addListener((tabId: number, changeInfo: object, tab: chrome.tabs.Tab | browser.tabs.Tab) => {
+    if ('status' in changeInfo && changeInfo.status == 'complete' && tab.active && tab.url !== undefined) {
         enableDisableExtensionForUrl(tab.url, tabId)
     }
 })

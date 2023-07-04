@@ -38,6 +38,9 @@ import { Puff } from '@agney/react-loading'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-explicit-any
+const _browser: any = chrome ? chrome : browser
+
 function OssiPopup() {
     const popupContext = useContext(ExtensionPopupContext)
 
@@ -193,9 +196,7 @@ function IqPopup() {
                                                 <NxFontAwesomeIcon
                                                     icon={faGear as IconDefinition}
                                                     onClick={() => {
-                                                        chrome.tabs.update({
-                                                            url: 'options.html',
-                                                        })
+                                                        _browser.tabs.create({ url: 'options.html' })
                                                         window.close()
                                                     }}
                                                 />
@@ -249,8 +250,7 @@ export default function Popup() {
             style={{
                 maxWidth: '800px',
                 width: '800px',
-            }}
-        >
+            }}>
             {extensionContext.dataSource === DATA_SOURCE.NEXUSIQ && <IqPopup />}
             {extensionContext.dataSource === DATA_SOURCE.OSSINDEX && <OssiPopup />}
         </div>
