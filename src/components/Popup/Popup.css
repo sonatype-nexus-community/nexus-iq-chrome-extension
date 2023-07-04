@@ -7,11 +7,10 @@
 }
 
 .nx-page {
-    /* min-width: 800px !important; */
-    width: 800px !important;
-    /* min-height: 580px !important;
-max-height: 580px !important; */
+    min-width: 800px !important;
+    min-height: 580px !important;
     padding: unset !important;
+    overflow-x: hidden;
 }
 
 .nx-page-main {
