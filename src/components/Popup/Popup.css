@@ -1,9 +1,18 @@
+.nx-body {
+    overflow-x: hidden;
+}
+
+#ui {
+    overflow: hidden;
+    max-width: 800px !important;
+    width: 800px !important;
+}
+
 .nx-page-content {
     min-width: 800px !important;
     max-width: 800px !important;
-    /* min-height: 580px !important;
-  max-height: 580px !important; */
-    padding: unset !important;
+    height: 530px !important;
+    /* padding: unset !important; */
 }
 
 .nx-page {
@@ -15,42 +24,12 @@
 
 .nx-page-main {
     padding: 0px !important;
+    margin: 0px !important;
+    height: 723px !important;
 }
 
 #popup-content-row {
     margin-bottom: 0px !important;
-}
-
-.nx-tab-panel {
-    /* padding: 10px !important; */
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    min-height: 540px !important;
-    max-height: 540px !important;
-}
-
-.nx-tile .nx-tile-subsection {
-    /* padding: 10px !important; */
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-}
-
-.nx-tab-panel {
-    /* padding: 10px !important; */
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    min-height: 540px !important;
-    max-height: 540px !important;
-}
-
-.nx-tile .nx-tile-subsection {
-    /* padding: 10px !important; */
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
 }
 
 .nx-counter {
@@ -60,11 +39,30 @@
     vertical-align: middle;
 }
 
-:not(.nx-tile-subsection__header) + .nx-tile-subsection:first-of-type {
-    border-top: none !important;
-    margin-top: var(--nx-spacing-2x) !important;
-    padding-top: 0px !important;
+.nx-tab-list {
+    margin-bottom: 0px !important;
 }
+
+.nx-tab-panel {
+    /* padding-top: 0px !important; */
+    height: 100% !important;
+}
+
+.nx-tab {
+    /* padding-top: 0px !important; */
+    margin-top: 0px !important;
+}
+
+.nx-tile {
+    padding-top: 0px !important;
+    /* margin-top: 0px !important; */
+}
+
+/* :not(.nx-tile-subsection__header) + .nx-tile-subsection:first-of-type { */
+/* border-top: none !important; */
+/* margin-top: var(--nx-spacing-2x) !important; */
+/* padding-top: 0px !important; */
+/* } */
 
 .nx-policy-violation-indicator {
     margin: 0 var(--nx-spacing-4x) var(--nx-spacing-2x) 0 !important;

@@ -3,6 +3,10 @@
     font-size: 90% !important;
 }
 
+.nx-policy-violation-indicator {
+    width: 100px !important;
+}
+
 .nx-list__description {
     font-size: 90% !important;
 }
@@ -13,4 +17,34 @@
 
 #security-threat {
     padding-top: 10px !important;
+}
+
+.nx-card {
+    min-width: unset !important;
+    padding-top: 10px !important;
+}
+
+#max-policy-header {
+    margin-bottom: 0px !important;
+}
+
+#max-policy-content {
+    margin-top: 0px !important;
+}
+
+#first-release-date {
+    margin-top: 20px !important;
+}
+
+.nx-list-in-cell:first-child {
+    border: none !important;
+    padding-top: 0px;
+}
+
+#hash {
+    color: hsl(0, 0%, 60%);
+}
+
+#code-url {
+    font-size: 12px;
 }

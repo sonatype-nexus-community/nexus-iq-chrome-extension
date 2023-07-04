@@ -19,7 +19,6 @@ import {
     NxLoadingSpinner,
     NxMeter,
     NxPolicyViolationIndicator,
-    NxTooltip,
     ThreatLevelNumber,
 } from '@sonatype/react-shared-components'
 import { PackageURL } from 'packageurl-js'
@@ -30,6 +29,7 @@ import './AllVersionsDetails.css'
 import { DATA_SOURCE } from '../../../../../../utils/Constants'
 import { ApiComponentPolicyViolationListDTOV2 } from '@sonatype/nexus-iq-api-client'
 import { getNewUrlandGo } from '../../../../../../utils/Helpers'
+import { Tooltip, withStyles } from '@material-ui/core'
 
 function IqAllVersionDetails() {
     const popupContext = useContext(ExtensionPopupContext)
@@ -52,16 +52,32 @@ function IqAllVersionDetails() {
         if (currentVersionRef.current) {
             currentVersionRef.current.scrollIntoView({
                 behavior: 'smooth',
-                block: 'center',
+                block: 'nearest',
                 inline: 'nearest',
             })
         }
-    })
+    }, [allVersions])
+
+    const VersionTooltip = withStyles((theme) => ({
+        tooltip: {
+            backgroundColor: theme.palette.common.white,
+            color: 'black',
+            boxShadow: theme.shadows[1],
+            fontSize: 12,
+        },
+    }))(Tooltip)
+
+    function calculateAge(catalogDate) {
+        // birthday is a date
+        const ageDifMs = Date.now() - catalogDate
+        const ageDate = new Date(ageDifMs) // miliseconds from epoch
+        return Math.abs(ageDate.getUTCFullYear() - 1970)
+    }
 
     if (allVersions) {
         // if (allVersions && currentPurl) {
         return (
-            <NxList>
+            <NxList id='all-versions-list'>
                 {allVersions.map((version) => {
                     const versionPurl = PackageURL.fromString(version.component?.packageUrl as string)
 
@@ -86,30 +102,43 @@ function IqAllVersionDetails() {
                                     }}>
                                     <NxGrid.Column className='nx-grid-col-50'>
                                         {version.policyData != undefined && (
-                                            <NxPolicyViolationIndicator
-                                                style={{ marginBottom: '16px !important' }}
-                                                policyThreatLevel={
-                                                    Math.round(getMaxViolation(version.policyData)) as ThreatLevelNumber
+                                            <VersionTooltip
+                                                title={
+                                                    <React.Fragment>
+                                                        {/* <Typography color='inherit'>Tooltip with HTML</Typography> */}
+                                                        {`Total Policy Violation Count: ${version.policyData.policyViolations?.length}`}
+                                                        <br />
+                                                        {`Security Vulnerabilities (CVE): ${version.securityData?.securityIssues?.length}`}
+                                                        <br />
+                                                        {`Age: ${calculateAge(version.catalogDate)} Year(s)`}
+                                                    </React.Fragment>
                                                 }>
-                                                {versionPurl.version}
-                                            </NxPolicyViolationIndicator>
+                                                {/* // title={`Policy Violation Count: ${version.policyData.policyViolations?.length}<br/>Security Vulnerabilities: ${version.securityData?.securityIssues?.length}`}> */}
+                                                <NxPolicyViolationIndicator
+                                                    style={{ marginBottom: '16px !important' }}
+                                                    policyThreatLevel={
+                                                        Math.round(
+                                                            getMaxViolation(version.policyData)
+                                                        ) as ThreatLevelNumber
+                                                    }>
+                                                    {versionPurl.version}
+                                                </NxPolicyViolationIndicator>
+                                            </VersionTooltip>
                                         )}
                                     </NxGrid.Column>
                                     {version.relativePopularity !== undefined && (
                                         <NxGrid.Column className='nx-grid-col-50'>
-                                            <NxTooltip title={`Popularity: ${version.relativePopularity}`}>
-                                                <>
-                                                    <NxMeter
-                                                        value={version.relativePopularity as number}
-                                                        max={100}
-                                                        children={''}
-                                                        style={{
-                                                            color: 'rgb(139, 199, 62) !important',
-                                                            // marginTop: '0px',
-                                                        }}
-                                                    />
-                                                </>
-                                            </NxTooltip>
+                                            <Tooltip title={`Popularity: ${version.relativePopularity}`}>
+                                                <NxMeter
+                                                    value={version.relativePopularity as number}
+                                                    max={100}
+                                                    children={''}
+                                                    style={{
+                                                        color: 'rgb(139, 199, 62) !important',
+                                                        // marginTop: '0px',
+                                                    }}
+                                                />
+                                            </Tooltip>
                                         </NxGrid.Column>
                                     )}
                                 </NxGrid.Row>
@@ -120,11 +149,7 @@ function IqAllVersionDetails() {
             </NxList>
         )
     } else {
-        return (
-            <>
-                <span>{currentPurl?.name}</span>
-            </>
-        )
+        // return <>{/* <span>{currentPurl?.name}</span> */}</>
         return <NxLoadingSpinner />
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NxTable } from '@sonatype/react-shared-components'
+import { NxTable, NxThreatIndicator, ThreatLevelCategory } from '@sonatype/react-shared-components'
 import * as React from 'react'
 import '../SecurityPage.css'
 import { ApiSecurityIssueDTO } from '@sonatype/nexus-iq-api-client'
@@ -37,10 +37,14 @@ export function IqSecurityItemDisplay(props: SecurityItemProps) {
             isClickable
             className='nx-table-row'
             key={`row-${props.securityIssue.reference}`}
-            onClick={() => window.open(cveUrl, '_blank')}
-        >
+            onClick={() => window.open(cveUrl, '_blank')}>
             <React.Fragment key={props.securityIssue.reference}>
-                <NxTable.Cell className='nx-cell'>{props.securityIssue.severity}</NxTable.Cell>
+                <NxTable.Cell className='nx-cell'>
+                    <NxThreatIndicator
+                        threatLevelCategory={props.securityIssue.threatCategory as ThreatLevelCategory}
+                    />
+                    <span>{props.securityIssue.severity}</span>
+                </NxTable.Cell>
                 <NxTable.Cell className='nx-cell'>{props.securityIssue.reference}</NxTable.Cell>
                 <NxTable.Cell chevron />
             </React.Fragment>

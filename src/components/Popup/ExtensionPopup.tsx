@@ -17,7 +17,6 @@
 import React, { useEffect, useState } from 'react'
 import { getDefaultPopupContext, ExtensionPopupContext } from '../../context/ExtensionPopupContext'
 import { ExtensionConfigurationContext } from '../../context/ExtensionConfigurationContext'
-import AlpDrawer from '../AlpDrawer/AlpDrawer'
 import Popup from './Popup'
 import { logger, LogLevel } from '../../logger/Logger'
 import { DEFAULT_EXTENSION_SETTINGS, ExtensionConfiguration } from '../../types/ExtensionConfiguration'
@@ -156,6 +155,7 @@ export default function ExtensionPopup() {
                                 const newPopupContextWithMoreComponentDetails = {
                                     iq: {
                                         componentDetails: {
+                                            catalogDate: componentDetails.catalogDate,
                                             integrityRating: componentDetails.integrityRating,
                                             hygieneRating: componentDetails.hygieneRating,
                                             projectData: componentDetails.projectData,
@@ -362,7 +362,7 @@ export default function ExtensionPopup() {
     return (
         <ExtensionConfigurationContext.Provider value={extensionConfig}>
             <ExtensionPopupContext.Provider value={popupContext}>
-                {popupContext.supportsLicensing && <AlpDrawer />}
+                {/* {popupContext.supportsLicensing && <AlpDrawer />} */}
                 <Popup />
             </ExtensionPopupContext.Provider>
         </ExtensionConfigurationContext.Provider>
