@@ -11,6 +11,21 @@ body {
   border-color: #5c74eb;
   border-width: 2px;
 }
+
+P.warning {
+  border:#fb2525 5px solid;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+#tabs P.warning {
+  width: auto !important;
+}
+
 div#container {
   vertical-align: middle;
 }
