@@ -2,7 +2,10 @@
 
 [![DepShield Badge](https://depshield.sonatype.org/badges/ctownshend/chrome-extension-nexus-iq/depshield.svg)](https://depshield.github.io) [![CircleCI](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension.svg?style=shield)](https://circleci.com/gh/sonatype-nexus-community/nexus-iq-chrome-extension)
 
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+> **Warning**
+> The Nexus IQ Chrome Extension is now deprecated and will not be receiving updates.
+> 
+> See the new [Sonatype Platform Browser Extension](https://sonatype-nexus-community.github.io/sonatype-platform-browser-extension/) for our latest browser extension.
 
 ## Table of Contents
 
